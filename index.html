@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구슬요모아보기</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .site-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            padding: 14px 0;
+            margin-right: 8px;
+            white-space: nowrap;
+        }
+
+        .divider {
+            width: 1px;
+            height: 20px;
+            background: #ddd;
+            margin-right: 8px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 14px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s;
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        .tab:hover { color: #333; background: #f8f8f8; }
+        .tab.active { color: #1a73e8; border-bottom-color: #1a73e8; }
+
+        .content {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sheet-frame {
+            display: none;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #fff;
+        }
+
+        .sheet-frame.active { display: block; }
+
+        .loading {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: #888;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid #e0e0e0;
+            border-top-color: #1a73e8;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <span class="site-title">구슬요모아보기</span>
+        <div class="divider"></div>
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(0)">BEADYO SCHEDULE</div>
+            <div class="tab" onclick="switchTab(1)">BEADYO LIVE SONG LIST</div>
+            <div class="tab" onclick="switchTab(2)">BEADYO 노래책</div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <span>불러오는 중...</span>
+        </div>
+
+        <iframe
+            class="sheet-frame active"
+            id="frame-0"
+            src="https://docs.google.com/spreadsheets/d/1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM/htmlview?gid=2063088341&embedded=true"
+            onload="hideLoading()">
+        </iframe>
+        <iframe
+            class="sheet-frame"
+            id="frame-1"
+            src="https://docs.google.com/spreadsheets/d/1bIhxhHDU_Ig5IuDrS4WvPtMVsiVWHnDvm6dU3E3Q8Mo/htmlview?gid=1545541300&embedded=true">
+        </iframe>
+        <iframe
+            class="sheet-frame"
+            id="frame-2"
+            src="https://docs.google.com/spreadsheets/d/1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw/htmlview?gid=1451717792&embedded=true">
+        </iframe>
+    </div>
+
+    <script>
+        let loaded = new Set([]);
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function switchTab(index) {
+            document.querySelectorAll('.tab').forEach((t, i) => {
+                t.classList.toggle('active', i === index);
+            });
+            document.querySelectorAll('.sheet-frame').forEach((f, i) => {
+                f.classList.toggle('active', i === index);
+            });
+
+            if (!loaded.has(index)) {
+                document.getElementById('loading').style.display = 'flex';
+                document.getElementById(`frame-${index}`).onload = hideLoading;
+                loaded.add(index);
+            }
+        }
+    </script>
+</body>
+</html>
