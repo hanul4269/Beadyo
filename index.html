@@ -871,7 +871,8 @@
 
         function getFrameUrl(index) {
             const sheet = SHEETS[index];
-            return (sheet.alwaysEdit) ? editUrl(sheet) : readOnlyUrl(sheet);
+            if (accessToken || (!isMobile && sheet.alwaysEdit)) return editUrl(sheet);
+            return readOnlyUrl(sheet);
         }
 
         function getSheetDirectUrl(index) {
@@ -918,11 +919,14 @@
             const badge = document.getElementById('live-badge');
             const urls = [
                 'live.json?t=' + Date.now(),
-                'https://hanul4269.github.io/Beadyo/live.json?t=' + Date.now()
+                'https://beadyo.com/live.json?t=' + Date.now()
             ];
             for (const url of urls) {
                 try {
-                    const res = await fetch(url);
+                    const ctrl = new AbortController();
+                    const tid = setTimeout(() => ctrl.abort(), 5000);
+                    const res = await fetch(url, { signal: ctrl.signal });
+                    clearTimeout(tid);
                     if (!res.ok) continue;
                     const data = await res.json();
                     badge.classList.toggle('is-live', !!data.live);
@@ -932,6 +936,7 @@
         }
 
         checkLiveStatus();
+        setTimeout(checkLiveStatus, 3000);
         setInterval(checkLiveStatus, 5 * 60 * 1000);
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') checkLiveStatus();
