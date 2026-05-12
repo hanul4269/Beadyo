@@ -21,8 +21,6 @@
             --accent: #8bc34a;
             --accent-light: #f1f8e9;
             --header-bg: #8bc34a;
-            --header-text: #ffffff;
-            --tab-active: #8bc34a;
             --tab-hover: rgba(139,195,74,0.1);
             --bg: #f7f7f9;
         }
@@ -51,7 +49,7 @@
             align-items: center;
             justify-content: center;
             padding: 12px 24px 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 2px solid rgba(255,255,255,0.35);
             gap: 8px;
             position: relative;
         }
@@ -65,6 +63,13 @@
         }
 
         .logo-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .logo-sub {
             display: flex;
             align-items: center;
             gap: 8px;
@@ -100,6 +105,24 @@
             color: #fff;
             border-color: rgba(255,255,255,0.6);
             background: rgba(255,255,255,0.1);
+        }
+
+        .header-link.icon-only {
+            padding: 5px 7px;
+            gap: 0;
+            background: rgba(255,255,255,0.18);
+        }
+
+        .header-link.icon-only:hover {
+            background: rgba(255,255,255,0.32);
+        }
+
+        .header-link.icon-only img,
+        .header-link.icon-only svg {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            flex-shrink: 0;
         }
 
         .header-link.edit-active {
@@ -288,7 +311,10 @@
             .logo-group {
                 position: absolute;
                 left: 50%;
-                transform: translateX(-50%);
+                top: 50%;
+                transform: translate(-50%, -50%);
+                flex-direction: row;
+                align-items: center;
                 gap: 14px;
             }
 
@@ -355,8 +381,6 @@
                 width: 12px !important;
                 height: 12px !important;
             }
-
-            .login-label { display: none; }
 
             #auth-badge {
                 font-size: 10px;
@@ -606,13 +630,6 @@
             margin-bottom: 10px;
         }
 
-        .login-modal-desc {
-            font-size: 14px;
-            color: #888;
-            line-height: 1.6;
-            margin-bottom: 28px;
-        }
-
         .login-google-btn {
             display: flex;
             align-items: center;
@@ -703,17 +720,21 @@
         <div class="header-top">
             <div class="logo-group">
                 <span class="logo-text">BEADYO</span>
-                <a class="live-badge" id="live-badge" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank"><span class="live-dot"></span>LIVE</a>
+                <div class="logo-sub">
+                    <a class="live-badge" id="live-badge" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank" rel="noopener noreferrer"><span class="live-dot"></span>LIVE</a>
+                    <button class="quick-menu-btn mobile-only" id="quick-menu-toggle" onclick="toggleQuickMenu()">☰</button>
+                </div>
             </div>
             <div class="header-links">
-                <a class="header-link desktop-only" href="https://www.youtube.com/@beadyo" target="_blank"><svg width="13" height="13" viewBox="0 0 24 24" style="border-radius:3px;flex-shrink:0"><path fill="#FF0000" d="M21.8 8s-.2-1.3-.8-1.9c-.6-.7-1.3-.7-1.6-.7C17.2 5.3 12 5.3 12 5.3s-5.2 0-7.4.1c-.3 0-1 0-1.6.7C2.4 6.7 2.2 8 2.2 8S2 9.5 2 11v1.4c0 1.5.2 3 .2 3s.2 1.3.8 1.9c.6.7 1.5.6 1.8.7C6 18.1 12 18.1 12 18.1s5.2 0 7.4-.2c.3 0 1-.1 1.6-.7.6-.6.8-1.9.8-1.9s.2-1.5.2-3V11c0-1.5-.2-3-.2-3zM10 14.6V9.4l5.2 2.6-5.2 2.6z"/></svg> 구튜브</a>
-                <a class="header-link desktop-only" href="https://www.youtube.com/@beadyoo/shorts" target="_blank"><svg width="13" height="13" viewBox="0 0 24 24" style="border-radius:3px;flex-shrink:0"><path fill="#FF0000" d="M21.8 8s-.2-1.3-.8-1.9c-.6-.7-1.3-.7-1.6-.7C17.2 5.3 12 5.3 12 5.3s-5.2 0-7.4.1c-.3 0-1 0-1.6.7C2.4 6.7 2.2 8 2.2 8S2 9.5 2 11v1.4c0 1.5.2 3 .2 3s.2 1.3.8 1.9c.6.7 1.5.6 1.8.7C6 18.1 12 18.1 12 18.1s5.2 0 7.4-.2c.3 0 1-.1 1.6-.7.6-.6.8-1.9.8-1.9s.2-1.5.2-3V11c0-1.5-.2-3-.2-3zM10 14.6V9.4l5.2 2.6-5.2 2.6z"/></svg> 마마마</a>
-                <a class="header-link desktop-only" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank"><img src="soop-icon.ico" width="13" height="13" style="border-radius:3px"> 구슬요</a>
-                <a class="header-link desktop-only" href="https://cafe.naver.com/beadyo" target="_blank"><img src="naver-icon.ico" width="13" height="13" style="border-radius:3px"> 떼굴떼굴카페</a>
+                <a class="header-link desktop-only" href="https://www.youtube.com/@beadyo" target="_blank" rel="noopener noreferrer"><svg width="13" height="13" viewBox="0 0 24 24" style="border-radius:3px;flex-shrink:0"><path fill="#FF0000" d="M21.8 8s-.2-1.3-.8-1.9c-.6-.7-1.3-.7-1.6-.7C17.2 5.3 12 5.3 12 5.3s-5.2 0-7.4.1c-.3 0-1 0-1.6.7C2.4 6.7 2.2 8 2.2 8S2 9.5 2 11v1.4c0 1.5.2 3 .2 3s.2 1.3.8 1.9c.6.7 1.5.6 1.8.7C6 18.1 12 18.1 12 18.1s5.2 0 7.4-.2c.3 0 1-.1 1.6-.7.6-.6.8-1.9.8-1.9s.2-1.5.2-3V11c0-1.5-.2-3-.2-3zM10 14.6V9.4l5.2 2.6-5.2 2.6z"/></svg> 구튜브</a>
+                <a class="header-link desktop-only" href="https://www.youtube.com/@beadyoo/shorts" target="_blank" rel="noopener noreferrer"><svg width="13" height="13" viewBox="0 0 24 24" style="border-radius:3px;flex-shrink:0"><path fill="#FF0000" d="M21.8 8s-.2-1.3-.8-1.9c-.6-.7-1.3-.7-1.6-.7C17.2 5.3 12 5.3 12 5.3s-5.2 0-7.4.1c-.3 0-1 0-1.6.7C2.4 6.7 2.2 8 2.2 8S2 9.5 2 11v1.4c0 1.5.2 3 .2 3s.2 1.3.8 1.9c.6.7 1.5.6 1.8.7C6 18.1 12 18.1 12 18.1s5.2 0 7.4-.2c.3 0 1-.1 1.6-.7.6-.6.8-1.9.8-1.9s.2-1.5.2-3V11c0-1.5-.2-3-.2-3zM10 14.6V9.4l5.2 2.6-5.2 2.6z"/></svg> 마마마</a>
+                <a class="header-link desktop-only icon-only" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank" rel="noopener noreferrer" title="구슬요"><img src="soop-icon.ico"></a>
+                <a class="header-link desktop-only icon-only" href="https://cafe.naver.com/beadyo" target="_blank" rel="noopener noreferrer" title="떼굴떼굴카페"><img src="naver-icon.ico"></a>
+                <a class="header-link desktop-only icon-only" href="https://fancim.me/celeb/profile.aspx?url=851033" target="_blank" rel="noopener noreferrer" title="팬심"><img src="fancim-icon.ico"></a>
+                <a class="header-link desktop-only icon-only" href="https://www.instagram.com/bead.yo?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" title="인스타그램"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#E1306C"/><rect x="4.5" y="4.5" width="15" height="15" rx="4" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="16.5" cy="7.5" r="1" fill="#fff"/></svg></a>
                 <span id="auth-badge">✏️ 편집 모드 <button id="signout-btn" onclick="signOut()">로그아웃</button></span>
                 <button class="header-link desktop-only login-btn" onclick="openLoginModal()">로그인</button>
                 <button class="header-link desktop-only" id="mobile-restore-btn" onclick="viewMobile()" style="display:none">← 모바일</button>
-                <button class="quick-menu-btn mobile-only" id="quick-menu-toggle" onclick="toggleQuickMenu()">☰</button>
             </div>
         </div>
         <div class="tabs">
@@ -783,22 +804,30 @@
         <div class="qm-section">
             <div class="qm-section-label">바로가기</div>
             <div class="qm-section-card">
-                <div class="qm-grid">
-                    <a class="qm-item" href="https://www.youtube.com/@beadyo" target="_blank" onclick="closeQuickMenu()">
+                <div class="qm-grid-3">
+                    <a class="qm-item" href="https://www.youtube.com/@beadyo" target="_blank" rel="noopener noreferrer" onclick="closeQuickMenu()">
                         <svg viewBox="0 0 24 24" style="border-radius:7px;flex-shrink:0"><path fill="#FF0000" d="M21.8 8s-.2-1.3-.8-1.9c-.6-.7-1.3-.7-1.6-.7C17.2 5.3 12 5.3 12 5.3s-5.2 0-7.4.1c-.3 0-1 0-1.6.7C2.4 6.7 2.2 8 2.2 8S2 9.5 2 11v1.4c0 1.5.2 3 .2 3s.2 1.3.8 1.9c.6.7 1.5.6 1.8.7C6 18.1 12 18.1 12 18.1s5.2 0 7.4-.2c.3 0 1-.1 1.6-.7.6-.6.8-1.9.8-1.9s.2-1.5.2-3V11c0-1.5-.2-3-.2-3zM10 14.6V9.4l5.2 2.6-5.2 2.6z"/></svg>
                         구튜브
                     </a>
-                    <a class="qm-item" href="https://www.youtube.com/@beadyoo/shorts" target="_blank" onclick="closeQuickMenu()">
+                    <a class="qm-item" href="https://www.youtube.com/@beadyoo/shorts" target="_blank" rel="noopener noreferrer" onclick="closeQuickMenu()">
                         <svg viewBox="0 0 24 24" style="border-radius:7px;flex-shrink:0"><path fill="#FF0000" d="M21.8 8s-.2-1.3-.8-1.9c-.6-.7-1.3-.7-1.6-.7C17.2 5.3 12 5.3 12 5.3s-5.2 0-7.4.1c-.3 0-1 0-1.6.7C2.4 6.7 2.2 8 2.2 8S2 9.5 2 11v1.4c0 1.5.2 3 .2 3s.2 1.3.8 1.9c.6.7 1.5.6 1.8.7C6 18.1 12 18.1 12 18.1s5.2 0 7.4-.2c.3 0 1-.1 1.6-.7.6-.6.8-1.9.8-1.9s.2-1.5.2-3V11c0-1.5-.2-3-.2-3zM10 14.6V9.4l5.2 2.6-5.2 2.6z"/></svg>
                         마마마
                     </a>
-                    <a class="qm-item" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank" onclick="closeQuickMenu()">
+                    <a class="qm-item" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank" rel="noopener noreferrer" onclick="closeQuickMenu()">
                         <img src="soop-icon.ico">
                         구슬요
                     </a>
-                    <a class="qm-item" href="https://cafe.naver.com/beadyo" target="_blank" onclick="closeQuickMenu()">
+                    <a class="qm-item" href="https://cafe.naver.com/beadyo" target="_blank" rel="noopener noreferrer" onclick="closeQuickMenu()">
                         <img src="naver-icon.ico">
                         떼굴떼굴카페
+                    </a>
+                    <a class="qm-item" href="https://fancim.me/celeb/profile.aspx?url=851033" target="_blank" rel="noopener noreferrer" onclick="closeQuickMenu()">
+                        <img src="fancim-icon.ico">
+                        팬심
+                    </a>
+                    <a class="qm-item" href="https://www.instagram.com/bead.yo?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" onclick="closeQuickMenu()">
+                        <svg viewBox="0 0 24 24" style="border-radius:7px;flex-shrink:0"><rect width="24" height="24" rx="6" fill="#E1306C"/><rect x="4.5" y="4.5" width="15" height="15" rx="4" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="16.5" cy="7.5" r="1" fill="#fff"/></svg>
+                        인스타그램
                     </a>
                 </div>
             </div>
@@ -836,6 +865,7 @@
         const loaded = new Set();
         let tokenClient = null;
         let accessToken = null;
+        let tokenExpiryTimer = null;
 
         const isMobile = window.matchMedia('(max-width: 640px)').matches;
 
@@ -885,12 +915,20 @@
 
         // ── 라이브 상태 체크 ──
         async function checkLiveStatus() {
-            try {
-                const res = await fetch('live.json?t=' + Date.now());
-                const data = await res.json();
-                const badge = document.getElementById('live-badge');
-                badge.classList.toggle('is-live', !!data.live);
-            } catch (e) {}
+            const badge = document.getElementById('live-badge');
+            const urls = [
+                'live.json?t=' + Date.now(),
+                'https://hanul4269.github.io/Beadyo/live.json?t=' + Date.now()
+            ];
+            for (const url of urls) {
+                try {
+                    const res = await fetch(url);
+                    if (!res.ok) continue;
+                    const data = await res.json();
+                    badge.classList.toggle('is-live', !!data.live);
+                    return;
+                } catch {}
+            }
         }
 
         checkLiveStatus();
@@ -929,23 +967,27 @@
 
         function viewDesktop() {
             document.querySelector('meta[name=viewport]').content = 'width=1200';
-            localStorage.setItem('desktopView', '1');
+            try { localStorage.setItem('desktopView', '1'); } catch {}
             closeQuickMenu();
             document.getElementById('mobile-restore-btn').style.display = '';
+            document.getElementById('mobile-fab').classList.remove('show');
         }
 
         function viewMobile() {
-            localStorage.removeItem('desktopView');
+            try { localStorage.removeItem('desktopView'); } catch {}
             location.reload();
         }
 
-        if (localStorage.getItem('desktopView') === '1') {
-            document.querySelector('meta[name=viewport]').content = 'width=1200';
-            document.getElementById('mobile-restore-btn').style.display = '';
-        }
+        try {
+            if (localStorage.getItem('desktopView') === '1') {
+                document.querySelector('meta[name=viewport]').content = 'width=1200';
+                document.getElementById('mobile-restore-btn').style.display = '';
+            }
+        } catch {}
 
         // ── 구글 로그인 ──
         function signIn() {
+            if (!window.google) return;
             if (!tokenClient) {
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: CLIENT_ID,
@@ -959,16 +1001,16 @@
         async function handleToken(resp) {
             if (resp.error) return;
             accessToken = resp.access_token;
-            if (resp.expires_in) setTimeout(() => { accessToken = null; }, (resp.expires_in - 60) * 1000);
+            if (resp.expires_in) {
+                clearTimeout(tokenExpiryTimer);
+                tokenExpiryTimer = setTimeout(() => { accessToken = null; }, (resp.expires_in - 60) * 1000);
+            }
 
-            // 유저 정보 가져오기
-            let displayName = '편집자';
             let profilePic = '';
             try {
                 const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo',
                     { headers: { Authorization: `Bearer ${accessToken}` } });
                 const user = await res.json();
-                displayName = user.name || user.email || '편집자';
                 if (user.picture) profilePic = `<img src="${user.picture}" width="24" height="24" style="border-radius:50%;flex-shrink:0">`;
             } catch {}
 
@@ -1010,6 +1052,7 @@
         }
 
         function signOut() {
+            clearTimeout(tokenExpiryTimer);
             if (accessToken) {
                 google.accounts.oauth2.revoke(accessToken, () => {});
                 accessToken = null;
@@ -1024,6 +1067,6 @@
         }
     </script>
 
-    <a class="mobile-fab" id="mobile-fab" href="#" target="_blank">✏️ 검색·편집하기</a>
+    <a class="mobile-fab" id="mobile-fab" href="#" target="_blank" rel="noopener noreferrer">✏️ 검색·편집하기</a>
 </body>
 </html>
