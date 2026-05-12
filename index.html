@@ -110,11 +110,11 @@
 
         #auth-badge {
             display: none;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
-            gap: 6px;
-            padding: 4px 10px 4px 4px;
-            border-radius: 20px;
+            gap: 3px;
+            padding: 5px 10px;
+            border-radius: 14px;
             font-size: 11px;
             font-weight: 500;
             background: rgba(139,195,74,0.15);
@@ -129,14 +129,14 @@
         #signout-btn {
             background: none;
             border: none;
-            color: rgba(255,255,255,0.35);
+            color: rgba(255,255,255,0.75);
             font-size: 10px;
             cursor: pointer;
             padding: 0;
             font-family: 'Noto Sans KR', -apple-system, sans-serif;
         }
 
-        #signout-btn:hover { color: rgba(255,255,255,0.7); }
+        #signout-btn:hover { color: #fff; }
 
         /* ── 라이브 뱃지 ── */
         .live-badge {
@@ -974,7 +974,7 @@
 
             // 로그인 성공 표시
             document.getElementById('auth-badge').innerHTML =
-                `${profilePic}<span>${displayName}</span><button id="signout-btn" onclick="signOut()">로그아웃</button>`;
+                `${profilePic}<button id="signout-btn" onclick="signOut()">로그아웃</button>`;
             document.querySelectorAll('.login-btn').forEach(b => b.style.display = 'none');
             document.getElementById('auth-badge').classList.add('show');
             closeQuickMenu();
