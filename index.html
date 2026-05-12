@@ -200,54 +200,29 @@
 
         .sheet-frame.active { display: block; }
 
-        /* ── 모바일 안내 ── */
-        .mobile-notice {
+        /* ── 모바일 플로팅 버튼 ── */
+        .mobile-fab {
             display: none;
-            position: absolute;
-            inset: 0;
-            flex-direction: column;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
             align-items: center;
-            justify-content: center;
-            gap: 16px;
-            background: var(--bg);
-            padding: 32px 24px;
-            text-align: center;
-        }
-
-        .mobile-notice.active { display: flex; }
-
-        .mobile-notice-icon { font-size: 48px; }
-
-        .mobile-notice-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: #333;
-        }
-
-        .mobile-notice-desc {
-            font-size: 13px;
-            color: #888;
-            line-height: 1.6;
-        }
-
-        .mobile-open-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
+            gap: 7px;
+            padding: 11px 18px;
             background: var(--accent);
             color: #fff;
             border-radius: 24px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             text-decoration: none;
-            border: none;
-            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(255,112,67,0.45);
             font-family: 'Noto Sans KR', -apple-system, sans-serif;
             transition: opacity 0.15s;
         }
 
-        .mobile-open-btn:hover { opacity: 0.85; }
+        .mobile-fab.show { display: flex; }
+        .mobile-fab:hover { opacity: 0.85; }
 
         /* ── 로딩 ── */
         .loading {
@@ -322,13 +297,6 @@
             <span class="loading-text">불러오는 중...</span>
         </div>
 
-        <div class="mobile-notice" id="mobile-notice">
-            <div class="mobile-notice-icon">📋</div>
-            <div class="mobile-notice-title">모바일에서는 구글 시트 앱으로 열어주세요</div>
-            <div class="mobile-notice-desc">검색 기능은 모바일 브라우저 환경에서<br>제한이 있어 구글 시트에서 이용 가능해요.</div>
-            <a class="mobile-open-btn" id="mobile-open-link" href="#" target="_blank">구글 시트에서 열기 →</a>
-        </div>
-
         <iframe class="sheet-frame active" id="frame-0" onload="hideLoading()"></iframe>
         <iframe class="sheet-frame" id="frame-1"></iframe>
         <iframe class="sheet-frame" id="frame-2"></iframe>
@@ -372,24 +340,24 @@
             if (el) el.style.display = 'none';
         }
 
+        function updateMobileFab(index) {
+            const fab = document.getElementById('mobile-fab');
+            if (!isMobile) return;
+            fab.classList.add('show');
+            fab.href = getSheetDirectUrl(index);
+        }
+
         function switchTab(index) {
             document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
             document.querySelectorAll('.sheet-frame').forEach((f, i) => f.classList.toggle('active', i === index));
 
-            if (isMobile) {
-                document.getElementById('mobile-notice').classList.add('active');
-                document.getElementById('mobile-open-link').href = getSheetDirectUrl(index);
-                hideLoading();
-                return;
-            }
-
-            document.getElementById('mobile-notice').classList.remove('active');
+            updateMobileFab(index);
 
             if (!loaded.has(index)) {
                 const frame = document.getElementById(`frame-${index}`);
                 document.getElementById('loading').style.display = 'flex';
                 frame.onload = hideLoading;
-                frame.src = getFrameUrl(index);
+                frame.src = isMobile ? readOnlyUrl(SHEETS[index]) : getFrameUrl(index);
                 loaded.add(index);
             }
         }
@@ -464,5 +432,7 @@
             document.getElementById('login-btn').style.display = '';
         }
     </script>
+
+    <a class="mobile-fab" id="mobile-fab" href="#" target="_blank">✏️ 검색·편집하기</a>
 </body>
 </html>
