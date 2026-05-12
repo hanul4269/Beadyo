@@ -301,7 +301,7 @@
         .mobile-only  { display: inline-flex; }
 
         /* ── 데스크탑 ── */
-        @media (min-width: 1025px) {
+        @media (min-width: 641px) {
             .desktop-only { display: inline-flex; align-items: center; }
             .mobile-only  { display: none !important; }
             .header-top {
@@ -361,12 +361,11 @@
             }
         }
 
-        /* ── 모바일/태블릿 반응형 ── */
-        @media (max-width: 1024px) {
+        /* ── 모바일 반응형 ── */
+        @media (max-width: 640px) {
             .header-top {
                 padding: 10px 12px 8px;
                 gap: 6px;
-                border-bottom: none;
             }
 
             .logo-text {
@@ -878,7 +877,7 @@
         let accessToken = null;
         let tokenExpiryTimer = null;
 
-        const isMobile = window.matchMedia('(max-width: 1024px)').matches;
+        const isMobile = window.matchMedia('(max-width: 640px)').matches;
 
         function getFrameUrl(index) {
             const sheet = SHEETS[index];
