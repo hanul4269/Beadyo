@@ -200,6 +200,55 @@
 
         .sheet-frame.active { display: block; }
 
+        /* ── 모바일 안내 ── */
+        .mobile-notice {
+            display: none;
+            position: absolute;
+            inset: 0;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            background: var(--bg);
+            padding: 32px 24px;
+            text-align: center;
+        }
+
+        .mobile-notice.active { display: flex; }
+
+        .mobile-notice-icon { font-size: 48px; }
+
+        .mobile-notice-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .mobile-notice-desc {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        .mobile-open-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', -apple-system, sans-serif;
+            transition: opacity 0.15s;
+        }
+
+        .mobile-open-btn:hover { opacity: 0.85; }
+
         /* ── 로딩 ── */
         .loading {
             position: absolute;
@@ -273,6 +322,13 @@
             <span class="loading-text">불러오는 중...</span>
         </div>
 
+        <div class="mobile-notice" id="mobile-notice">
+            <div class="mobile-notice-icon">📋</div>
+            <div class="mobile-notice-title">모바일에서는 구글 시트 앱으로 열어주세요</div>
+            <div class="mobile-notice-desc">검색 기능은 모바일 브라우저 환경에서<br>제한이 있어 구글 시트에서 이용 가능해요.</div>
+            <a class="mobile-open-btn" id="mobile-open-link" href="#" target="_blank">구글 시트에서 열기 →</a>
+        </div>
+
         <iframe class="sheet-frame active" id="frame-0" onload="hideLoading()"></iframe>
         <iframe class="sheet-frame" id="frame-1"></iframe>
         <iframe class="sheet-frame" id="frame-2"></iframe>
@@ -299,9 +355,16 @@
         let tokenClient = null;
         let accessToken = null;
 
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
         function getFrameUrl(index) {
             const sheet = SHEETS[index];
             return (sheet.alwaysEdit) ? editUrl(sheet) : readOnlyUrl(sheet);
+        }
+
+        function getSheetDirectUrl(index) {
+            const sheet = SHEETS[index];
+            return `https://docs.google.com/spreadsheets/d/${sheet.id}/edit#gid=${sheet.gid}`;
         }
 
         function hideLoading() {
@@ -312,6 +375,15 @@
         function switchTab(index) {
             document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
             document.querySelectorAll('.sheet-frame').forEach((f, i) => f.classList.toggle('active', i === index));
+
+            if (isMobile) {
+                document.getElementById('mobile-notice').classList.add('active');
+                document.getElementById('mobile-open-link').href = getSheetDirectUrl(index);
+                hideLoading();
+                return;
+            }
+
+            document.getElementById('mobile-notice').classList.remove('active');
 
             if (!loaded.has(index)) {
                 const frame = document.getElementById(`frame-${index}`);
