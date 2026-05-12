@@ -18,12 +18,12 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --accent: #ff7043;
-            --accent-light: #fff3f0;
-            --header-bg: #1a1a2e;
+            --accent: #8bc34a;
+            --accent-light: #f1f8e9;
+            --header-bg: #8bc34a;
             --header-text: #ffffff;
-            --tab-active: #ff7043;
-            --tab-hover: rgba(255,255,255,0.08);
+            --tab-active: #8bc34a;
+            --tab-hover: rgba(139,195,74,0.1);
             --bg: #f7f7f9;
         }
 
@@ -46,46 +46,28 @@
 
         .header-top {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 24px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
-            overflow: hidden;
+            padding: 12px 24px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            gap: 8px;
+            position: relative;
         }
 
         .logo-text {
-            font-size: 16px;
+            font-size: 22px;
             font-weight: 700;
             color: #fff;
-            letter-spacing: -0.3px;
-        }
-
-        .logo-sub {
-            font-size: 11px;
-            color: rgba(255,255,255,0.45);
-            font-weight: 400;
-            margin-left: 4px;
+            letter-spacing: 2px;
+            text-align: center;
         }
 
         .header-links {
             display: flex;
             gap: 6px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .header-link {
@@ -116,7 +98,7 @@
         .header-link.edit-active {
             color: #fff;
             border-color: var(--accent);
-            background: rgba(255,112,67,0.15);
+            background: rgba(139,195,74,0.15);
         }
 
         #auth-badge {
@@ -128,8 +110,8 @@
             border-radius: 12px;
             font-size: 11px;
             font-weight: 500;
-            background: rgba(255,112,67,0.15);
-            border: 1px solid rgba(255,112,67,0.4);
+            background: rgba(139,195,74,0.15);
+            border: 1px solid rgba(139,195,74,0.4);
             color: var(--accent);
             white-space: nowrap;
             line-height: 1.3;
@@ -224,7 +206,7 @@
         .tab.active {
             color: #fff;
             border-bottom-color: var(--accent);
-            background: rgba(255,112,67,0.1);
+            background: rgba(139,195,74,0.1);
         }
 
         .tab-icon { font-size: 15px; }
@@ -263,29 +245,16 @@
         /* ── 모바일 반응형 ── */
         @media (max-width: 640px) {
             .header-top {
-                padding: 8px 12px;
-            }
-
-            .logo-icon {
-                width: 28px;
-                height: 28px;
-                border-radius: 6px;
-                overflow: hidden;
-            }
-
-            .logo-icon img {
-                width: 28px !important;
-                height: 28px !important;
+                padding: 10px 12px 8px;
+                gap: 6px;
             }
 
             .logo-text {
-                font-size: 13px;
-                white-space: nowrap;
+                font-size: 18px;
+                letter-spacing: 2px;
             }
 
-            .logo-sub { display: none; }
-
-            .header-links { gap: 4px; }
+            .header-links { gap: 5px; }
 
             .header-link {
                 padding: 5px 9px;
@@ -330,13 +299,167 @@
             font-size: 13px;
             font-weight: 600;
             text-decoration: none;
-            box-shadow: 0 4px 16px rgba(255,112,67,0.45);
+            box-shadow: 0 4px 16px rgba(139,195,74,0.45);
             font-family: 'Noto Sans KR', -apple-system, sans-serif;
             transition: opacity 0.15s;
         }
 
         .mobile-fab.show { display: flex; }
         .mobile-fab:hover { opacity: 0.85; }
+
+        /* ── 퀵메뉴 ── */
+        .header { position: relative; }
+
+        .quick-menu-btn {
+            background: rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.35);
+            color: #fff;
+            padding: 6px 13px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: background 0.15s;
+            line-height: 1;
+        }
+
+        .quick-menu-btn:hover { background: rgba(0,0,0,0.25); }
+
+        .quick-menu-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 400;
+            background: rgba(0,0,0,0.35);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        .quick-menu-overlay.open { display: block; }
+
+        .quick-menu-panel {
+            display: none;
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 500;
+            background: #f2f2f2;
+            overflow-y: auto;
+            padding: 8px 16px 36px;
+            border-radius: 22px 22px 0 0;
+            box-shadow: 0 -4px 30px rgba(0,0,0,0.15);
+            animation: slideUp 0.25s ease;
+        }
+
+        .quick-menu-panel.open { display: block; }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
+        }
+
+        .qm-handle {
+            width: 36px;
+            height: 4px;
+            background: #ddd;
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+
+        .qm-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .qm-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+
+        .qm-header-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .qm-header-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 7px 14px;
+            border-radius: 20px;
+            border: 1.5px solid var(--accent);
+            background: #fff;
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .qm-header-btn:hover { background: var(--accent-light); }
+
+        .qm-section { margin-bottom: 14px; }
+
+        .qm-section-label {
+            font-size: 12px;
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 8px;
+            padding-left: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .qm-section-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 14px;
+        }
+
+        .qm-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .qm-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .qm-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 18px 10px;
+            border-radius: 14px;
+            border: 1.5px solid #efefef;
+            background: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            text-decoration: none;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .qm-item:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .qm-item svg { width: 28px; height: 28px; color: var(--accent); }
+        .qm-item img { width: 28px; height: 28px; border-radius: 7px; }
 
         /* ── 로딩 ── */
         .loading {
@@ -386,16 +509,11 @@
 <body>
     <div class="header">
         <div class="header-top">
-            <div class="logo">
-                <div class="logo-icon"><img src="logo-icon.webp" width="32" height="32" style="border-radius:8px;display:block;object-fit:cover"></div>
-                <span class="logo-text">구슬요모아보기<span class="logo-sub">BEADYO</span></span>
-            </div>
+            <span class="logo-text">BEADYO</span>
             <div class="header-links">
-                <a class="header-link" href="https://www.youtube.com/@beadyo" target="_blank"><img src="https://www.youtube.com/yts/img/favicon_144-vfliLAfaB.png" width="14" height="14" style="border-radius:3px;margin-top:2px"> 유튜브</a>
-                <a class="header-link" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank"><img src="https://www.sooplive.com/favicon.ico" width="14" height="14" style="border-radius:3px;margin-top:2px"> 방송국</a>
                 <a class="live-badge" id="live-badge" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank"><span class="live-dot"></span>LIVE</a>
                 <span id="auth-badge">✏️ 편집 모드 <button id="signout-btn" onclick="signOut()">로그아웃</button></span>
-                <button class="header-link" id="login-btn" onclick="signIn()"><img src="login-icon.png" width="18" height="18" style="border-radius:50%;margin-top:2px"> <span class="login-label">편집자 로그인</span></button>
+                <button class="quick-menu-btn" id="quick-menu-toggle" onclick="toggleQuickMenu()">☰</button>
             </div>
         </div>
         <div class="tabs">
@@ -407,6 +525,63 @@
             </div>
             <div class="tab" onclick="switchTab(2)">
                 <span class="tab-icon">📖</span> 노래책
+            </div>
+        </div>
+    </div>
+
+    <div class="quick-menu-overlay" id="quick-menu-overlay" onclick="closeQuickMenu()"></div>
+    <div class="quick-menu-panel" id="quick-menu-panel">
+        <div class="qm-handle"></div>
+        <div class="qm-header">
+            <span class="qm-title">QUICK MENU</span>
+            <div class="qm-header-btns">
+                <button class="qm-header-btn" onclick="viewDesktop()">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                    PC버전
+                </button>
+                <button class="qm-header-btn" id="login-btn" onclick="signIn(); closeQuickMenu()">
+                    <img src="login-icon.png" width="13" height="13" style="border-radius:50%"> 로그인
+                </button>
+            </div>
+        </div>
+
+        <div class="qm-section">
+            <div class="qm-section-label">탭 이동</div>
+            <div class="qm-section-card">
+                <div class="qm-grid">
+                    <button class="qm-item" onclick="switchTab(0); closeQuickMenu()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        SCHEDULE
+                    </button>
+                    <button class="qm-item" onclick="switchTab(1); closeQuickMenu()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                        SONG LIST
+                    </button>
+                    <button class="qm-item" onclick="switchTab(2); closeQuickMenu()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        노래책
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="qm-section">
+            <div class="qm-section-label">바로가기</div>
+            <div class="qm-section-card">
+                <div class="qm-grid-3">
+                    <a class="qm-item" href="https://www.youtube.com/@beadyo" target="_blank" onclick="closeQuickMenu()">
+                        <img src="https://www.youtube.com/yts/img/favicon_144-vfliLAfaB.png">
+                        구튜브
+                    </a>
+                    <a class="qm-item" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank" onclick="closeQuickMenu()">
+                        <img src="https://www.sooplive.com/favicon.ico">
+                        구슬요
+                    </a>
+                    <a class="qm-item" href="https://cafe.naver.com/beadyo" target="_blank" onclick="closeQuickMenu()">
+                        <img src="https://cafe.naver.com/favicon.ico">
+                        네이버카페
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -502,6 +677,31 @@
         checkLiveStatus();
         setInterval(checkLiveStatus, 5 * 60 * 1000);
 
+        // ── 퀵메뉴 ──
+        function toggleQuickMenu() {
+            const panel = document.getElementById('quick-menu-panel');
+            const overlay = document.getElementById('quick-menu-overlay');
+            const headerH = document.querySelector('.header').offsetHeight;
+            panel.style.top = headerH + 'px';
+            panel.classList.toggle('open');
+            overlay.classList.toggle('open');
+        }
+
+        function closeQuickMenu() {
+            document.getElementById('quick-menu-panel').classList.remove('open');
+            document.getElementById('quick-menu-overlay').classList.remove('open');
+        }
+
+        function viewDesktop() {
+            document.querySelector('meta[name=viewport]').content = 'width=1200';
+            localStorage.setItem('desktopView', '1');
+            closeQuickMenu();
+        }
+
+        if (localStorage.getItem('desktopView') === '1') {
+            document.querySelector('meta[name=viewport]').content = 'width=1200';
+        }
+
         // ── 구글 로그인 ──
         function signIn() {
             if (!tokenClient) {
@@ -549,6 +749,7 @@
             if (hasAnyEdit) {
                 document.getElementById('login-btn').style.display = 'none';
                 document.getElementById('auth-badge').classList.add('show');
+                closeQuickMenu();
             } else {
                 // 로그인했지만 편집 권한 없음 → 그냥 조용히 무시
                 accessToken = null;
