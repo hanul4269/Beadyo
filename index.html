@@ -9,6 +9,10 @@
     <link rel="preconnect" href="https://docs.google.com">
     <link rel="preconnect" href="https://sheets.googleapis.com">
     <link rel="preconnect" href="https://accounts.google.com">
+    <link rel="preconnect" href="https://ssl.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://ssl.gstatic.com">
+    <link rel="dns-prefetch" href="https://www.gstatic.com">
     <link rel="preload" href="logo-icon.webp" as="image">
     <link rel="preload" href="loading-img.png" as="image">
     <link rel="preload" href="login-icon.png" as="image">
@@ -840,9 +844,14 @@
             <span class="loading-text loading-dots">대기 중</span>
         </div>
 
-        <iframe class="sheet-frame active" id="frame-0" onload="hideLoading(0)"></iframe>
+        <iframe class="sheet-frame active" id="frame-0"></iframe>
         <iframe class="sheet-frame" id="frame-1"></iframe>
         <iframe class="sheet-frame" id="frame-2"></iframe>
+        <script>
+        // JS 실행 전에 첫 탭 로드를 즉시 시작
+        document.getElementById('frame-0').src =
+            'https://docs.google.com/spreadsheets/d/1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM/edit?rm=minimal#gid=2063088341';
+        </script>
     </div>
 
     <script>
@@ -863,6 +872,7 @@
             `https://docs.google.com/spreadsheets/d/${s.id}/edit?rm=minimal#gid=${s.gid}`;
 
         const loaded = new Set();
+        const preloaded = new Set();
         let tokenClient = null;
         let accessToken = null;
         let tokenExpiryTimer = null;
@@ -885,6 +895,18 @@
             if (el) el.style.display = 'none';
             const frame = document.getElementById(`frame-${index}`);
             if (frame) requestAnimationFrame(() => frame.classList.add('loaded'));
+            if (index === 0) setTimeout(preloadRemainingTabs, 4000);
+        }
+
+        function preloadRemainingTabs() {
+            [1, 2].forEach(i => {
+                if (!loaded.has(i) && !preloaded.has(i)) {
+                    const f = document.getElementById(`frame-${i}`);
+                    f.onload = () => requestAnimationFrame(() => f.classList.add('loaded'));
+                    f.src = getFrameUrl(i);
+                    preloaded.add(i);
+                }
+            });
         }
 
         function updateMobileFab(index) {
@@ -900,14 +922,19 @@
 
             updateMobileFab(index);
 
-            if (!loaded.has(index)) {
-                const frame = document.getElementById(`frame-${index}`);
-                document.getElementById('loading').style.display = 'flex';
-                frame.onload = () => hideLoading(index);
-                frame.src = getFrameUrl(index);
-                loaded.add(index);
-            } else {
+            const frame = document.getElementById(`frame-${index}`);
+
+            if (loaded.has(index)) {
                 hideLoading(index);
+            } else if (preloaded.has(index) && frame.classList.contains('loaded')) {
+                loaded.add(index);
+                hideLoading(index);
+            } else {
+                document.getElementById('loading').style.display = 'flex';
+                loaded.add(index);
+                frame.onload = () => hideLoading(index);
+                const targetUrl = getFrameUrl(index);
+                if (frame.src !== targetUrl) frame.src = targetUrl;
             }
         }
 
