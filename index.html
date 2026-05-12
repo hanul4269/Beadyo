@@ -4,69 +4,179 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>구슬요모아보기</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        :root {
+            --accent: #ff7043;
+            --accent-light: #fff3f0;
+            --header-bg: #1a1a2e;
+            --header-text: #ffffff;
+            --tab-active: #ff7043;
+            --tab-hover: rgba(255,255,255,0.08);
+            --bg: #f7f7f9;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f0f2f5;
+            font-family: 'Noto Sans KR', -apple-system, sans-serif;
+            background: var(--bg);
             height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ── 헤더 ── */
+        .header {
+            background: var(--header-bg);
+            flex-shrink: 0;
             display: flex;
             flex-direction: column;
         }
 
-        .header {
-            background: #fff;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 0 20px;
+        .header-top {
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex-shrink: 0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            justify-content: space-between;
+            padding: 12px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
         }
 
-        .site-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: #333;
-            padding: 14px 0;
-            margin-right: 8px;
-            white-space: nowrap;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .divider {
-            width: 1px;
-            height: 20px;
-            background: #ddd;
-            margin-right: 8px;
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
         }
 
+        .logo-text {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+
+        .logo-sub {
+            font-size: 11px;
+            color: rgba(255,255,255,0.45);
+            font-weight: 400;
+            margin-left: 4px;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 6px;
+        }
+
+        .header-link {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.65);
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+
+        .header-link:hover {
+            color: #fff;
+            border-color: rgba(255,255,255,0.35);
+            background: rgba(255,255,255,0.06);
+        }
+
+        .header-link.edit-active {
+            color: #fff;
+            border-color: var(--accent);
+            background: rgba(255,112,67,0.15);
+        }
+
+        #auth-badge {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            background: rgba(255,112,67,0.15);
+            border: 1px solid rgba(255,112,67,0.4);
+            color: var(--accent);
+        }
+
+        #auth-badge.show { display: flex; }
+
+        #signout-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.4);
+            font-size: 11px;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        #signout-btn:hover { color: rgba(255,255,255,0.7); }
+
+        /* ── 탭 ── */
         .tabs {
             display: flex;
-            gap: 0;
+            padding: 0 16px;
+            gap: 2px;
             overflow-x: auto;
         }
 
+        .tabs::-webkit-scrollbar { display: none; }
+
         .tab {
-            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 11px 16px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
-            color: #666;
+            color: rgba(255,255,255,0.5);
             border-bottom: 2px solid transparent;
             transition: all 0.15s;
             white-space: nowrap;
             user-select: none;
+            border-radius: 6px 6px 0 0;
         }
 
-        .tab:hover { color: #333; background: #f8f8f8; }
-        .tab.active { color: #1a73e8; border-bottom-color: #1a73e8; }
+        .tab:hover {
+            color: rgba(255,255,255,0.85);
+            background: var(--tab-hover);
+        }
 
+        .tab.active {
+            color: #fff;
+            border-bottom-color: var(--accent);
+            background: rgba(255,112,67,0.1);
+        }
+
+        .tab-icon { font-size: 15px; }
+
+        /* ── 콘텐츠 ── */
         .content {
             flex: 1;
             position: relative;
             overflow: hidden;
+            background: #fff;
         }
 
         .sheet-frame {
@@ -76,11 +186,11 @@
             width: 100%;
             height: 100%;
             border: none;
-            background: #fff;
         }
 
         .sheet-frame.active { display: block; }
 
+        /* ── 로딩 ── */
         .loading {
             position: absolute;
             inset: 0;
@@ -88,39 +198,69 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            gap: 12px;
-            color: #888;
-            font-size: 14px;
-            pointer-events: none;
+            gap: 14px;
+            background: #fff;
+            z-index: 10;
+        }
+
+        .loading-icon {
+            font-size: 36px;
+            animation: bounce 1s ease-in-out infinite alternate;
+        }
+
+        .loading-text {
+            font-size: 13px;
+            color: #aaa;
+            font-weight: 500;
         }
 
         .spinner {
-            width: 28px;
-            height: 28px;
-            border: 3px solid #e0e0e0;
-            border-top-color: #1a73e8;
+            width: 32px;
+            height: 32px;
+            border: 3px solid #f0f0f0;
+            border-top-color: var(--accent);
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            animation: spin 0.75s linear infinite;
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to   { transform: translateY(-6px); }
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <span class="site-title">구슬요모아보기</span>
-        <div class="divider"></div>
+        <div class="header-top">
+            <div class="logo">
+                <div class="logo-icon">🫧</div>
+                <span class="logo-text">구슬요모아보기<span class="logo-sub">BEADYO</span></span>
+            </div>
+            <div class="header-links">
+                <a class="header-link" href="https://www.youtube.com/@beadyo" target="_blank">▶ 유튜브</a>
+                <a class="header-link" href="https://chzzk.naver.com" target="_blank">📡 방송국</a>
+                <span id="auth-badge">✏️ 편집 모드 <button id="signout-btn" onclick="signOut()">로그아웃</button></span>
+                <button class="header-link" id="login-btn" onclick="signIn()">🔑 편집자 로그인</button>
+            </div>
+        </div>
         <div class="tabs">
-            <div class="tab active" onclick="switchTab(0)">BEADYO SCHEDULE</div>
-            <div class="tab" onclick="switchTab(1)">BEADYO LIVE SONG LIST</div>
-            <div class="tab" onclick="switchTab(2)">BEADYO 노래책</div>
+            <div class="tab active" onclick="switchTab(0)">
+                <span class="tab-icon">📅</span> SCHEDULE
+            </div>
+            <div class="tab" onclick="switchTab(1)">
+                <span class="tab-icon">🎵</span> LIVE SONG LIST
+            </div>
+            <div class="tab" onclick="switchTab(2)">
+                <span class="tab-icon">📖</span> 노래책
+            </div>
         </div>
     </div>
 
     <div class="content">
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <span>불러오는 중...</span>
+            <span class="loading-text">불러오는 중...</span>
         </div>
 
         <iframe
@@ -142,25 +282,107 @@
     </div>
 
     <script>
-        let loaded = new Set([]);
+        // ── Google OAuth Client ID ──
+        // Google Cloud Console > API 및 서비스 > 사용자 인증 정보에서 발급
+        // 발급 후 아래 값을 교체하세요
+        const CLIENT_ID = '948358808520-02q5ea2leevvs5ck4ncjg5283nrob2o1.apps.googleusercontent.com';
+
+        const SHEETS = [
+            { id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM', gid: '2063088341' },
+            { id: '1bIhxhHDU_Ig5IuDrS4WvPtMVsiVWHnDvm6dU3E3Q8Mo', gid: '1545541300' },
+            { id: '1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw', gid: '1451717792' }
+        ];
+
+        const readOnlyUrl = s =>
+            `https://docs.google.com/spreadsheets/d/${s.id}/htmlview?gid=${s.gid}&embedded=true`;
+        const editUrl = s =>
+            `https://docs.google.com/spreadsheets/d/${s.id}/edit?rm=minimal#gid=${s.gid}`;
+
+        const loaded = new Set();
+        let tokenClient = null;
+        let accessToken = null;
 
         function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
+            const el = document.getElementById('loading');
+            if (el) el.style.display = 'none';
         }
 
         function switchTab(index) {
-            document.querySelectorAll('.tab').forEach((t, i) => {
-                t.classList.toggle('active', i === index);
-            });
-            document.querySelectorAll('.sheet-frame').forEach((f, i) => {
-                f.classList.toggle('active', i === index);
-            });
+            document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
+            document.querySelectorAll('.sheet-frame').forEach((f, i) => f.classList.toggle('active', i === index));
 
             if (!loaded.has(index)) {
                 document.getElementById('loading').style.display = 'flex';
                 document.getElementById(`frame-${index}`).onload = hideLoading;
                 loaded.add(index);
             }
+        }
+
+        // ── 구글 로그인 ──
+        function signIn() {
+            if (!tokenClient) {
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: CLIENT_ID,
+                    scope: 'https://www.googleapis.com/auth/drive.metadata.readonly',
+                    callback: handleToken,
+                });
+            }
+            tokenClient.requestAccessToken({ prompt: '' });
+        }
+
+        async function handleToken(resp) {
+            if (resp.error) return;
+            accessToken = resp.access_token;
+            await applyEditMode();
+        }
+
+        async function checkCanEdit(sheetId) {
+            try {
+                const res = await fetch(
+                    `https://www.googleapis.com/drive/v3/files/${sheetId}?fields=capabilities(canEdit)`,
+                    { headers: { Authorization: `Bearer ${accessToken}` } }
+                );
+                const data = await res.json();
+                return data.capabilities?.canEdit === true;
+            } catch {
+                return false;
+            }
+        }
+
+        async function applyEditMode() {
+            const results = await Promise.all(SHEETS.map(s => checkCanEdit(s.id)));
+            const hasAnyEdit = results.some(Boolean);
+
+            SHEETS.forEach((sheet, i) => {
+                const frame = document.getElementById(`frame-${i}`);
+                const url = results[i] ? editUrl(sheet) : readOnlyUrl(sheet);
+                if (frame.src !== url) {
+                    loaded.delete(i);
+                    frame.src = url;
+                }
+            });
+
+            if (hasAnyEdit) {
+                document.getElementById('login-btn').style.display = 'none';
+                document.getElementById('auth-badge').classList.add('show');
+            } else {
+                // 로그인했지만 편집 권한 없음 → 그냥 조용히 무시
+                accessToken = null;
+            }
+        }
+
+        function signOut() {
+            if (accessToken) {
+                google.accounts.oauth2.revoke(accessToken, () => {});
+                accessToken = null;
+            }
+            SHEETS.forEach((sheet, i) => {
+                const frame = document.getElementById(`frame-${i}`);
+                loaded.delete(i);
+                frame.src = readOnlyUrl(sheet);
+            });
+            document.getElementById('auth-badge').classList.remove('show');
+            document.getElementById('login-btn').style.display = '';
         }
     </script>
 </body>
