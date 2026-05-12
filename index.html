@@ -42,6 +42,7 @@
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .header-top {
@@ -56,11 +57,17 @@
         }
 
         .logo-text {
-            font-size: 22px;
+            font-size: 39px;
             font-weight: 700;
             color: #fff;
             letter-spacing: 2px;
             text-align: center;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .header-links {
@@ -278,12 +285,26 @@
                 gap: 0;
             }
 
-            .logo-text {
+            .logo-group {
                 position: absolute;
                 left: 50%;
                 transform: translateX(-50%);
-                font-size: 24px;
+                gap: 14px;
+            }
+
+            .logo-text {
+                font-size: 41px;
                 letter-spacing: 4px;
+            }
+
+            .live-badge {
+                padding: 7px 14px;
+                font-size: 13px;
+            }
+
+            .live-dot {
+                width: 8px;
+                height: 8px;
             }
 
             .header-links {
@@ -318,7 +339,7 @@
             }
 
             .logo-text {
-                font-size: 18px;
+                font-size: 35px;
                 letter-spacing: 2px;
             }
 
@@ -386,8 +407,6 @@
         .mobile-fab:hover { opacity: 0.85; }
 
         /* ── 퀵메뉴 ── */
-        .header { position: relative; }
-
         .quick-menu-btn {
             background: rgba(0,0,0,0.15);
             border: 1px solid rgba(255,255,255,0.35);
@@ -682,14 +701,18 @@
 <body>
     <div class="header">
         <div class="header-top">
-            <span class="logo-text">BEADYO</span>
-            <div class="header-links">
-                <a class="header-link desktop-only" href="https://www.youtube.com/@beadyo" target="_blank"><img src="https://www.youtube.com/yts/img/favicon_144-vfliLAfaB.png" width="13" height="13" style="border-radius:3px"> 구튜브</a>
-                <a class="header-link desktop-only" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank"><img src="https://www.sooplive.com/favicon.ico" width="13" height="13" style="border-radius:3px"> 구슬요</a>
-                <a class="header-link desktop-only" href="https://cafe.naver.com/beadyo" target="_blank"><img src="https://cafe.naver.com/favicon.ico" width="13" height="13" style="border-radius:3px"> 떼굴떼굴카페</a>
+            <div class="logo-group">
+                <span class="logo-text">BEADYO</span>
                 <a class="live-badge" id="live-badge" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank"><span class="live-dot"></span>LIVE</a>
+            </div>
+            <div class="header-links">
+                <a class="header-link desktop-only" href="https://www.youtube.com/@beadyo" target="_blank"><svg width="13" height="13" viewBox="0 0 24 24" style="border-radius:3px;flex-shrink:0"><path fill="#FF0000" d="M21.8 8s-.2-1.3-.8-1.9c-.6-.7-1.3-.7-1.6-.7C17.2 5.3 12 5.3 12 5.3s-5.2 0-7.4.1c-.3 0-1 0-1.6.7C2.4 6.7 2.2 8 2.2 8S2 9.5 2 11v1.4c0 1.5.2 3 .2 3s.2 1.3.8 1.9c.6.7 1.5.6 1.8.7C6 18.1 12 18.1 12 18.1s5.2 0 7.4-.2c.3 0 1-.1 1.6-.7.6-.6.8-1.9.8-1.9s.2-1.5.2-3V11c0-1.5-.2-3-.2-3zM10 14.6V9.4l5.2 2.6-5.2 2.6z"/></svg> 구튜브</a>
+                <a class="header-link desktop-only" href="https://www.youtube.com/@beadyoo/shorts" target="_blank"><svg width="13" height="13" viewBox="0 0 24 24" style="border-radius:3px;flex-shrink:0"><path fill="#FF0000" d="M21.8 8s-.2-1.3-.8-1.9c-.6-.7-1.3-.7-1.6-.7C17.2 5.3 12 5.3 12 5.3s-5.2 0-7.4.1c-.3 0-1 0-1.6.7C2.4 6.7 2.2 8 2.2 8S2 9.5 2 11v1.4c0 1.5.2 3 .2 3s.2 1.3.8 1.9c.6.7 1.5.6 1.8.7C6 18.1 12 18.1 12 18.1s5.2 0 7.4-.2c.3 0 1-.1 1.6-.7.6-.6.8-1.9.8-1.9s.2-1.5.2-3V11c0-1.5-.2-3-.2-3zM10 14.6V9.4l5.2 2.6-5.2 2.6z"/></svg> 마마마</a>
+                <a class="header-link desktop-only" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank"><img src="soop-icon.ico" width="13" height="13" style="border-radius:3px"> 구슬요</a>
+                <a class="header-link desktop-only" href="https://cafe.naver.com/beadyo" target="_blank"><img src="naver-icon.ico" width="13" height="13" style="border-radius:3px"> 떼굴떼굴카페</a>
                 <span id="auth-badge">✏️ 편집 모드 <button id="signout-btn" onclick="signOut()">로그아웃</button></span>
                 <button class="header-link desktop-only login-btn" onclick="openLoginModal()">로그인</button>
+                <button class="header-link desktop-only" id="mobile-restore-btn" onclick="viewMobile()" style="display:none">← 모바일</button>
                 <button class="quick-menu-btn mobile-only" id="quick-menu-toggle" onclick="toggleQuickMenu()">☰</button>
             </div>
         </div>
@@ -760,17 +783,21 @@
         <div class="qm-section">
             <div class="qm-section-label">바로가기</div>
             <div class="qm-section-card">
-                <div class="qm-grid-3">
+                <div class="qm-grid">
                     <a class="qm-item" href="https://www.youtube.com/@beadyo" target="_blank" onclick="closeQuickMenu()">
-                        <img src="https://www.youtube.com/yts/img/favicon_144-vfliLAfaB.png">
+                        <svg viewBox="0 0 24 24" style="border-radius:7px;flex-shrink:0"><path fill="#FF0000" d="M21.8 8s-.2-1.3-.8-1.9c-.6-.7-1.3-.7-1.6-.7C17.2 5.3 12 5.3 12 5.3s-5.2 0-7.4.1c-.3 0-1 0-1.6.7C2.4 6.7 2.2 8 2.2 8S2 9.5 2 11v1.4c0 1.5.2 3 .2 3s.2 1.3.8 1.9c.6.7 1.5.6 1.8.7C6 18.1 12 18.1 12 18.1s5.2 0 7.4-.2c.3 0 1-.1 1.6-.7.6-.6.8-1.9.8-1.9s.2-1.5.2-3V11c0-1.5-.2-3-.2-3zM10 14.6V9.4l5.2 2.6-5.2 2.6z"/></svg>
                         구튜브
                     </a>
+                    <a class="qm-item" href="https://www.youtube.com/@beadyoo/shorts" target="_blank" onclick="closeQuickMenu()">
+                        <svg viewBox="0 0 24 24" style="border-radius:7px;flex-shrink:0"><path fill="#FF0000" d="M21.8 8s-.2-1.3-.8-1.9c-.6-.7-1.3-.7-1.6-.7C17.2 5.3 12 5.3 12 5.3s-5.2 0-7.4.1c-.3 0-1 0-1.6.7C2.4 6.7 2.2 8 2.2 8S2 9.5 2 11v1.4c0 1.5.2 3 .2 3s.2 1.3.8 1.9c.6.7 1.5.6 1.8.7C6 18.1 12 18.1 12 18.1s5.2 0 7.4-.2c.3 0 1-.1 1.6-.7.6-.6.8-1.9.8-1.9s.2-1.5.2-3V11c0-1.5-.2-3-.2-3zM10 14.6V9.4l5.2 2.6-5.2 2.6z"/></svg>
+                        마마마
+                    </a>
                     <a class="qm-item" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank" onclick="closeQuickMenu()">
-                        <img src="https://www.sooplive.com/favicon.ico">
+                        <img src="soop-icon.ico">
                         구슬요
                     </a>
                     <a class="qm-item" href="https://cafe.naver.com/beadyo" target="_blank" onclick="closeQuickMenu()">
-                        <img src="https://cafe.naver.com/favicon.ico">
+                        <img src="naver-icon.ico">
                         떼굴떼굴카페
                     </a>
                 </div>
@@ -784,7 +811,7 @@
             <span class="loading-text loading-dots">대기 중</span>
         </div>
 
-        <iframe class="sheet-frame active" id="frame-0" onload="hideLoading()"></iframe>
+        <iframe class="sheet-frame active" id="frame-0" onload="hideLoading(0)"></iframe>
         <iframe class="sheet-frame" id="frame-1"></iframe>
         <iframe class="sheet-frame" id="frame-2"></iframe>
     </div>
@@ -810,7 +837,7 @@
         let tokenClient = null;
         let accessToken = null;
 
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const isMobile = window.matchMedia('(max-width: 640px)').matches;
 
         function getFrameUrl(index) {
             const sheet = SHEETS[index];
@@ -868,6 +895,9 @@
 
         checkLiveStatus();
         setInterval(checkLiveStatus, 5 * 60 * 1000);
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') checkLiveStatus();
+        });
 
         // ── 로그인 모달 ──
         function openLoginModal() {
@@ -901,10 +931,17 @@
             document.querySelector('meta[name=viewport]').content = 'width=1200';
             localStorage.setItem('desktopView', '1');
             closeQuickMenu();
+            document.getElementById('mobile-restore-btn').style.display = '';
+        }
+
+        function viewMobile() {
+            localStorage.removeItem('desktopView');
+            location.reload();
         }
 
         if (localStorage.getItem('desktopView') === '1') {
             document.querySelector('meta[name=viewport]').content = 'width=1200';
+            document.getElementById('mobile-restore-btn').style.display = '';
         }
 
         // ── 구글 로그인 ──
@@ -912,7 +949,7 @@
             if (!tokenClient) {
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: CLIENT_ID,
-                    scope: 'https://www.googleapis.com/auth/drive.metadata.readonly',
+                    scope: 'email profile https://www.googleapis.com/auth/drive.metadata.readonly',
                     callback: handleToken,
                 });
             }
@@ -922,7 +959,27 @@
         async function handleToken(resp) {
             if (resp.error) return;
             accessToken = resp.access_token;
-            await applyEditMode();
+            if (resp.expires_in) setTimeout(() => { accessToken = null; }, (resp.expires_in - 60) * 1000);
+
+            // 유저 이름 가져오기
+            let displayName = '편집자';
+            try {
+                const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo',
+                    { headers: { Authorization: `Bearer ${accessToken}` } });
+                const user = await res.json();
+                displayName = user.name || user.email || '편집자';
+            } catch {}
+
+            // 로그인 성공 표시
+            document.getElementById('auth-badge').innerHTML =
+                `✏️ ${displayName} <button id="signout-btn" onclick="signOut()">로그아웃</button>`;
+            document.querySelectorAll('.login-btn').forEach(b => b.style.display = 'none');
+            document.getElementById('auth-badge').classList.add('show');
+            closeQuickMenu();
+            closeLoginModal();
+
+            // iframe URL 갱신 (편집 권한 있으면 edit 모드, 없어도 alwaysEdit이라 무관)
+            applyEditMode();
         }
 
         async function checkCanEdit(sheetId) {
@@ -940,8 +997,6 @@
 
         async function applyEditMode() {
             const results = await Promise.all(SHEETS.map(s => checkCanEdit(s.id)));
-            const hasAnyEdit = results.some(Boolean);
-
             SHEETS.forEach((sheet, i) => {
                 const frame = document.getElementById(`frame-${i}`);
                 const url = (results[i] || sheet.alwaysEdit) ? editUrl(sheet) : readOnlyUrl(sheet);
@@ -950,16 +1005,6 @@
                     frame.src = url;
                 }
             });
-
-            if (hasAnyEdit) {
-                document.querySelectorAll('.login-btn').forEach(b => b.style.display = 'none');
-                document.getElementById('auth-badge').classList.add('show');
-                closeQuickMenu();
-                closeLoginModal();
-            } else {
-                // 로그인했지만 편집 권한 없음 → 그냥 조용히 무시
-                accessToken = null;
-            }
         }
 
         function signOut() {
