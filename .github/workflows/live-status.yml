@@ -13,47 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch SOOP live status
-        run: |
-          RESPONSE=$(curl -s --max-time 10 \
-            -X POST \
-            -d "bid=beadyo97" \
-            -H "Referer: https://play.sooplive.com/" \
-            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
-            "https://live.sooplive.com/afreeca/player_live_api.php" 2>/dev/null)
-
-          if [ -z "$RESPONSE" ]; then
-            echo "API 응답 없음, 종료"
-            exit 0
-          fi
-
-          IS_LIVE=$(echo "$RESPONSE" | python3 -c "
-import sys, json
-try:
-    d = json.load(sys.stdin)
-    ch = d.get('CHANNEL', {})
-    bno = ch.get('BNO')
-    print('true' if bno else 'false')
-except Exception as e:
-    sys.stderr.write(str(e) + '\n')
-    print('false')
-")
-
-          TITLE=$(echo "$RESPONSE" | python3 -c "
-import sys, json
-try:
-    d = json.load(sys.stdin)
-    ch = d.get('CHANNEL', {})
-    t = (ch.get('TITLE') or '').strip()
-    print(json.dumps(t))
-except:
-    print('\"\"')
-" 2>/dev/null || echo '""')
-
-          UPDATED=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          printf '{"live":%s,"title":%s,"updated":"%s"}\n' "$IS_LIVE" "$TITLE" "$UPDATED" > live.json
-          echo "live=$IS_LIVE, title=$TITLE"
+        run: python3 .github/scripts/check_live.py
 
       - name: Commit if changed
         run: |
