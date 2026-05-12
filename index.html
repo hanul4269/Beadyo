@@ -846,7 +846,7 @@
                 const frame = document.getElementById(`frame-${index}`);
                 document.getElementById('loading').style.display = 'flex';
                 frame.onload = () => hideLoading(index);
-                frame.src = isMobile ? readOnlyUrl(SHEETS[index]) : getFrameUrl(index);
+                frame.src = getFrameUrl(index);
                 loaded.add(index);
             } else {
                 hideLoading(index);
