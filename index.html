@@ -286,35 +286,40 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
             background: #fff;
             z-index: 10;
         }
 
-        .loading-icon {
-            font-size: 36px;
-            animation: bounce 1s ease-in-out infinite alternate;
+        .loading-img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            animation: breathe 1.8s ease-in-out infinite;
         }
 
         .loading-text {
             font-size: 13px;
             color: #aaa;
             font-weight: 500;
+            letter-spacing: 0.5px;
         }
 
-        .spinner {
-            width: 32px;
-            height: 32px;
-            border: 3px solid #f0f0f0;
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.75s linear infinite;
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
         }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to   { transform: translateY(-6px); }
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50%       { transform: scale(1.06); }
+        }
+
+        @keyframes dots {
+            0%   { content: ''; }
+            25%  { content: '.'; }
+            50%  { content: '..'; }
+            75%  { content: '...'; }
         }
     </style>
 </head>
@@ -347,8 +352,8 @@
 
     <div class="content">
         <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <span class="loading-text">불러오는 중...</span>
+            <img class="loading-img" src="loading-img.png" alt="">
+            <span class="loading-text loading-dots">대기 중</span>
         </div>
 
         <iframe class="sheet-frame active" id="frame-0" onload="hideLoading()"></iframe>
