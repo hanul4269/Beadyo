@@ -1,0 +1,66 @@
+name: Update Live Status
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check-live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch SOOP live status
+        run: |
+          RESPONSE=$(curl -s --max-time 10 \
+            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
+            "https://st.sooplive.co.kr/api/get_station.php?szBjId=beadyo97" 2>/dev/null)
+
+          if [ -z "$RESPONSE" ]; then
+            echo "API 응답 없음, 기존 상태 유지"
+            exit 0
+          fi
+
+          python3 - <<'PYEOF'
+import json, os, sys
+from datetime import datetime, timezone
+
+raw = os.popen('curl -s --max-time 10 -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" "https://st.sooplive.co.kr/api/get_station.php?szBjId=beadyo97"').read()
+
+try:
+    d = json.loads(raw)
+    data = d.get('DATA', {})
+    title = (data.get('station_title') or '').strip()
+    broad_no = (data.get('broad_no') or '').strip()
+    is_live = bool(title or broad_no)
+except Exception:
+    print("파싱 실패, 종료")
+    sys.exit(0)
+
+result = {
+    "live": is_live,
+    "title": title,
+    "updated": datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+}
+
+with open('live.json', 'w', encoding='utf-8') as f:
+    json.dump(result, f, ensure_ascii=False)
+
+print(f"live={is_live}, title={title!r}")
+PYEOF
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add live.json
+          if git diff --cached --quiet; then
+            echo "상태 변화 없음"
+          else
+            git commit -m "chore: update live status"
+            git push
+          fi
