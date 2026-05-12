@@ -3,6 +3,8 @@ name: Update Live Status
 on:
   schedule:
     - cron: '*/5 * * * *'
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
