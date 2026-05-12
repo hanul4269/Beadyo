@@ -242,8 +242,13 @@
             opacity: 1;
         }
 
+        .desktop-only { display: none; }
+        .mobile-only  { display: inline-flex; }
+
         /* ── 데스크탑 ── */
         @media (min-width: 641px) {
+            .desktop-only { display: inline-flex; align-items: center; }
+            .mobile-only  { display: none !important; }
             .header-top {
                 flex-direction: row;
                 justify-content: space-between;
@@ -549,9 +554,13 @@
         <div class="header-top">
             <span class="logo-text">BEADYO</span>
             <div class="header-links">
+                <a class="header-link desktop-only" href="https://www.youtube.com/@beadyo" target="_blank"><img src="https://www.youtube.com/yts/img/favicon_144-vfliLAfaB.png" width="13" height="13" style="border-radius:3px"> 구튜브</a>
+                <a class="header-link desktop-only" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank"><img src="https://www.sooplive.com/favicon.ico" width="13" height="13" style="border-radius:3px"> 구슬요</a>
+                <a class="header-link desktop-only" href="https://cafe.naver.com/beadyo" target="_blank"><img src="https://cafe.naver.com/favicon.ico" width="13" height="13" style="border-radius:3px"> 네이버카페</a>
                 <a class="live-badge" id="live-badge" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank"><span class="live-dot"></span>LIVE</a>
                 <span id="auth-badge">✏️ 편집 모드 <button id="signout-btn" onclick="signOut()">로그아웃</button></span>
-                <button class="quick-menu-btn" id="quick-menu-toggle" onclick="toggleQuickMenu()">☰</button>
+                <button class="header-link desktop-only login-btn" onclick="signIn()">로그인</button>
+                <button class="quick-menu-btn mobile-only" id="quick-menu-toggle" onclick="toggleQuickMenu()">☰</button>
             </div>
         </div>
         <div class="tabs">
@@ -577,7 +586,7 @@
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
                     PC버전
                 </button>
-                <button class="qm-header-btn" id="login-btn" onclick="signIn(); closeQuickMenu()">
+                <button class="qm-header-btn login-btn" onclick="signIn(); closeQuickMenu()">
                     <img src="login-icon.png" width="13" height="13" style="border-radius:50%"> 로그인
                 </button>
             </div>
@@ -785,7 +794,7 @@
             });
 
             if (hasAnyEdit) {
-                document.getElementById('login-btn').style.display = 'none';
+                document.querySelectorAll('.login-btn').forEach(b => b.style.display = 'none');
                 document.getElementById('auth-badge').classList.add('show');
                 closeQuickMenu();
             } else {
@@ -805,7 +814,7 @@
                 frame.src = sheet.alwaysEdit ? editUrl(sheet) : readOnlyUrl(sheet);
             });
             document.getElementById('auth-badge').classList.remove('show');
-            document.getElementById('login-btn').style.display = '';
+            document.querySelectorAll('.login-btn').forEach(b => b.style.display = '');
         }
     </script>
 
