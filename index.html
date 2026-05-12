@@ -871,7 +871,7 @@
 
         function getFrameUrl(index) {
             const sheet = SHEETS[index];
-            if (accessToken || (!isMobile && sheet.alwaysEdit)) return editUrl(sheet);
+            if (accessToken || sheet.alwaysEdit) return editUrl(sheet);
             return readOnlyUrl(sheet);
         }
 
