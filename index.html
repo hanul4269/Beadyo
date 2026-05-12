@@ -110,11 +110,11 @@
 
         #auth-badge {
             display: none;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
-            gap: 2px;
-            padding: 5px 12px;
-            border-radius: 12px;
+            gap: 6px;
+            padding: 4px 10px 4px 4px;
+            border-radius: 20px;
             font-size: 11px;
             font-weight: 500;
             background: rgba(139,195,74,0.15);
@@ -961,18 +961,20 @@
             accessToken = resp.access_token;
             if (resp.expires_in) setTimeout(() => { accessToken = null; }, (resp.expires_in - 60) * 1000);
 
-            // 유저 이름 가져오기
+            // 유저 정보 가져오기
             let displayName = '편집자';
+            let profilePic = '';
             try {
                 const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo',
                     { headers: { Authorization: `Bearer ${accessToken}` } });
                 const user = await res.json();
                 displayName = user.name || user.email || '편집자';
+                if (user.picture) profilePic = `<img src="${user.picture}" width="24" height="24" style="border-radius:50%;flex-shrink:0">`;
             } catch {}
 
             // 로그인 성공 표시
             document.getElementById('auth-badge').innerHTML =
-                `✏️ ${displayName} <button id="signout-btn" onclick="signOut()">로그아웃</button>`;
+                `${profilePic}<span>${displayName}</span><button id="signout-btn" onclick="signOut()">로그아웃</button>`;
             document.querySelectorAll('.login-btn').forEach(b => b.style.display = 'none');
             document.getElementById('auth-badge').classList.add('show');
             closeQuickMenu();
