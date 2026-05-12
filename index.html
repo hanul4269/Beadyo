@@ -363,6 +363,12 @@
 
         /* ── 모바일 반응형 ── */
         @media (max-width: 640px) {
+            /* #top-bar(margin-top:57px+height:7px)를 overflow:hidden으로 잘라냄 */
+            .sheet-frame {
+                top: -70px;
+                height: calc(100% + 70px);
+            }
+
             .header-top {
                 padding: 10px 12px 8px;
                 gap: 6px;
