@@ -200,6 +200,60 @@
 
         .sheet-frame.active { display: block; }
 
+        /* ── 모바일 반응형 ── */
+        @media (max-width: 640px) {
+            .header-top {
+                padding: 8px 12px;
+            }
+
+            .logo-icon {
+                width: 28px;
+                height: 28px;
+                border-radius: 6px;
+                overflow: hidden;
+            }
+
+            .logo-icon img {
+                width: 28px !important;
+                height: 28px !important;
+            }
+
+            .logo-text {
+                font-size: 13px;
+                white-space: nowrap;
+            }
+
+            .logo-sub { display: none; }
+
+            .header-links { gap: 4px; }
+
+            .header-link {
+                padding: 5px 9px;
+                font-size: 11px;
+                gap: 4px;
+            }
+
+            .header-link img {
+                width: 12px !important;
+                height: 12px !important;
+            }
+
+            .login-label { display: none; }
+
+            #auth-badge {
+                font-size: 10px;
+                padding: 4px 8px;
+            }
+
+            .tabs { padding: 0 8px; }
+
+            .tab {
+                padding: 10px 10px;
+                font-size: 12px;
+                gap: 5px;
+            }
+        }
+
         /* ── 모바일 플로팅 버튼 ── */
         .mobile-fab {
             display: none;
@@ -275,7 +329,7 @@
                 <a class="header-link" href="https://www.youtube.com/@beadyo" target="_blank"><img src="https://www.youtube.com/yts/img/favicon_144-vfliLAfaB.png" width="14" height="14" style="border-radius:3px;margin-top:2px"> 유튜브</a>
                 <a class="header-link" href="https://chzzk.naver.com" target="_blank"><img src="https://www.sooplive.com/favicon.ico" width="14" height="14" style="border-radius:3px;margin-top:2px"> 방송국</a>
                 <span id="auth-badge">✏️ 편집 모드 <button id="signout-btn" onclick="signOut()">로그아웃</button></span>
-                <button class="header-link" id="login-btn" onclick="signIn()"><img src="login-icon.png" width="18" height="18" style="border-radius:50%;margin-top:2px"> 편집자 로그인</button>
+                <button class="header-link" id="login-btn" onclick="signIn()"><img src="login-icon.png" width="18" height="18" style="border-radius:50%;margin-top:2px"> <span class="login-label">편집자 로그인</span></button>
             </div>
         </div>
         <div class="tabs">
