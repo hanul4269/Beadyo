@@ -273,22 +273,9 @@
             <span class="loading-text">불러오는 중...</span>
         </div>
 
-        <iframe
-            class="sheet-frame active"
-            id="frame-0"
-            src="https://docs.google.com/spreadsheets/d/1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM/htmlview?gid=2063088341&embedded=true"
-            onload="hideLoading()">
-        </iframe>
-        <iframe
-            class="sheet-frame"
-            id="frame-1"
-            src="https://docs.google.com/spreadsheets/d/1bIhxhHDU_Ig5IuDrS4WvPtMVsiVWHnDvm6dU3E3Q8Mo/edit?rm=minimal#gid=1545541300">
-        </iframe>
-        <iframe
-            class="sheet-frame"
-            id="frame-2"
-            src="https://docs.google.com/spreadsheets/d/1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw/edit?rm=minimal#gid=1451717792">
-        </iframe>
+        <iframe class="sheet-frame active" id="frame-0" onload="hideLoading()"></iframe>
+        <iframe class="sheet-frame" id="frame-1"></iframe>
+        <iframe class="sheet-frame" id="frame-2"></iframe>
     </div>
 
     <script>
@@ -312,6 +299,11 @@
         let tokenClient = null;
         let accessToken = null;
 
+        function getFrameUrl(index) {
+            const sheet = SHEETS[index];
+            return (sheet.alwaysEdit) ? editUrl(sheet) : readOnlyUrl(sheet);
+        }
+
         function hideLoading() {
             const el = document.getElementById('loading');
             if (el) el.style.display = 'none';
@@ -322,11 +314,16 @@
             document.querySelectorAll('.sheet-frame').forEach((f, i) => f.classList.toggle('active', i === index));
 
             if (!loaded.has(index)) {
+                const frame = document.getElementById(`frame-${index}`);
                 document.getElementById('loading').style.display = 'flex';
-                document.getElementById(`frame-${index}`).onload = hideLoading;
+                frame.onload = hideLoading;
+                frame.src = getFrameUrl(index);
                 loaded.add(index);
             }
         }
+
+        // 첫 탭 초기 로드
+        switchTab(0);
 
         // ── 구글 로그인 ──
         function signIn() {
