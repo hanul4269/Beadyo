@@ -242,6 +242,44 @@
             opacity: 1;
         }
 
+        /* ── 데스크탑 ── */
+        @media (min-width: 641px) {
+            .header-top {
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 0 32px;
+                height: 56px;
+                gap: 0;
+            }
+
+            .logo-text {
+                font-size: 20px;
+                letter-spacing: 3px;
+            }
+
+            .header-links {
+                justify-content: flex-end;
+                flex-wrap: nowrap;
+            }
+
+            .tabs {
+                padding: 0 24px;
+            }
+
+            .tab {
+                padding: 12px 20px;
+                font-size: 13px;
+            }
+
+            .quick-menu-panel {
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                width: 420px;
+                border-radius: 22px 22px 0 0;
+            }
+        }
+
         /* ── 모바일 반응형 ── */
         @media (max-width: 640px) {
             .header-top {
