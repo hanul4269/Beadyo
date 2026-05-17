@@ -1106,6 +1106,10 @@
         function updateMobileFab(index) {
             const fab = document.getElementById('mobile-fab');
             if (!isMobile) return;
+            if (TABS[index].type === 'calendar') {
+                fab.classList.remove('show');
+                return;
+            }
             fab.classList.add('show');
             fab.href = getSheetDirectUrl(index);
         }
