@@ -1076,7 +1076,9 @@
             `https://docs.google.com/spreadsheets/d/${s.id}/edit?rm=minimal#gid=${s.gid}`;
 
         const loaded = new Set();
-        const authDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const authDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { detectSessionInUrl: false }
+        });
         let authUser = null;
 
         const isMobile = window.matchMedia('(max-width: 640px)').matches;
@@ -1277,22 +1279,50 @@
         } catch {}
 
         async function initAuth() {
-            // 이벤트 누락 방지를 위해 리스너를 먼저 등록
             authDb.auth.onAuthStateChange((_event, session) => {
                 authUser = session?.user ?? null;
                 updateAuthUI();
                 syncCalendarAuth();
             });
 
-            // OAuth 리다이렉트 후 URL 파라미터 정리 (시각적 목적)
-            const currentUrl = new URL(window.location.href);
-            if (currentUrl.searchParams.has('code')) {
-                currentUrl.searchParams.delete('code');
-                currentUrl.searchParams.delete('state');
-                history.replaceState({}, document.title, currentUrl.pathname + currentUrl.search + currentUrl.hash);
+            // Implicit flow: #access_token= 해시 처리
+            const hash = window.location.hash.substring(1);
+            if (hash.includes('access_token=')) {
+                const params = new URLSearchParams(hash);
+                const accessToken = params.get('access_token');
+                const refreshToken = params.get('refresh_token') || '';
+                if (accessToken) {
+                    history.replaceState({}, document.title, window.location.pathname);
+                    const { data, error } = await authDb.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+                    if (error) {
+                        console.error('setSession error:', error.message, error);
+                    } else if (data.session) {
+                        authUser = data.session.user ?? null;
+                        updateAuthUI();
+                        syncCalendarAuth();
+                        return;
+                    }
+                }
             }
 
-            // getSession()은 내부적으로 detectSessionInUrl 교환 완료까지 대기
+            // PKCE flow: ?code= 쿼리 처리
+            const currentUrl = new URL(window.location.href);
+            const authCode = currentUrl.searchParams.get('code');
+            if (authCode) {
+                currentUrl.searchParams.delete('code');
+                currentUrl.searchParams.delete('state');
+                history.replaceState({}, document.title, currentUrl.pathname + currentUrl.search);
+                const { data, error } = await authDb.auth.exchangeCodeForSession(authCode);
+                if (error) {
+                    console.error('exchangeCodeForSession error:', error.message, error);
+                } else if (data.session) {
+                    authUser = data.session.user ?? null;
+                    updateAuthUI();
+                    syncCalendarAuth();
+                    return;
+                }
+            }
+
             const { data: { session } } = await authDb.auth.getSession();
             authUser = session?.user ?? null;
             updateAuthUI();
