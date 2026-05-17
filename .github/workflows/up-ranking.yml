@@ -38,11 +38,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/hanul4269/Beadyo.git
+          cp up.json /tmp/up_new.json
+          git pull --rebase origin main
+          cp /tmp/up_new.json up.json
           git add up.json
           if git diff --cached --quiet; then
             echo "No change"
           else
             git commit -m "chore: update UP ranking"
-            git pull --rebase origin main
             git push origin main
           fi
