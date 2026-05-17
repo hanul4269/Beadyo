@@ -1133,7 +1133,6 @@
         .memo-tooltip.show { opacity: 1; }
 
         .mobile-schedule-view,
-        .mobile-bottom-nav,
         .mobile-add-fab {
             display: none;
         }
@@ -1206,7 +1205,7 @@
             }
             .mobile-schedule-view {
                 display: block;
-                height: calc(100dvh - 214px);
+                height: calc(100dvh - 146px);
                 padding: 8px 14px 0;
                 overflow-y: auto;
             }
@@ -1311,55 +1310,6 @@
             .is-editor .mobile-add-fab {
                 display: flex;
             }
-            .mobile-bottom-nav {
-                position: fixed;
-                left: 14px;
-                right: 14px;
-                bottom: 10px;
-                z-index: 230;
-                display: flex;
-                align-items: center;
-                justify-content: space-around;
-                height: 58px;
-                background: #fff;
-                border-radius: 30px;
-                box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            }
-            .mobile-bottom-nav button {
-                border: none;
-                background: transparent;
-                color: #666;
-                font-size: 23px;
-                width: 46px;
-                height: 46px;
-                border-radius: 50%;
-                font-weight: 800;
-            }
-            .mobile-bottom-nav .active {
-                color: #ff6074;
-                background: rgba(255,96,116,0.10);
-            }
-            .mobile-bottom-nav .up-nav-btn {
-                color: #7aa53b;
-                font-size: 16px;
-                gap: 2px;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                flex-direction: column;
-                line-height: 1;
-            }
-            .mobile-bottom-nav .up-nav-btn img {
-                width: 18px;
-                height: 18px;
-                object-fit: contain;
-                flex-shrink: 0;
-            }
-            .mobile-bottom-nav .up-nav-btn span:last-child {
-                font-size: 10px;
-                font-weight: 900;
-                letter-spacing: 0.4px;
-            }
         }
     </style>
 </head>
@@ -1405,13 +1355,6 @@
 </div>
 
 <button class="mobile-add-fab" onclick="openAddModal(dateToStr(new Date()))" title="일정 추가">＋</button>
-<nav class="mobile-bottom-nav" aria-label="모바일 메뉴">
-    <button class="active" type="button">▣</button>
-    <button class="up-nav-btn" type="button" onclick="openUpModal()"><img src="stickers/s8.png" alt=""><span>UP</span></button>
-    <button type="button">♪</button>
-    <button type="button">♥</button>
-</nav>
-
 <!-- ─── 보기 모달 ─── -->
 <div class="modal-overlay" id="viewModal" onmousedown="if(event.target===this)closeViewModal()">
     <div class="modal">
