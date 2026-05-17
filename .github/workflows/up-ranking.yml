@@ -14,8 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4.2.2
 
-      - name: Install supabase-py
-        run: python3 -m pip install supabase --quiet
+      - name: Install dependencies
+        run: python3 -m pip install supabase curl_cffi --quiet
 
       - name: Test SOOP API access
         run: |

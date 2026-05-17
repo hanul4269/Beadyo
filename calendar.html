@@ -2194,38 +2194,40 @@ function parseSoopUrl(url) {
 
 async function fetchSoopRankingLive(bjId, postNo) {
     const PROXY = 'https://clever-rhino-36.hanul4269.deno.net';
-    const endpoints = [
-        `${PROXY}?url=${encodeURIComponent(`https://api.m.afreecatv.com/station/board/reply/list?szBjId=${bjId}&nTitleNo=${postNo}&nPageNo=1&nListCnt=200`)}`,
-        `${PROXY}?url=${encodeURIComponent(`https://api.m.sooplive.co.kr/station/board/reply/list?szBjId=${bjId}&nTitleNo=${postNo}&nPageNo=1&nListCnt=200`)}`,
-    ];
-    for (const url of endpoints) {
+    const allItems = [];
+    let page = 1, lastPage = 1;
+    do {
+        const target = `https://api-channel.sooplive.com/v1.1/channel/${bjId}/post/${postNo}/comment?page=${page}&orderBy=reg_date&cCommentNo=0&perPage=100`;
+        const url = `${PROXY}?url=${encodeURIComponent(target)}`;
         try {
-            const resp = await fetch(url, { signal: AbortSignal.timeout(8000) });
-            if (!resp.ok) continue;
+            const resp = await fetch(url, { signal: AbortSignal.timeout(10000) });
+            if (!resp.ok) break;
             const d = await resp.json();
-            if (d.result !== 1 && d.result !== '1' && !d.data) continue;
-            const container = d.data || d;
-            const items = container.list || container.reply_list || [];
-            if (!Array.isArray(items)) continue;
-            const replies = items
-                .filter(it => (it.depth === 0 || it.depth === '0') && (it.parent_no === 0 || it.parent_no === '0'))
-                .map(it => ({
-                    bj_id: String(it.user_id || '').trim(),
-                    name: String(it.user_nick || it.user_id || '').trim(),
-                    profile_url: `https://profile.img.sooplive.co.kr/LOGO/${it.user_id}/${it.user_id}.jpg`,
-                    timestamp: String(it.comment_write_date || it.reg_date || '').trim(),
-                    up_count: parseInt(it.recommend_cnt || it.up_cnt || 0) || 0,
-                    reply_no: String(it.comment_no || it.reply_no || ''),
-                }))
-                .filter(r => r.bj_id);
-            replies.sort((a, b) => b.up_count - a.up_count);
-            replies.forEach((r, i) => r.rank = i + 1);
-            return replies;
+            const items = d.data || [];
+            for (const it of items) {
+                if (it.pCommentNo) {
+                    allItems.push({
+                        bj_id:       String(it.userId || '').trim(),
+                        name:        String(it.userNick || '').trim(),
+                        profile_url: String(it.profileImage || '').trim(),
+                        timestamp:   String(it.regDate || '').trim(),
+                        up_count:    parseInt(it.likeCnt || 0) || 0,
+                        reply_no:    String(it.pCommentNo || ''),
+                    });
+                }
+            }
+            lastPage = (d.meta || {}).lastPage || 1;
         } catch (e) {
             console.log('SOOP fetch error:', e.message);
+            break;
         }
-    }
-    return null;
+        page++;
+    } while (page <= lastPage);
+
+    if (!allItems.length) return null;
+    allItems.sort((a, b) => b.up_count - a.up_count);
+    allItems.forEach((r, i) => r.rank = i + 1);
+    return allItems;
 }
 
 function renderUpModal(data, fetchLive = false) {
