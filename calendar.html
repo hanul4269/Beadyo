@@ -2738,7 +2738,7 @@ document.getElementById('monthLabel').addEventListener('click', () => {
     _labelClicks++;
     clearTimeout(_labelTimer);
     _labelTimer = setTimeout(() => { _labelClicks = 0; }, 1500);
-    if (_labelClicks >= 10) {
+    if (_labelClicks >= 5) {
         _labelClicks = 0;
         launchStickerRain();
     }
