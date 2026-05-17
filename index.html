@@ -17,7 +17,7 @@
     <link rel="preload" href="loading-img.png" as="image">
     <link rel="preload" href="login-icon.png" as="image">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -64,6 +64,20 @@
             color: #fff;
             letter-spacing: 2px;
             text-align: center;
+        }
+
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-mascot {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+            filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+            flex-shrink: 0;
         }
 
         .logo-group {
@@ -297,6 +311,10 @@
             opacity: 1;
         }
 
+        .calendar-frame-host {
+            background: #f5f4f0;
+        }
+
         .desktop-only { display: none; }
         .mobile-only  { display: inline-flex; }
 
@@ -320,6 +338,10 @@
                 flex-direction: row;
                 align-items: center;
                 gap: 14px;
+            }
+
+            .logo-title {
+                gap: 12px;
             }
 
             .logo-text {
@@ -369,6 +391,11 @@
                 height: calc(100% + 70px);
             }
 
+            .calendar-frame-host {
+                top: 0;
+                height: 100%;
+            }
+
             .header-top {
                 padding: 10px 12px 8px;
                 gap: 6px;
@@ -377,6 +404,11 @@
             .logo-text {
                 font-size: 35px;
                 letter-spacing: 2px;
+            }
+
+            .logo-mascot {
+                width: 30px;
+                height: 30px;
             }
 
             .header-links { gap: 5px; }
@@ -729,7 +761,10 @@
     <div class="header">
         <div class="header-top">
             <div class="logo-group">
-                <span class="logo-text">BEADYO</span>
+                <div class="logo-title">
+                    <img src="stickers/kyabuki.gif" class="logo-mascot" alt="">
+                    <span class="logo-text">BEADYO</span>
+                </div>
                 <div class="logo-sub">
                     <a class="live-badge" id="live-badge" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank" rel="noopener noreferrer"><span class="live-dot"></span>LIVE</a>
                     <button class="quick-menu-btn mobile-only" id="quick-menu-toggle" onclick="toggleQuickMenu()">☰</button>
@@ -748,19 +783,23 @@
             </div>
         </div>
         <div class="tabs">
-            <div class="tab active" onclick="switchTab(0)">
-                <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
-                SCHEDULE
-            </div>
-            <div class="tab" onclick="switchTab(1)">
-                <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
-                LIVE SONG LIST
-            </div>
-            <div class="tab" onclick="switchTab(2)">
-                <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
-                SONGBOOK
-            </div>
+        <div class="tab active" onclick="switchTab(0)">
+            <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="14" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="14" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="14" r="1.2" fill="currentColor" stroke="none"/></svg></span>
+            CALENDAR
         </div>
+        <div class="tab" onclick="switchTab(1)">
+            <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+            SCHEDULE
+        </div>
+        <div class="tab" onclick="switchTab(2)">
+            <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
+            LIVE SONG LIST
+        </div>
+        <div class="tab" onclick="switchTab(3)">
+            <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+            SONGBOOK
+        </div>
+    </div>
     </div>
 
     <div class="login-overlay" id="login-overlay" onclick="handleLoginOverlayClick(event)">
@@ -796,14 +835,18 @@
             <div class="qm-section-card">
                 <div class="qm-grid">
                     <button class="qm-item" onclick="switchTab(0); closeQuickMenu()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="14" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="14" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="14" r="1.2" fill="currentColor" stroke="none"/></svg>
+                        CALENDAR
+                    </button>
+                    <button class="qm-item" onclick="switchTab(1); closeQuickMenu()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                         SCHEDULE
                     </button>
-                    <button class="qm-item" onclick="switchTab(1); closeQuickMenu()">
+                    <button class="qm-item" onclick="switchTab(2); closeQuickMenu()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
                         SONG LIST
                     </button>
-                    <button class="qm-item" onclick="switchTab(2); closeQuickMenu()">
+                    <button class="qm-item" onclick="switchTab(3); closeQuickMenu()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                         SONGBOOK
                     </button>
@@ -850,21 +893,21 @@
             <span class="loading-text loading-dots">대기 중</span>
         </div>
 
-        <iframe class="sheet-frame active" id="frame-0" onload="hideLoading(0)"></iframe>
+        <iframe class="sheet-frame calendar-frame-host active" id="frame-0" onload="hideLoading(0)"></iframe>
         <iframe class="sheet-frame" id="frame-1"></iframe>
         <iframe class="sheet-frame" id="frame-2"></iframe>
+        <iframe class="sheet-frame" id="frame-3"></iframe>
     </div>
 
     <script>
-        // ── Google OAuth Client ID ──
-        // Google Cloud Console > API 및 서비스 > 사용자 인증 정보에서 발급
-        // 발급 후 아래 값을 교체하세요
-        const CLIENT_ID = '948358808520-02q5ea2leevvs5ck4ncjg5283nrob2o1.apps.googleusercontent.com';
+        const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsbWN3b2JmbGRnbWh3aHB0a2Z6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1OTMxNTYsImV4cCI6MjA5NDE2OTE1Nn0.-TxiFRxGjlLVgQtOiVG6Lp6Kdh_aO6LV4CZ6l0IFzwA';
 
-        const SHEETS = [
-            { id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM', gid: '2063088341', alwaysEdit: true },
-            { id: '1bIhxhHDU_Ig5IuDrS4WvPtMVsiVWHnDvm6dU3E3Q8Mo', gid: '1545541300', alwaysEdit: true },
-            { id: '1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw', gid: '1451717792', alwaysEdit: true }
+        const TABS = [
+            { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html' },
+            { type: 'sheet', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM', gid: '2063088341', alwaysEdit: true },
+            { type: 'sheet', id: '1bIhxhHDU_Ig5IuDrS4WvPtMVsiVWHnDvm6dU3E3Q8Mo', gid: '1545541300', alwaysEdit: true },
+            { type: 'sheet', id: '1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw', gid: '1451717792', alwaysEdit: true }
         ];
 
         const readOnlyUrl = s =>
@@ -873,21 +916,22 @@
             `https://docs.google.com/spreadsheets/d/${s.id}/edit?rm=minimal#gid=${s.gid}`;
 
         const loaded = new Set();
-        let tokenClient = null;
-        let accessToken = null;
-        let tokenExpiryTimer = null;
+        const authDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let authUser = null;
 
         const isMobile = window.matchMedia('(max-width: 640px)').matches;
 
         function getFrameUrl(index) {
-            const sheet = SHEETS[index];
-            if (accessToken || sheet.alwaysEdit) return editUrl(sheet);
-            return readOnlyUrl(sheet);
+            const tab = TABS[index];
+            if (tab.type === 'calendar') return tab.src;
+            if (tab.alwaysEdit) return editUrl(tab);
+            return readOnlyUrl(tab);
         }
 
         function getSheetDirectUrl(index) {
-            const sheet = SHEETS[index];
-            return `https://docs.google.com/spreadsheets/d/${sheet.id}/edit#gid=${sheet.gid}`;
+            const tab = TABS[index];
+            if (tab.type === 'calendar') return tab.directUrl;
+            return `https://docs.google.com/spreadsheets/d/${tab.id}/edit#gid=${tab.gid}`;
         }
 
         function hideLoading(index) {
@@ -904,6 +948,38 @@
             fab.href = getSheetDirectUrl(index);
         }
 
+        function getSerializableAuthUser(user = authUser) {
+            if (!user) return null;
+            return {
+                email: user.email || '',
+                name: user.user_metadata?.full_name || user.user_metadata?.name || user.email || '',
+                picture: user.user_metadata?.avatar_url || user.user_metadata?.picture || '',
+            };
+        }
+
+        function syncCalendarAuth() {
+            const frame = document.getElementById('frame-0');
+            if (!frame?.contentWindow) return;
+            frame.contentWindow.postMessage({
+                type: 'beadyo-auth-sync',
+                user: getSerializableAuthUser(),
+            }, window.location.origin === 'null' ? '*' : window.location.origin);
+        }
+
+        function updateAuthUI() {
+            const badge = document.getElementById('auth-badge');
+            if (!authUser) {
+                badge.classList.remove('show');
+                document.querySelectorAll('.login-btn').forEach(b => b.style.display = '');
+                return;
+            }
+
+            const picture = authUser.user_metadata?.avatar_url || authUser.user_metadata?.picture || '';
+            badge.innerHTML = `${picture ? `<img src="${picture}" width="24" height="24" style="border-radius:50%;flex-shrink:0">` : ''}<button id="signout-btn" onclick="signOut()">로그아웃</button>`;
+            document.querySelectorAll('.login-btn').forEach(b => b.style.display = 'none');
+            badge.classList.add('show');
+        }
+
         function switchTab(index) {
             document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
             document.querySelectorAll('.sheet-frame').forEach((f, i) => f.classList.toggle('active', i === index));
@@ -914,9 +990,13 @@
 
             if (loaded.has(index)) {
                 hideLoading(index);
+                if (index === 0) syncCalendarAuth();
             } else {
                 document.getElementById('loading').style.display = 'flex';
-                frame.onload = () => hideLoading(index);
+                frame.onload = () => {
+                    hideLoading(index);
+                    if (index === 0) syncCalendarAuth();
+                };
                 frame.src = getFrameUrl(index);
                 loaded.add(index);
             }
@@ -1001,86 +1081,40 @@
             }
         } catch {}
 
-        // ── 구글 로그인 ──
-        function signIn() {
-            if (!window.google) return;
-            if (!tokenClient) {
-                tokenClient = google.accounts.oauth2.initTokenClient({
-                    client_id: CLIENT_ID,
-                    scope: 'email profile https://www.googleapis.com/auth/drive.metadata.readonly',
-                    callback: handleToken,
-                });
-            }
-            tokenClient.requestAccessToken({ prompt: '' });
-        }
+        async function initAuth() {
+            const { data: { session } } = await authDb.auth.getSession();
+            authUser = session?.user ?? null;
+            updateAuthUI();
+            syncCalendarAuth();
 
-        async function handleToken(resp) {
-            if (resp.error) return;
-            accessToken = resp.access_token;
-            if (resp.expires_in) {
-                clearTimeout(tokenExpiryTimer);
-                tokenExpiryTimer = setTimeout(() => { accessToken = null; }, (resp.expires_in - 60) * 1000);
-            }
-
-            let profilePic = '';
-            try {
-                const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo',
-                    { headers: { Authorization: `Bearer ${accessToken}` } });
-                const user = await res.json();
-                if (user.picture) profilePic = `<img src="${user.picture}" width="24" height="24" style="border-radius:50%;flex-shrink:0">`;
-            } catch {}
-
-            // 로그인 성공 표시
-            document.getElementById('auth-badge').innerHTML =
-                `${profilePic}<button id="signout-btn" onclick="signOut()">로그아웃</button>`;
-            document.querySelectorAll('.login-btn').forEach(b => b.style.display = 'none');
-            document.getElementById('auth-badge').classList.add('show');
-            closeQuickMenu();
-            closeLoginModal();
-
-            // iframe URL 갱신 (편집 권한 있으면 edit 모드, 없어도 alwaysEdit이라 무관)
-            applyEditMode();
-        }
-
-        async function checkCanEdit(sheetId) {
-            try {
-                const res = await fetch(
-                    `https://www.googleapis.com/drive/v3/files/${sheetId}?fields=capabilities(canEdit)`,
-                    { headers: { Authorization: `Bearer ${accessToken}` } }
-                );
-                const data = await res.json();
-                return data.capabilities?.canEdit === true;
-            } catch {
-                return false;
-            }
-        }
-
-        async function applyEditMode() {
-            const results = await Promise.all(SHEETS.map(s => checkCanEdit(s.id)));
-            SHEETS.forEach((sheet, i) => {
-                const frame = document.getElementById(`frame-${i}`);
-                const url = (results[i] || sheet.alwaysEdit) ? editUrl(sheet) : readOnlyUrl(sheet);
-                if (frame.src !== url) {
-                    loaded.delete(i);
-                    frame.src = url;
-                }
+            authDb.auth.onAuthStateChange((_event, session) => {
+                authUser = session?.user ?? null;
+                updateAuthUI();
+                syncCalendarAuth();
             });
         }
 
-        function signOut() {
-            clearTimeout(tokenExpiryTimer);
-            if (accessToken) {
-                google.accounts.oauth2.revoke(accessToken, () => {});
-                accessToken = null;
+        async function signIn() {
+            if (location.protocol === 'file:') {
+                alert('로그인은 localhost 또는 beadyo.com에서 가능합니다.');
+                return;
             }
-            SHEETS.forEach((sheet, i) => {
-                const frame = document.getElementById(`frame-${i}`);
-                loaded.delete(i);
-                frame.src = sheet.alwaysEdit ? editUrl(sheet) : readOnlyUrl(sheet);
+            const redirectTo = `${location.origin}${location.pathname}`;
+            const { error } = await authDb.auth.signInWithOAuth({
+                provider: 'google',
+                options: { redirectTo },
             });
-            document.getElementById('auth-badge').classList.remove('show');
-            document.querySelectorAll('.login-btn').forEach(b => b.style.display = '');
+            if (error) alert('로그인 실패: ' + error.message);
         }
+
+        async function signOut() {
+            await authDb.auth.signOut();
+            authUser = null;
+            updateAuthUI();
+            syncCalendarAuth();
+        }
+
+        initAuth();
     </script>
 
     <a class="mobile-fab" id="mobile-fab" href="#" target="_blank" rel="noopener noreferrer">✏️ 검색·편집하기</a>
