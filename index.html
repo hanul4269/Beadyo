@@ -1076,9 +1076,7 @@
             `https://docs.google.com/spreadsheets/d/${s.id}/edit?rm=minimal#gid=${s.gid}`;
 
         const loaded = new Set();
-        const authDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            auth: { detectSessionInUrl: false }
-        });
+        const authDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let authUser = null;
 
         const isMobile = window.matchMedia('(max-width: 640px)').matches;
@@ -1286,23 +1284,15 @@
                 syncCalendarAuth();
             });
 
+            // OAuth 리다이렉트 후 URL 파라미터 정리 (시각적 목적)
             const currentUrl = new URL(window.location.href);
-            const authCode = currentUrl.searchParams.get('code');
-            if (authCode) {
-                const { data, error } = await authDb.auth.exchangeCodeForSession(authCode);
-                if (error) {
-                    console.error('exchangeCodeForSession:', error);
-                } else {
-                    currentUrl.searchParams.delete('code');
-                    currentUrl.searchParams.delete('state');
-                    history.replaceState({}, document.title, currentUrl.pathname + currentUrl.search + currentUrl.hash);
-                    authUser = data.session?.user ?? null;
-                    updateAuthUI();
-                    syncCalendarAuth();
-                    return;
-                }
+            if (currentUrl.searchParams.has('code')) {
+                currentUrl.searchParams.delete('code');
+                currentUrl.searchParams.delete('state');
+                history.replaceState({}, document.title, currentUrl.pathname + currentUrl.search + currentUrl.hash);
             }
 
+            // getSession()은 내부적으로 detectSessionInUrl 교환 완료까지 대기
             const { data: { session } } = await authDb.auth.getSession();
             authUser = session?.user ?? null;
             updateAuthUI();
