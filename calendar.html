@@ -2176,7 +2176,7 @@ async function openUpModal() {
         const res = await fetch('up.json?t=' + Date.now());
         if (!res.ok) throw new Error('fetch failed');
         const data = await res.json();
-        renderUpModal(data);
+        renderUpModal(data, true);
     } catch {
         document.getElementById('upModalContent').innerHTML =
             '<div class="up-empty">데이터를 불러올 수 없습니다</div>';
@@ -2186,7 +2186,48 @@ function closeUpModal() {
     document.getElementById('upModal').classList.remove('open');
 }
 
-function renderUpModal(data) {
+function parseSoopUrl(url) {
+    const clean = url.split('#')[0];
+    const m = clean.match(/\/(?:station\/)?(\w+)\/post\/(\d+)/);
+    return m ? [m[1], m[2]] : [null, null];
+}
+
+async function fetchSoopRankingLive(bjId, postNo) {
+    const endpoints = [
+        `https://api.m.afreecatv.com/station/board/reply/list?szBjId=${bjId}&nTitleNo=${postNo}&nPageNo=1&nListCnt=200`,
+        `https://api.m.sooplive.co.kr/station/board/reply/list?szBjId=${bjId}&nTitleNo=${postNo}&nPageNo=1&nListCnt=200`,
+    ];
+    for (const url of endpoints) {
+        try {
+            const resp = await fetch(url, { signal: AbortSignal.timeout(8000) });
+            if (!resp.ok) continue;
+            const d = await resp.json();
+            if (d.result !== 1 && d.result !== '1' && !d.data) continue;
+            const container = d.data || d;
+            const items = container.list || container.reply_list || [];
+            if (!Array.isArray(items)) continue;
+            const replies = items
+                .filter(it => (it.depth === 0 || it.depth === '0') && (it.parent_no === 0 || it.parent_no === '0'))
+                .map(it => ({
+                    bj_id: String(it.user_id || '').trim(),
+                    name: String(it.user_nick || it.user_id || '').trim(),
+                    profile_url: `https://profile.img.sooplive.co.kr/LOGO/${it.user_id}/${it.user_id}.jpg`,
+                    timestamp: String(it.comment_write_date || it.reg_date || '').trim(),
+                    up_count: parseInt(it.recommend_cnt || it.up_cnt || 0) || 0,
+                    reply_no: String(it.comment_no || it.reply_no || ''),
+                }))
+                .filter(r => r.bj_id);
+            replies.sort((a, b) => b.up_count - a.up_count);
+            replies.forEach((r, i) => r.rank = i + 1);
+            return replies;
+        } catch (e) {
+            console.log('SOOP fetch error:', e.message);
+        }
+    }
+    return null;
+}
+
+function renderUpModal(data, fetchLive = false) {
     const events = data.events || [];
     if (!events.length) {
         document.getElementById('upModalContent').innerHTML =
@@ -2196,25 +2237,31 @@ function renderUpModal(data) {
     const updatedStr = data.updated
         ? new Date(data.updated).toLocaleString('ko-KR') : '-';
 
+    let currentIdx = 0;
+
     function renderTab(idx) {
+        currentIdx = idx;
         const ev = events[idx];
         const tabs = events.map((e, i) =>
             `<button class="up-tab-btn${i===idx?' active':''}" onclick="renderUpTab(${i})">${esc(e.tab)}</button>`
         ).join('');
-        const items = (ev.ranking || []).map(r => {
-            const cls = r.rank <= 3 ? ` top${r.rank}` : '';
-            return `<div class="up-rank-item">
-                <div class="up-rank-num${cls}">${r.rank}</div>
-                <img class="up-rank-profile" src="${esc(r.profile_url)}"
-                     onerror="this.src='stickers/s8.png'" alt="" loading="lazy">
-                <div class="up-rank-info">
-                    <div class="up-rank-name">${esc(r.name)}</div>
-                    <div class="up-rank-handle">@${esc(r.bj_id)}</div>
-                    <div class="up-rank-time">${esc(r.timestamp)}</div>
-                </div>
-                <div class="up-rank-count">👍 ${Number(r.up_count).toLocaleString()}</div>
-            </div>`;
-        }).join('') || '<div class="up-empty">랭킹 데이터를 불러오는 중입니다.<br>잠시 후 새로고침해 주세요!</div>';
+        const ranking = ev.ranking || [];
+        const items = ranking.length
+            ? ranking.map(r => {
+                const cls = r.rank <= 3 ? ` top${r.rank}` : '';
+                return `<div class="up-rank-item">
+                    <div class="up-rank-num${cls}">${r.rank}</div>
+                    <img class="up-rank-profile" src="${esc(r.profile_url)}"
+                         onerror="this.src='stickers/s8.png'" alt="" loading="lazy">
+                    <div class="up-rank-info">
+                        <div class="up-rank-name">${esc(r.name)}</div>
+                        <div class="up-rank-handle">@${esc(r.bj_id)}</div>
+                        <div class="up-rank-time">${esc(r.timestamp)}</div>
+                    </div>
+                    <div class="up-rank-count">👍 ${Number(r.up_count).toLocaleString()}</div>
+                </div>`;
+            }).join('')
+            : '<div class="up-empty">랭킹 데이터를 불러오는 중입니다...</div>';
 
         document.getElementById('upModalContent').innerHTML = `
             <div class="up-tabs">${tabs}</div>
@@ -2225,8 +2272,21 @@ function renderUpModal(data) {
             <div class="up-ranking-list">${items}</div>
             <div class="up-updated">업데이트: ${updatedStr}</div>`;
     }
+
     window.renderUpTab = (idx) => renderTab(idx);
     renderTab(0);
+
+    if (fetchLive) {
+        events.forEach(async (ev, idx) => {
+            const [bjId, postNo] = parseSoopUrl(ev.soop_url);
+            if (!bjId) return;
+            const ranking = await fetchSoopRankingLive(bjId, postNo);
+            if (ranking !== null) {
+                ev.ranking = ranking;
+                if (currentIdx === idx) renderTab(idx);
+            }
+        });
+    }
 }
 
 // ─── 추가/수정 모달 ───
