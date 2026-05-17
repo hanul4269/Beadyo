@@ -1076,7 +1076,9 @@
             `https://docs.google.com/spreadsheets/d/${s.id}/edit?rm=minimal#gid=${s.gid}`;
 
         const loaded = new Set();
-        const authDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const authDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { detectSessionInUrl: false }
+        });
         let authUser = null;
 
         const isMobile = window.matchMedia('(max-width: 640px)').matches;
@@ -1277,16 +1279,27 @@
         } catch {}
 
         async function initAuth() {
+            // 이벤트 누락 방지를 위해 리스너를 먼저 등록
+            authDb.auth.onAuthStateChange((_event, session) => {
+                authUser = session?.user ?? null;
+                updateAuthUI();
+                syncCalendarAuth();
+            });
+
             const currentUrl = new URL(window.location.href);
             const authCode = currentUrl.searchParams.get('code');
             if (authCode) {
-                const { error } = await authDb.auth.exchangeCodeForSession(authCode);
+                const { data, error } = await authDb.auth.exchangeCodeForSession(authCode);
                 if (error) {
                     console.error('exchangeCodeForSession:', error);
                 } else {
                     currentUrl.searchParams.delete('code');
                     currentUrl.searchParams.delete('state');
                     history.replaceState({}, document.title, currentUrl.pathname + currentUrl.search + currentUrl.hash);
+                    authUser = data.session?.user ?? null;
+                    updateAuthUI();
+                    syncCalendarAuth();
+                    return;
                 }
             }
 
@@ -1294,12 +1307,6 @@
             authUser = session?.user ?? null;
             updateAuthUI();
             syncCalendarAuth();
-
-            authDb.auth.onAuthStateChange((_event, session) => {
-                authUser = session?.user ?? null;
-                updateAuthUI();
-                syncCalendarAuth();
-            });
         }
 
         async function signIn() {
