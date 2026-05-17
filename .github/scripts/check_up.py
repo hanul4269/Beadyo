@@ -30,9 +30,11 @@ def fetch_replies(bj_id, post_no):
     endpoints = [
         f'https://api.m.afreecatv.com/station/board/reply/list?szBjId={bj_id}&nTitleNo={post_no}&nPageNo=1&nListCnt=200',
         f'https://api.m.sooplive.co.kr/station/board/reply/list?szBjId={bj_id}&nTitleNo={post_no}&nPageNo=1&nListCnt=200',
+        f'https://api.sooplive.co.kr/v1/station/{bj_id}/post/{post_no}/comment?page=1&per_page=200',
     ]
     for url in endpoints:
         raw = curl_soop(url)
+        print(f'  [{url.split("/")[2]}] raw({len(raw)}): {raw[:200]}')
         if not raw:
             continue
         try:
@@ -42,9 +44,9 @@ def fetch_replies(bj_id, post_no):
                 print(f'  API OK ({url.split("/")[2]}): {len(replies)} replies')
                 return replies
             else:
-                print(f'  API response unexpected: {str(d)[:120]}')
+                print(f'  API response unexpected: {str(d)[:200]}')
         except Exception as e:
-            print(f'  Parse error: {e} | raw: {raw[:80]}')
+            print(f'  Parse error: {e} | raw: {raw[:200]}')
     print(f'  All API attempts failed for {bj_id}/post/{post_no}')
     return None
 

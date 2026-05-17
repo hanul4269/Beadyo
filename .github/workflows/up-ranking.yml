@@ -17,6 +17,19 @@ jobs:
       - name: Install supabase-py
         run: python3 -m pip install supabase --quiet
 
+      - name: Test SOOP API access
+        run: |
+          echo "=== SOOP API test ==="
+          curl -s --max-time 10 \
+            -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' \
+            -H 'Accept: application/json' \
+            -H 'Referer: https://www.sooplive.co.kr/' \
+            -H 'Origin: https://www.sooplive.co.kr' \
+            'https://api.m.afreecatv.com/station/board/reply/list?szBjId=spbabobj&nTitleNo=195398193&nPageNo=1&nListCnt=5' \
+            | head -c 500
+          echo ""
+          echo "=== exit: $? ==="
+
       - name: Fetch UP ranking from SOOP
         run: python3 .github/scripts/check_up.py
 
