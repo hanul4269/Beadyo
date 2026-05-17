@@ -124,6 +124,15 @@ for ev in events:
         if ev['id'] in prev_map:
             print(f'  Keeping previous data')
             events_out.append(prev_map[ev['id']])
+        else:
+            print(f'  No previous data, adding with empty ranking')
+            events_out.append({
+                'id':       ev['id'],
+                'tab':      ev['tab_name'],
+                'title':    ev['title'],
+                'soop_url': ev['soop_url'],
+                'ranking':  [],
+            })
         continue
 
     replies.sort(key=lambda x: x['up_count'], reverse=True)
