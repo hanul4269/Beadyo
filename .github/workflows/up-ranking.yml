@@ -43,5 +43,6 @@ jobs:
             echo "No change"
           else
             git commit -m "chore: update UP ranking"
+            git pull --rebase origin main
             git push origin main
           fi
