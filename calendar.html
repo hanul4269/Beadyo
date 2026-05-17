@@ -810,41 +810,143 @@
             margin-bottom: 16px;
             padding-right: 28px;
         }
-        .up-modal-copy {
+        /* ── UP 랭킹 모달 ── */
+        #upModal .modal { max-width: 520px; }
+        .up-tabs {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-            color: #4d4d4d;
-            line-height: 1.65;
-            font-size: 14px;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
         }
-        .up-modal-badge {
-            align-self: flex-start;
+        .up-tab-btn {
+            padding: 5px 13px;
+            border-radius: 999px;
+            border: 1.5px solid var(--border);
+            background: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--muted);
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: background 0.12s, color 0.12s;
+        }
+        .up-tab-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+        .up-event-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .up-event-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            flex: 1;
+            min-width: 0;
+        }
+        .up-goto-btn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
+            gap: 5px;
+            padding: 6px 13px;
             border-radius: 999px;
-            background: linear-gradient(180deg, #f8fff1 0%, #e8f5d7 100%);
-            border: 1px solid rgba(139,195,74,0.26);
-            color: #6e9731;
-            font-size: 13px;
-            font-weight: 900;
-        }
-        .up-modal-badge img {
-            width: 18px;
-            height: 18px;
-            object-fit: contain;
+            background: var(--accent);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+            font-family: 'Noto Sans KR', sans-serif;
             flex-shrink: 0;
         }
-        .up-modal-note {
-            padding: 12px 14px;
-            border-radius: 14px;
-            background: #f8fbf3;
-            color: #5f7350;
-            font-size: 13px;
-            line-height: 1.6;
+        .up-goto-btn:hover { opacity: 0.85; }
+        .up-ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            max-height: 52vh;
+            overflow-y: auto;
         }
+        .up-rank-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 11px;
+            border-radius: 11px;
+            border: 1.5px solid var(--border);
+            background: #fff;
+        }
+        .up-rank-num {
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--accent);
+            min-width: 22px;
+            text-align: center;
+        }
+        .up-rank-num.top1 { color: #e8a020; }
+        .up-rank-num.top2 { color: #888; }
+        .up-rank-num.top3 { color: #b87333; }
+        .up-rank-profile {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: var(--border);
+        }
+        .up-rank-info { flex: 1; min-width: 0; }
+        .up-rank-name { font-size: 13px; font-weight: 700; color: var(--text); }
+        .up-rank-handle { font-size: 11px; color: var(--muted); }
+        .up-rank-time { font-size: 11px; color: var(--muted); margin-top: 1px; }
+        .up-rank-count {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+        .up-updated {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: right;
+            margin-top: 8px;
+        }
+        .up-empty {
+            text-align: center;
+            padding: 36px 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        /* ── 어드민 탭 ── */
+        .admin-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 16px;
+            border-bottom: 2px solid var(--border);
+        }
+        .admin-tab-btn {
+            padding: 7px 16px;
+            border: none;
+            background: none;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--muted);
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+        .admin-tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .admin-section { display: none; }
+        .admin-section.active { display: block; }
 
         /* ── 보기 모달 ── */
         .view-section { margin-bottom: 12px; }
@@ -1377,17 +1479,43 @@
 <div class="modal-overlay" id="adminModal" onmousedown="if(event.target===this)closeAdminModal()">
     <div class="modal">
         <button class="modal-close" onclick="closeAdminModal()">×</button>
-        <div class="modal-title">편집자 관리</div>
-        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">
-            등록된 편집자는 일정을 추가·수정·삭제할 수 있습니다.
-        </p>
-        <div class="editor-list" id="editorList"></div>
-        <div class="field">
-            <label>편집자 추가</label>
-            <div class="editor-add-row">
-                <input type="email" id="newEditorEmail" placeholder="example@gmail.com"
-                    onkeydown="if(event.key==='Enter')addEditor()">
-                <button onclick="addEditor()">추가</button>
+        <div class="modal-title">⚙ 편집 설정</div>
+        <div class="admin-tabs">
+            <button class="admin-tab-btn active" onclick="switchAdminTab('editors')">편집자 관리</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('upevents')">UP 이벤트</button>
+        </div>
+        <!-- 편집자 관리 -->
+        <div class="admin-section active" id="adminSectionEditors">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">
+                등록된 편집자는 일정을 추가·수정·삭제할 수 있습니다.
+            </p>
+            <div class="editor-list" id="editorList"></div>
+            <div class="field">
+                <label>편집자 추가</label>
+                <div class="editor-add-row">
+                    <input type="email" id="newEditorEmail" placeholder="example@gmail.com"
+                        onkeydown="if(event.key==='Enter')addEditor()">
+                    <button onclick="addEditor()">추가</button>
+                </div>
+            </div>
+        </div>
+        <!-- UP 이벤트 관리 -->
+        <div class="admin-section" id="adminSectionUpevents">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">
+                SOOP 게시글 UP 랭킹을 5분마다 자동으로 가져옵니다.
+            </p>
+            <div class="editor-list" id="upEventList"></div>
+            <div class="field" style="margin-top:12px;">
+                <label>이벤트 추가</label>
+                <div style="display:flex;flex-direction:column;gap:7px;margin-top:6px;">
+                    <input type="text" id="newUpTab" placeholder="탭 이름 (예: 종겜동 운동회)">
+                    <input type="text" id="newUpTitle" placeholder="제목 (예: [종겜동 운동회2] 참가 모집)">
+                    <input type="url" id="newUpUrl" placeholder="SOOP 게시글 URL">
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <input type="number" id="newUpOrder" placeholder="순서 (기본 0)" style="width:130px;">
+                        <button onclick="addUpEvent()" style="flex:1;">추가</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1396,15 +1524,9 @@
 <div class="modal-overlay" id="upModal" onmousedown="if(event.target===this)closeUpModal()">
     <div class="modal">
         <button class="modal-close" onclick="closeUpModal()">×</button>
-        <div class="modal-title">UP</div>
-        <div class="up-modal-copy">
-            <div class="up-modal-badge"><img src="stickers/s8.png" alt=""><span>UP</span></div>
-            <p>BEADYO 안에서 더 자연스럽게 즐길 수 있는 작은 참여형 기능을 준비하는 자리예요.</p>
-            <p>지금은 아이콘과 팝업 흐름만 먼저 열어두었고, 이후에 랭킹이나 추천 같은 방식으로 확장할 수 있게 연결해둘 예정입니다.</p>
-            <div class="up-modal-note">준비가 끝나면 참고한 사이트와는 조금 다른, BEADYO만의 톤으로 보이도록 다듬어갈게요.</div>
-        </div>
-        <div class="btn-row">
-            <button class="btn btn-secondary" onclick="closeUpModal()">닫기</button>
+        <div class="modal-title">👍 UP 랭킹</div>
+        <div id="upModalContent">
+            <div class="up-empty">불러오는 중...</div>
         </div>
     </div>
 </div>
@@ -2047,11 +2169,64 @@ function openViewModal(id) {
 }
 function closeViewModal() { document.getElementById('viewModal').classList.remove('open'); }
 
-function openUpModal() {
+async function openUpModal() {
     document.getElementById('upModal').classList.add('open');
+    document.getElementById('upModalContent').innerHTML = '<div class="up-empty">불러오는 중...</div>';
+    try {
+        const res = await fetch('up.json?t=' + Date.now());
+        if (!res.ok) throw new Error('fetch failed');
+        const data = await res.json();
+        renderUpModal(data);
+    } catch {
+        document.getElementById('upModalContent').innerHTML =
+            '<div class="up-empty">데이터를 불러올 수 없습니다</div>';
+    }
 }
 function closeUpModal() {
     document.getElementById('upModal').classList.remove('open');
+}
+
+function renderUpModal(data) {
+    const events = data.events || [];
+    if (!events.length) {
+        document.getElementById('upModalContent').innerHTML =
+            '<div class="up-empty">진행 중인 UP 이벤트가 없습니다</div>';
+        return;
+    }
+    const updatedStr = data.updated
+        ? new Date(data.updated).toLocaleString('ko-KR') : '-';
+
+    function renderTab(idx) {
+        const ev = events[idx];
+        const tabs = events.map((e, i) =>
+            `<button class="up-tab-btn${i===idx?' active':''}" onclick="renderUpTab(${i})">${esc(e.tab)}</button>`
+        ).join('');
+        const items = (ev.ranking || []).map(r => {
+            const cls = r.rank <= 3 ? ` top${r.rank}` : '';
+            return `<div class="up-rank-item">
+                <div class="up-rank-num${cls}">${r.rank}</div>
+                <img class="up-rank-profile" src="${esc(r.profile_url)}"
+                     onerror="this.src='stickers/s8.png'" alt="" loading="lazy">
+                <div class="up-rank-info">
+                    <div class="up-rank-name">${esc(r.name)}</div>
+                    <div class="up-rank-handle">@${esc(r.bj_id)}</div>
+                    <div class="up-rank-time">${esc(r.timestamp)}</div>
+                </div>
+                <div class="up-rank-count">👍 ${Number(r.up_count).toLocaleString()}</div>
+            </div>`;
+        }).join('') || '<div class="up-empty">댓글이 없습니다</div>';
+
+        document.getElementById('upModalContent').innerHTML = `
+            <div class="up-tabs">${tabs}</div>
+            <div class="up-event-header">
+                <div class="up-event-title">${esc(ev.title)}</div>
+                <a class="up-goto-btn" href="${esc(ev.soop_url)}" target="_blank" rel="noopener">UP 바로가기 ↗</a>
+            </div>
+            <div class="up-ranking-list">${items}</div>
+            <div class="up-updated">업데이트: ${updatedStr}</div>`;
+    }
+    window.renderUpTab = (idx) => renderTab(idx);
+    renderTab(0);
 }
 
 // ─── 추가/수정 모달 ───
@@ -2194,10 +2369,22 @@ async function deleteEvent(id) {
 // ─── 편집자 관리 ───
 async function openAdminModal() {
     await loadEditors();
+    await loadUpEvents();
     renderEditorList();
+    renderUpEventList();
     document.getElementById('adminModal').classList.add('open');
 }
 function closeAdminModal() { document.getElementById('adminModal').classList.remove('open'); }
+
+function switchAdminTab(tab) {
+    document.querySelectorAll('.admin-tab-btn').forEach((b, i) => {
+        const names = ['editors', 'upevents'];
+        b.classList.toggle('active', names[i] === tab);
+    });
+    document.querySelectorAll('.admin-section').forEach(s => {
+        s.classList.toggle('active', s.id === 'adminSection' + tab.charAt(0).toUpperCase() + tab.slice(1));
+    });
+}
 
 function renderEditorList() {
     const list = document.getElementById('editorList');
@@ -2233,6 +2420,62 @@ async function removeEditor(id) {
     if (error) { showToast('삭제 실패'); return; }
     await loadEditors();
     renderEditorList();
+    showToast('삭제되었습니다');
+}
+
+// ─── UP 이벤트 관리 ───
+let upEvents = [];
+
+async function loadUpEvents() {
+    const { data, error } = await db.from('up_events').select('*').order('sort_order');
+    if (!error) upEvents = data || [];
+}
+
+function renderUpEventList() {
+    const list = document.getElementById('upEventList');
+    if (!upEvents.length) {
+        list.innerHTML = '<div class="editor-item" style="color:var(--muted);">등록된 UP 이벤트가 없습니다.</div>';
+        return;
+    }
+    list.innerHTML = upEvents.map(e => `
+        <div class="editor-item">
+            <span style="flex:1;min-width:0;overflow:hidden;">
+                <b>${esc(e.tab_name)}</b>
+                <span style="color:var(--muted);font-size:12px;margin-left:6px;">${esc(e.title)}</span>
+                <span style="color:${e.is_active ? 'var(--accent)' : 'var(--muted)'};font-size:11px;margin-left:6px;">${e.is_active ? '●활성' : '●비활성'}</span>
+            </span>
+            <button class="editor-remove-btn" onclick="removeUpEvent(${e.id})">삭제</button>
+        </div>
+    `).join('');
+}
+
+async function addUpEvent() {
+    const tabName  = document.getElementById('newUpTab').value.trim();
+    const title    = document.getElementById('newUpTitle').value.trim();
+    const soopUrl  = document.getElementById('newUpUrl').value.trim();
+    const sortOrder = parseInt(document.getElementById('newUpOrder').value) || 0;
+    if (!tabName || !title || !soopUrl) { showToast('탭 이름, 제목, URL을 모두 입력해주세요'); return; }
+    if (!soopUrl.includes('sooplive') && !soopUrl.includes('afreecatv')) {
+        showToast('올바른 SOOP URL을 입력해주세요'); return;
+    }
+    const { error } = await db.from('up_events').insert({
+        tab_name: tabName, title, soop_url: soopUrl, sort_order: sortOrder, is_active: true,
+    });
+    if (error) { showToast('추가 실패: ' + error.message); return; }
+    ['newUpTab','newUpTitle','newUpUrl','newUpOrder'].forEach(id => {
+        document.getElementById(id).value = '';
+    });
+    showToast('UP 이벤트 추가됨');
+    await loadUpEvents();
+    renderUpEventList();
+}
+
+async function removeUpEvent(id) {
+    if (!confirm('이 UP 이벤트를 삭제하시겠습니까?')) return;
+    const { error } = await db.from('up_events').delete().eq('id', id);
+    if (error) { showToast('삭제 실패'); return; }
+    await loadUpEvents();
+    renderUpEventList();
     showToast('삭제되었습니다');
 }
 
