@@ -1628,6 +1628,7 @@ const state = {
     isOwner: false,
     editors: [],
     viewMode: 'month',
+    mobileStartDate: dateToStr(new Date()),
 };
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1897,20 +1898,17 @@ function eventsForDate(dateStr) {
 function renderMobileSchedule() {
     const wrap = document.getElementById('mobileScheduleView');
     if (!wrap) return;
-    const today = new Date();
-    const todayStr = dateToStr(today);
+    const todayStr = dateToStr(new Date());
     const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
-    const daysInMonth = new Date(state.year, state.month + 1, 0).getDate();
-    const isCurrentMonth = state.year === today.getFullYear() && state.month === today.getMonth();
-    const startDay = isCurrentMonth ? today.getDate() : 1;
-    const endDay = daysInMonth;
+    const [y, m, d] = state.mobileStartDate.split('-').map(Number);
     const cards = [];
 
-    for (let day = startDay; day <= endDay; day++) {
-        const date = new Date(state.year, state.month, day);
+    for (let i = 0; i < 3; i++) {
+        const date = new Date(y, m - 1, d + i);
         const dateStr = dateToStr(date);
         const events = eventsForDate(dateStr);
         const dow = date.getDay();
+        const day = date.getDate();
         const titleCls = dow === 0 ? ' sun' : '';
         const eventHtml = events.length
             ? events.map(ev => {
@@ -1932,10 +1930,7 @@ function renderMobileSchedule() {
         </section>`);
     }
 
-    wrap.innerHTML = cards.length ? cards.join('') : `<section class="mobile-day-card">
-        <div class="mobile-day-head"><div class="mobile-date-title">일정 없음</div></div>
-        <div class="mobile-empty-note">이번 달 남은 일정이 없어요</div>
-    </section>`;
+    wrap.innerHTML = cards.join('');
 }
 
 function renderSecondaryViews() {
@@ -2507,13 +2502,30 @@ function changeMonth(delta) {
     state.month += delta;
     if (state.month > 11) { state.month = 0; state.year++; }
     if (state.month < 0)  { state.month = 11; state.year--; }
+    state.mobileStartDate = `${state.year}-${String(state.month + 1).padStart(2, '0')}-01`;
     loadEvents();
 }
 function goToday() {
     const now = new Date();
     state.year  = now.getFullYear();
     state.month = now.getMonth();
+    state.mobileStartDate = dateToStr(now);
     loadEvents();
+}
+
+function navigateMobileDays(delta) {
+    const [y, m, d] = state.mobileStartDate.split('-').map(Number);
+    const next = new Date(y, m - 1, d + delta);
+    state.mobileStartDate = dateToStr(next);
+    const newYear = next.getFullYear();
+    const newMonth = next.getMonth();
+    if (newYear !== state.year || newMonth !== state.month) {
+        state.year = newYear;
+        state.month = newMonth;
+        loadEvents();
+    } else {
+        renderMobileSchedule();
+    }
 }
 
 function normalizeAuthUser(userLike) {
@@ -2577,7 +2589,13 @@ let touchStartX = 0;
 document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
 document.addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 60) changeMonth(dx < 0 ? 1 : -1);
+    if (Math.abs(dx) > 60) {
+        if (window.innerWidth <= 640) {
+            navigateMobileDays(dx < 0 ? 3 : -3);
+        } else {
+            changeMonth(dx < 0 ? 1 : -1);
+        }
+    }
 }, { passive: true });
 
 // ─── 초기화 ───
