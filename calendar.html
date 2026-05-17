@@ -37,14 +37,14 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            padding: 10px 16px 0;
+            padding: 2px 16px 0;
         }
         .header-right { display: flex; align-items: center; gap: 8px; }
 
         .auth-chip {
             background: rgba(255,255,255,0.2);
             border: 1px solid rgba(255,255,255,0.35);
-            color: #fff;
+            color: #5e8426;
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 13px;
@@ -56,8 +56,17 @@
         .auth-chip.owner {
             cursor: pointer;
             transition: background 0.15s;
+            font-weight: 800;
+            background: rgba(245, 255, 236, 0.92);
+            border-color: rgba(139,195,74,0.26);
         }
-        .auth-chip.owner:hover { background: rgba(255,255,255,0.30); }
+        .auth-chip.owner:hover { background: rgba(239, 251, 223, 0.96); }
+        .auth-chip.owner img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
 
         /* ── 프로필 드롭다운 ── */
         .profile-wrap { position: relative; }
@@ -122,7 +131,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 18px 20px 12px;
+            padding: 10px 20px 10px;
         }
         .nav-center { display: flex; align-items: center; gap: 10px; }
 
@@ -307,6 +316,10 @@
             padding: 12px 0;
             color: var(--muted);
             letter-spacing: 0.5px;
+            background: rgba(255,255,255,0.82);
+            border: 1px solid rgba(0,0,0,0.04);
+            border-radius: 10px;
+            box-shadow: inset 0 -1px 0 rgba(255,255,255,0.65);
         }
         .day-label.sun { color: #e53935; }
         .day-label.sat { color: #1976d2; }
@@ -672,6 +685,37 @@
             flex-shrink: 0;
             padding-top: 28px;
         }
+        .up-launcher {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 10px;
+            padding: 8px 10px;
+            border: 1px solid rgba(139,195,74,0.28);
+            border-radius: 14px;
+            background: linear-gradient(180deg, #f8fff1 0%, #e7f6d1 100%);
+            color: #6e9731;
+            box-shadow: 0 4px 12px rgba(139,195,74,0.14);
+            font: inherit;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: transform 0.12s, box-shadow 0.12s, filter 0.15s;
+        }
+        .up-launcher:hover {
+            filter: brightness(0.98);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(139,195,74,0.18);
+        }
+        .up-launcher-emoji {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
         .legend-title {
             font-size: 10px;
             font-weight: 700;
@@ -765,6 +809,41 @@
             font-weight: 700;
             margin-bottom: 16px;
             padding-right: 28px;
+        }
+        .up-modal-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            color: #4d4d4d;
+            line-height: 1.65;
+            font-size: 14px;
+        }
+        .up-modal-badge {
+            align-self: flex-start;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, #f8fff1 0%, #e8f5d7 100%);
+            border: 1px solid rgba(139,195,74,0.26);
+            color: #6e9731;
+            font-size: 13px;
+            font-weight: 900;
+        }
+        .up-modal-badge img {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+        .up-modal-note {
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: #f8fbf3;
+            color: #5f7350;
+            font-size: 13px;
+            line-height: 1.6;
         }
 
         /* ── 보기 모달 ── */
@@ -966,7 +1045,7 @@
                 border-radius: 0;
                 min-height: 0;
                 height: auto;
-                padding: 8px 14px 0;
+                padding: 4px 14px 0;
                 position: relative;
             }
             .header-right {
@@ -985,7 +1064,7 @@
                 box-shadow: 0 2px 8px rgba(0,0,0,0.04);
             }
             .cal-nav {
-                padding: 12px 16px 10px;
+                padding: 8px 16px 8px;
             }
             .nav-center {
                 width: 100%;
@@ -1152,6 +1231,27 @@
                 color: #ff6074;
                 background: rgba(255,96,116,0.10);
             }
+            .mobile-bottom-nav .up-nav-btn {
+                color: #7aa53b;
+                font-size: 16px;
+                gap: 2px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                line-height: 1;
+            }
+            .mobile-bottom-nav .up-nav-btn img {
+                width: 18px;
+                height: 18px;
+                object-fit: contain;
+                flex-shrink: 0;
+            }
+            .mobile-bottom-nav .up-nav-btn span:last-child {
+                font-size: 10px;
+                font-weight: 900;
+                letter-spacing: 0.4px;
+            }
         }
     </style>
 </head>
@@ -1198,7 +1298,7 @@
 <button class="mobile-add-fab" onclick="openAddModal(dateToStr(new Date()))" title="일정 추가">＋</button>
 <nav class="mobile-bottom-nav" aria-label="모바일 메뉴">
     <button class="active" type="button">▣</button>
-    <button type="button">⌘</button>
+    <button class="up-nav-btn" type="button" onclick="openUpModal()"><img src="stickers/s8.png" alt=""><span>UP</span></button>
     <button type="button">♪</button>
     <button type="button">♥</button>
 </nav>
@@ -1289,6 +1389,22 @@
                     onkeydown="if(event.key==='Enter')addEditor()">
                 <button onclick="addEditor()">추가</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="upModal" onmousedown="if(event.target===this)closeUpModal()">
+    <div class="modal">
+        <button class="modal-close" onclick="closeUpModal()">×</button>
+        <div class="modal-title">UP</div>
+        <div class="up-modal-copy">
+            <div class="up-modal-badge"><img src="stickers/s8.png" alt=""><span>UP</span></div>
+            <p>BEADYO 안에서 더 자연스럽게 즐길 수 있는 작은 참여형 기능을 준비하는 자리예요.</p>
+            <p>지금은 아이콘과 팝업 흐름만 먼저 열어두었고, 이후에 랭킹이나 추천 같은 방식으로 확장할 수 있게 연결해둘 예정입니다.</p>
+            <div class="up-modal-note">준비가 끝나면 참고한 사이트와는 조금 다른, BEADYO만의 톤으로 보이도록 다듬어갈게요.</div>
+        </div>
+        <div class="btn-row">
+            <button class="btn btn-secondary" onclick="closeUpModal()">닫기</button>
         </div>
     </div>
 </div>
@@ -1684,6 +1800,7 @@ async function loadEditors() {
 // ─── 범례 렌더링 ───
 function renderLegend() {
     document.getElementById('legend').innerHTML =
+        `<button class="up-launcher" onclick="openUpModal()"><img class="up-launcher-emoji" src="stickers/s8.png" alt=""><span>UP</span></button>` +
         `<div class="legend-title">유형</div>` +
         EVENT_TYPES.map(t => `
             <div class="legend-item" onclick="openAddModalWithType('${t.key}')">
@@ -1930,6 +2047,13 @@ function openViewModal(id) {
 }
 function closeViewModal() { document.getElementById('viewModal').classList.remove('open'); }
 
+function openUpModal() {
+    document.getElementById('upModal').classList.add('open');
+}
+function closeUpModal() {
+    document.getElementById('upModal').classList.remove('open');
+}
+
 // ─── 추가/수정 모달 ───
 function populateTypeSelect() {
     document.getElementById('editType').innerHTML = EVENT_TYPES.map(t =>
@@ -2152,6 +2276,12 @@ async function initAuth() {
         if (!data || data.type !== 'beadyo-auth-sync') return;
         setSessionUser(normalizeAuthUser(data.user));
     });
+
+    window.addEventListener('message', event => {
+        const { data } = event;
+        if (!data || data.type !== 'beadyo-auth-action') return;
+        if (data.action === 'open-admin' && state.isOwner) openAdminModal();
+    });
 }
 
 async function setSessionUser(user) {
@@ -2178,26 +2308,7 @@ async function setSessionUser(user) {
 
 function updateHeaderUI() {
     const right = document.getElementById('headerRight');
-    if (!state.user) {
-        right.innerHTML = '';
-        return;
-    }
-
-    if (state.isOwner) {
-        right.innerHTML = `
-            <button class="auth-chip owner" onclick="openAdminModal()">
-                ${state.user.picture ? `<img src="${esc(state.user.picture)}" width="22" height="22" style="border-radius:50%;flex-shrink:0;">` : ''}
-                <span>${state.isEditor ? '편집 설정' : '관리'}</span>
-            </button>`;
-        return;
-    }
-
-    right.innerHTML = state.isEditor
-        ? `<div class="auth-chip">
-               ${state.user.picture ? `<img src="${esc(state.user.picture)}" width="22" height="22" style="border-radius:50%;flex-shrink:0;">` : ''}
-               <span class="editor-tag">편집자</span>
-           </div>`
-        : '';
+    right.innerHTML = '';
 }
 
 // ─── 모바일 스와이프 ───
