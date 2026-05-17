@@ -1672,6 +1672,10 @@ const HOLIDAYS = {
     '2030-12-25': '크리스마스',
 };
 
+function getHoliday(dateStr) {
+    return HOLIDAYS[dateStr] || (dateStr.slice(5) === '08-18' ? '🎂 구슬요 생일' : null);
+}
+
 const state = {
     year: new Date().getFullYear(),
     month: new Date().getMonth(),
@@ -2047,7 +2051,7 @@ function renderCalendar() {
         const cellClick = isEmpty && state.isEditor
             ? `onclick="openAddModal('${dateStr}')"` : '';
 
-        const isHoliday = !other && !!HOLIDAYS[dateStr];
+        const isHoliday = !other && !!getHoliday(dateStr);
         const numCls = ['date-num',
             (dow === 0 || isHoliday) ? 'sun' : dow === 6 ? 'sat' : '',
         ].filter(Boolean).join(' ');
@@ -2105,7 +2109,7 @@ function renderCalendar() {
                 title="${esc(ev.title)}">${timeBadge}<div class="chip-body" style="${bodyStyle}"><span class="type-icon">${esc(t.icon)}</span>${vodDot}${esc(ev.title)}</div>${subtitleHtml}</button>`;
         }).join('');
 
-        const holiday   = !other ? (HOLIDAYS[dateStr] || null) : null;
+        const holiday   = !other ? (getHoliday(dateStr) || null) : null;
         const holHtml   = holiday ? `<div class="holiday-label">${esc(holiday)}</div>` : '';
         const todayBadge = isToday ? `<span class="today-badge">TODAY</span>` : '';
         const addBtn = !other
