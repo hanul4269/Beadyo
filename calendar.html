@@ -1207,18 +1207,15 @@
                 display: block;
                 height: calc(100dvh - 214px);
                 padding: 8px 14px 0;
-                overflow: hidden;
+                overflow-y: auto;
             }
             .mobile-day-card {
                 background: #fff;
                 border-radius: 20px;
-                height: calc((100dvh - 252px) / 3);
-                min-height: 0;
                 padding: 12px 14px;
                 margin-bottom: 10px;
                 box-shadow: 0 8px 24px rgba(0,0,0,0.05);
                 position: relative;
-                overflow: hidden;
             }
             .mobile-day-head {
                 display: flex;
@@ -1961,7 +1958,7 @@ function renderMobileSchedule() {
     const daysInMonth = new Date(state.year, state.month + 1, 0).getDate();
     const isCurrentMonth = state.year === today.getFullYear() && state.month === today.getMonth();
     const startDay = isCurrentMonth ? today.getDate() : 1;
-    const endDay = Math.min(daysInMonth, startDay + 2);
+    const endDay = daysInMonth;
     const cards = [];
 
     for (let day = startDay; day <= endDay; day++) {
