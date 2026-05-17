@@ -1,4 +1,4 @@
-import json, subprocess, re, sys
+import json, subprocess, re, sys, urllib.request, urllib.parse
 from datetime import datetime, timezone
 
 SUPABASE_URL      = 'https://qlmcwobfldgmhwhptkfz.supabase.co'
@@ -72,17 +72,36 @@ def parse_reply_data(d):
         })
     return replies
 
-# ── supabase-py로 이벤트 조회 ──
+
+# ── Supabase에서 이벤트 조회 (supabase-py 우선, requests 폴백) ──
 print('Fetching UP events from Supabase...')
+events = []
+
+def fetch_supabase_events_requests():
+    url = f'{SUPABASE_URL}/rest/v1/up_events?is_active=eq.true&order=sort_order'
+    req = urllib.request.Request(url, headers={
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': f'Bearer {SUPABASE_ANON_KEY}',
+        'Content-Type': 'application/json',
+    })
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        return json.loads(resp.read().decode())
+
 try:
     from supabase import create_client
     sb = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
     resp = sb.table('up_events').select('*').eq('is_active', True).order('sort_order').execute()
     events = resp.data or []
-    print(f'Found {len(events)} active events: {[e.get("tab_name") for e in events]}')
+    print(f'[supabase-py] Found {len(events)} active events: {[e.get("tab_name") for e in events]}')
 except Exception as e:
-    print(f'Supabase fetch error: {e}')
-    events = []
+    print(f'[supabase-py] Failed: {e}')
+    print('[requests] Trying urllib fallback...')
+    try:
+        events = fetch_supabase_events_requests()
+        print(f'[urllib] Found {len(events)} events: {[e.get("tab_name") for e in events]}')
+    except Exception as e2:
+        print(f'[urllib] Also failed: {e2}')
+        events = []
 
 # 이전 up.json 로드
 try:
