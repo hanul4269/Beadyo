@@ -2193,9 +2193,10 @@ function parseSoopUrl(url) {
 }
 
 async function fetchSoopRankingLive(bjId, postNo) {
+    const PROXY = 'https://clever-rhino-36.hanul4269.deno.net';
     const endpoints = [
-        `https://api.m.afreecatv.com/station/board/reply/list?szBjId=${bjId}&nTitleNo=${postNo}&nPageNo=1&nListCnt=200`,
-        `https://api.m.sooplive.co.kr/station/board/reply/list?szBjId=${bjId}&nTitleNo=${postNo}&nPageNo=1&nListCnt=200`,
+        `${PROXY}?url=${encodeURIComponent(`https://api.m.afreecatv.com/station/board/reply/list?szBjId=${bjId}&nTitleNo=${postNo}&nPageNo=1&nListCnt=200`)}`,
+        `${PROXY}?url=${encodeURIComponent(`https://api.m.sooplive.co.kr/station/board/reply/list?szBjId=${bjId}&nTitleNo=${postNo}&nPageNo=1&nListCnt=200`)}`,
     ];
     for (const url of endpoints) {
         try {
