@@ -881,6 +881,14 @@
             border-radius: 11px;
             border: 1.5px solid var(--border);
             background: #fff;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .up-rank-item:hover {
+            background: #fdf3e3;
+            border-color: var(--accent);
         }
         .up-rank-num {
             font-size: 16px;
@@ -2249,10 +2257,12 @@ function renderUpModal(data, fetchLive = false) {
             `<button class="up-tab-btn${i===idx?' active':''}" onclick="renderUpTab(${i})">${esc(e.tab)}</button>`
         ).join('');
         const ranking = ev.ranking || [];
+        const baseUrl = ev.soop_url.split('#')[0];
         const items = ranking.length
             ? ranking.map(r => {
                 const cls = r.rank <= 3 ? ` top${r.rank}` : '';
-                return `<div class="up-rank-item">
+                const href = r.reply_no ? `${baseUrl}#comment_noti${esc(r.reply_no)}` : esc(ev.soop_url);
+                return `<a class="up-rank-item" href="${href}" target="_blank" rel="noopener">
                     <div class="up-rank-num${cls}">${r.rank}</div>
                     <img class="up-rank-profile" src="${esc(r.profile_url)}"
                          onerror="this.src='stickers/s8.png'" alt="" loading="lazy">
@@ -2262,7 +2272,7 @@ function renderUpModal(data, fetchLive = false) {
                         <div class="up-rank-time">${esc(r.timestamp)}</div>
                     </div>
                     <div class="up-rank-count">👍 ${Number(r.up_count).toLocaleString()}</div>
-                </div>`;
+                </a>`;
             }).join('')
             : '<div class="up-empty">랭킹 데이터를 불러오는 중입니다...</div>';
 
