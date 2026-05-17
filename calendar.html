@@ -2262,7 +2262,9 @@ function renderUpModal(data, fetchLive = false) {
             ? ranking.map(r => {
                 const cls = r.rank <= 3 ? ` top${r.rank}` : '';
                 const href = r.reply_no ? `${baseUrl}#comment_noti${esc(r.reply_no)}` : esc(ev.soop_url);
-                return `<a class="up-rank-item" href="${href}" target="_blank" rel="noopener">
+                return `<div class="up-rank-item" role="link" tabindex="0" data-href="${esc(href)}"
+                    onclick="window.open(this.dataset.href,'_blank','noopener noreferrer')"
+                    onkeydown="if(event.key==='Enter')window.open(this.dataset.href,'_blank','noopener noreferrer')">
                     <div class="up-rank-num${cls}">${r.rank}</div>
                     <img class="up-rank-profile" src="${esc(r.profile_url)}"
                          onerror="this.src='stickers/s8.png'" alt="" loading="lazy">
@@ -2272,7 +2274,7 @@ function renderUpModal(data, fetchLive = false) {
                         <div class="up-rank-time">${esc(r.timestamp)}</div>
                     </div>
                     <div class="up-rank-count">👍 ${Number(r.up_count).toLocaleString()}</div>
-                </a>`;
+                </div>`;
             }).join('')
             : '<div class="up-empty">랭킹 데이터를 불러오는 중입니다...</div>';
 
