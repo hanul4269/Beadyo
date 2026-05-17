@@ -1277,6 +1277,19 @@
         } catch {}
 
         async function initAuth() {
+            const currentUrl = new URL(window.location.href);
+            const authCode = currentUrl.searchParams.get('code');
+            if (authCode) {
+                const { error } = await authDb.auth.exchangeCodeForSession(authCode);
+                if (error) {
+                    console.error('exchangeCodeForSession:', error);
+                } else {
+                    currentUrl.searchParams.delete('code');
+                    currentUrl.searchParams.delete('state');
+                    history.replaceState({}, document.title, currentUrl.pathname + currentUrl.search + currentUrl.hash);
+                }
+            }
+
             const { data: { session } } = await authDb.auth.getSession();
             authUser = session?.user ?? null;
             updateAuthUI();
