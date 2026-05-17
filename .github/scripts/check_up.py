@@ -1,7 +1,7 @@
-import json, subprocess, sys, re
+import json, subprocess, re, sys
 from datetime import datetime, timezone
 
-SUPABASE_URL     = 'https://qlmcwobfldgmhwhptkfz.supabase.co'
+SUPABASE_URL      = 'https://qlmcwobfldgmhwhptkfz.supabase.co'
 SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR'
 
 HEADERS_SOOP = [
@@ -12,14 +12,9 @@ HEADERS_SOOP = [
     '-H', 'Origin: https://www.sooplive.co.kr',
 ]
 
-def curl(url, extra_headers=None):
-    cmd = ['curl', '-s', '--max-time', '15'] + HEADERS_SOOP
-    if extra_headers:
-        for h in extra_headers:
-            cmd += ['-H', h]
-    cmd.append(url)
-    r = subprocess.run(cmd, capture_output=True, text=True)
-    return r.stdout
+def curl_soop(url):
+    cmd = ['curl', '-s', '--max-time', '15'] + HEADERS_SOOP + [url]
+    return subprocess.run(cmd, capture_output=True, text=True).stdout
 
 def parse_soop_url(url):
     url = url.split('#')[0]
@@ -32,40 +27,36 @@ def profile_url(bj_id):
     return f'https://profile.img.sooplive.co.kr/LOGO/{bj_id}/{bj_id}.jpg'
 
 def fetch_replies(bj_id, post_no):
-    # Attempt 1: afreecatv mobile API (구 도메인, 아직 살아있는 경우)
     endpoints = [
         f'https://api.m.afreecatv.com/station/board/reply/list?szBjId={bj_id}&nTitleNo={post_no}&nPageNo=1&nListCnt=200',
         f'https://api.m.sooplive.co.kr/station/board/reply/list?szBjId={bj_id}&nTitleNo={post_no}&nPageNo=1&nListCnt=200',
     ]
     for url in endpoints:
-        raw = curl(url)
+        raw = curl_soop(url)
         if not raw:
             continue
         try:
             d = json.loads(raw)
-            replies = parse_reply_data(d, bj_id)
+            replies = parse_reply_data(d)
             if replies is not None:
-                print(f'  API success ({url.split("/")[2]}): {len(replies)} replies')
+                print(f'  API OK ({url.split("/")[2]}): {len(replies)} replies')
                 return replies
+            else:
+                print(f'  API response unexpected: {str(d)[:120]}')
         except Exception as e:
-            print(f'  Parse error for {url}: {e}')
-
+            print(f'  Parse error: {e} | raw: {raw[:80]}')
     print(f'  All API attempts failed for {bj_id}/post/{post_no}')
     return None
 
-def parse_reply_data(d, post_bj_id):
-    # afreecatv/sooplive mobile API 응답 파싱
+def parse_reply_data(d):
     if d.get('result') not in (1, '1') and 'data' not in d:
-        print(f'  Unexpected response keys: {list(d.keys())}')
         return None
     data = d.get('data', d)
     items = data.get('list', data.get('reply_list', []))
     if not isinstance(items, list):
         return None
-
     replies = []
     for item in items:
-        # 최상위 댓글만 (대댓글 제외)
         if item.get('depth', 0) != 0 or item.get('parent_no', 0) != 0:
             continue
         bj_id = str(item.get('user_id', '')).strip()
@@ -81,60 +72,52 @@ def parse_reply_data(d, post_bj_id):
         })
     return replies
 
-# ── Supabase에서 활성 이벤트 목록 조회 ──
+# ── supabase-py로 이벤트 조회 ──
 print('Fetching UP events from Supabase...')
-raw = curl(
-    f'{SUPABASE_URL}/rest/v1/up_events?is_active=eq.true&order=sort_order.asc',
-    [
-        f'apikey: {SUPABASE_ANON_KEY}',
-        f'Authorization: Bearer {SUPABASE_ANON_KEY}',
-    ]
-)
+try:
+    from supabase import create_client
+    sb = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+    resp = sb.table('up_events').select('*').eq('is_active', True).order('sort_order').execute()
+    events = resp.data or []
+    print(f'Found {len(events)} active events: {[e.get("tab_name") for e in events]}')
+except Exception as e:
+    print(f'Supabase fetch error: {e}')
+    events = []
 
-# 이전 up.json 로드 (API 실패 시 기존 데이터 유지용)
+# 이전 up.json 로드
 try:
     with open('up.json', 'r', encoding='utf-8') as f:
         prev = json.load(f)
     prev_map = {e['id']: e for e in prev.get('events', [])}
 except Exception:
-    prev = {}
     prev_map = {}
 
 events_out = []
-try:
-    events = json.loads(raw)
-    print(f'Found {len(events)} active events')
-    for ev in events:
-        bj_id, post_no = parse_soop_url(ev['soop_url'])
-        if not bj_id or not post_no:
-            print(f'Could not parse URL: {ev["soop_url"]}')
-            continue
-        print(f'Processing: [{ev["tab_name"]}] {ev["title"]} ({bj_id}/post/{post_no})')
-        replies = fetch_replies(bj_id, post_no)
+for ev in events:
+    bj_id, post_no = parse_soop_url(ev['soop_url'])
+    if not bj_id or not post_no:
+        print(f'Could not parse URL: {ev["soop_url"]}')
+        continue
+    print(f'Processing: [{ev["tab_name"]}] {ev["title"]} ({bj_id}/post/{post_no})')
+    replies = fetch_replies(bj_id, post_no)
 
-        if replies is None:
-            if ev['id'] in prev_map:
-                print(f'  Keeping previous data')
-                events_out.append(prev_map[ev['id']])
-            continue
+    if replies is None:
+        if ev['id'] in prev_map:
+            print(f'  Keeping previous data')
+            events_out.append(prev_map[ev['id']])
+        continue
 
-        replies.sort(key=lambda x: x['up_count'], reverse=True)
-        for i, r in enumerate(replies):
-            r['rank'] = i + 1
+    replies.sort(key=lambda x: x['up_count'], reverse=True)
+    for i, r in enumerate(replies):
+        r['rank'] = i + 1
 
-        events_out.append({
-            'id':       ev['id'],
-            'tab':      ev['tab_name'],
-            'title':    ev['title'],
-            'soop_url': ev['soop_url'],
-            'ranking':  replies,
-        })
-
-except Exception as e:
-    print(f'Error: {e}')
-    if prev.get('events'):
-        print('Keeping all previous data')
-        events_out = prev['events']
+    events_out.append({
+        'id':       ev['id'],
+        'tab':      ev['tab_name'],
+        'title':    ev['title'],
+        'soop_url': ev['soop_url'],
+        'ranking':  replies,
+    })
 
 output = {
     'updated': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),

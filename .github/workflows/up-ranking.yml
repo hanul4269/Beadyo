@@ -14,6 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4.2.2
 
+      - name: Install supabase-py
+        run: pip install supabase --quiet
+
       - name: Fetch UP ranking from SOOP
         run: python3 .github/scripts/check_up.py
 
