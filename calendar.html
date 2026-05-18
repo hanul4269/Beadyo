@@ -243,6 +243,7 @@
             background: var(--accent);
             color: #fff;
         }
+        #mobileTodayBtn { display: none; }
         .cal-area.week-mode .cal-grid {
             grid-template-rows: 1fr;
         }
@@ -1195,6 +1196,9 @@
             .view-toggle #monthModeBtn {
                 display: none;
             }
+            #mobileTodayBtn {
+                display: inline-block;
+            }
             .month-label {
                 min-width: auto;
                 color: #4a3131;
@@ -1381,7 +1385,7 @@
         <div class="view-toggle" role="group" aria-label="캘린더 보기">
             <button type="button" id="weekModeBtn" onclick="setViewMode('week')">주간</button>
             <button type="button" id="monthModeBtn" onclick="setViewMode('month')">월간</button>
-            <button type="button" onclick="goToday()">Today</button>
+            <button type="button" id="mobileTodayBtn" onclick="goToday()">Today</button>
             <button type="button" onclick="openUpModal()"><img src="stickers/s8.png" alt="" style="width:14px;height:14px;vertical-align:middle;margin-right:3px;">UP</button>
         </div>
     </div>
