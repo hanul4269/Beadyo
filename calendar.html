@@ -1838,6 +1838,7 @@ function showToast(msg) {
 // ─── 드래그앤드랍 순서 ───
 let dragState = { id: null, dateStr: null };
 let _dragged = false;
+var renderUpTab;
 
 function getLocalOrder(dateStr, events) {
     const saved = localStorage.getItem('beadyo_order_' + dateStr);
@@ -1995,7 +1996,7 @@ function renderMobileSchedule() {
 }
 
 function renderSecondaryViews() {
-    renderMobileSchedule();
+    if (window.innerWidth <= 640) renderMobileSchedule();
 }
 
 // ─── 캘린더 렌더링 ───
@@ -2260,7 +2261,8 @@ function renderUpModal(data, fetchLive = false) {
         const items = ranking.length
             ? ranking.map(r => {
                 const cls = r.rank <= 3 ? ` top${r.rank}` : '';
-                const href = r.reply_no ? `${baseUrl}#comment_noti${esc(r.reply_no)}` : esc(ev.soop_url);
+                const replyNo = String(r.reply_no || '').replace(/\D/g, '');
+                const href = safeUrl(replyNo ? `${baseUrl}#comment_noti${replyNo}` : ev.soop_url);
                 return `<div class="up-rank-item" role="link" tabindex="0" data-href="${esc(href)}"
                     onclick="window.open(this.dataset.href,'_blank','noopener noreferrer')"
                     onkeydown="if(event.key==='Enter')window.open(this.dataset.href,'_blank','noopener noreferrer')">
@@ -2287,7 +2289,7 @@ function renderUpModal(data, fetchLive = false) {
             <div class="up-updated">업데이트: ${updatedStr}</div>`;
     }
 
-    window.renderUpTab = (idx) => renderTab(idx);
+    renderUpTab = (idx) => renderTab(idx);
     renderTab(0);
 
     if (fetchLive) {
@@ -2607,14 +2609,12 @@ async function initAuth() {
 
     window.addEventListener('message', event => {
         const { data } = event;
-        if (!data || data.type !== 'beadyo-auth-sync') return;
-        setSessionUser(normalizeAuthUser(data.user));
-    });
-
-    window.addEventListener('message', event => {
-        const { data } = event;
-        if (!data || data.type !== 'beadyo-auth-action') return;
-        if (data.action === 'open-admin' && state.isOwner) openAdminModal();
+        if (!data) return;
+        if (data.type === 'beadyo-auth-sync') {
+            setSessionUser(normalizeAuthUser(data.user));
+        } else if (data.type === 'beadyo-auth-action') {
+            if (data.action === 'open-admin' && state.isOwner) openAdminModal();
+        }
     });
 }
 
@@ -2659,9 +2659,12 @@ document.addEventListener('touchend', e => {
     }
 }, { passive: true });
 
+// ── 이스터에그 ──
+const STICKERS = ['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13','s14','s15'];
+const CONFETTI_COLORS = ['#ff7eb3','#ffcd3c','#7bc67e','#6eb5ff','#ff8c69','#c77dff','#ff6b6b'];
+
 // ─── 초기화 ───
 renderLegend();
-renderCalendar();
 loadEvents().catch(err => {
     console.error('initial loadEvents:', err);
     state.events = [];
@@ -2669,10 +2672,6 @@ loadEvents().catch(err => {
 });
 initAuth();
 checkBirthday();
-
-// ── 이스터에그 ──
-const STICKERS = ['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13','s14','s15'];
-const CONFETTI_COLORS = ['#ff7eb3','#ffcd3c','#7bc67e','#6eb5ff','#ff8c69','#c77dff','#ff6b6b'];
 
 function launchConfetti(count = 80) {
     for (let i = 0; i < count; i++) {
