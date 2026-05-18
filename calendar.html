@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -2645,6 +2646,13 @@ document.addEventListener('touchend', e => {
         }
     }
 }, { passive: true });
+
+// 인앱브라우저(네이버 등) 백그라운드 정지 대응 — 포그라운드 복귀 시 재시도
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && state.events.length === 0) {
+        loadEvents();
+    }
+});
 
 // ── 이스터에그 ──
 const STICKERS = ['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13','s14','s15'];
