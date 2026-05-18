@@ -1899,13 +1899,31 @@ async function loadEvents() {
         try { state.events = JSON.parse(cached); renderCalendar(); } catch {}
     }
 
-    const { data, error } = await db
-        .from('schedules')
-        .select('id,date,end_date,start_time,duration,title,type,collab,subtitle,vod_url,memo,is_rest')
-        .gte('date', extFirst)
-        .lte('date', last)
-        .order('date')
-        .order('start_time', { nullsFirst: false });
+    const controller = new AbortController();
+    const tid = setTimeout(() => controller.abort(), 10000);
+
+    let data, error;
+    try {
+        ({ data, error } = await db
+            .from('schedules')
+            .select('id,date,end_date,start_time,duration,title,type,collab,subtitle,vod_url,memo,is_rest')
+            .gte('date', extFirst)
+            .lte('date', last)
+            .order('date')
+            .order('start_time', { nullsFirst: false })
+            .abortSignal(controller.signal));
+    } catch (e) {
+        clearTimeout(tid);
+        if (e.name === 'AbortError') {
+            console.warn('loadEvents: timeout, using cache');
+            if (!cached) { state.events = []; renderCalendar(); }
+        } else {
+            console.error('loadEvents:', e);
+            if (!cached) { state.events = []; renderCalendar(); }
+        }
+        return;
+    }
+    clearTimeout(tid);
 
     if (error) {
         console.error('loadEvents:', error);
