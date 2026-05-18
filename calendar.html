@@ -21,7 +21,6 @@
             --border:       rgba(0,0,0,0.07);
             --text:         #222222;
             --muted:        #888888;
-            --shadow:       0 1px 4px rgba(0,0,0,0.07);
         }
 
         body {
@@ -648,16 +647,6 @@
             text-align: center;
             width: 100%;
         }
-        .type-icon {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            min-width: 1.1em;
-            margin-right: 3px;
-            font-size: 0.9em;
-            opacity: 0.86;
-        }
-
         .chip-subtitle {
             font-size: clamp(10px, 0.9vw, 13px);
             font-weight: 400;
@@ -1148,7 +1137,6 @@
                 background-image: none;
                 height: 100dvh;
                 overflow: hidden;
-                overflow-x: hidden;
             }
             .header {
                 background: transparent;
@@ -1901,13 +1889,18 @@ function dragDrop(e, targetId, dateStr) {
 async function loadEvents() {
     const first = toDateStr(state.year, state.month, 1);
     const last  = toDateStr(state.year, state.month, new Date(state.year, state.month + 1, 0).getDate());
-    // 이전 달부터 로드해 다중일 이벤트 커버
     const prev  = new Date(state.year, state.month - 1, 1);
     const extFirst = `${prev.getFullYear()}-${pad(prev.getMonth() + 1)}-01`;
 
+    const cacheKey = `beadyo_ev_${state.year}_${pad(state.month + 1)}`;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached && state.events.length === 0) {
+        try { state.events = JSON.parse(cached); renderCalendar(); } catch {}
+    }
+
     const { data, error } = await db
         .from('schedules')
-        .select('*')
+        .select('id,date,end_date,start_time,duration,title,type,collab,subtitle,vod_url,memo,is_rest')
         .gte('date', extFirst)
         .lte('date', last)
         .order('date')
@@ -1915,16 +1908,16 @@ async function loadEvents() {
 
     if (error) {
         console.error('loadEvents:', error);
-        state.events = [];
-        renderCalendar();
+        if (!cached) { state.events = []; renderCalendar(); }
         return;
     }
     state.events = data ?? [];
+    try { localStorage.setItem(cacheKey, JSON.stringify(state.events)); } catch {}
     renderCalendar();
 }
 
 async function loadEditors() {
-    const { data, error } = await db.from('editors').select('*').order('created_at');
+    const { data, error } = await db.from('editors').select('id,email,created_at').order('created_at');
     if (error) {
         console.error('loadEditors:', error);
         state.editors = [];
@@ -2061,10 +2054,10 @@ function renderCalendar() {
             (dow === 0 || isHoliday) ? 'sun' : dow === 6 ? 'sat' : '',
         ].filter(Boolean).join(' ');
 
-        const isSingle  = events.length === 1;
+        const isSingle     = events.length === 1;
         const isStableList = events.length >= 2 && events.length <= 4;
-        const isPacked  = events.length >= 5;
-        const isCompact = events.length >= 5 && events.length <= 6;
+        const isCompact    = events.length >= 5 && events.length <= 6;
+        const isPacked     = events.length >= 7;
         const chipsHtml = events.map(ev => {
             const t        = typeOf(ev.type);
             const isMulti  = ev.end_date && ev.end_date !== ev.date;
@@ -2111,7 +2104,7 @@ function renderCalendar() {
                 style="${typeStyle(t)}border-radius:${br};"
                 onclick="if(!_dragged)openViewModal('${esc(ev.id)}')"
                 ${memoAttr} ${memoEvents} ${dragAttrs}
-                title="${esc(ev.title)}">${timeBadge}<div class="chip-body" style="${bodyStyle}"><span class="type-icon">${esc(t.icon)}</span>${vodDot}${esc(ev.title)}</div>${subtitleHtml}</button>`;
+                title="${esc(ev.title)}">${timeBadge}<div class="chip-body" style="${bodyStyle}">${vodDot}${esc(ev.title)}</div>${subtitleHtml}</button>`;
         }).join('');
 
         const holiday   = !other ? (getHoliday(dateStr) || null) : null;
@@ -2636,13 +2629,7 @@ async function setSessionUser(user) {
     await loadEditors();
     state.isEditor = state.isOwner || state.editors.some(e => e.email.toLowerCase() === state.user.email.toLowerCase());
     document.body.classList.toggle('is-editor', state.isEditor);
-    updateHeaderUI();
     renderCalendar();
-}
-
-function updateHeaderUI() {
-    const right = document.getElementById('headerRight');
-    right.innerHTML = '';
 }
 
 // ─── 모바일 스와이프 ───
