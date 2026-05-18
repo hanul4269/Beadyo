@@ -1680,6 +1680,7 @@ const state = {
     isOwner: false,
     editors: [],
     viewMode: 'month',
+    weekStart: null,
     mobileStartDate: dateToStr(new Date()),
 };
 
@@ -1891,9 +1892,17 @@ function dragDrop(e, targetId, dateStr) {
 // ─── 데이터 로드 ───
 async function loadEvents() {
     const first = toDateStr(state.year, state.month, 1);
-    const last  = toDateStr(state.year, state.month, new Date(state.year, state.month + 1, 0).getDate());
+    let   last  = toDateStr(state.year, state.month, new Date(state.year, state.month + 1, 0).getDate());
     const prev  = new Date(state.year, state.month - 1, 1);
     const extFirst = `${prev.getFullYear()}-${pad(prev.getMonth() + 1)}-01`;
+
+    // 주간 뷰에서 주가 월 경계를 넘는 경우 다음 달까지 포함
+    if (state.viewMode === 'week' && state.weekStart) {
+        const [wy, wm, wd] = state.weekStart.split('-').map(Number);
+        const weekEnd = addDays(new Date(wy, wm - 1, wd), 6);
+        const weekEndStr = dateToStr(weekEnd);
+        if (weekEndStr > last) last = weekEndStr;
+    }
 
     const cacheKey = `beadyo_ev_${state.year}_${pad(state.month + 1)}`;
     const cached = localStorage.getItem(cacheKey);
@@ -2015,7 +2024,19 @@ function renderSecondaryViews() {
 
 // ─── 캘린더 렌더링 ───
 function renderCalendar() {
-    document.getElementById('monthLabel').textContent = `${state.year}.${pad(state.month + 1)}`;
+    if (state.viewMode === 'week' && state.weekStart) {
+        const [wy, wm, wd] = state.weekStart.split('-').map(Number);
+        const wStart = new Date(wy, wm - 1, wd);
+        const wEnd   = addDays(wStart, 6);
+        const fmt = d => `${d.getMonth() + 1}.${pad(d.getDate())}`;
+        document.getElementById('monthLabel').textContent = `${fmt(wStart)} ~ ${fmt(wEnd)}`;
+        document.querySelector('.nav-btn.prev').dataset.tip = '이전 주';
+        document.querySelector('.nav-btn.next').dataset.tip = '다음 주';
+    } else {
+        document.getElementById('monthLabel').textContent = `${state.year}.${pad(state.month + 1)}`;
+        document.querySelector('.nav-btn.prev').dataset.tip = '이전 달';
+        document.querySelector('.nav-btn.next').dataset.tip = '다음 달';
+    }
     document.getElementById('weekModeBtn')?.classList.toggle('active', state.viewMode === 'week');
     document.getElementById('monthModeBtn')?.classList.toggle('active', state.viewMode === 'month');
     document.querySelector('.cal-area')?.classList.toggle('week-mode', state.viewMode === 'week');
@@ -2025,16 +2046,18 @@ function renderCalendar() {
 
     const cells = [];
     if (state.viewMode === 'week') {
-        const base = state.year === today.getFullYear() && state.month === today.getMonth()
-            ? today
-            : new Date(state.year, state.month, 1);
-        const start = addDays(base, -base.getDay());
+        if (!state.weekStart) {
+            const ws = addDays(today, -today.getDay());
+            state.weekStart = dateToStr(ws);
+        }
+        const [wy, wm, wd] = state.weekStart.split('-').map(Number);
+        const start = new Date(wy, wm - 1, wd);
         for (let i = 0; i < 7; i++) {
             const date = addDays(start, i);
             cells.push({
                 day: date.getDate(),
                 dateStr: dateToStr(date),
-                other: date.getMonth() !== state.month,
+                other: false,
             });
         }
     } else {
@@ -2572,10 +2595,34 @@ async function removeUpEvent(id) {
 // ─── 네비게이션 ───
 function setViewMode(mode) {
     state.viewMode = mode === 'week' ? 'week' : 'month';
+    if (state.viewMode === 'week' && !state.weekStart) {
+        const today = new Date();
+        const ws = addDays(today, -today.getDay());
+        state.weekStart = dateToStr(ws);
+    }
     renderCalendar();
 }
 
 function changeMonth(delta) {
+    if (state.viewMode === 'week') {
+        if (!state.weekStart) {
+            const today = new Date();
+            state.weekStart = dateToStr(addDays(today, -today.getDay()));
+        }
+        const [wy, wm, wd] = state.weekStart.split('-').map(Number);
+        const newWs = addDays(new Date(wy, wm - 1, wd), delta * 7);
+        state.weekStart = dateToStr(newWs);
+        const newYear  = newWs.getFullYear();
+        const newMonth = newWs.getMonth();
+        if (newYear !== state.year || newMonth !== state.month) {
+            state.year  = newYear;
+            state.month = newMonth;
+            loadEvents();
+        } else {
+            renderCalendar();
+        }
+        return;
+    }
     state.month += delta;
     if (state.month > 11) { state.month = 0; state.year++; }
     if (state.month < 0)  { state.month = 11; state.year--; }
@@ -2587,6 +2634,7 @@ function goToday() {
     state.year  = now.getFullYear();
     state.month = now.getMonth();
     state.mobileStartDate = dateToStr(now);
+    state.weekStart = dateToStr(addDays(now, -now.getDay()));
     loadEvents();
 }
 
