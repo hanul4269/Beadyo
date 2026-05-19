@@ -506,6 +506,7 @@
             display: -webkit-box;
             -webkit-line-clamp: 1;
             font-weight: 700;
+            font-size: clamp(10px, 1.3vw, 15px) !important;
         }
         .chips-area.stable-list .chip-time-badge {
             font-size: clamp(8px, 0.8vw, 10px);
@@ -539,6 +540,19 @@
         }
         .chips-area.stable-list .event-chip.has-subtitle .chip-collab {
             font-size: clamp(7px, 0.68vw, 9px) !important;
+            line-height: 1.1;
+        }
+        .chips-area.stable-list .event-chip.has-collab {
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
+        .chips-area.stable-list .event-chip.has-collab .chip-body {
+            font-size: clamp(10px, 1.0vw, 13px) !important;
+            line-height: 1.1;
+            -webkit-line-clamp: 1;
+        }
+        .chips-area.stable-list .event-chip.has-collab .chip-collab {
+            font-size: clamp(8px, 0.75vw, 10px) !important;
             line-height: 1.1;
         }
         .chips-area.stable-list.count-3 .event-chip.has-time {
@@ -575,7 +589,9 @@
             grid-column: 1 / -1;
         }
         .chips-area.packed .event-chip.has-subtitle,
-        .chips-area.compact .event-chip.has-subtitle {
+        .chips-area.packed .event-chip.has-collab,
+        .chips-area.compact .event-chip.has-subtitle,
+        .chips-area.compact .event-chip.has-collab {
             grid-column: 1 / -1;
             min-height: 42px;
             padding-top: 5px;
@@ -586,13 +602,20 @@
             -webkit-line-clamp: 1;
             line-height: 1.2;
         }
+        .chips-area.packed .event-chip.has-collab .chip-body,
+        .chips-area.compact .event-chip.has-collab .chip-body {
+            -webkit-line-clamp: 1;
+            line-height: 1.2;
+        }
         .chips-area.packed .event-chip.has-subtitle .chip-subtitle,
         .chips-area.compact .event-chip.has-subtitle .chip-subtitle {
             line-height: 1.2;
             -webkit-line-clamp: 1;
         }
         .chips-area.packed .event-chip.has-subtitle .chip-collab,
-        .chips-area.compact .event-chip.has-subtitle .chip-collab {
+        .chips-area.compact .event-chip.has-subtitle .chip-collab,
+        .chips-area.packed .event-chip.has-collab .chip-collab,
+        .chips-area.compact .event-chip.has-collab .chip-collab {
             line-height: 1.2;
         }
 
@@ -1036,46 +1059,32 @@
         .field-row .field { flex: 1; margin-bottom: 0; }
 
         /* ── 시간 피커 ── */
-        .tp-label-row {
+        .tp-input-row {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 5px;
+            gap: 6px;
+            margin-bottom: 6px;
         }
-        .tp-label-row > label { margin-bottom: 0; }
-        .tp-enable {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .tp-input-row input[type="text"] {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .tp-toggle-btn {
+            width: 36px; height: 36px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            background: #f5f5f7;
             cursor: pointer;
-            user-select: none;
-        }
-        .tp-enable input { display: none; }
-        .tp-sw {
-            width: 32px;
-            height: 18px;
-            border-radius: 9px;
-            background: #d0d0d0;
-            position: relative;
-            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
+            transition: background 0.15s, border-color 0.15s;
+            padding: 0;
         }
-        .tp-sw::after {
-            content: '';
-            position: absolute;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #fff;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.18s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.18);
-        }
-        .tp-enable input:checked ~ .tp-sw { background: var(--accent); }
-        .tp-enable input:checked ~ .tp-sw::after { transform: translateX(14px); }
-        .tp-enable-text { font-size: 12px; color: #aaa; }
-        .tp-enable input:checked ~ .tp-sw ~ .tp-enable-text { color: var(--accent); }
+        .tp-toggle-btn svg { width: 16px; height: 16px; stroke: #888; transition: stroke 0.15s; }
+        .tp-toggle-btn:hover, .tp-toggle-btn.active { background: var(--accent-light); border-color: var(--accent); }
+        .tp-toggle-btn:hover svg, .tp-toggle-btn.active svg { stroke: var(--accent); }
 
         .tp-wrap {
             position: relative;
@@ -1109,7 +1118,9 @@
             scroll-snap-type: y mandatory;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            cursor: grab;
         }
+        .tp-col.grabbing { cursor: grabbing; }
         .tp-col::-webkit-scrollbar { display: none; }
         .tp-pad { height: 36px; scroll-snap-align: none; }
         .tp-item {
@@ -1120,8 +1131,8 @@
             font-size: 17px;
             font-weight: 600;
             color: #222;
-            scroll-snap-align: start;
-            cursor: pointer;
+            scroll-snap-align: center;
+            cursor: grab;
             user-select: none;
         }
         .tp-sep {
@@ -1571,13 +1582,12 @@
         </div>
         <div class="field-row" style="margin-bottom:13px;">
             <div class="field">
-                <div class="tp-label-row">
-                    <label>방송 시간</label>
-                    <label class="tp-enable">
-                        <input type="checkbox" id="editTimeEnable" onchange="onTimeEnableChange()">
-                        <span class="tp-sw"></span>
-                        <span class="tp-enable-text">설정</span>
-                    </label>
+                <label>방송 시간</label>
+                <div class="tp-input-row">
+                    <input type="text" id="editTime" placeholder="HH:MM" maxlength="5" oninput="onTimeTextInput(this)">
+                    <button type="button" class="tp-toggle-btn" id="tpToggleBtn" onclick="toggleTimePicker()" title="시간 선택기">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+                    </button>
                 </div>
                 <div class="tp-wrap disabled" id="tpWrap">
                     <div class="tp-selector"></div>
@@ -1587,7 +1597,6 @@
                         <div class="tp-col" id="tpMin"></div>
                     </div>
                 </div>
-                <input type="hidden" id="editTime">
             </div>
             <div class="field">
                 <label>방송 길이</label>

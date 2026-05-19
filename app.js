@@ -626,7 +626,10 @@ function renderCalendar() {
                 : '';
             const bodyStyle = `${!isStart ? 'opacity:0.55;' : ''}font-size:${chipFontSize(ev.title, isSingle, isCompact, events.length)};${newlineStyle}`;
             const titleSizeClass = String(ev.title ?? '').length <= 5 ? 'short-title' : 'long-title';
-            const subtitleClass = isStart && (ev.subtitle || ev.collab) ? ' has-subtitle' : '';
+            const subtitleClass = !isStart ? ''
+                : ev.subtitle ? ' has-subtitle'
+                : ev.collab   ? ' has-collab'
+                : '';
 
             const memoAttr = isStart && ev.memo
                 ? `data-memo="${esc(ev.memo)}"` : '';
@@ -869,8 +872,8 @@ function _tpVal(col, count) {
 }
 
 function _tpSync() {
-    const cb = document.getElementById('editTimeEnable');
-    if (!cb?.checked) return;
+    const wrap = document.getElementById('tpWrap');
+    if (!wrap || wrap.classList.contains('disabled')) return;
     const h = document.getElementById('tpHour');
     const m = document.getElementById('tpMin');
     const inp = document.getElementById('editTime');
@@ -878,44 +881,129 @@ function _tpSync() {
     inp.value = `${String(_tpVal(h, 24)).padStart(2, '0')}:${String(_tpVal(m, 60)).padStart(2, '0')}`;
 }
 
-function onTimeEnableChange() {
-    const cb = document.getElementById('editTimeEnable');
+function _tpAddMouseDrag(col) {
+    let active = false;
+    let lastY = 0, lastTime = 0, velocity = 0;
+    let animId = null;
+    const FRICTION = 0.92;
+
+    function snapTo(scrollTop) {
+        if (animId) { cancelAnimationFrame(animId); animId = null; }
+        const target = Math.round(scrollTop / _TP_H) * _TP_H;
+        const start = col.scrollTop;
+        const dist = target - start;
+        if (Math.abs(dist) < 1) { col.scrollTop = target; col.style.scrollSnapType = ''; _tpSync(); return; }
+        const dur = Math.min(320, Math.max(100, Math.abs(dist) * 1.2));
+        const t0 = performance.now();
+        (function frame(now) {
+            const p = Math.min(1, (now - t0) / dur);
+            const ease = 1 - Math.pow(1 - p, 3);
+            col.scrollTop = start + dist * ease;
+            if (p < 1) { animId = requestAnimationFrame(frame); }
+            else { col.scrollTop = target; col.style.scrollSnapType = ''; _tpSync(); }
+        })(t0);
+    }
+
+    function inertia() {
+        if (Math.abs(velocity) < 0.5) { snapTo(col.scrollTop); return; }
+        col.scrollTop += velocity;
+        velocity *= FRICTION;
+        animId = requestAnimationFrame(inertia);
+    }
+
+    col.addEventListener('mousedown', e => {
+        if (animId) { cancelAnimationFrame(animId); animId = null; }
+        active = true;
+        lastY = e.clientY;
+        lastTime = performance.now();
+        velocity = 0;
+        col.style.scrollSnapType = 'none';
+        col.classList.add('grabbing');
+        e.preventDefault();
+    });
+    window.addEventListener('mousemove', e => {
+        if (!active) return;
+        const now = performance.now();
+        const dt = Math.max(1, now - lastTime);
+        const dy = e.clientY - lastY;
+        velocity = -dy * 16 / dt;
+        col.scrollTop -= dy;
+        lastY = e.clientY;
+        lastTime = now;
+    });
+    window.addEventListener('mouseup', () => {
+        if (!active) return;
+        active = false;
+        col.classList.remove('grabbing');
+        animId = requestAnimationFrame(inertia);
+    });
+}
+
+function toggleTimePicker() {
     const wrap = document.getElementById('tpWrap');
+    const btn = document.getElementById('tpToggleBtn');
     const inp = document.getElementById('editTime');
-    const enabled = cb.checked;
-    wrap.classList.toggle('disabled', !enabled);
-    if (!enabled) {
-        inp.value = '';
+    const isOpen = !wrap.classList.contains('disabled');
+    if (isOpen) {
+        wrap.classList.add('disabled');
+        btn.classList.remove('active');
     } else {
-        const h = document.getElementById('tpHour');
-        if (h && h.scrollTop === 0) h.scrollTo({ top: 19 * _TP_H, behavior: 'instant' });
-        _tpSync();
+        wrap.classList.remove('disabled');
+        btn.classList.add('active');
+        const match = inp.value.match(/^(\d{1,2}):(\d{2})$/);
+        const h = match ? Math.min(23, parseInt(match[1], 10)) : 0;
+        const m = match ? Math.min(59, parseInt(match[2], 10)) : 0;
+        setTimeout(() => {
+            document.getElementById('tpHour').scrollTo({ top: h * _TP_H, behavior: 'instant' });
+            document.getElementById('tpMin').scrollTo({ top: m * _TP_H, behavior: 'instant' });
+            _tpSync();
+        }, 10);
     }
 }
+
+function onTimeTextInput(inp) {
+    let val = inp.value.replace(/[^\d:]/g, '');
+    if (val !== inp.value) inp.value = val;
+    if (val.length === 2 && !val.includes(':')) {
+        inp.value = val + ':';
+        val = inp.value;
+    }
+    const wrap = document.getElementById('tpWrap');
+    if (!wrap || wrap.classList.contains('disabled')) return;
+    const match = val.match(/^(\d{1,2}):(\d{2})$/);
+    if (match) {
+        const h = Math.min(23, parseInt(match[1], 10));
+        const m = Math.min(59, parseInt(match[2], 10));
+        document.getElementById('tpHour')?.scrollTo({ top: h * _TP_H, behavior: 'smooth' });
+        document.getElementById('tpMin')?.scrollTo({ top: m * _TP_H, behavior: 'smooth' });
+    }
+}
+
+function onTimeEnableChange() {}
 
 function initTimePicker(value) {
     const hCol = document.getElementById('tpHour');
     const mCol = document.getElementById('tpMin');
     const wrap = document.getElementById('tpWrap');
-    const cb = document.getElementById('editTimeEnable');
+    const btn = document.getElementById('tpToggleBtn');
     const inp = document.getElementById('editTime');
     if (!hCol || !mCol) return;
 
     _tpBuild(hCol, 24);
     _tpBuild(mCol, 60);
+    _tpAddMouseDrag(hCol);
+    _tpAddMouseDrag(mCol);
 
-    const hasTime = !!value;
-    cb.checked = hasTime;
-    wrap.classList.toggle('disabled', !hasTime);
+    wrap.classList.add('disabled');
+    btn?.classList.remove('active');
     inp.value = value || '';
 
-    const h = hasTime ? parseInt(value, 10) : 19;
-    const m = hasTime ? parseInt(value.split(':')[1], 10) : 0;
+    const h = value ? parseInt(value, 10) : 0;
+    const m = value ? parseInt(value.split(':')[1], 10) : 0;
 
     setTimeout(() => {
         hCol.scrollTo({ top: h * _TP_H, behavior: 'instant' });
         mCol.scrollTo({ top: m * _TP_H, behavior: 'instant' });
-        if (hasTime) _tpSync();
     }, 30);
 
     hCol.removeEventListener('scroll', _tpSync);
