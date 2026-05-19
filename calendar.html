@@ -805,6 +805,7 @@
             font-weight: 700;
             margin-bottom: 16px;
             padding-right: 28px;
+            white-space: pre-wrap;
         }
         /* ── UP 랭킹 모달 ── */
         #upModal .modal { max-width: 520px; }
@@ -1006,6 +1007,7 @@
             box-shadow: 0 0 0 3px var(--accent-light);
         }
         .field textarea { resize: vertical; min-height: 64px; }
+        #editTitle { min-height: 0; height: 54px; resize: none; line-height: 1.45; }
         .field-row { display: flex; gap: 10px; }
         .field-row .field { flex: 1; margin-bottom: 0; }
 
@@ -1442,7 +1444,7 @@
         </div>
         <div class="field">
             <label>제목 *</label>
-            <input type="text" id="editTitle" placeholder="방송/일정 제목">
+            <textarea id="editTitle" rows="2" placeholder="방송/일정 제목"></textarea>
         </div>
         <div class="field">
             <label>컨텐츠 유형</label>

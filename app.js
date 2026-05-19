@@ -597,7 +597,8 @@ function renderCalendar() {
                 ? `<div class="chip-time-badge">${toAmPm(ev.start_time)}</div>` : '';
             const vodDot = isStart && ev.vod_url
                 ? `<span class="vod-dot"></span>` : '';
-            const bodyStyle = `${!isStart ? 'opacity:0.55;' : ''}font-size:${chipFontSize(ev.title, isSingle, isCompact, events.length)};`;
+            const hasNewline   = ev.title.includes('\n');
+            const bodyStyle = `${!isStart ? 'opacity:0.55;' : ''}font-size:${chipFontSize(ev.title, isSingle, isCompact, events.length)};${hasNewline ? 'white-space:pre-line;' : ''}`;
             const titleSizeClass = String(ev.title ?? '').length <= 5 ? 'short-title' : 'long-title';
             const subtitleClass = isStart && ev.subtitle ? ' has-subtitle' : '';
 
@@ -915,7 +916,7 @@ async function repeatWeekly(id) {
 }
 
 async function saveEvent() {
-    const title = document.getElementById('editTitle').value.trim();
+    const title = document.getElementById('editTitle').value.trim().replace(/\n{2,}/g, '\n');
     if (!title) { showToast('제목을 입력해주세요'); return; }
     const date = document.getElementById('editDate').value;
     if (!date)  { showToast('날짜를 선택해주세요'); return; }
