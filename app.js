@@ -148,7 +148,20 @@ const state = {
     mobileStartDate: dateToStr(new Date()),
 };
 
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let db = null;
+let _dbReady = null;
+function _ensureDb() {
+    if (db) return Promise.resolve(db);
+    if (_dbReady) return _dbReady;
+    _dbReady = new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'supabase.min.js';
+        s.onload = () => { db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); resolve(db); };
+        s.onerror = reject;
+        document.head.appendChild(s);
+    });
+    return _dbReady;
+}
 
 function typeOf(key) {
     return EVENT_TYPES.find(t => t.key === key) ?? EVENT_TYPES.find(t => t.key === 'general');
@@ -431,6 +444,7 @@ async function loadEvents() {
 }
 
 async function loadEditors() {
+    await _ensureDb();
     const { data, error } = await db.from('editors').select('id,email,created_at').order('created_at');
     if (error) {
         console.error('loadEditors:', error);
@@ -896,6 +910,7 @@ function copyEvent(id) {
 }
 
 async function repeatWeekly(id) {
+    await _ensureDb();
     const ev = state.events.find(e => e.id === id);
     if (!ev || !state.isEditor) return;
     const count = Number(prompt('몇 주 반복할까요? 다음 주부터 생성됩니다.', '4'));
@@ -928,6 +943,7 @@ async function repeatWeekly(id) {
 }
 
 async function saveEvent() {
+    await _ensureDb();
     const title = document.getElementById('editTitle').value.trim().replace(/\n{2,}/g, '\n');
     if (!title) { showToast('제목을 입력해주세요'); return; }
     const date = document.getElementById('editDate').value;
@@ -959,6 +975,7 @@ async function saveEvent() {
 }
 
 async function deleteEvent(id) {
+    await _ensureDb();
     if (!confirm('이 일정을 삭제하시겠습니까?')) return;
     const { error } = await db.from('schedules').delete().eq('id', id);
     if (error) { showToast('삭제 실패'); return; }
@@ -1002,6 +1019,7 @@ function renderEditorList() {
 }
 
 async function addEditor() {
+    await _ensureDb();
     const email = document.getElementById('newEditorEmail').value.trim().toLowerCase();
     if (!email.includes('@')) { showToast('올바른 이메일을 입력해주세요'); return; }
     const { error } = await db.from('editors').insert({ email, added_by: state.user?.email });
@@ -1016,6 +1034,7 @@ async function addEditor() {
 }
 
 async function removeEditor(id) {
+    await _ensureDb();
     if (!confirm('이 편집자를 삭제하시겠습니까?')) return;
     const { error } = await db.from('editors').delete().eq('id', id);
     if (error) { showToast('삭제 실패'); return; }
@@ -1028,6 +1047,7 @@ async function removeEditor(id) {
 let upEvents = [];
 
 async function loadUpEvents() {
+    await _ensureDb();
     const { data, error } = await db.from('up_events').select('*').order('sort_order');
     if (!error) upEvents = data || [];
 }
@@ -1051,6 +1071,7 @@ function renderUpEventList() {
 }
 
 async function addUpEvent() {
+    await _ensureDb();
     const tabName  = document.getElementById('newUpTab').value.trim();
     const title    = document.getElementById('newUpTitle').value.trim();
     const soopUrl  = document.getElementById('newUpUrl').value.trim();
@@ -1072,6 +1093,7 @@ async function addUpEvent() {
 }
 
 async function removeUpEvent(id) {
+    await _ensureDb();
     if (!confirm('이 UP 이벤트를 삭제하시겠습니까?')) return;
     const { error } = await db.from('up_events').delete().eq('id', id);
     if (error) { showToast('삭제 실패'); return; }
@@ -1151,6 +1173,7 @@ function normalizeAuthUser(userLike) {
 }
 
 async function initAuth() {
+    await _ensureDb();
     // 이전 세션에서 편집자였다면 즉시 is-editor 클래스 적용 (네트워크 대기 없이)
     if (localStorage.getItem('beadyo_was_editor') === '1') {
         document.body.classList.add('is-editor');
