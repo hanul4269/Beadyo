@@ -724,15 +724,41 @@ function closeViewModal() { document.getElementById('viewModal').classList.remov
 async function openUpModal() {
     document.getElementById('upModal').classList.add('open');
     document.getElementById('upModalContent').innerHTML = '<div class="up-empty">불러오는 중...</div>';
+
+    // up.json 캐시 로드
+    let cachedData = { updated: null, events: [] };
     try {
         const res = await fetch('up.json?t=' + Date.now());
-        if (!res.ok) throw new Error('fetch failed');
-        const data = await res.json();
-        renderUpModal(data, true);
-    } catch {
+        if (res.ok) cachedData = await res.json();
+    } catch {}
+
+    // Supabase에서 현재 활성 이벤트 목록 직접 조회
+    let sbEvents = [];
+    try {
+        await _ensureDb();
+        const { data } = await db.from('up_events').select('*').eq('is_active', true).order('sort_order');
+        sbEvents = data || [];
+    } catch {}
+
+    // Supabase 목록 기준으로 up.json 캐시 랭킹 병합
+    const cachedMap = {};
+    for (const e of (cachedData.events || [])) cachedMap[e.id] = e;
+
+    const mergedEvents = sbEvents.map(e => ({
+        id:       e.id,
+        tab:      e.tab_name,
+        title:    e.title,
+        soop_url: e.soop_url,
+        ranking:  cachedMap[e.id]?.ranking || [],
+    }));
+
+    if (!mergedEvents.length && !cachedData.events?.length) {
         document.getElementById('upModalContent').innerHTML =
-            '<div class="up-empty">데이터를 불러올 수 없습니다</div>';
+            '<div class="up-empty">진행 중인 UP 이벤트가 없습니다</div>';
+        return;
     }
+
+    renderUpModal({ updated: cachedData.updated, events: mergedEvents.length ? mergedEvents : cachedData.events }, true);
 }
 function closeUpModal() {
     document.getElementById('upModal').classList.remove('open');

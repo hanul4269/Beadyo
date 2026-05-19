@@ -92,7 +92,14 @@ events_out = []
 for ev in events:
     bj_id, post_no = parse_soop_url(ev['soop_url'])
     if not bj_id or not post_no:
-        print(f'Could not parse URL: {ev["soop_url"]}')
+        print(f'Could not parse URL (no post): {ev["soop_url"]}')
+        events_out.append({
+            'id':       ev['id'],
+            'tab':      ev['tab_name'],
+            'title':    ev['title'],
+            'soop_url': ev['soop_url'],
+            'ranking':  prev_map.get(ev['id'], {}).get('ranking', []),
+        })
         continue
     print(f'Processing: [{ev["tab_name"]}] {ev["title"]} ({bj_id}/post/{post_no})')
     replies = fetch_replies(bj_id, post_no)
