@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
+    <link rel="preload" href="supabase.min.js" as="script">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet"></noscript>
     <style>
@@ -2663,6 +2664,10 @@ function normalizeAuthUser(userLike) {
 }
 
 async function initAuth() {
+    // 이전 세션에서 편집자였다면 즉시 is-editor 클래스 적용 (네트워크 대기 없이)
+    if (localStorage.getItem('beadyo_was_editor') === '1') {
+        document.body.classList.add('is-editor');
+    }
     const { data: { session } } = await db.auth.getSession();
     await setSessionUser(normalizeAuthUser(session?.user));
     db.auth.onAuthStateChange((_event, session) => {
@@ -2690,7 +2695,7 @@ async function setSessionUser(user) {
         state.isEditor = false;
         state.isOwner = false;
         document.body.classList.remove('is-editor');
-        updateHeaderUI();
+        localStorage.removeItem('beadyo_was_editor');
         renderCalendar();
         return;
     }
@@ -2698,6 +2703,7 @@ async function setSessionUser(user) {
     await loadEditors();
     state.isEditor = state.isOwner || state.editors.some(e => e.email.toLowerCase() === state.user.email.toLowerCase());
     document.body.classList.toggle('is-editor', state.isEditor);
+    localStorage.setItem('beadyo_was_editor', state.isEditor ? '1' : '0');
     renderCalendar();
 }
 
