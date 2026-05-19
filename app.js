@@ -294,6 +294,7 @@ function showToast(msg) {
 // ─── 드래그앤드랍 순서 ───
 let dragState = { id: null, dateStr: null };
 let _dragged = false;
+let _eventsLoaded = false;
 var renderUpTab;
 
 function getLocalOrder(dateStr, events) {
@@ -374,6 +375,15 @@ async function loadEvents() {
         try { state.events = JSON.parse(cached); renderCalendar(); } catch {}
     }
 
+    // 캐시 없으면 빈 상태라도 즉시 렌더 (모바일 무한 빈 화면 방지)
+    if (state.events.length === 0) renderCalendar();
+
+    // 페이지가 hidden이면 fetch 건너뜀 — visibilitychange 복귀 시 재시도
+    if (document.visibilityState !== 'visible') {
+        _eventsLoaded = false;
+        return;
+    }
+
     const controller = new AbortController();
     const tid = setTimeout(() => controller.abort(), 10000);
 
@@ -407,6 +417,7 @@ async function loadEvents() {
     }
     state.events = data ?? [];
     try { localStorage.setItem(cacheKey, JSON.stringify(state.events)); } catch {}
+    _eventsLoaded = true;
     renderCalendar();
 }
 
@@ -1186,7 +1197,7 @@ document.addEventListener('touchend', e => {
 
 // 인앱브라우저(네이버 등) 백그라운드 정지 대응 — 포그라운드 복귀 시 재시도
 document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && state.events.length === 0) {
+    if (document.visibilityState === 'visible' && !_eventsLoaded) {
         loadEvents();
     }
 });
