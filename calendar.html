@@ -518,6 +518,10 @@
             margin-top: 1px;
             line-height: 1.2;
         }
+        .chips-area.stable-list .chip-collab {
+            margin-top: 1px;
+            line-height: 1.2;
+        }
         .chips-area.stable-list .event-chip.has-subtitle {
             padding-top: 4px;
             padding-bottom: 4px;
@@ -532,6 +536,10 @@
             font-size: clamp(7px, 0.68vw, 9px) !important;
             line-height: 1.1;
             -webkit-line-clamp: 1;
+        }
+        .chips-area.stable-list .event-chip.has-subtitle .chip-collab {
+            font-size: clamp(7px, 0.68vw, 9px) !important;
+            line-height: 1.1;
         }
         .chips-area.stable-list.count-3 .event-chip.has-time {
             padding-top: 3px;
@@ -582,6 +590,10 @@
         .chips-area.compact .event-chip.has-subtitle .chip-subtitle {
             line-height: 1.2;
             -webkit-line-clamp: 1;
+        }
+        .chips-area.packed .event-chip.has-subtitle .chip-collab,
+        .chips-area.compact .event-chip.has-subtitle .chip-collab {
+            line-height: 1.2;
         }
 
         /* ── 5-6 이벤트 2열 컴팩트 ── */
@@ -664,6 +676,18 @@
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
             line-height: 1.25;
+        }
+        .chip-collab {
+            font-size: clamp(9px, 0.82vw, 12px);
+            font-weight: 500;
+            opacity: 0.68;
+            text-align: center;
+            width: 100%;
+            margin-top: 1px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            line-height: 1.2;
         }
 
         .vod-dot {
@@ -1579,7 +1603,7 @@
             <select id="editType"></select>
         </div>
         <div class="field">
-            <label>콜라보 (w.)</label>
+            <label>합방멤버</label>
             <input type="text" id="editCollab" placeholder="예: 크로방, 서브병주">
         </div>
         <div class="field">

@@ -626,7 +626,7 @@ function renderCalendar() {
                 : '';
             const bodyStyle = `${!isStart ? 'opacity:0.55;' : ''}font-size:${chipFontSize(ev.title, isSingle, isCompact, events.length)};${newlineStyle}`;
             const titleSizeClass = String(ev.title ?? '').length <= 5 ? 'short-title' : 'long-title';
-            const subtitleClass = isStart && ev.subtitle ? ' has-subtitle' : '';
+            const subtitleClass = isStart && (ev.subtitle || ev.collab) ? ' has-subtitle' : '';
 
             const memoAttr = isStart && ev.memo
                 ? `data-memo="${esc(ev.memo)}"` : '';
@@ -635,6 +635,8 @@ function renderCalendar() {
 
             const subtitleHtml = isStart && ev.subtitle
                 ? `<div class="chip-subtitle" style="font-size:${chipSubtitleFontSize(ev.subtitle, isSingle, isCompact)};">${esc(ev.subtitle)}</div>` : '';
+            const collabHtml = isStart && ev.collab
+                ? `<div class="chip-collab">w. ${esc(ev.collab)}</div>` : '';
 
             const dragAttrs = state.isEditor && isStart
                 ? `draggable="true"
@@ -650,7 +652,7 @@ function renderCalendar() {
                 style="${typeStyle(t)}border-radius:${br};"
                 onclick="if(!_dragged)openViewModal('${esc(ev.id)}')"
                 ${memoAttr} ${memoEvents} ${dragAttrs}
-                title="${esc(ev.title)}">${timeBadge}<div class="chip-body" style="${bodyStyle}">${vodDot}${esc(ev.title)}</div>${subtitleHtml}</button>`;
+                title="${esc(ev.title)}">${timeBadge}<div class="chip-body" style="${bodyStyle}">${vodDot}${esc(ev.title)}</div>${subtitleHtml}${collabHtml}</button>`;
         }).join('');
 
         const holiday   = !other ? (getHoliday(dateStr) || null) : null;
@@ -695,7 +697,7 @@ function openViewModal(id) {
         html += `<div class="view-section"><div class="view-label">시간</div><div class="view-value">${t2}</div></div>`;
     }
     if (ev.collab)
-        html += `<div class="view-section"><div class="view-label">w.</div><div class="view-value">${esc(ev.collab)}</div></div>`;
+        html += `<div class="view-section"><div class="view-label">합방</div><div class="view-value">${esc(ev.collab)}</div></div>`;
     if (ev.subtitle)
         html += `<div class="view-section"><div class="view-label">부제</div><div class="view-value">${esc(ev.subtitle)}</div></div>`;
     if (ev.memo)
