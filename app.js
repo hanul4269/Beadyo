@@ -893,11 +893,15 @@ function _tpAddMouseDrag(col) {
 
     function snapTo(fromScrollTop) {
         cancelAnim();
-        col.classList.remove('dragging');
         const target = Math.round(fromScrollTop / _TP_H) * _TP_H;
         const s0 = col.scrollTop;
         const dist = target - s0;
-        if (Math.abs(dist) < 0.5) { col.scrollTop = target; _tpSync(); return; }
+        if (Math.abs(dist) < 0.5) {
+            col.scrollTop = target;
+            col.classList.remove('dragging');
+            _tpSync();
+            return;
+        }
         const dur = Math.min(300, Math.max(80, Math.abs(dist) * 1.4));
         const t0 = performance.now();
         function frame(now) {
@@ -905,7 +909,12 @@ function _tpAddMouseDrag(col) {
             const ease = 1 - Math.pow(1 - p, 3);
             col.scrollTop = s0 + dist * ease;
             if (p < 1) { animId = requestAnimationFrame(frame); }
-            else { col.scrollTop = target; animId = null; _tpSync(); }
+            else {
+                col.scrollTop = target;
+                col.classList.remove('dragging');
+                animId = null;
+                _tpSync();
+            }
         }
         animId = requestAnimationFrame(frame);
     }
