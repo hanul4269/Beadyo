@@ -394,34 +394,37 @@ async function loadEvents() {
         return;
     }
 
+    // Supabase 클라이언트 초기화 행 방지 — REST API 직접 호출
+    const cols = 'id,date,end_date,start_time,duration,title,type,collab,subtitle,vod_url,memo,is_rest';
+    const url  = `${SUPABASE_URL}/rest/v1/schedules` +
+        `?select=${cols}` +
+        `&date=gte.${extFirst}` +
+        `&date=lte.${last}` +
+        `&order=date.asc,start_time.asc.nullslast`;
+
     const controller = new AbortController();
     const tid = setTimeout(() => controller.abort(), 6000);
 
-    let data, error;
+    let data;
     try {
-        ({ data, error } = await db
-            .from('schedules')
-            .select('id,date,end_date,start_time,duration,title,type,collab,subtitle,vod_url,memo,is_rest')
-            .gte('date', extFirst)
-            .lte('date', last)
-            .order('date')
-            .order('start_time', { nullsFirst: false })
-            .abortSignal(controller.signal));
+        const res = await fetch(url, {
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            },
+            signal: controller.signal,
+        });
+        clearTimeout(tid);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        data = await res.json();
     } catch (e) {
         clearTimeout(tid);
         if (!cached) { state.events = []; renderCalendar(); }
         _scheduleLoadRetry();
         return;
     }
-    clearTimeout(tid);
 
-    if (error) {
-        console.error('loadEvents:', error);
-        if (!cached) { state.events = []; renderCalendar(); }
-        _scheduleLoadRetry();
-        return;
-    }
-    state.events = data ?? [];
+    state.events = Array.isArray(data) ? data : [];
     try { localStorage.setItem(cacheKey, JSON.stringify(state.events)); } catch {}
     _eventsLoaded = true;
     renderCalendar();
