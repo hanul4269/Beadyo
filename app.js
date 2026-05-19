@@ -851,6 +851,77 @@ function populateTypeSelect() {
     ).join('');
 }
 
+// ── 시간 피커 ──
+const _TP_H = 36;
+
+function _tpBuild(col, count) {
+    let html = '<div class="tp-pad"></div>';
+    for (let i = 0; i < count; i++)
+        html += `<div class="tp-item">${String(i).padStart(2, '0')}</div>`;
+    html += '<div class="tp-pad"></div>';
+    col.innerHTML = html;
+}
+
+function _tpVal(col, count) {
+    return Math.max(0, Math.min(count - 1, Math.round(col.scrollTop / _TP_H)));
+}
+
+function _tpSync() {
+    const cb = document.getElementById('editTimeEnable');
+    if (!cb?.checked) return;
+    const h = document.getElementById('tpHour');
+    const m = document.getElementById('tpMin');
+    const inp = document.getElementById('editTime');
+    if (!h || !m || !inp) return;
+    inp.value = `${String(_tpVal(h, 24)).padStart(2, '0')}:${String(_tpVal(m, 60)).padStart(2, '0')}`;
+}
+
+function onTimeEnableChange() {
+    const cb = document.getElementById('editTimeEnable');
+    const wrap = document.getElementById('tpWrap');
+    const inp = document.getElementById('editTime');
+    const enabled = cb.checked;
+    wrap.classList.toggle('disabled', !enabled);
+    if (!enabled) {
+        inp.value = '';
+    } else {
+        const h = document.getElementById('tpHour');
+        if (h && h.scrollTop === 0) h.scrollTo({ top: 19 * _TP_H, behavior: 'instant' });
+        _tpSync();
+    }
+}
+
+function initTimePicker(value) {
+    const hCol = document.getElementById('tpHour');
+    const mCol = document.getElementById('tpMin');
+    const wrap = document.getElementById('tpWrap');
+    const cb = document.getElementById('editTimeEnable');
+    const inp = document.getElementById('editTime');
+    if (!hCol || !mCol) return;
+
+    _tpBuild(hCol, 24);
+    _tpBuild(mCol, 60);
+
+    const hasTime = !!value;
+    cb.checked = hasTime;
+    wrap.classList.toggle('disabled', !hasTime);
+    inp.value = value || '';
+
+    const h = hasTime ? parseInt(value, 10) : 19;
+    const m = hasTime ? parseInt(value.split(':')[1], 10) : 0;
+
+    setTimeout(() => {
+        hCol.scrollTo({ top: h * _TP_H, behavior: 'instant' });
+        mCol.scrollTo({ top: m * _TP_H, behavior: 'instant' });
+        if (hasTime) _tpSync();
+    }, 30);
+
+    hCol.removeEventListener('scroll', _tpSync);
+    mCol.removeEventListener('scroll', _tpSync);
+    hCol.addEventListener('scroll', _tpSync, { passive: true });
+    mCol.addEventListener('scroll', _tpSync, { passive: true });
+}
+
 function openAddModalWithType(typeKey) {
     if (!state.isEditor) return;
     const today = new Date();
@@ -863,7 +934,7 @@ function openAddModal(dateStr, type = 'general') {
     document.getElementById('editId').value        = '';
     document.getElementById('editDate').value      = dateStr;
     document.getElementById('editEndDate').value   = '';
-    document.getElementById('editTime').value      = '';
+    initTimePicker('');
     document.getElementById('editDuration').value  = '';
     document.getElementById('editTitle').value     = '';
     document.getElementById('editType').value      = type;
@@ -889,7 +960,7 @@ function fillEditForm(ev, title, id = '') {
     document.getElementById('editId').value        = id;
     document.getElementById('editDate').value      = ev.date ?? '';
     document.getElementById('editEndDate').value   = ev.end_date ?? '';
-    document.getElementById('editTime').value      = ev.start_time ? ev.start_time.slice(0, 5) : '';
+    initTimePicker(ev.start_time ? ev.start_time.slice(0, 5) : '');
     document.getElementById('editDuration').value  = ev.duration ?? '';
     document.getElementById('editTitle').value     = ev.title ?? '';
     document.getElementById('editType').value      = ev.type ?? 'general';
