@@ -598,7 +598,10 @@ function renderCalendar() {
             const vodDot = isStart && ev.vod_url
                 ? `<span class="vod-dot"></span>` : '';
             const hasNewline   = ev.title.includes('\n');
-            const bodyStyle = `${!isStart ? 'opacity:0.55;' : ''}font-size:${chipFontSize(ev.title, isSingle, isCompact, events.length)};${hasNewline ? 'white-space:pre-line;' : ''}`;
+            const newlineStyle = hasNewline
+                ? (isSingle ? 'white-space:pre-line;' : 'white-space:pre-line;-webkit-line-clamp:2;')
+                : '';
+            const bodyStyle = `${!isStart ? 'opacity:0.55;' : ''}font-size:${chipFontSize(ev.title, isSingle, isCompact, events.length)};${newlineStyle}`;
             const titleSizeClass = String(ev.title ?? '').length <= 5 ? 'short-title' : 'long-title';
             const subtitleClass = isStart && ev.subtitle ? ' has-subtitle' : '';
 
