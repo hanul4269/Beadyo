@@ -882,60 +882,81 @@ function _tpSync() {
 }
 
 function _tpAddMouseDrag(col) {
-    let active = false;
-    let lastY = 0, lastTime = 0, velocity = 0;
+    let isDragging = false;
+    let lastY = 0, lastTime = 0, velocity = 0, totalMoved = 0;
     let animId = null;
-    const FRICTION = 0.92;
+    const FRICTION = 0.90;
 
-    function snapTo(scrollTop) {
+    function cancelAnim() {
         if (animId) { cancelAnimationFrame(animId); animId = null; }
-        const target = Math.round(scrollTop / _TP_H) * _TP_H;
-        const start = col.scrollTop;
-        const dist = target - start;
-        if (Math.abs(dist) < 1) { col.scrollTop = target; col.style.scrollSnapType = ''; _tpSync(); return; }
-        const dur = Math.min(320, Math.max(100, Math.abs(dist) * 1.2));
-        const t0 = performance.now();
-        (function frame(now) {
-            const p = Math.min(1, (now - t0) / dur);
-            const ease = 1 - Math.pow(1 - p, 3);
-            col.scrollTop = start + dist * ease;
-            if (p < 1) { animId = requestAnimationFrame(frame); }
-            else { col.scrollTop = target; col.style.scrollSnapType = ''; _tpSync(); }
-        })(t0);
     }
 
-    function inertia() {
+    function snapTo(fromScrollTop) {
+        cancelAnim();
+        col.classList.remove('dragging');
+        const target = Math.round(fromScrollTop / _TP_H) * _TP_H;
+        const s0 = col.scrollTop;
+        const dist = target - s0;
+        if (Math.abs(dist) < 0.5) { col.scrollTop = target; _tpSync(); return; }
+        const dur = Math.min(300, Math.max(80, Math.abs(dist) * 1.4));
+        const t0 = performance.now();
+        function frame(now) {
+            const p = Math.min(1, (now - t0) / dur);
+            const ease = 1 - Math.pow(1 - p, 3);
+            col.scrollTop = s0 + dist * ease;
+            if (p < 1) { animId = requestAnimationFrame(frame); }
+            else { col.scrollTop = target; animId = null; _tpSync(); }
+        }
+        animId = requestAnimationFrame(frame);
+    }
+
+    function runInertia() {
         if (Math.abs(velocity) < 0.5) { snapTo(col.scrollTop); return; }
         col.scrollTop += velocity;
         velocity *= FRICTION;
-        animId = requestAnimationFrame(inertia);
+        animId = requestAnimationFrame(runInertia);
     }
 
     col.addEventListener('mousedown', e => {
-        if (animId) { cancelAnimationFrame(animId); animId = null; }
-        active = true;
+        if (e.button !== 0) return;
+        cancelAnim();
+        isDragging = true;
         lastY = e.clientY;
         lastTime = performance.now();
         velocity = 0;
-        col.style.scrollSnapType = 'none';
-        col.classList.add('grabbing');
+        totalMoved = 0;
+        col.classList.add('dragging', 'grabbing');
         e.preventDefault();
     });
+
     window.addEventListener('mousemove', e => {
-        if (!active) return;
+        if (!isDragging) return;
         const now = performance.now();
         const dt = Math.max(1, now - lastTime);
         const dy = e.clientY - lastY;
+        totalMoved += Math.abs(dy);
         velocity = -dy * 16 / dt;
         col.scrollTop -= dy;
         lastY = e.clientY;
         lastTime = now;
     });
-    window.addEventListener('mouseup', () => {
-        if (!active) return;
-        active = false;
+
+    window.addEventListener('mouseup', e => {
+        if (!isDragging) return;
+        isDragging = false;
         col.classList.remove('grabbing');
-        animId = requestAnimationFrame(inertia);
+
+        if (totalMoved < 6) {
+            const item = document.elementFromPoint(e.clientX, e.clientY)?.closest('.tp-item');
+            if (item) {
+                const idx = [...col.querySelectorAll('.tp-item')].indexOf(item);
+                if (idx >= 0) { snapTo(idx * _TP_H); return; }
+            }
+            snapTo(col.scrollTop);
+            return;
+        }
+
+        animId = requestAnimationFrame(runInertia);
     });
 }
 
