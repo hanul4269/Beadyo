@@ -883,9 +883,12 @@ function _tpSync() {
 
 function _tpAddMouseDrag(col) {
     let isDragging = false;
-    let lastY = 0, lastTime = 0, velocity = 0, totalMoved = 0;
+    let lastY = 0, lastTime = 0;
+    let velocity = 0, totalMoved = 0;
     let animId = null;
-    const FRICTION = 0.90;
+    const FRICTION = 0.88;   // per 16ms frame
+    const MAX_V   = 50;      // px/frame 상한
+    const velSamples = [];   // 최근 velocity 샘플
 
     function cancelAnim() {
         if (animId) { cancelAnimationFrame(animId); animId = null; }
@@ -902,7 +905,7 @@ function _tpAddMouseDrag(col) {
             _tpSync();
             return;
         }
-        const dur = Math.min(300, Math.max(80, Math.abs(dist) * 1.4));
+        const dur = Math.min(280, Math.max(60, Math.abs(dist) * 1.2));
         const t0 = performance.now();
         function frame(now) {
             const p = Math.min(1, (now - t0) / dur);
@@ -919,11 +922,16 @@ function _tpAddMouseDrag(col) {
         animId = requestAnimationFrame(frame);
     }
 
-    function runInertia() {
+    function runInertia(prevTime) {
+        const now = performance.now();
+        const dt = Math.min(32, now - prevTime);        // 프레임 시간 기반 friction
+        velocity *= Math.pow(FRICTION, dt / 16);
         if (Math.abs(velocity) < 0.5) { snapTo(col.scrollTop); return; }
-        col.scrollTop += velocity;
-        velocity *= FRICTION;
-        animId = requestAnimationFrame(runInertia);
+        const prev = col.scrollTop;
+        col.scrollTop += velocity * (dt / 16);          // 실제 시간 기반 이동량
+        // 경계에 막혔으면 즉시 snap
+        if (Math.abs(col.scrollTop - prev) < 0.1) { snapTo(col.scrollTop); return; }
+        animId = requestAnimationFrame(t => runInertia(t));
     }
 
     col.addEventListener('mousedown', e => {
@@ -934,6 +942,7 @@ function _tpAddMouseDrag(col) {
         lastTime = performance.now();
         velocity = 0;
         totalMoved = 0;
+        velSamples.length = 0;
         col.classList.add('dragging', 'grabbing');
         e.preventDefault();
     });
@@ -944,7 +953,9 @@ function _tpAddMouseDrag(col) {
         const dt = Math.max(1, now - lastTime);
         const dy = e.clientY - lastY;
         totalMoved += Math.abs(dy);
-        velocity = -dy * 16 / dt;
+        velSamples.push({ v: -dy * 16 / dt, t: now });
+        // 100ms 이상 된 샘플 제거
+        while (velSamples.length > 1 && velSamples[0].t < now - 100) velSamples.shift();
         col.scrollTop -= dy;
         lastY = e.clientY;
         lastTime = now;
@@ -965,7 +976,15 @@ function _tpAddMouseDrag(col) {
             return;
         }
 
-        animId = requestAnimationFrame(runInertia);
+        // 최근 80ms 샘플 평균으로 초기 velocity 계산
+        const now = performance.now();
+        const recent = velSamples.filter(s => s.t >= now - 80);
+        velocity = recent.length > 0
+            ? recent.reduce((s, x) => s + x.v, 0) / recent.length
+            : 0;
+        velocity = Math.max(-MAX_V, Math.min(MAX_V, velocity));
+
+        animId = requestAnimationFrame(t => runInertia(t));
     });
 }
 
