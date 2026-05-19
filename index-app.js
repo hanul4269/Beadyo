@@ -5,8 +5,8 @@ const OWNER_EMAIL = 'riosniper12@gmail.com';
 const TABS = [
     { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html' },
     { type: 'sheet', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM', gid: '2063088341', alwaysEdit: true },
-    { type: 'sheet', id: '1bIhxhHDU_Ig5IuDrS4WvPtMVsiVWHnDvm6dU3E3Q8Mo', gid: '1545541300', alwaysEdit: true },
-    { type: 'sheet', id: '1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw', gid: '1451717792', alwaysEdit: true }
+    { type: 'sheet', id: '1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw', gid: '1451717792', alwaysEdit: true },
+    { type: 'sheet', id: '1bIhxhHDU_Ig5IuDrS4WvPtMVsiVWHnDvm6dU3E3Q8Mo', gid: '1545541300', alwaysEdit: true }
 ];
 
 const readOnlyUrl = s =>
@@ -146,18 +146,42 @@ function switchTab(index) {
 switchTab(0);
 
 // ── 라이브 상태 체크 ──
+const PROXY = 'https://clever-rhino-36.hanul4269.deno.net';
+
+async function fetchWithTimeout(url, ms) {
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), ms);
+    try {
+        const res = await fetch(url, { signal: ctrl.signal });
+        clearTimeout(tid);
+        return res;
+    } catch (e) {
+        clearTimeout(tid);
+        throw e;
+    }
+}
+
 async function checkLiveStatus() {
     const badge = document.getElementById('live-badge');
-    const urls = [
-        'live.json?t=' + Date.now(),
-        'https://beadyo.com/live.json?t=' + Date.now()
-    ];
-    for (const url of urls) {
+
+    // 1) 실시간: SOOP chapi API 직접 호출 (Deno 프록시 경유)
+    try {
+        const res = await fetchWithTimeout(
+            `${PROXY}/https://chapi.sooplive.co.kr/api/beadyo97/station`,
+            4000
+        );
+        if (res.ok) {
+            const d = await res.json();
+            const broad = d?.broad;
+            badge.classList.toggle('is-live', !!(broad?.broad_no));
+            return;
+        }
+    } catch {}
+
+    // 2) 폴백: live.json
+    for (const url of ['live.json?t=' + Date.now(), 'https://beadyo.com/live.json?t=' + Date.now()]) {
         try {
-            const ctrl = new AbortController();
-            const tid = setTimeout(() => ctrl.abort(), 5000);
-            const res = await fetch(url, { signal: ctrl.signal });
-            clearTimeout(tid);
+            const res = await fetchWithTimeout(url, 5000);
             if (!res.ok) continue;
             const data = await res.json();
             badge.classList.toggle('is-live', !!data.live);
