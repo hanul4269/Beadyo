@@ -1412,7 +1412,7 @@ async function initAuth() {
         if (data.type === 'beadyo-auth-sync') {
             setSessionUser(normalizeAuthUser(data.user));
         } else if (data.type === 'beadyo-auth-action') {
-            if (data.action === 'open-admin' && state.isOwner) openAdminModal();
+            if (data.action === 'open-admin' && state.isEditor) openAdminModal();
         }
     });
 }

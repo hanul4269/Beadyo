@@ -20,6 +20,16 @@ const authDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 });
 let authUser = null;
 
+async function isEditorUser(user) {
+    if (!user) return false;
+    const email = (user.email || '').toLowerCase();
+    if (email === OWNER_EMAIL.toLowerCase()) return true;
+    try {
+        const { data } = await authDb.from('editors').select('email').eq('email', email).maybeSingle();
+        return !!data;
+    } catch { return false; }
+}
+
 const isMobile = window.matchMedia('(max-width: 640px)').matches;
 
 function getFrameUrl(index) {
@@ -97,7 +107,7 @@ function openCalendarAdmin() {
     setTimeout(() => sendCalendarAction('open-admin'), 120);
 }
 
-function updateAuthUI() {
+async function updateAuthUI() {
     const badge = document.getElementById('auth-badge');
     if (!authUser) {
         badge.classList.remove('show');
@@ -106,13 +116,13 @@ function updateAuthUI() {
     }
 
     const picture = authUser.user_metadata?.avatar_url || authUser.user_metadata?.picture || '';
-    const isOwner = (authUser.email || '').toLowerCase() === OWNER_EMAIL.toLowerCase();
+    const canAdmin = await isEditorUser(authUser);
     badge.innerHTML = `<div class="auth-menu-wrap">
         <button class="auth-trigger" onclick="toggleAuthMenu(event)" aria-label="계정 메뉴">
             ${picture ? `<img src="${picture}" alt="">` : `<img src="login-icon.png" alt="">`}
         </button>
         <div class="auth-menu" id="auth-menu">
-            ${isOwner ? `<button onclick="openCalendarAdmin()">⚙ 편집 설정</button>` : ''}
+            ${canAdmin ? `<button onclick="openCalendarAdmin()">⚙ 편집 설정</button>` : ''}
             <button class="danger" onclick="signOut()">로그아웃</button>
         </div>
     </div>`;
