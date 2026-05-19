@@ -295,7 +295,13 @@ function showToast(msg) {
 let dragState = { id: null, dateStr: null };
 let _dragged = false;
 let _eventsLoaded = false;
+let _retryTimer = null;
 var renderUpTab;
+
+function _scheduleLoadRetry(delay = 3000) {
+    clearTimeout(_retryTimer);
+    _retryTimer = setTimeout(() => { if (!_eventsLoaded) loadEvents(); }, delay);
+}
 
 function getLocalOrder(dateStr, events) {
     const saved = localStorage.getItem('beadyo_order_' + dateStr);
@@ -356,6 +362,10 @@ function dragDrop(e, targetId, dateStr) {
 
 // ─── 데이터 로드 ───
 async function loadEvents() {
+    _eventsLoaded = false;
+    clearTimeout(_retryTimer);
+    _retryTimer = null;
+
     const first = toDateStr(state.year, state.month, 1);
     let   last  = toDateStr(state.year, state.month, new Date(state.year, state.month + 1, 0).getDate());
     const prev  = new Date(state.year, state.month - 1, 1);
@@ -380,12 +390,12 @@ async function loadEvents() {
 
     // 페이지가 hidden이면 fetch 건너뜀 — visibilitychange 복귀 시 재시도
     if (document.visibilityState !== 'visible') {
-        _eventsLoaded = false;
+        _scheduleLoadRetry(1000);
         return;
     }
 
     const controller = new AbortController();
-    const tid = setTimeout(() => controller.abort(), 10000);
+    const tid = setTimeout(() => controller.abort(), 6000);
 
     let data, error;
     try {
@@ -399,13 +409,8 @@ async function loadEvents() {
             .abortSignal(controller.signal));
     } catch (e) {
         clearTimeout(tid);
-        if (e.name === 'AbortError') {
-            console.warn('loadEvents: timeout, using cache');
-            if (!cached) { state.events = []; renderCalendar(); }
-        } else {
-            console.error('loadEvents:', e);
-            if (!cached) { state.events = []; renderCalendar(); }
-        }
+        if (!cached) { state.events = []; renderCalendar(); }
+        _scheduleLoadRetry();
         return;
     }
     clearTimeout(tid);
@@ -413,6 +418,7 @@ async function loadEvents() {
     if (error) {
         console.error('loadEvents:', error);
         if (!cached) { state.events = []; renderCalendar(); }
+        _scheduleLoadRetry();
         return;
     }
     state.events = data ?? [];
@@ -1204,6 +1210,10 @@ document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && !_eventsLoaded) {
         loadEvents();
     }
+});
+// iOS bfcache 복원 대응 (뒤로가기/탭전환 후 페이지 재표시)
+window.addEventListener('pageshow', () => {
+    if (!_eventsLoaded) loadEvents();
 });
 
 // ── 이스터에그 ──
