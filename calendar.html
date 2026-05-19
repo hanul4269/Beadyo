@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
+    <link rel="preload" href="app.js" as="script">
     <script defer src="app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet"></noscript>
@@ -1131,6 +1132,19 @@
         .mobile-schedule-view,
         .mobile-add-fab {
             display: none;
+        }
+
+        /* JS 실행 전 즉시 로딩 메시지 (빈 화면 방지) */
+        @media (max-width: 640px) {
+            #mobileScheduleView:empty::before {
+                content: '일정 불러오는 중...';
+                display: block;
+                text-align: center;
+                padding: 60px 20px;
+                color: #c0b8b8;
+                font-size: 15px;
+                font-weight: 700;
+            }
         }
 
         /* ── 반응형 ── */
