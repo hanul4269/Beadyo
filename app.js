@@ -1064,7 +1064,8 @@ async function openUpModal() {
         return;
     }
 
-    renderUpModal({ updated: cachedData.updated, events: mergedEvents.length ? mergedEvents : cachedData.events }, true);
+    _upCurrentData = { updated: cachedData.updated, events: mergedEvents.length ? mergedEvents : cachedData.events };
+    renderUpModal(_upCurrentData, true);
 }
 function closeUpModal() {
     document.getElementById('upModal').classList.remove('open');
@@ -1652,6 +1653,21 @@ async function removeEditor(id) {
 
 // ─── UP 이벤트 관리 ───
 let upEvents = [];
+let _upCurrentData = null;
+
+function _refreshUpModalDisplay() {
+    const modal = document.getElementById('upModal');
+    if (!modal || !modal.classList.contains('open')) return;
+    const rankingMap = {};
+    if (_upCurrentData) {
+        for (const e of (_upCurrentData.events || [])) rankingMap[e.id] = e.ranking || [];
+    }
+    const displayEvents = upEvents
+        .filter(e => e.is_active)
+        .map(e => ({ id: e.id, tab: e.tab_name, title: e.title, soop_url: e.soop_url, ranking: rankingMap[e.id] || [] }));
+    _upCurrentData = { updated: _upCurrentData?.updated || null, events: displayEvents };
+    renderUpModal(_upCurrentData, false);
+}
 
 async function loadUpEvents() {
     await _ensureDb();
@@ -1697,6 +1713,7 @@ async function addUpEvent() {
     showToast('UP 이벤트 추가됨');
     await loadUpEvents();
     renderUpEventList();
+    _refreshUpModalDisplay();
 }
 
 async function removeUpEvent(id) {
@@ -1706,6 +1723,7 @@ async function removeUpEvent(id) {
     if (error) { showToast('삭제 실패'); return; }
     await loadUpEvents();
     renderUpEventList();
+    _refreshUpModalDisplay();
     showToast('삭제되었습니다');
 }
 
