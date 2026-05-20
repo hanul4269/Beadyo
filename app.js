@@ -718,6 +718,16 @@ function openViewModal(id) {
         : `<button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>`;
 
     document.getElementById('viewModal').classList.add('open');
+
+    const titleEl = document.querySelector('#viewContent .modal-title');
+    if (titleEl) {
+        let fs = 26;
+        titleEl.style.fontSize = fs + 'px';
+        const maxH = fs * 1.45 * 4;
+        while (fs > 13 && titleEl.scrollHeight > maxH) {
+            titleEl.style.fontSize = --fs + 'px';
+        }
+    }
 }
 function closeViewModal() { document.getElementById('viewModal').classList.remove('open'); }
 
