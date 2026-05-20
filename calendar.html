@@ -493,18 +493,20 @@
         .chips-area.stable-list {
             justify-content: flex-start;
             gap: 3px;
+            flex: 1 0 auto;
         }
         .chips-area.stable-list .event-chip {
-            min-height: 0;
-            flex: 1 1 0;
+            flex: 1 0 auto;
             padding: 5px 7px;
             flex-direction: column;
             justify-content: center;
         }
         .chips-area.stable-list .chip-body {
             line-height: 1.25;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
+            display: block;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow: hidden;
             font-weight: 700;
             font-size: clamp(10px, 1.3vw, 15px) !important;
         }
@@ -522,21 +524,22 @@
         .chips-area.stable-list .chip-collab {
             margin-top: 1px;
             line-height: 1.2;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow: hidden;
         }
         .chips-area.stable-list .event-chip.has-subtitle {
             padding-top: 4px;
             padding-bottom: 4px;
-            flex: 2.25 1 0;
+            flex: 2.25 0 auto;
         }
         .chips-area.stable-list .event-chip.has-subtitle .chip-body {
             font-size: clamp(8px, 0.82vw, 11px) !important;
             line-height: 1.1;
-            -webkit-line-clamp: 1;
         }
         .chips-area.stable-list .event-chip.has-subtitle .chip-subtitle {
             font-size: clamp(7px, 0.68vw, 9px) !important;
             line-height: 1.1;
-            -webkit-line-clamp: 1;
         }
         .chips-area.stable-list .event-chip.has-subtitle .chip-collab {
             font-size: clamp(7px, 0.68vw, 9px) !important;
@@ -549,7 +552,6 @@
         .chips-area.stable-list .event-chip.has-collab .chip-body {
             font-size: clamp(10px, 1.0vw, 13px) !important;
             line-height: 1.1;
-            -webkit-line-clamp: 1;
         }
         .chips-area.stable-list .event-chip.has-collab .chip-collab {
             font-size: clamp(8px, 0.75vw, 10px) !important;
@@ -576,6 +578,38 @@
         .chips-area.stable-list.count-4 .event-chip.short-title .chip-body {
             font-size: clamp(11px, 1.12vw, 14px) !important;
             line-height: 1.05;
+        }
+        .chips-area.stable-list.count-4 .event-chip {
+            min-height: 38px;
+        }
+        .chips-area.stable-list.count-4 .event-chip.has-collab,
+        .chips-area.stable-list.count-4 .event-chip.has-subtitle {
+            min-height: 50px;
+        }
+        .chips-area.stable-list .event-chip.has-time {
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2px 5px;
+        }
+        .chips-area.stable-list .event-chip.has-time .chip-time-badge {
+            margin-bottom: 0;
+            flex-shrink: 0;
+            align-self: center;
+        }
+        .chips-area.stable-list .event-chip.has-time .chip-body {
+            flex: 1;
+            text-align: left !important;
+            min-width: 80px;
+        }
+        .chips-area.stable-list .event-chip.has-time .chip-collab,
+        .chips-area.stable-list .event-chip.has-time .chip-subtitle {
+            width: 100%;
+            flex: 0 0 100%;
+            text-align: center;
+        }
+        .chips-area.stable-list .event-chip.has-newline .chip-body {
+            white-space: pre-line;
         }
 
         .chips-area.packed {
@@ -1587,7 +1621,7 @@
             <div class="field">
                 <label>방송 시간</label>
                 <div class="tp-input-row">
-                    <input type="text" id="editTime" placeholder="HH:MM" maxlength="5" oninput="onTimeTextInput(this)">
+                    <input type="text" id="editTime" placeholder="HH:MM" maxlength="5" oninput="onTimeTextInput(this)" onkeydown="onTimeKeyDown(event)">
                     <button type="button" class="tp-toggle-btn" id="tpToggleBtn" onclick="toggleTimePicker()" title="시간 선택기">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
                     </button>
@@ -1630,9 +1664,7 @@
             <label>메모</label>
             <textarea id="editMemo" placeholder="추가 메모"></textarea>
         </div>
-        <label class="check-field">
-            <input type="checkbox" id="editIsRest"> 휴방으로 표시
-        </label>
+        <input type="checkbox" id="editIsRest" hidden>
         <input type="hidden" id="editId">
         <div class="btn-row">
             <button class="btn btn-primary" onclick="saveEvent()">저장</button>

@@ -3,10 +3,10 @@ const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL       = 'riosniper12@gmail.com';
 
 const EVENT_TYPES = [
-    { key: 'chat',    label: '소통',        icon: '☘', color: '#d8f4cf', text: '#3e7d2f', border: '#a7d892' },
-    { key: 'song',    label: '노래',        icon: '♪',  color: '#ffd9e8', text: '#a33a69', border: '#f2a9c8' },
+    { key: 'chat',    label: '소통',        icon: '☘', color: '#c8f5bc', text: '#2e6e22', border: '#8fd878' },
+    { key: 'song',    label: '노래',        icon: '♪',  color: '#ffd0b8', text: '#a03a15', border: '#f5a07a' },
     { key: 'solo',    label: '슬요 컨텐츠', icon: '✦', color: '#ffe7bf', text: '#a76016', border: '#f1bd73' },
-    { key: 'collab',  label: '참여 컨텐츠', icon: '＋', color: '#dff3bf', text: '#547d19', border: '#bddb7d' },
+    { key: 'collab',  label: '참여 컨텐츠', icon: '＋', color: '#bff5ee', text: '#1a7a6e', border: '#7dddd6' },
     { key: 'watch',   label: '같이 보기',   icon: '▶', color: '#eadcff', text: '#6b4aa0', border: '#cdb7ef' },
     { key: 'game',    label: '게임',        icon: '◆', color: '#cdf6df', text: '#28724b', border: '#97d9b5' },
     { key: 'ad',      label: '광고',        icon: 'AD', color: '#fff3b8', text: '#9a7914', border: '#ecd46a' },
@@ -621,8 +621,9 @@ function renderCalendar() {
             const vodDot = isStart && ev.vod_url
                 ? `<span class="vod-dot"></span>` : '';
             const hasNewline   = ev.title.includes('\n');
+            const newlineClass = hasNewline && !isSingle ? ' has-newline' : '';
             const newlineStyle = hasNewline
-                ? (isSingle ? 'white-space:pre-line;' : 'white-space:pre-line;-webkit-line-clamp:2;')
+                ? 'white-space:pre-line;'
                 : '';
             const bodyStyle = `${!isStart ? 'opacity:0.55;' : ''}font-size:${chipFontSize(ev.title, isSingle, isCompact, events.length)};${newlineStyle}`;
             const titleSizeClass = String(ev.title ?? '').length <= 5 ? 'short-title' : 'long-title';
@@ -651,7 +652,7 @@ function renderCalendar() {
 
             const timeClass = isStart && ev.start_time ? ' has-time' : '';
 
-            return `<button class="event-chip ${titleSizeClass}${subtitleClass}${timeClass}"
+            return `<button class="event-chip ${titleSizeClass}${subtitleClass}${timeClass}${newlineClass}"
                 style="${typeStyle(t)}border-radius:${br};"
                 onclick="if(!_dragged)openViewModal('${esc(ev.id)}')"
                 ${memoAttr} ${memoEvents} ${dragAttrs}
@@ -894,6 +895,7 @@ function populateTypeSelect() {
 
 // ── 시간 피커 ──
 const _TP_H = 36;
+let _tpDeleting = false;
 
 function _tpBuild(col, count) {
     let html = '<div class="tp-pad"></div>';
@@ -1058,10 +1060,49 @@ function toggleTimePicker() {
     }
 }
 
+function onTimeKeyDown(e) {
+    if (e.key !== 'Backspace') return;
+    const inp = e.target;
+    const val = inp.value;
+    const pos = inp.selectionStart;
+    if (inp.selectionStart !== inp.selectionEnd) { _tpDeleting = true; return; }
+
+    const colonIdx = val.indexOf(':');
+
+    // 커서가 콜론 바로 뒤: 콜론 건너뛰고 시간 마지막 자리 삭제
+    if (colonIdx >= 0 && pos === colonIdx + 1) {
+        e.preventDefault();
+        let newVal, newPos;
+        if (colonIdx > 0) {
+            newVal = val.slice(0, colonIdx - 1) + val.slice(colonIdx);
+            newPos = colonIdx - 1;
+        } else {
+            newVal = val.slice(1);
+            newPos = 0;
+        }
+        inp.value = newVal;
+        inp.setSelectionRange(newPos, newPos);
+        onTimeTextInput(inp);
+        return;
+    }
+
+    // 콜론만 남은 경우 (:) → 전체 삭제
+    if (colonIdx === 0 && pos === 0) {
+        e.preventDefault();
+        inp.value = '';
+        onTimeTextInput(inp);
+        return;
+    }
+
+    _tpDeleting = true;
+}
+
 function onTimeTextInput(inp) {
+    const deleting = _tpDeleting;
+    _tpDeleting = false;
     let val = inp.value.replace(/[^\d:]/g, '');
     if (val !== inp.value) inp.value = val;
-    if (val.length === 2 && !val.includes(':')) {
+    if (!deleting && val.length === 2 && !val.includes(':')) {
         inp.value = val + ':';
         val = inp.value;
     }
