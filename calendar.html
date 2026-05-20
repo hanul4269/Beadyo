@@ -298,12 +298,19 @@
         }
 
         /* ── 메인 레이아웃 ── */
-        .main-layout {
+        .outer-layout {
             display: flex;
             gap: 16px;
-            max-width: 1800px;
             margin: 0 auto;
             padding: 0 12px 48px;
+            align-items: flex-start;
+        }
+        .main-layout {
+            display: flex;
+            flex: 1;
+            min-width: 0;
+            max-width: 1800px;
+            gap: 16px;
             align-items: flex-start;
         }
         .cal-area { flex: 1; min-width: 0; }
@@ -431,10 +438,11 @@
         .yt-add-btn {
             display: inline-flex; align-items: center; justify-content: center;
             width: 17px; height: 12px; border-radius: 3px;
-            background: #ff0000; border: none; cursor: pointer; padding: 0;
-            flex-shrink: 0; opacity: 0.7; transition: opacity 0.15s;
+            background: #aaa; border: none; cursor: pointer; padding: 0;
+            flex-shrink: 0; opacity: 0; transition: opacity 0.15s;
         }
-        .yt-add-btn:hover { opacity: 1; }
+        .cell-date-row:hover .yt-add-btn { opacity: 1; }
+        .yt-add-btn:hover { background: #888; }
         .yt-add-btn svg { width: 7px; height: 7px; fill: #fff; }
         /* ── YouTube 링크 관리 모달 ── */
         #ytLinkModal .modal { max-width: 400px; }
@@ -805,6 +813,146 @@
             vertical-align: middle;
             margin-right: 3px;
         }
+
+        /* ── 메모 사이드바 ── */
+        .memo-sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-top: 4px;
+        }
+        .memo-add-form {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .memo-add-form textarea {
+            width: 100%;
+            resize: none;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 7px 9px;
+            font: inherit;
+            font-size: 12px;
+            line-height: 1.4;
+            box-sizing: border-box;
+            min-height: 62px;
+        }
+        .memo-add-form textarea:focus { border-color: #8bc34a; outline: none; }
+        .memo-add-form input[type="url"] {
+            width: 100%;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 6px 9px;
+            font: inherit;
+            font-size: 11px;
+            box-sizing: border-box;
+        }
+        .memo-add-form input[type="url"]:focus { border-color: #8bc34a; outline: none; }
+        .memo-add-form button {
+            background: #8bc34a;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 0;
+            font: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+        }
+        .memo-add-form button:hover { background: #7cb342; }
+        .memo-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 10px 10px 8px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #333;
+            position: relative;
+            word-break: break-word;
+            transition: box-shadow 0.15s, transform 0.12s;
+            user-select: none;
+        }
+        .memo-card.is-link {
+            cursor: pointer;
+            border-left: 3px solid #8bc34a;
+        }
+        .memo-card.is-link:hover {
+            box-shadow: 0 4px 14px rgba(139,195,74,0.25);
+            transform: translateY(-1px);
+        }
+        .memo-card.dragging { opacity: 0.4; }
+        .memo-card.drag-over { box-shadow: 0 0 0 2px #8bc34a; }
+        .memo-card-text { white-space: pre-wrap; }
+        .memo-card-link {
+            display: block;
+            font-size: 10px;
+            color: #8bc34a;
+            margin-top: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .memo-card-del {
+            position: absolute;
+            top: 5px; right: 6px;
+            background: none; border: none;
+            color: #ccc; font-size: 13px;
+            cursor: pointer; padding: 0 2px;
+            line-height: 1;
+        }
+        .memo-card-del:hover { color: #e53935; }
+        .memo-drag-handle {
+            display: block;
+            color: #ccc;
+            font-size: 10px;
+            text-align: center;
+            margin-top: 4px;
+            cursor: grab;
+            letter-spacing: 2px;
+        }
+        /* ── 모바일 메모 FAB ── */
+        .memo-fab {
+            position: fixed;
+            bottom: 76px; right: 18px;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1.5px solid #d0d0d0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+        }
+        .memo-fab svg { width: 20px; height: 20px; }
+        @media (max-width: 900px) {
+            .memo-fab { display: flex; }
+        }
+        /* ── 메모 모달 ── */
+        #memoModal .modal { max-width: 380px; }
+        .memo-modal-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+        .memo-modal-card {
+            background: #f7f7f7;
+            border-radius: 10px;
+            padding: 10px 12px 8px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #333;
+            word-break: break-word;
+            position: relative;
+        }
+        .memo-modal-card.is-link { cursor: pointer; border-left: 3px solid #8bc34a; }
+        .memo-modal-card.is-link:hover { background: #f0f9e5; }
 
         /* ── 범례 사이드바 ── */
         .legend-sidebar {
@@ -1374,6 +1522,7 @@
         /* ── 반응형 ── */
         @media (max-width: 900px) {
             .legend-sidebar { display: none; }
+            .memo-sidebar   { display: none; }
         }
         @media (max-width: 640px) {
             body {
@@ -1443,6 +1592,9 @@
                 margin-left: 8px;
             }
             .main-layout {
+                display: none;
+            }
+            .outer-layout {
                 display: none;
             }
             .mobile-schedule-view {
@@ -1627,8 +1779,10 @@
 <main class="mobile-schedule-view" id="mobileScheduleView"></main>
 
 <!-- 메인 레이아웃 -->
-<div class="main-layout">
-    <div class="cal-area">
+<div class="outer-layout">
+    <div class="memo-sidebar" id="memoSidebar"></div>
+    <div class="main-layout">
+        <div class="cal-area">
         <div class="cal-head-row">
             <div class="day-label sun">SUN</div>
             <div class="day-label">MON</div>
@@ -1642,8 +1796,25 @@
     </div>
     <div class="legend-sidebar" id="legend"></div>
 </div>
+</div>
 
 <button class="mobile-add-fab" onclick="openAddModal(dateToStr(new Date()))" title="일정 추가">＋</button>
+<button class="memo-fab" onclick="openMemoModal()" title="메모카드">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
+</button>
+
+<div class="modal-overlay" id="memoModal" onmousedown="if(event.target===this)closeMemoModal()">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title">메모카드</div>
+            <button class="modal-close" onclick="closeMemoModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="memo-modal-list" id="memoModalList"></div>
+            <div id="memoModalForm"></div>
+        </div>
+    </div>
+</div>
 <!-- ─── 보기 모달 ─── -->
 <div class="modal-overlay" id="viewModal" onmousedown="if(event.target===this)closeViewModal()">
     <div class="modal">
@@ -1711,14 +1882,6 @@
         <div class="field">
             <label>다시보기 URL</label>
             <input type="url" id="editVodUrl" placeholder="https://...">
-        </div>
-        <div class="field">
-            <label>YouTube 링크 (최대 3개 · 쇼츠는 /shorts/ URL)</label>
-            <div style="display:flex;flex-direction:column;gap:6px;">
-                <input type="url" id="editYtUrl1" placeholder="https://youtube.com/watch?v=...">
-                <input type="url" id="editYtUrl2" placeholder="https://youtube.com/shorts/...">
-                <input type="url" id="editYtUrl3" placeholder="https://...">
-            </div>
         </div>
         <div class="field">
             <label>메모</label>

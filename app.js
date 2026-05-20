@@ -140,6 +140,7 @@ const state = {
     month: new Date().getMonth(),
     events: [],
     ytLinks: [],
+    memoCards: [],
     user: null,
     isEditor: false,
     isOwner: false,
@@ -733,6 +734,181 @@ function renderCalendar() {
         </div>`;
     }).join('');
     renderSecondaryViews();
+}
+
+// ─── 메모카드 ───
+async function loadMemoCards() {
+    const ym = `${state.year}-${String(state.month + 1).padStart(2, '0')}`;
+    try {
+        const res = await fetch(
+            `${SUPABASE_URL}/rest/v1/memo_cards?select=id,content,url,sort_order,year_month&year_month=eq.${ym}&order=sort_order.asc,created_at.asc`,
+            { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        state.memoCards = Array.isArray(data) ? data : [];
+    } catch (e) {
+        console.error('loadMemoCards:', e);
+        state.memoCards = [];
+    }
+    renderMemoSidebar();
+}
+
+function renderMemoSidebar() {
+    const el = document.getElementById('memoSidebar');
+    if (!el) return;
+
+    // 입력 폼: 아직 없을 때만 렌더 (입력 중인 텍스트 보호)
+    if (state.isEditor && !el.querySelector('.memo-add-form')) {
+        const form = document.createElement('div');
+        form.className = 'memo-add-form';
+        form.innerHTML = `
+            <textarea id="memoNewContent" placeholder="메모 내용을 입력하세요" rows="3"></textarea>
+            <input type="url" id="memoNewUrl" placeholder="링크 URL (선택)">
+            <button onclick="addMemoCard()">추가</button>`;
+        el.prepend(form);
+    }
+
+    // 카드 목록만 갱신
+    const cardsHtml = state.memoCards.map(card => _memoCardHtml(card, true)).join('');
+    let listEl = el.querySelector('.memo-card-list');
+    if (!listEl) {
+        listEl = document.createElement('div');
+        listEl.className = 'memo-card-list';
+        el.appendChild(listEl);
+    }
+    listEl.innerHTML = cardsHtml;
+}
+
+function _memoCardHtml(card, sidebar) {
+    const isLink = !!card.url;
+    const delBtn = state.isEditor
+        ? `<button class="memo-card-del" onclick="event.stopPropagation();deleteMemoCard('${esc(card.id)}')" title="삭제">✕</button>`
+        : '';
+    const dragAttrs = state.isEditor && sidebar
+        ? `draggable="true"
+           ondragstart="memoDragStart(event,'${esc(card.id)}')"
+           ondragover="memoDragOver(event,'${esc(card.id)}')"
+           ondragleave="this.classList.remove('drag-over')"
+           ondrop="memoDrop(event,'${esc(card.id)}')"
+           ondragend="memoDragEnd(event)"`
+        : '';
+    const clickAttr = isLink
+        ? `onclick="openMemoCard('${esc(card.url)}')"` : '';
+    const handle = state.isEditor && sidebar
+        ? `<span class="memo-drag-handle">• • •</span>` : '';
+    return `<div class="memo-card${isLink ? ' is-link' : ''}" ${clickAttr} ${dragAttrs}>
+        ${delBtn}
+        <div class="memo-card-text">${esc(card.content)}</div>
+        ${handle}
+    </div>`;
+}
+
+async function addMemoCard() {
+    const content = (document.getElementById('memoNewContent')?.value || '').trim();
+    const url     = (document.getElementById('memoNewUrl')?.value || '').trim();
+    if (!content) { showToast('내용을 입력해 주세요'); return; }
+    if (url && safeUrl(url) === '#') { showToast('올바른 URL을 입력해 주세요'); return; }
+    const ym = `${state.year}-${String(state.month + 1).padStart(2, '0')}`;
+    const maxOrder = state.memoCards.reduce((m, c) => Math.max(m, c.sort_order ?? 0), -1);
+    await _ensureDb();
+    const { data, error } = await db.from('memo_cards')
+        .insert({ content, url: url || null, sort_order: maxOrder + 1, year_month: ym })
+        .select();
+    if (error) { showToast('저장 실패: ' + error.message); return; }
+    state.memoCards.push(data[0]);
+    const contentEl = document.getElementById('memoNewContent');
+    const urlEl = document.getElementById('memoNewUrl');
+    if (contentEl) contentEl.value = '';
+    if (urlEl) urlEl.value = '';
+    renderMemoSidebar();
+    renderMemoModalList();
+}
+
+async function deleteMemoCard(id) {
+    await _ensureDb();
+    const { error } = await db.from('memo_cards').delete().eq('id', id);
+    if (error) { showToast('삭제 실패: ' + error.message); return; }
+    state.memoCards = state.memoCards.filter(c => c.id !== id);
+    renderMemoSidebar();
+    renderMemoModalList();
+}
+
+function openMemoCard(url) {
+    window.open(safeUrl(url), '_blank', 'noopener,noreferrer');
+}
+
+// 드래그앤드롭
+let _memoDragId = null;
+function memoDragStart(e, id) {
+    _memoDragId = id;
+    e.currentTarget.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+}
+function memoDragEnd(e) {
+    e.currentTarget.classList.remove('dragging');
+    document.querySelectorAll('.memo-card.drag-over').forEach(el => el.classList.remove('drag-over'));
+    _memoDragId = null;
+}
+function memoDragOver(e, id) {
+    if (!_memoDragId || _memoDragId === id) return;
+    e.preventDefault();
+    e.currentTarget.classList.add('drag-over');
+}
+async function memoDrop(e, targetId) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+    if (!_memoDragId || _memoDragId === targetId) return;
+    const fromIdx = state.memoCards.findIndex(c => c.id === _memoDragId);
+    const toIdx   = state.memoCards.findIndex(c => c.id === targetId);
+    if (fromIdx === -1 || toIdx === -1) return;
+    const reordered = [...state.memoCards];
+    const [moved] = reordered.splice(fromIdx, 1);
+    reordered.splice(toIdx, 0, moved);
+    reordered.forEach((c, i) => { c.sort_order = i; });
+    state.memoCards = reordered;
+    renderMemoSidebar();
+    await _ensureDb();
+    await Promise.all(reordered.map((c, i) =>
+        db.from('memo_cards').update({ sort_order: i }).eq('id', c.id)
+    ));
+}
+
+// 모바일 메모 모달
+function openMemoModal() {
+    renderMemoModalList();
+    renderMemoModalForm();
+    document.getElementById('memoModal').classList.add('open');
+}
+function closeMemoModal() {
+    document.getElementById('memoModal').classList.remove('open');
+}
+function renderMemoModalList() {
+    const el = document.getElementById('memoModalList');
+    if (!el) return;
+    if (!state.memoCards.length) {
+        el.innerHTML = '<div style="color:#aaa;font-size:13px;text-align:center;padding:10px 0;">등록된 메모가 없어요</div>';
+        return;
+    }
+    el.innerHTML = state.memoCards.map(card => {
+        const isLink = !!card.url;
+        const delBtn = state.isEditor
+            ? `<button class="memo-card-del" onclick="event.stopPropagation();deleteMemoCard('${esc(card.id)}')" title="삭제">✕</button>` : '';
+        const clickAttr = isLink ? `onclick="openMemoCard('${esc(card.url)}')"` : '';
+        return `<div class="memo-modal-card${isLink ? ' is-link' : ''}" ${clickAttr}>
+            ${delBtn}
+            <div style="white-space:pre-wrap">${esc(card.content)}</div>
+        </div>`;
+    }).join('');
+}
+function renderMemoModalForm() {
+    const el = document.getElementById('memoModalForm');
+    if (!el || !state.isEditor) { if (el) el.innerHTML = ''; return; }
+    el.innerHTML = `<div class="memo-add-form">
+        <textarea id="memoNewContent" placeholder="메모 내용을 입력하세요" rows="3"></textarea>
+        <input type="url" id="memoNewUrl" placeholder="링크 URL (선택)">
+        <button onclick="addMemoCard()">추가</button>
+    </div>`;
 }
 
 // ─── YouTube 링크 모달 ───
@@ -1559,6 +1735,7 @@ function changeMonth(delta) {
             state.year  = newYear;
             state.month = newMonth;
             loadEvents();
+            loadMemoCards().catch(() => {});
         } else {
             renderCalendar();
         }
@@ -1569,6 +1746,7 @@ function changeMonth(delta) {
     if (state.month < 0)  { state.month = 11; state.year--; }
     state.mobileStartDate = `${state.year}-${String(state.month + 1).padStart(2, '0')}-01`;
     loadEvents();
+    loadMemoCards().catch(() => {});
 }
 function goToday() {
     const now = new Date();
@@ -1577,6 +1755,7 @@ function goToday() {
     state.mobileStartDate = dateToStr(now);
     state.weekStart = dateToStr(addDays(now, -now.getDay()));
     loadEvents();
+    loadMemoCards().catch(() => {});
 }
 
 function navigateMobileDays(delta) {
@@ -1646,6 +1825,7 @@ async function setSessionUser(user) {
     document.body.classList.toggle('is-editor', state.isEditor);
     localStorage.setItem('beadyo_was_editor', state.isEditor ? '1' : '0');
     renderCalendar();
+    renderMemoSidebar();
 }
 
 // ─── 모바일 스와이프 ───
@@ -1685,6 +1865,7 @@ loadEvents().catch(err => {
     renderCalendar();
     loadYtLinks().catch(() => {});
 });
+loadMemoCards().catch(err => console.error('initial loadMemoCards:', err));
 initAuth();
 checkBirthday();
 
