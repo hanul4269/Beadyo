@@ -1465,9 +1465,6 @@ function openAddModal(dateStr, type = 'chat') {
     document.getElementById('editCollab').value    = '';
     document.getElementById('editSubtitle').value  = '';
     document.getElementById('editVodUrl').value    = '';
-    document.getElementById('editYtUrl1').value    = '';
-    document.getElementById('editYtUrl2').value    = '';
-    document.getElementById('editYtUrl3').value    = '';
     document.getElementById('editMemo').value      = '';
     document.getElementById('editIsRest').checked  = false;
     document.getElementById('editModal').classList.add('open');
@@ -1494,10 +1491,6 @@ function fillEditForm(ev, title, id = '') {
     document.getElementById('editCollab').value    = ev.collab ?? '';
     document.getElementById('editSubtitle').value  = ev.subtitle ?? '';
     document.getElementById('editVodUrl').value    = ev.vod_url ?? '';
-    const ytLinks = (ev.youtube_links || '').split('\n').filter(Boolean);
-    document.getElementById('editYtUrl1').value    = ytLinks[0] ?? '';
-    document.getElementById('editYtUrl2').value    = ytLinks[1] ?? '';
-    document.getElementById('editYtUrl3').value    = ytLinks[2] ?? '';
     document.getElementById('editMemo').value      = ev.memo ?? '';
     document.getElementById('editIsRest').checked  = ev.is_rest ?? false;
 }
@@ -1562,11 +1555,6 @@ async function saveEvent() {
         collab:     document.getElementById('editCollab').value.trim()   || null,
         subtitle:   document.getElementById('editSubtitle').value.trim() || null,
         vod_url:    document.getElementById('editVodUrl').value.trim()   || null,
-        youtube_links: [
-            document.getElementById('editYtUrl1').value.trim(),
-            document.getElementById('editYtUrl2').value.trim(),
-            document.getElementById('editYtUrl3').value.trim(),
-        ].filter(Boolean).join('\n') || null,
         memo:       document.getElementById('editMemo').value.trim()     || null,
         is_rest:    document.getElementById('editIsRest').checked,
     };
