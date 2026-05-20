@@ -400,10 +400,60 @@
             width: 28px; height: 28px;
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
-            margin-bottom: 2px;
         }
         .date-num.sun { color: #e53935; }
         .date-num.sat { color: #1976d2; }
+
+        .cell-date-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+            margin-bottom: 2px;
+        }
+        .yt-badges { display: flex; gap: 2px; }
+        .yt-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 17px; height: 17px;
+            border-radius: 50%;
+            font-size: 9px;
+            font-weight: 900;
+            text-decoration: none;
+            flex-shrink: 0;
+            line-height: 1;
+            transition: transform 0.1s, filter 0.1s;
+        }
+        .yt-badge:hover { transform: scale(1.2); filter: brightness(1.1); }
+        .yt-badge.yt-long  { background: #ff0000; color: #fff; box-shadow: 0 1px 3px rgba(255,0,0,0.45); }
+        .yt-badge.yt-short { background: #0f0f0f; color: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+        .yt-add-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 17px; height: 12px; border-radius: 3px;
+            background: #ff0000; border: none; cursor: pointer; padding: 0;
+            flex-shrink: 0; opacity: 0.7; transition: opacity 0.15s;
+        }
+        .yt-add-btn:hover { opacity: 1; }
+        .yt-add-btn svg { width: 7px; height: 7px; fill: #fff; }
+        /* ── YouTube 링크 관리 모달 ── */
+        #ytLinkModal .modal { max-width: 400px; }
+        .yt-link-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+        .yt-link-item {
+            display: flex; align-items: center; gap: 8px;
+            background: #f7f7f7; border-radius: 8px; padding: 8px 10px;
+        }
+        .yt-link-item .yt-badge { width: 18px; height: 18px; font-size: 9px; flex-shrink: 0; }
+        .yt-link-item a { flex: 1; font-size: 12px; color: #333; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .yt-link-item a:hover { text-decoration: underline; color: #ff0000; }
+        .yt-link-del { background: none; border: none; cursor: pointer; color: #aaa; font-size: 16px; line-height: 1; padding: 0 2px; }
+        .yt-link-del:hover { color: #e53935; }
+        .yt-link-add { display: flex; gap: 8px; }
+        .yt-link-add input { flex: 1; padding: 8px 10px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: 13px; }
+        .yt-link-add input:focus { border-color: #ff0000; outline: none; }
+        .yt-link-add button { background: #ff0000; color: #fff; border: none; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer; }
+        .yt-link-add button:hover { background: #cc0000; }
+        .yt-empty-msg { color: #aaa; font-size: 13px; text-align: center; padding: 10px 0; }
 
         /* ── 셀 우상단 영역 ── */
         .cell-top-right {
@@ -1064,6 +1114,8 @@
             margin-top: 10px;
         }
         .vod-link:hover { background: #e53935; }
+        .yt-vod-link { background: #ff0000; margin-top: 8px; }
+        .yt-vod-link:hover { background: #cc0000; }
 
         /* ── 폼 ── */
         .field { margin-bottom: 13px; }
@@ -1661,6 +1713,14 @@
             <input type="url" id="editVodUrl" placeholder="https://...">
         </div>
         <div class="field">
+            <label>YouTube 링크 (최대 3개 · 쇼츠는 /shorts/ URL)</label>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <input type="url" id="editYtUrl1" placeholder="https://youtube.com/watch?v=...">
+                <input type="url" id="editYtUrl2" placeholder="https://youtube.com/shorts/...">
+                <input type="url" id="editYtUrl3" placeholder="https://...">
+            </div>
+        </div>
+        <div class="field">
             <label>메모</label>
             <textarea id="editMemo" placeholder="추가 메모"></textarea>
         </div>
@@ -1731,6 +1791,23 @@
 
 <div class="toast" id="toast"></div>
 <div class="memo-tooltip" id="memoTooltip"></div>
+
+<div class="modal-overlay" id="ytLinkModal" onmousedown="if(event.target===this)closeYtModal()">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title" id="ytLinkModalTitle">YouTube 링크</div>
+            <button class="modal-close" onclick="closeYtModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="yt-link-list" id="ytLinkList"></div>
+            <div class="yt-link-add">
+                <input type="url" id="ytLinkInput" placeholder="https://youtube.com/watch?v=... 또는 /shorts/..." onkeydown="if(event.key==='Enter')saveYtLink()">
+                <button onclick="saveYtLink()">추가</button>
+            </div>
+            <div style="font-size:11px;color:#aaa;margin-top:6px;">최대 3개까지 등록 가능 · 쇼츠는 /shorts/ URL을 넣어 주세요</div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

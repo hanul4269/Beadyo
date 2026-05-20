@@ -139,6 +139,7 @@ const state = {
     year: new Date().getFullYear(),
     month: new Date().getMonth(),
     events: [],
+    ytLinks: [],
     user: null,
     isEditor: false,
     isOwner: false,
@@ -165,6 +166,14 @@ function _ensureDb() {
 
 function typeOf(key) {
     return EVENT_TYPES.find(t => t.key === key) ?? EVENT_TYPES.find(t => t.key === 'general');
+}
+function ytLinkType(url) {
+    if (!url || typeof url !== 'string') return null;
+    url = url.trim();
+    if (!url) return null;
+    if (url.includes('/shorts/')) return 'short';
+    if (url.includes('youtube.com') || url.includes('youtu.be')) return 'long';
+    return null;
 }
 function pad(n) { return String(n).padStart(2, '0'); }
 function toDateStr(y, m, d) { return `${y}-${pad(m + 1)}-${pad(d)}`; }
@@ -408,7 +417,7 @@ async function loadEvents() {
     }
 
     // Supabase 클라이언트 초기화 행 방지 — REST API 직접 호출
-    const cols = 'id,date,end_date,start_time,duration,title,type,collab,subtitle,vod_url,memo,is_rest';
+    const cols = 'id,date,end_date,start_time,duration,title,type,collab,subtitle,vod_url,memo,is_rest,youtube_links';
     const url  = `${SUPABASE_URL}/rest/v1/schedules` +
         `?select=${cols}` +
         `&date=gte.${extFirst}` +
@@ -441,6 +450,7 @@ async function loadEvents() {
     try { localStorage.setItem(cacheKey, JSON.stringify(state.events)); } catch {}
     _eventsLoaded = true;
     renderCalendar();
+    loadYtLinks().catch(() => {});
 }
 
 async function loadEditors() {
@@ -452,6 +462,27 @@ async function loadEditors() {
         return;
     }
     state.editors = data ?? [];
+}
+
+async function loadYtLinks() {
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const lastDay  = new Date(now.getFullYear(), now.getMonth() + 2, 0);
+    const from = dateToStr(firstDay);
+    const to   = dateToStr(lastDay);
+    try {
+        const res = await fetch(
+            `${SUPABASE_URL}/rest/v1/youtube_links?select=id,date,url&date=gte.${from}&date=lte.${to}&order=date.asc,created_at.asc`,
+            { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        state.ytLinks = Array.isArray(data) ? data : [];
+    } catch (e) {
+        console.error('loadYtLinks:', e);
+        state.ytLinks = [];
+    }
+    renderCalendar();
 }
 
 // ─── 범례 렌더링 ───
@@ -668,17 +699,99 @@ function renderCalendar() {
         const topRight = !other
             ? `<div class="cell-top-right">${todayBadge}${addBtn}</div>` : '';
 
+        const ytBadges = [];
+        events.forEach(ev => {
+            if (!ev.youtube_links || ev.date !== dateStr) return;
+            ev.youtube_links.split('\n').forEach(url => {
+                const type = ytLinkType(url);
+                if (type) ytBadges.push({ url: url.trim(), type });
+            });
+        });
+        state.ytLinks.filter(yl => yl.date === dateStr).forEach(yl => {
+            const type = ytLinkType(yl.url);
+            if (type) ytBadges.push({ url: yl.url.trim(), type });
+        });
+        const ytAddBtn = !other && state.isEditor
+            ? `<button class="yt-add-btn" onclick="event.stopPropagation();openYtModal('${dateStr}')" title="YouTube 링크 추가"><svg viewBox="0 0 10 7"><path d="M3.9 4.9V2.1L6.7 3.5z"/></svg></button>`
+            : '';
+        const ytBadgesHtml = (ytBadges.length || ytAddBtn)
+            ? `<div class="yt-badges">${ytBadges.map(({ url, type }) =>
+                `<a class="yt-badge yt-${type}" href="${safeUrl(url)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" title="${type === 'long' ? 'YouTube' : 'YouTube Shorts'}">${type === 'long' ? 'Y' : 'S'}</a>`
+              ).join('')}${ytAddBtn}</div>` : '';
+
         const chipsClass = `chips-area${isSingle ? ' single' : ''}${isStableList ? ' stable-list' : ''}${isPacked ? ' packed' : ''}${isCompact ? ' compact' : ''}${isStableList ? ` count-${events.length}` : ''}`;
         const body = `<div class="${chipsClass}">${chipsHtml}</div>`;
 
         return `<div class="${cellCls}" ${cellClick}>
-            <div class="${numCls}">${day}</div>
+            <div class="cell-date-row">
+                <div class="${numCls}">${day}</div>
+                ${ytBadgesHtml}
+            </div>
             ${holHtml}
             ${topRight}
             ${body}
         </div>`;
     }).join('');
     renderSecondaryViews();
+}
+
+// ─── YouTube 링크 모달 ───
+let _ytModalDate = null;
+
+function openYtModal(dateStr) {
+    _ytModalDate = dateStr;
+    const [y, m, d] = dateStr.split('-');
+    document.getElementById('ytLinkModalTitle').textContent = 'YouTube 링크';
+    document.getElementById('ytLinkInput').value = '';
+    renderYtLinkList();
+    document.getElementById('ytLinkModal').classList.add('open');
+}
+
+function closeYtModal() {
+    document.getElementById('ytLinkModal').classList.remove('open');
+    _ytModalDate = null;
+}
+
+function renderYtLinkList() {
+    const list = document.getElementById('ytLinkList');
+    const links = state.ytLinks.filter(yl => yl.date === _ytModalDate);
+    if (!links.length) {
+        list.innerHTML = '<div class="yt-empty-msg">등록된 링크가 없어요</div>';
+        return;
+    }
+    list.innerHTML = links.map(yl => {
+        const type = ytLinkType(yl.url);
+        const badge = type ? `<span class="yt-badge yt-${type}">${type === 'long' ? 'Y' : 'S'}</span>` : '';
+        return `<div class="yt-link-item">
+            ${badge}
+            <a href="${safeUrl(yl.url)}" target="_blank" rel="noopener noreferrer">${esc(yl.url)}</a>
+            <button class="yt-link-del" onclick="deleteYtLink('${esc(yl.id)}')" title="삭제">✕</button>
+        </div>`;
+    }).join('');
+}
+
+async function saveYtLink() {
+    const url = document.getElementById('ytLinkInput').value.trim();
+    if (!url || !_ytModalDate) return;
+    if (!ytLinkType(url)) { showToast('유효한 YouTube URL을 입력해 주세요'); return; }
+    const existing = state.ytLinks.filter(yl => yl.date === _ytModalDate);
+    if (existing.length >= 3) { showToast('날짜당 최대 3개까지 등록할 수 있어요'); return; }
+    await _ensureDb();
+    const { data, error } = await db.from('youtube_links').insert({ date: _ytModalDate, url }).select();
+    if (error) { showToast('저장 실패: ' + error.message); return; }
+    state.ytLinks.push(data[0]);
+    document.getElementById('ytLinkInput').value = '';
+    renderYtLinkList();
+    renderCalendar();
+}
+
+async function deleteYtLink(id) {
+    await _ensureDb();
+    const { error } = await db.from('youtube_links').delete().eq('id', id);
+    if (error) { showToast('삭제 실패: ' + error.message); return; }
+    state.ytLinks = state.ytLinks.filter(yl => yl.id !== id);
+    renderYtLinkList();
+    renderCalendar();
 }
 
 // ─── 보기 모달 ───
@@ -708,6 +821,12 @@ function openViewModal(id) {
         html += `<div class="view-section"><div class="view-label">메모</div><div class="view-value" style="white-space:pre-wrap">${esc(ev.memo)}</div></div>`;
     if (ev.vod_url)
         html += `<a class="vod-link" href="${safeUrl(ev.vod_url)}" target="_blank" rel="noopener noreferrer">▶ 다시보기</a>`;
+    if (ev.youtube_links) {
+        ev.youtube_links.split('\n').filter(Boolean).forEach(url => {
+            const type = ytLinkType(url);
+            if (type) html += `<a class="vod-link yt-vod-link" href="${safeUrl(url)}" target="_blank" rel="noopener noreferrer">${type === 'long' ? '▶ YouTube' : '▶ YouTube Shorts'}</a>`;
+        });
+    }
 
     document.getElementById('viewContent').innerHTML = html;
     document.getElementById('viewBtns').innerHTML = state.isEditor
@@ -1156,7 +1275,7 @@ function openAddModalWithType(typeKey) {
     openAddModal(toDateStr(today.getFullYear(), today.getMonth(), today.getDate()), typeKey);
 }
 
-function openAddModal(dateStr, type = 'general') {
+function openAddModal(dateStr, type = 'chat') {
     populateTypeSelect();
     document.getElementById('editModalTitle').textContent = '일정 추가';
     document.getElementById('editId').value        = '';
@@ -1169,6 +1288,9 @@ function openAddModal(dateStr, type = 'general') {
     document.getElementById('editCollab').value    = '';
     document.getElementById('editSubtitle').value  = '';
     document.getElementById('editVodUrl').value    = '';
+    document.getElementById('editYtUrl1').value    = '';
+    document.getElementById('editYtUrl2').value    = '';
+    document.getElementById('editYtUrl3').value    = '';
     document.getElementById('editMemo').value      = '';
     document.getElementById('editIsRest').checked  = false;
     document.getElementById('editModal').classList.add('open');
@@ -1191,10 +1313,14 @@ function fillEditForm(ev, title, id = '') {
     initTimePicker(ev.start_time ? ev.start_time.slice(0, 5) : '');
     document.getElementById('editDuration').value  = ev.duration ?? '';
     document.getElementById('editTitle').value     = ev.title ?? '';
-    document.getElementById('editType').value      = ev.type ?? 'general';
+    document.getElementById('editType').value      = ev.type ?? 'chat';
     document.getElementById('editCollab').value    = ev.collab ?? '';
     document.getElementById('editSubtitle').value  = ev.subtitle ?? '';
     document.getElementById('editVodUrl').value    = ev.vod_url ?? '';
+    const ytLinks = (ev.youtube_links || '').split('\n').filter(Boolean);
+    document.getElementById('editYtUrl1').value    = ytLinks[0] ?? '';
+    document.getElementById('editYtUrl2').value    = ytLinks[1] ?? '';
+    document.getElementById('editYtUrl3').value    = ytLinks[2] ?? '';
     document.getElementById('editMemo').value      = ev.memo ?? '';
     document.getElementById('editIsRest').checked  = ev.is_rest ?? false;
 }
@@ -1231,6 +1357,7 @@ async function repeatWeekly(id) {
             vod_url: ev.vod_url || null,
             memo: ev.memo || null,
             is_rest: !!ev.is_rest,
+            youtube_links: ev.youtube_links || null,
         };
         return payload;
     });
@@ -1258,6 +1385,11 @@ async function saveEvent() {
         collab:     document.getElementById('editCollab').value.trim()   || null,
         subtitle:   document.getElementById('editSubtitle').value.trim() || null,
         vod_url:    document.getElementById('editVodUrl').value.trim()   || null,
+        youtube_links: [
+            document.getElementById('editYtUrl1').value.trim(),
+            document.getElementById('editYtUrl2').value.trim(),
+            document.getElementById('editYtUrl3').value.trim(),
+        ].filter(Boolean).join('\n') || null,
         memo:       document.getElementById('editMemo').value.trim()     || null,
         is_rest:    document.getElementById('editIsRest').checked,
     };
@@ -1551,6 +1683,7 @@ loadEvents().catch(err => {
     console.error('initial loadEvents:', err);
     state.events = [];
     renderCalendar();
+    loadYtLinks().catch(() => {});
 });
 initAuth();
 checkBirthday();
