@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구슬요 노래</title>
+    <link rel="icon" href="logo-icon.webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet"></noscript>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --accent:       #8bc34a;
+            --accent-dark:  #6d9c32;
+            --accent-light: #f1f8e9;
+            --bg:           #f5f4f0;
+            --surface:      #ffffff;
+            --border:       rgba(0,0,0,0.07);
+            --text:         #222222;
+            --muted:        #888888;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ─── 헤더 ─── */
+        .songs-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 48px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .filter-tab {
+            padding: 5px 14px;
+            border: none;
+            border-radius: 20px;
+            background: transparent;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--muted);
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            letter-spacing: 0.02em;
+        }
+        .filter-tab:hover { background: var(--accent-light); color: var(--accent-dark); }
+        .filter-tab.active { background: var(--accent); color: #fff; }
+
+        .add-btn {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s;
+            white-space: nowrap;
+        }
+        .add-btn:hover { background: var(--accent-dark); }
+        .is-editor .add-btn { display: flex; }
+
+        /* ─── 그리드 ─── */
+        .songs-body {
+            padding: 20px 16px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .songs-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        @media (max-width: 900px) { .songs-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 600px) { .songs-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
+        @media (max-width: 360px) { .songs-grid { grid-template-columns: repeat(1, 1fr); } }
+
+        /* ─── 타일 ─── */
+        .song-tile {
+            background: var(--surface);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.18s, box-shadow 0.18s;
+            position: relative;
+        }
+        .song-tile:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.13); }
+
+        .song-thumb-wrap {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 */
+            background: #e8e6e0;
+            overflow: hidden;
+        }
+        .song-thumb {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.25s;
+        }
+        .song-tile:hover .song-thumb { transform: scale(1.04); }
+
+        .song-thumb-fallback {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e0ddd8;
+        }
+        .song-thumb-fallback svg { width: 40px; height: 40px; opacity: 0.3; }
+
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0);
+            transition: background 0.2s;
+        }
+        .song-tile:hover .play-overlay { background: rgba(0,0,0,0.22); }
+        .play-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,0.92);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .song-tile:hover .play-icon { opacity: 1; transform: scale(1); }
+        .play-icon svg { width: 18px; height: 18px; fill: var(--accent-dark); margin-left: 2px; }
+
+        .type-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .type-badge.original { background: rgba(139,195,74,0.9); color: #fff; }
+        .type-badge.cover    { background: rgba(100,160,240,0.9); color: #fff; }
+
+        .edit-btn, .delete-btn {
+            display: none;
+            position: absolute;
+            top: 8px;
+            width: 26px;
+            height: 26px;
+            background: rgba(0,0,0,0.55);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+            z-index: 2;
+        }
+        .edit-btn   { right: 40px; }
+        .delete-btn { right: 8px; }
+        .edit-btn svg, .delete-btn svg { width: 13px; height: 13px; stroke: #fff; fill: none; }
+        .edit-btn:hover   { background: rgba(139,195,74,0.9); }
+        .delete-btn:hover { background: rgba(220,50,50,0.85); }
+        .is-editor .song-tile:hover .edit-btn,
+        .is-editor .song-tile:hover .delete-btn { display: flex; }
+
+        .song-info {
+            padding: 10px 12px 12px;
+        }
+        .song-title {
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.35;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin-bottom: 3px;
+        }
+        .song-collab {
+            font-size: 11px;
+            color: var(--accent-dark);
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+        .song-date {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* ─── 빈 상태 ─── */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--muted);
+        }
+        .empty-state svg { width: 48px; height: 48px; opacity: 0.25; margin-bottom: 12px; }
+        .empty-state p { font-size: 14px; }
+
+        /* ─── 모달 ─── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal-overlay.open { display: flex; }
+
+        .modal {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 24px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+        }
+        .modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .field { margin-bottom: 14px; }
+        .field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            margin-bottom: 5px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .field input, .field select {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            background: var(--bg);
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        .field input:focus, .field select:focus { border-color: var(--accent); }
+
+        .date-input-wrap {
+            position: relative;
+            display: flex;
+            gap: 6px;
+        }
+        .date-input-wrap input[type="text"] { flex: 1; }
+        .date-pick-btn {
+            flex-shrink: 0;
+            width: 38px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .date-pick-btn:hover { border-color: var(--accent); background: var(--accent-light); }
+        .date-pick-btn svg { width: 16px; height: 16px; color: var(--muted); }
+
+        /* URL 입력 + 썸네일 미리보기 */
+        .url-preview {
+            margin-top: 8px;
+            display: none;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            background: #e0ddd8;
+        }
+        .url-preview.show { display: block; }
+        .url-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+        .btn-cancel {
+            padding: 9px 18px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: transparent;
+            font-family: inherit;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .btn-save {
+            padding: 9px 18px;
+            border: none;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #fff;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn-save:hover { background: var(--accent-dark); }
+        .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* ─── 토스트 ─── */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(30,30,30,0.92);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 24px;
+            font-size: 13px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s, transform 0.25s;
+            z-index: 9999;
+            white-space: nowrap;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* ─── 로딩 스켈레톤 ─── */
+        .skeleton {
+            background: linear-gradient(90deg, #ede9e4 25%, #e4e0db 50%, #ede9e4 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 8px;
+        }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        .skeleton-tile {
+            background: var(--surface);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        .skeleton-thumb { width: 100%; padding-bottom: 56.25%; position: relative; }
+        .skeleton-thumb > div { position: absolute; inset: 0; }
+        .skeleton-info { padding: 10px 12px 12px; }
+        .skeleton-title { height: 13px; margin-bottom: 8px; }
+        .skeleton-title2 { height: 13px; width: 70%; margin-bottom: 8px; }
+        .skeleton-date { height: 11px; width: 50%; }
+    </style>
+</head>
+<body>
+    <div class="songs-header">
+        <div class="filter-tabs">
+            <button class="filter-tab active" onclick="setFilter('all')">전체</button>
+            <button class="filter-tab" onclick="setFilter('original')">오리지널</button>
+            <button class="filter-tab" onclick="setFilter('cover')">커버</button>
+        </div>
+        <button class="add-btn" onclick="openAddModal()">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
+            추가
+        </button>
+    </div>
+
+    <div class="songs-body">
+        <div class="songs-grid" id="songs-grid"></div>
+    </div>
+
+    <!-- 추가 모달 -->
+    <div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-title" id="modal-title">노래 추가</div>
+            <div class="field">
+                <label>YouTube URL</label>
+                <input type="url" id="field-url" placeholder="https://youtu.be/..." oninput="onUrlInput(this.value)">
+                <div class="url-preview" id="url-preview">
+                    <img id="preview-img" src="" alt="">
+                </div>
+            </div>
+            <div class="field">
+                <label>제목</label>
+                <input type="text" id="field-title" placeholder="노래 제목">
+            </div>
+            <div class="field">
+                <label>구분</label>
+                <select id="field-type">
+                    <option value="original">오리지널</option>
+                    <option value="cover">커버</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>With <span style="font-weight:400;text-transform:none;letter-spacing:0">(선택)</span></label>
+                <input type="text" id="field-collab" placeholder="예: 아이네, 징버거">
+            </div>
+            <div class="field">
+                <label>업로드 날짜</label>
+                <div class="date-input-wrap">
+                    <input type="text" id="field-date" placeholder="20240315 또는 2024-03-15" oninput="onDateInput(this)" maxlength="10">
+                    <button type="button" class="date-pick-btn" onclick="document.getElementById('field-date-picker').showPicker()" title="달력에서 선택">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </button>
+                    <input type="date" id="field-date-picker" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0" oninput="onPickerChange(this.value)">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">취소</button>
+                <button class="btn-save" id="btn-save" onclick="saveSong()">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const SUPABASE_URL      = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
+        const OWNER_EMAIL       = 'riosniper12@gmail.com';
+
+        let db = null;
+        let _dbReady = null;
+        function ensureDb() {
+            if (db) return Promise.resolve(db);
+            if (_dbReady) return _dbReady;
+            _dbReady = new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = 'supabase.min.js';
+                s.onload = () => { db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); resolve(db); };
+                s.onerror = reject;
+                document.head.appendChild(s);
+            });
+            return _dbReady;
+        }
+
+        let state = { songs: [], filter: 'all', isEditor: false, editingId: null };
+
+        // ─── YouTube 유틸 ───
+        function extractVideoId(url) {
+            if (!url) return null;
+            const m = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+            return m ? m[1] : null;
+        }
+        function thumbUrl(videoId) {
+            return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+        }
+        function safeYtUrl(url) {
+            url = (url || '').trim();
+            if (/^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\//.test(url)) return url;
+            return '#';
+        }
+
+        // ─── 필터 ───
+        function setFilter(f) {
+            state.filter = f;
+            document.querySelectorAll('.filter-tab').forEach((el, i) => {
+                el.classList.toggle('active', ['all','original','cover'][i] === f);
+            });
+            renderGrid();
+        }
+
+        // ─── 렌더 ───
+        function renderGrid() {
+            const grid = document.getElementById('songs-grid');
+            const items = state.songs.filter(s => state.filter === 'all' || s.type === state.filter);
+
+            if (!items.length) {
+                const label = state.filter === 'all' ? '등록된 노래가 없어요' : state.filter === 'original' ? '오리지널 곡이 없어요' : '커버 곡이 없어요';
+                grid.innerHTML = `<div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                    <p>${label}</p>
+                </div>`;
+                return;
+            }
+
+            grid.innerHTML = items.map(song => {
+                const vid = extractVideoId(song.youtube_url);
+                const thumb = vid ? thumbUrl(vid) : null;
+                const href = safeYtUrl(song.youtube_url);
+                const dateStr = song.upload_date
+                    ? new Date(song.upload_date + 'T00:00:00').toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
+                    : '';
+                const typeLbl = song.type === 'original' ? '오리지널' : '커버';
+                const typeCls = song.type === 'original' ? 'original' : 'cover';
+
+                const thumbHtml = thumb
+                    ? `<img class="song-thumb" src="${esc(thumb)}" alt="${esc(song.title)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+                    : '';
+                const fallbackHtml = `<div class="song-thumb-fallback" style="${thumb ? 'display:none' : ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>`;
+
+                return `<a class="song-tile" href="${href}" target="_blank" rel="noopener noreferrer">
+                    <div class="song-thumb-wrap">
+                        ${thumbHtml}${fallbackHtml}
+                        <div class="play-overlay">
+                            <div class="play-icon">
+                                <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+                            </div>
+                        </div>
+                        <span class="type-badge ${typeCls}">${typeLbl}</span>
+                        <button class="edit-btn" onclick="event.preventDefault();event.stopPropagation();openEditModal('${esc(song.id)}')" title="수정">
+                            <svg viewBox="0 0 24 24" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </button>
+                        <button class="delete-btn" onclick="event.preventDefault();event.stopPropagation();deleteSong('${esc(song.id)}','${esc(song.title)}')" title="삭제">
+                            <svg viewBox="0 0 24 24" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6"/><path d="M10,11v6M14,11v6"/><path d="M9,6V4h6v2"/></svg>
+                        </button>
+                    </div>
+                    <div class="song-info">
+                        <div class="song-title">${esc(song.title)}</div>
+                        ${song.collab ? `<div class="song-collab">w. ${esc(song.collab)}</div>` : ''}
+                        <div class="song-date">${esc(dateStr)}</div>
+                    </div>
+                </a>`;
+            }).join('');
+        }
+
+        function renderSkeleton() {
+            const grid = document.getElementById('songs-grid');
+            grid.innerHTML = Array(8).fill(0).map(() => `
+                <div class="skeleton-tile">
+                    <div class="skeleton-thumb"><div class="skeleton"></div></div>
+                    <div class="skeleton-info">
+                        <div class="skeleton skeleton-title"></div>
+                        <div class="skeleton skeleton-title2"></div>
+                        <div class="skeleton skeleton-date"></div>
+                    </div>
+                </div>`).join('');
+        }
+
+        function esc(str) {
+            return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        }
+
+        // ─── 데이터 로드 ───
+        async function loadSongs() {
+            renderSkeleton();
+            await ensureDb();
+            const { data, error } = await db
+                .from('youtube_songs')
+                .select('*')
+                .order('upload_date', { ascending: false });
+            if (error) { showToast('불러오기 실패: ' + error.message); state.songs = []; }
+            else state.songs = data || [];
+            renderGrid();
+        }
+
+        // ─── 모달 ───
+        function openAddModal() {
+            state.editingId = null;
+            document.getElementById('modal-title').textContent = '노래 추가';
+            document.getElementById('field-url').value = '';
+            document.getElementById('field-title').value = '';
+            document.getElementById('field-type').value = 'original';
+            document.getElementById('field-collab').value = '';
+            document.getElementById('field-date').value = '';
+            document.getElementById('field-date-picker').value = '';
+            document.getElementById('url-preview').classList.remove('show');
+            document.getElementById('modal-overlay').classList.add('open');
+            document.getElementById('field-url').focus();
+        }
+        function openEditModal(id) {
+            const song = state.songs.find(s => s.id === id);
+            if (!song) return;
+            state.editingId = id;
+            document.getElementById('modal-title').textContent = '노래 수정';
+            document.getElementById('field-url').value = song.youtube_url || '';
+            document.getElementById('field-title').value = song.title || '';
+            document.getElementById('field-type').value = song.type || 'original';
+            document.getElementById('field-collab').value = song.collab || '';
+            document.getElementById('field-date').value = song.upload_date || '';
+            document.getElementById('field-date-picker').value = song.upload_date || '';
+            onUrlInput(song.youtube_url || '');
+            document.getElementById('modal-overlay').classList.add('open');
+            document.getElementById('field-title').focus();
+        }
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('open');
+        }
+        function handleOverlayClick(e) {
+            if (e.target === document.getElementById('modal-overlay')) closeModal();
+        }
+
+        function onUrlInput(val) {
+            const vid = extractVideoId(val);
+            const preview = document.getElementById('url-preview');
+            const img = document.getElementById('preview-img');
+            if (vid) {
+                img.src = thumbUrl(vid);
+                preview.classList.add('show');
+            } else {
+                preview.classList.remove('show');
+            }
+        }
+
+        function onDateInput(el) {
+            const digits = el.value.replace(/\D/g, '').slice(0, 8);
+            let formatted = digits;
+            if (digits.length > 4) formatted = digits.slice(0,4) + '-' + digits.slice(4);
+            if (digits.length > 6) formatted = digits.slice(0,4) + '-' + digits.slice(4,6) + '-' + digits.slice(6);
+            el.value = formatted;
+        }
+
+        function onPickerChange(val) {
+            document.getElementById('field-date').value = val;
+        }
+
+        function parseDate(raw) {
+            const digits = raw.replace(/\D/g, '');
+            if (digits.length === 8) return `${digits.slice(0,4)}-${digits.slice(4,6)}-${digits.slice(6,8)}`;
+            if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+            return null;
+        }
+
+        async function saveSong() {
+            const url   = document.getElementById('field-url').value.trim();
+            const title = document.getElementById('field-title').value.trim();
+            const type  = document.getElementById('field-type').value;
+            const dateRaw = document.getElementById('field-date').value.trim();
+            const date  = parseDate(dateRaw);
+
+            if (!title) { showToast('제목을 입력해주세요'); return; }
+            if (!date)  { showToast('날짜를 올바르게 입력해주세요 (예: 20240315)'); return; }
+            if (!state.editingId) {
+                if (!url) { showToast('URL을 입력해주세요'); return; }
+                if (!extractVideoId(url)) { showToast('올바른 YouTube URL이 아닙니다'); return; }
+            }
+
+            const btn = document.getElementById('btn-save');
+            btn.disabled = true;
+            await ensureDb();
+
+            const payload = { title, type, upload_date: date, collab: document.getElementById('field-collab').value.trim() || null };
+            if (url) payload.youtube_url = url;
+            let error;
+            if (state.editingId) {
+                ({ error } = await db.from('youtube_songs').update(payload).eq('id', state.editingId));
+            } else {
+                payload.youtube_url = url;
+                ({ error } = await db.from('youtube_songs').insert(payload));
+            }
+
+            btn.disabled = false;
+            if (error) { showToast('저장 실패: ' + error.message); return; }
+            showToast(state.editingId ? '수정되었습니다' : '추가되었습니다');
+            closeModal();
+            await loadSongs();
+        }
+
+        async function deleteSong(id, title) {
+            if (!confirm(`"${title}" 을(를) 삭제하시겠습니까?`)) return;
+            await ensureDb();
+            const { error } = await db.from('youtube_songs').delete().eq('id', id);
+            if (error) { showToast('삭제 실패: ' + error.message); return; }
+            showToast('삭제되었습니다');
+            await loadSongs();
+        }
+
+        // ─── 토스트 ───
+        let _toastTimer = null;
+        function showToast(msg) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            clearTimeout(_toastTimer);
+            _toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+        }
+
+        // ─── 인증 동기화 (부모 iframe) ───
+        async function checkEditor(user) {
+            if (!user) return false;
+            const email = (user.email || '').toLowerCase();
+            if (email === OWNER_EMAIL.toLowerCase()) return true;
+            await ensureDb();
+            try {
+                const { data } = await db.from('editors').select('email').eq('email', email).maybeSingle();
+                return !!data;
+            } catch { return false; }
+        }
+
+        window.addEventListener('message', async event => {
+            const { data } = event;
+            if (!data) return;
+            if (data.type === 'beadyo-auth-sync') {
+                const user = data.user;
+                state.isEditor = user ? await checkEditor(user) : false;
+                document.body.classList.toggle('is-editor', state.isEditor);
+            }
+        });
+
+        // ─── 초기 로드 ───
+        // localStorage 캐시로 편집자 상태 즉시 복원
+        if (localStorage.getItem('beadyo_was_editor') === '1') {
+            document.body.classList.add('is-editor');
+            state.isEditor = true;
+        }
+
+        loadSongs();
+    </script>
+</body>
+</html>

@@ -6,7 +6,8 @@ const TABS = [
     { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html' },
     { type: 'sheet', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM', gid: '2063088341', alwaysEdit: true },
     { type: 'sheet', id: '1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw', gid: '1451717792', alwaysEdit: true },
-    { type: 'sheet', id: '1bIhxhHDU_Ig5IuDrS4WvPtMVsiVWHnDvm6dU3E3Q8Mo', gid: '1545541300', alwaysEdit: true }
+    { type: 'sheet', id: '1bIhxhHDU_Ig5IuDrS4WvPtMVsiVWHnDvm6dU3E3Q8Mo', gid: '1545541300', alwaysEdit: true },
+    { type: 'songs', src: 'songs.html', directUrl: 'songs.html' },
 ];
 
 const readOnlyUrl = s =>
@@ -34,14 +35,14 @@ const isMobile = window.matchMedia('(max-width: 640px)').matches;
 
 function getFrameUrl(index) {
     const tab = TABS[index];
-    if (tab.type === 'calendar') return tab.src;
+    if (tab.type === 'calendar' || tab.type === 'songs') return tab.src;
     if (tab.alwaysEdit) return editUrl(tab);
     return readOnlyUrl(tab);
 }
 
 function getSheetDirectUrl(index) {
     const tab = TABS[index];
-    if (tab.type === 'calendar') return tab.directUrl;
+    if (tab.type === 'calendar' || tab.type === 'songs') return tab.directUrl;
     return `https://docs.google.com/spreadsheets/d/${tab.id}/edit#gid=${tab.gid}`;
 }
 
@@ -55,7 +56,8 @@ function hideLoading(index) {
 function updateMobileFab(index) {
     const fab = document.getElementById('mobile-fab');
     if (!isMobile) return;
-    if (TABS[index].type === 'calendar') {
+    const type = TABS[index]?.type;
+    if (type === 'calendar' || type === 'songs') {
         fab.classList.remove('show');
         return;
     }
@@ -73,12 +75,12 @@ function getSerializableAuthUser(user = authUser) {
 }
 
 function syncCalendarAuth() {
-    const frame = document.getElementById('frame-0');
-    if (!frame?.contentWindow) return;
-    frame.contentWindow.postMessage({
-        type: 'beadyo-auth-sync',
-        user: getSerializableAuthUser(),
-    }, window.location.origin === 'null' ? '*' : window.location.origin);
+    const origin = window.location.origin === 'null' ? '*' : window.location.origin;
+    const msg = { type: 'beadyo-auth-sync', user: getSerializableAuthUser() };
+    for (const id of ['frame-0', 'frame-4']) {
+        const frame = document.getElementById(id);
+        if (frame?.contentWindow) frame.contentWindow.postMessage(msg, origin);
+    }
 }
 
 function sendCalendarAction(action) {
@@ -308,10 +310,10 @@ async function initAuth() {
 
 async function signIn() {
     if (location.protocol === 'file:') {
-        alert('로그인은 localhost 또는 beadyo.com에서 가능합니다.');
+        alert('파일로 직접 열면 로그인이 안 돼요.\n터미널에서 아래 명령어로 로컬 서버를 실행해주세요:\n\npython3 -m http.server 3000\n\n그 다음 http://localhost:3000 에서 접속하면 로그인 가능해요.');
         return;
     }
-    const redirectTo = `${location.origin}${location.pathname}`;
+    const redirectTo = `${location.protocol}//${location.host}/`;
     const { error } = await authDb.auth.signInWithOAuth({
         provider: 'google',
         options: { redirectTo },

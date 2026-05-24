@@ -958,6 +958,10 @@
             <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
             LIVE SONG LIST
         </div>
+        <div class="tab" onclick="switchTab(4)">
+            <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polygon points="10,8 16,10 10,12" fill="currentColor" stroke="none"/></svg></span>
+            SONGS
+        </div>
     </div>
     </div>
 
@@ -1008,6 +1012,10 @@
                     <button class="qm-item" onclick="switchTab(3); closeQuickMenu()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
                         SONG LIST
+                    </button>
+                    <button class="qm-item" onclick="switchTab(4); closeQuickMenu()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polygon points="10,8 16,10 10,12" fill="currentColor" stroke="none"/></svg>
+                        SONGS
                     </button>
                 </div>
             </div>
@@ -1061,6 +1069,7 @@
             <iframe class="sheet-frame" id="frame-1"></iframe>
             <iframe class="sheet-frame" id="frame-2"></iframe>
             <iframe class="sheet-frame" id="frame-3"></iframe>
+            <iframe class="sheet-frame" id="frame-4"></iframe>
         </div>
         <footer class="site-footer">
             <div class="footer-line">
