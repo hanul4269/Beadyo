@@ -352,35 +352,77 @@ function dragEnd(e) {
     setTimeout(() => { _dragged = false; }, 100);
     e.currentTarget.classList.remove('dragging');
     document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+    document.querySelectorAll('.cell-drop-target').forEach(el => el.classList.remove('cell-drop-target'));
 }
 function dragOver(e, id, dateStr) {
-    if (dragState.dateStr !== dateStr || dragState.id === id) return;
+    if (dragState.id === id) return;
     e.preventDefault();
+    e.stopPropagation();
     e.currentTarget.classList.add('drag-over');
 }
 function dragLeave(e) {
     e.currentTarget.classList.remove('drag-over');
 }
-function dragDrop(e, targetId, dateStr) {
+async function dragDrop(e, targetId, targetDateStr) {
     e.preventDefault();
+    e.stopPropagation();
     e.currentTarget.classList.remove('drag-over');
     const { id: sourceId, dateStr: srcDate } = dragState;
-    if (!sourceId || sourceId === targetId || srcDate !== dateStr) return;
-
-    const cellEvents = state.events.filter(ev => {
-        const endDate = ev.end_date || ev.date;
-        return dateStr >= ev.date && dateStr <= endDate;
-    });
-    const order = getLocalOrder(dateStr, cellEvents);
-    const fromIdx = order.indexOf(sourceId);
-    const toIdx   = order.indexOf(targetId);
-    if (fromIdx === -1 || toIdx === -1) return;
-
-    order.splice(fromIdx, 1);
-    order.splice(toIdx, 0, sourceId);
-    localStorage.setItem('beadyo_order_' + dateStr, order.join(','));
-    renderCalendar();
     dragState = { id: null, dateStr: null };
+    if (!sourceId || sourceId === targetId) return;
+
+    if (srcDate === targetDateStr) {
+        const cellEvents = state.events.filter(ev => {
+            const endDate = ev.end_date || ev.date;
+            return targetDateStr >= ev.date && targetDateStr <= endDate;
+        });
+        const order = getLocalOrder(targetDateStr, cellEvents);
+        const fromIdx = order.indexOf(sourceId);
+        const toIdx   = order.indexOf(targetId);
+        if (fromIdx === -1 || toIdx === -1) return;
+        order.splice(fromIdx, 1);
+        order.splice(toIdx, 0, sourceId);
+        localStorage.setItem('beadyo_order_' + targetDateStr, order.join(','));
+        renderCalendar();
+    } else {
+        await moveEventToDate(sourceId, srcDate, targetDateStr);
+    }
+}
+function cellDragOver(e, dateStr) {
+    if (!dragState.id) return;
+    e.preventDefault();
+    e.currentTarget.classList.add('cell-drop-target');
+}
+function cellDragLeave(e) {
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    e.currentTarget.classList.remove('cell-drop-target');
+}
+async function cellDrop(e, dateStr) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('cell-drop-target');
+    const { id: sourceId, dateStr: srcDate } = dragState;
+    dragState = { id: null, dateStr: null };
+    if (!sourceId || srcDate === dateStr) return;
+    await moveEventToDate(sourceId, srcDate, dateStr);
+}
+async function moveEventToDate(eventId, srcDate, targetDate) {
+    await _ensureDb();
+    const ev = state.events.find(e => e.id === eventId);
+    if (!ev) return;
+    const payload = { date: targetDate };
+    if (ev.end_date && ev.end_date !== ev.date) {
+        const [sy, sm, sd] = srcDate.split('-').map(Number);
+        const [ty, tm, td] = targetDate.split('-').map(Number);
+        const dayDiff = Math.round((new Date(ty, tm - 1, td) - new Date(sy, sm - 1, sd)) / 86400000);
+        const [ey, em, ed] = ev.end_date.split('-').map(Number);
+        const newEnd = new Date(ey, em - 1, ed);
+        newEnd.setDate(newEnd.getDate() + dayDiff);
+        payload.end_date = toDateStr(newEnd.getFullYear(), newEnd.getMonth(), newEnd.getDate());
+    }
+    const { error } = await db.from('schedules').update(payload).eq('id', eventId);
+    if (error) { showToast('이동 실패: ' + error.message); return; }
+    showToast('일정이 이동되었습니다');
+    await loadEvents();
 }
 
 // ─── 데이터 로드 ───
@@ -723,7 +765,10 @@ function renderCalendar() {
         const chipsClass = `chips-area${isSingle ? ' single' : ''}${isStableList ? ' stable-list' : ''}${isPacked ? ' packed' : ''}${isCompact ? ' compact' : ''}${isStableList ? ` count-${events.length}` : ''}`;
         const body = `<div class="${chipsClass}">${chipsHtml}</div>`;
 
-        return `<div class="${cellCls}" ${cellClick}>
+        const cellDropAttrs = !other && state.isEditor
+            ? `ondragover="cellDragOver(event,'${dateStr}')" ondragleave="cellDragLeave(event)" ondrop="cellDrop(event,'${dateStr}')"` : '';
+
+        return `<div class="${cellCls}" ${cellClick} ${cellDropAttrs}>
             <div class="cell-date-row">
                 <div class="${numCls}">${day}</div>
                 ${ytBadgesHtml}
