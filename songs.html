@@ -721,6 +721,8 @@
         }
 
         window.addEventListener('message', async event => {
+            const allowed = ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'];
+            if (!allowed.includes(event.origin) && event.origin !== window.location.origin) return;
             const { data } = event;
             if (!data) return;
             if (data.type === 'beadyo-auth-sync') {
