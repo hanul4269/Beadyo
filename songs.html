@@ -179,8 +179,9 @@
             letter-spacing: 0.04em;
             text-transform: uppercase;
         }
-        .type-badge.original { background: rgba(139,195,74,0.9); color: #fff; }
+        .type-badge.original { background: rgba(139,195,74,0.9);  color: #fff; }
         .type-badge.cover    { background: rgba(100,160,240,0.9); color: #fff; }
+        .type-badge.live     { background: rgba(255,100,100,0.9); color: #fff; }
 
         .edit-btn, .delete-btn {
             display: none;
@@ -401,6 +402,7 @@
             <button class="filter-tab active" onclick="setFilter('all')">전체</button>
             <button class="filter-tab" onclick="setFilter('original')">오리지널</button>
             <button class="filter-tab" onclick="setFilter('cover')">커버</button>
+            <button class="filter-tab" onclick="setFilter('live')">라이브</button>
         </div>
         <button class="add-btn" onclick="openAddModal()">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
@@ -432,6 +434,7 @@
                 <select id="field-type">
                     <option value="original">오리지널</option>
                     <option value="cover">커버</option>
+                    <option value="live">라이브</option>
                 </select>
             </div>
             <div class="field">
@@ -498,7 +501,7 @@
         function setFilter(f) {
             state.filter = f;
             document.querySelectorAll('.filter-tab').forEach((el, i) => {
-                el.classList.toggle('active', ['all','original','cover'][i] === f);
+                el.classList.toggle('active', ['all','original','cover','live'][i] === f);
             });
             renderGrid();
         }
@@ -509,7 +512,10 @@
             const items = state.songs.filter(s => state.filter === 'all' || s.type === state.filter);
 
             if (!items.length) {
-                const label = state.filter === 'all' ? '등록된 노래가 없어요' : state.filter === 'original' ? '오리지널 곡이 없어요' : '커버 곡이 없어요';
+                const label = state.filter === 'all' ? '등록된 노래가 없어요'
+                    : state.filter === 'original' ? '오리지널 곡이 없어요'
+                    : state.filter === 'cover' ? '커버 곡이 없어요'
+                    : '라이브 영상이 없어요';
                 grid.innerHTML = `<div class="empty-state">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
                     <p>${label}</p>
@@ -524,8 +530,8 @@
                 const dateStr = song.upload_date
                     ? new Date(song.upload_date + 'T00:00:00').toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
                     : '';
-                const typeLbl = song.type === 'original' ? '오리지널' : '커버';
-                const typeCls = song.type === 'original' ? 'original' : 'cover';
+                const typeLbl = song.type === 'original' ? '오리지널' : song.type === 'live' ? '라이브' : '커버';
+                const typeCls = song.type === 'original' ? 'original' : song.type === 'live' ? 'live' : 'cover';
 
                 const thumbHtml = thumb
                     ? `<img class="song-thumb" src="${esc(thumb)}" alt="${esc(song.title)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
