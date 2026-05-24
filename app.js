@@ -406,6 +406,7 @@ async function cellDrop(e, dateStr) {
     await moveEventToDate(sourceId, srcDate, dateStr);
 }
 async function moveEventToDate(eventId, srcDate, targetDate) {
+    if (!state.isEditor) return;
     await _ensureDb();
     const ev = state.events.find(e => e.id === eventId);
     if (!ev) return;
@@ -1721,7 +1722,7 @@ function renderUpEventList() {
                 <span style="color:var(--muted);font-size:12px;margin-left:6px;">${esc(e.title)}</span>
                 <span style="color:${e.is_active ? 'var(--accent)' : 'var(--muted)'};font-size:11px;margin-left:6px;">${e.is_active ? '●활성' : '●비활성'}</span>
             </span>
-            <button class="editor-remove-btn" onclick="removeUpEvent(${e.id})">삭제</button>
+            <button class="editor-remove-btn" onclick="removeUpEvent('${esc(String(e.id))}')">삭제</button>
         </div>
     `).join('');
 }

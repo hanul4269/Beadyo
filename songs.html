@@ -655,6 +655,7 @@
         }
 
         async function saveSong() {
+            if (!state.isEditor) return;
             const url   = document.getElementById('field-url').value.trim();
             const title = document.getElementById('field-title').value.trim();
             const type  = document.getElementById('field-type').value;
@@ -690,6 +691,7 @@
         }
 
         async function deleteSong(id, title) {
+            if (!state.isEditor) return;
             if (!confirm(`"${title}" 을(를) 삭제하시겠습니까?`)) return;
             await ensureDb();
             const { error } = await db.from('youtube_songs').delete().eq('id', id);
