@@ -38,12 +38,67 @@
             z-index: 100;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
+        }
+
+        .header-row {
             padding: 0 16px;
             display: flex;
             align-items: center;
             gap: 8px;
             height: 48px;
         }
+
+        .search-bar {
+            display: none;
+            padding: 0 16px 10px;
+        }
+        .search-bar.open { display: block; }
+
+        .search-input-wrap {
+            position: relative;
+        }
+        .search-input-wrap svg {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 15px;
+            height: 15px;
+            stroke: var(--muted);
+            fill: none;
+            pointer-events: none;
+        }
+        #search-input {
+            width: 100%;
+            padding: 8px 12px 8px 32px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: 13px;
+            background: var(--bg);
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        #search-input:focus { border-color: var(--accent); }
+
+        .search-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border: none;
+            border-radius: 50%;
+            background: transparent;
+            cursor: pointer;
+            transition: background 0.15s;
+            flex-shrink: 0;
+        }
+        .search-btn:hover { background: var(--accent-light); }
+        .search-btn.active { background: var(--accent-light); }
+        .search-btn svg { width: 17px; height: 17px; stroke: var(--muted); fill: none; }
+        .search-btn.active svg { stroke: var(--accent-dark); }
 
         .filter-tabs {
             display: flex;
@@ -398,16 +453,27 @@
 </head>
 <body>
     <div class="songs-header">
-        <div class="filter-tabs">
-            <button class="filter-tab active" onclick="setFilter('all')">전체</button>
-            <button class="filter-tab" onclick="setFilter('original')">오리지널</button>
-            <button class="filter-tab" onclick="setFilter('cover')">커버</button>
-            <button class="filter-tab" onclick="setFilter('live')">라이브</button>
+        <div class="header-row">
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="setFilter('all')">전체</button>
+                <button class="filter-tab" onclick="setFilter('original')">오리지널</button>
+                <button class="filter-tab" onclick="setFilter('cover')">커버</button>
+                <button class="filter-tab" onclick="setFilter('live')">라이브</button>
+            </div>
+            <button class="search-btn" id="search-btn" onclick="toggleSearch()" title="검색">
+                <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </button>
+            <button class="add-btn" onclick="openAddModal()">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
+                추가
+            </button>
         </div>
-        <button class="add-btn" onclick="openAddModal()">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
-            추가
-        </button>
+        <div class="search-bar" id="search-bar">
+            <div class="search-input-wrap">
+                <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="search" id="search-input" placeholder="제목 검색..." oninput="onSearchInput(this.value)" autocomplete="off">
+            </div>
+        </div>
     </div>
 
     <div class="songs-body">
@@ -480,7 +546,7 @@
             return _dbReady;
         }
 
-        let state = { songs: [], filter: 'all', isEditor: false, editingId: null };
+        let state = { songs: [], filter: 'all', query: '', isEditor: false, editingId: null };
 
         // ─── YouTube 유틸 ───
         function extractVideoId(url) {
@@ -497,7 +563,7 @@
             return '#';
         }
 
-        // ─── 필터 ───
+        // ─── 필터 / 검색 ───
         function setFilter(f) {
             state.filter = f;
             document.querySelectorAll('.filter-tab').forEach((el, i) => {
@@ -506,13 +572,37 @@
             renderGrid();
         }
 
+        function toggleSearch() {
+            const bar = document.getElementById('search-bar');
+            const btn = document.getElementById('search-btn');
+            const open = bar.classList.toggle('open');
+            btn.classList.toggle('active', open);
+            if (open) {
+                document.getElementById('search-input').focus();
+            } else {
+                document.getElementById('search-input').value = '';
+                state.query = '';
+                renderGrid();
+            }
+        }
+
+        function onSearchInput(val) {
+            state.query = val.trim().toLowerCase();
+            renderGrid();
+        }
+
         // ─── 렌더 ───
         function renderGrid() {
             const grid = document.getElementById('songs-grid');
-            const items = state.songs.filter(s => state.filter === 'all' || s.type === state.filter);
+            let items = state.songs.filter(s => state.filter === 'all' || s.type === state.filter);
+            if (state.query) {
+                items = items.filter(s => s.title.toLowerCase().includes(state.query));
+            }
 
             if (!items.length) {
-                const label = state.filter === 'all' ? '등록된 노래가 없어요'
+                const label = state.query
+                    ? `"${esc(state.query)}" 검색 결과가 없어요`
+                    : state.filter === 'all' ? '등록된 노래가 없어요'
                     : state.filter === 'original' ? '오리지널 곡이 없어요'
                     : state.filter === 'cover' ? '커버 곡이 없어요'
                     : '라이브 영상이 없어요';
