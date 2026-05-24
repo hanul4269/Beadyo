@@ -218,7 +218,7 @@ async function checkLiveStatus() {
 
 checkLiveStatus();
 setTimeout(checkLiveStatus, 3000);
-setInterval(checkLiveStatus, 5 * 60 * 1000);
+setInterval(checkLiveStatus, 10 * 60 * 1000);
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') checkLiveStatus();
 });
