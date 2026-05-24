@@ -4,7 +4,7 @@ const OWNER_EMAIL = 'riosniper12@gmail.com';
 
 const TABS = [
     { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html' },
-    { type: 'sheet', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM', gid: '2063088341', alwaysEdit: true },
+    { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
     { type: 'sheet', id: '1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw', gid: '1451717792', alwaysEdit: true },
     { type: 'sheet', id: '1bIhxhHDU_Ig5IuDrS4WvPtMVsiVWHnDvm6dU3E3Q8Mo', gid: '1565839847', alwaysEdit: true },
     { type: 'songs', src: 'songs.html', directUrl: 'songs.html' },
@@ -14,6 +14,18 @@ const readOnlyUrl = s =>
     `https://docs.google.com/spreadsheets/d/${s.id}/htmlview?gid=${s.gid}&embedded=true`;
 const editUrl = s =>
     `https://docs.google.com/spreadsheets/d/${s.id}/edit?rm=minimal#gid=${s.gid}`;
+
+function currentScheduleSheetName() {
+    const now = new Date();
+    const yy = String(now.getFullYear()).slice(-2);
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    return `${yy}.${mm}`;
+}
+
+function scheduleUrl(tab) {
+    const sheet = currentScheduleSheetName();
+    return `https://docs.google.com/spreadsheets/d/${tab.id}/edit?rm=minimal&range=${encodeURIComponent(sheet)}!A1`;
+}
 
 const loaded = new Set();
 const authDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -36,6 +48,7 @@ const isMobile = window.matchMedia('(max-width: 640px)').matches;
 function getFrameUrl(index) {
     const tab = TABS[index];
     if (tab.type === 'calendar' || tab.type === 'songs') return tab.src;
+    if (tab.type === 'schedule') return scheduleUrl(tab);
     if (tab.alwaysEdit) return editUrl(tab);
     return readOnlyUrl(tab);
 }
@@ -43,6 +56,7 @@ function getFrameUrl(index) {
 function getSheetDirectUrl(index) {
     const tab = TABS[index];
     if (tab.type === 'calendar' || tab.type === 'songs') return tab.directUrl;
+    if (tab.type === 'schedule') return scheduleUrl(tab);
     return `https://docs.google.com/spreadsheets/d/${tab.id}/edit#gid=${tab.gid}`;
 }
 
@@ -140,7 +154,7 @@ function switchTab(index) {
 
     const frame = document.getElementById(`frame-${index}`);
 
-    if (loaded.has(index)) {
+    if (loaded.has(index) && index !== 1) {
         hideLoading(index);
         if (index === 0) syncCalendarAuth();
     } else {
