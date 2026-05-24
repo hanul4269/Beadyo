@@ -23,15 +23,9 @@ try:
     print(f'live={is_live}, title={title!r}')
 except Exception as e:
     print('Parse error:', e, '| raw:', result.stdout[:200])
-    # API 응답 파싱 실패 시 기존 live.json 상태 유지 (live 값 보존)
-    try:
-        with open('live.json', 'r', encoding='utf-8') as f:
-            prev = json.load(f)
-        is_live = prev.get('live', False)
-        title = prev.get('title', '')
-        print(f'API unavailable – keeping previous state: live={is_live}')
-    except Exception:
-        print('No previous live.json found, defaulting to live=false')
+    is_live = False
+    title = ''
+    print('API 파싱 실패 → live=false 처리')
 
 output = {
     'live': is_live,
