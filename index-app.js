@@ -193,7 +193,7 @@ async function checkLiveStatus() {
     // 1) 실시간: SOOP chapi API 직접 호출 (Deno 프록시 경유)
     try {
         const res = await fetchWithTimeout(
-            `${PROXY}/https://chapi.sooplive.co.kr/api/beadyo97/station`,
+            `${PROXY}?url=${encodeURIComponent('https://chapi.sooplive.co.kr/api/beadyo97/station')}`,
             4000
         );
         if (res.ok) {
