@@ -152,6 +152,7 @@ function switchTab(index) {
     document.querySelectorAll('.sheet-frame').forEach((f, i) => f.classList.toggle('active', i === index));
 
     updateMobileFab(index);
+    try { localStorage.setItem('activeTab', index); } catch {}
 
     const frame = document.getElementById(`frame-${index}`);
 
@@ -170,7 +171,12 @@ function switchTab(index) {
 }
 
 // 첫 탭 초기 로드
-switchTab(0);
+try {
+    const saved = parseInt(localStorage.getItem('activeTab'));
+    switchTab(Number.isFinite(saved) && saved >= 0 && saved < TABS.length ? saved : 0);
+} catch {
+    switchTab(0);
+}
 
 // ── 라이브 상태 체크 ──
 const PROXY = 'https://clever-rhino-36.hanul4269.deno.net';
