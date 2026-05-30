@@ -527,7 +527,8 @@
                 height: calc(100% + 70px);
             }
 
-            .calendar-frame-host {
+            .calendar-frame-host,
+            .local-frame-host {
                 top: 0;
                 height: 100%;
             }
@@ -962,6 +963,10 @@
             <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polygon points="10,8 16,10 10,12" fill="currentColor" stroke="none"/></svg></span>
             SONGS
         </div>
+        <div class="tab" onclick="switchTab(5)">
+            <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+            🚧 공사중
+        </div>
     </div>
     </div>
 
@@ -1017,6 +1022,10 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polygon points="10,8 16,10 10,12" fill="currentColor" stroke="none"/></svg>
                         SONGS
                     </button>
+                    <button class="qm-item" onclick="switchTab(5); closeQuickMenu()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        🚧 공사중
+                    </button>
                 </div>
             </div>
         </div>
@@ -1070,6 +1079,7 @@
             <iframe class="sheet-frame" id="frame-2"></iframe>
             <iframe class="sheet-frame" id="frame-3"></iframe>
             <iframe class="sheet-frame" id="frame-4"></iframe>
+            <iframe class="sheet-frame local-frame-host" id="frame-5"></iframe>
         </div>
         <footer class="site-footer">
             <div class="footer-line">

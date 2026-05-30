@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구슬요 노래 검색</title>
+    <link rel="icon" href="logo-icon.webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet"></noscript>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --accent:       #8bc34a;
+            --accent-dark:  #5d8f28;
+            --accent-light: #edf7e0;
+            --bg:           #f3f4ef;
+            --surface:      #ffffff;
+            --border:       rgba(0,0,0,0.09);
+            --text:         #1c1c1c;
+            --muted:        #727272;
+            --row-hover:    #f3fae7;
+            --row-alt:      rgba(139,195,74,0.05);
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ─── 헤더 ─── */
+        .sb-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            border-bottom: 1.5px solid rgba(0,0,0,0.08);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        /* 메인 탭 행 */
+        .sb-main-row {
+            display: flex;
+            align-items: center;
+            height: 62px;
+            padding: 0 12px;
+            gap: 6px;
+        }
+        .main-tabs { display: flex; gap: 4px; flex: 1; }
+        .main-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 5px 14px 6px;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            color: var(--muted);
+            cursor: pointer;
+            transition: background .15s, color .15s;
+        }
+        .main-tab-icon {
+            width: 44px;
+            height: 28px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            background: linear-gradient(160deg, #f3f3f3 0%, #eaeaea 100%);
+            border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.85);
+            transition: background .15s, border-color .15s, box-shadow .15s;
+        }
+        .main-tab:hover { color: var(--accent-dark); }
+        .main-tab:hover .main-tab-icon {
+            background: var(--accent-light);
+            border-color: var(--accent);
+        }
+        .main-tab.active { color: var(--accent-dark); }
+        .main-tab.active .main-tab-icon {
+            background: linear-gradient(160deg, var(--accent) 0%, var(--accent-dark) 100%);
+            border-color: var(--accent-dark);
+            box-shadow: 0 2px 8px rgba(139,195,74,0.4), inset 0 1px 0 rgba(255,255,255,0.25);
+        }
+
+        /* 랜덤 버튼 (검색창 왼쪽) */
+        #random-btn {
+            width: 36px; height: 36px; flex-shrink: 0;
+            border: 1px solid var(--border); border-radius: 50%;
+            background: var(--bg);
+            cursor: pointer; font-size: 17px;
+            display: flex; align-items: center; justify-content: center;
+            transition: background .15s, border-color .15s;
+        }
+        #random-btn:hover { background: var(--accent-light); border-color: var(--accent); }
+        #random-btn.hidden { display: none; }
+
+        /* 서브 탭 행 */
+        .sb-sub-row {
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding: 0 12px 8px;
+        }
+        .sb-sub-row::-webkit-scrollbar { display: none; }
+        .sub-tabs { display: flex; gap: 6px; white-space: nowrap; }
+        .sub-tab {
+            padding: 6px 16px;
+            border: 1.5px solid rgba(0,0,0,0.1);
+            border-radius: 20px;
+            background: var(--surface);
+            font-family: inherit; font-size: 14px; font-weight: 700;
+            color: #555;
+            cursor: pointer;
+            transition: background .15s, color .15s, border-color .15s, box-shadow .15s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+        }
+        .sub-tab:hover {
+            background: var(--accent-light);
+            color: var(--accent-dark);
+            border-color: var(--accent);
+        }
+        .sub-tab.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent-dark);
+            box-shadow: 0 2px 8px rgba(139,195,74,0.35);
+        }
+
+        /* 검색바 (항상 표시) */
+        .sb-search-row {
+            padding: 0 12px 10px;
+            display: block;
+        }
+        .search-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .search-input-wrap { position: relative; flex: 1; }
+        .search-input-wrap svg {
+            position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+            width: 15px; height: 15px; stroke: var(--muted); fill: none; pointer-events: none;
+        }
+        #search-input {
+            width: 100%; padding: 9px 34px 9px 34px;
+            border: 1.5px solid var(--border); border-radius: 20px;
+            font-family: inherit; font-size: 14px;
+            background: var(--surface); color: var(--text); outline: none;
+            transition: border-color .15s, box-shadow .15s;
+        }
+        #search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139,195,74,0.15); }
+        .search-clear {
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            width: 18px; height: 18px; border: none; border-radius: 50%;
+            background: var(--muted); color: #fff;
+            font-size: 11px; line-height: 1;
+            cursor: pointer; display: none; align-items: center; justify-content: center;
+        }
+        .search-clear.show { display: flex; }
+
+        /* ─── 본문 ─── */
+        .sb-body {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 4px 0 60px;
+        }
+
+        /* 결과 카운트 */
+        .result-info {
+            padding: 10px 16px;
+            font-size: 13px;
+            color: var(--muted);
+            min-height: 32px;
+            font-weight: 500;
+        }
+
+        /* ─── 노래 행 (공통) ─── */
+        .song-list { }
+
+        .song-row {
+            display: grid;
+            align-items: center;
+            padding: 10px 16px;
+            gap: 0 10px;
+            border-bottom: 1px solid var(--border);
+            transition: background .12s;
+            min-height: 52px;
+        }
+        .song-row:hover { background: var(--row-hover); }
+        .song-row:last-child { border-bottom: none; }
+
+        .row-title {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .row-artist {
+            font-size: 12px;
+            color: var(--muted);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-top: 2px;
+        }
+        .row-links { display: flex; gap: 5px; justify-content: flex-end; flex-wrap: nowrap; }
+        .row-col-link { display: flex; justify-content: center; }
+        .row-col-memo {
+            font-size: 11px;
+            color: var(--muted);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 120px;
+        }
+        .link-btn {
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: opacity .15s;
+        }
+        .link-btn:hover { opacity: .75; }
+        .link-btn.mr   { background: #ddeeff; color: #1255a0; }
+        .link-btn.clip { background: var(--accent-light); color: var(--accent-dark); }
+
+        /* 분류 뱃지 */
+        .cat-badge {
+            display: inline-block;
+            padding: 2px 7px; border-radius: 8px;
+            font-size: 11px; font-weight: 700;
+            background: #dff0c8; color: #3d6618;
+            white-space: nowrap;
+        }
+
+        /* ─── 테이블 공통 ─── */
+        .song-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+        .song-table {
+            width: 100%;
+            min-width: 860px;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 14px;
+        }
+
+        .song-table thead th {
+            background: #eaf2e0;
+            padding: 10px 11px;
+            font-size: 12px; font-weight: 700;
+            color: #4a6a30; letter-spacing: .04em;
+            text-align: left; white-space: nowrap;
+            border-bottom: 2px solid rgba(100,150,50,.2);
+            border-right: 1px solid rgba(100,150,50,.15);
+            position: sticky; top: 0; z-index: 2;
+        }
+        .song-table thead th:last-child { border-right: none; }
+        .song-table thead th.th-center { text-align: center; }
+
+        .song-table tbody td {
+            padding: 11px 11px;
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            vertical-align: middle;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            line-height: 1.45;
+        }
+        .song-table tbody td:last-child { border-right: none; }
+        .song-table tbody tr:hover td { background: var(--row-hover) !important; }
+        .song-table tbody tr:last-child td { border-bottom: none; }
+        .song-table tbody tr:nth-child(even) td { background: var(--row-alt); }
+
+        /* 열 너비 */
+        .col-num    { width: 38px;  text-align: right; }
+        .col-cat    { width: 62px; }
+        .col-title  { min-width: 160px; font-weight: 700; }
+        .col-artist { width: 140px; color: var(--muted); }
+        .col-mr     { width: 62px;  text-align: center; }
+        .col-clip   { width: 90px;  text-align: center; }
+        .col-skill  { width: 96px;  text-align: center; letter-spacing: -1px; }
+        .col-memo   { width: 210px; color: var(--muted); font-size: 12px; }
+
+        /* 라이브 열 너비 */
+        .col-date   { width: 70px;  color: var(--muted); font-size: 12px; }
+        .col-lmemo  { width: 180px; color: var(--muted); font-size: 12px; }
+
+        /* 제목/가수/메모 줄바꿈 허용 */
+        .song-table tbody td.col-title,
+        .song-table tbody td.col-artist,
+        .song-table tbody td.col-memo,
+        .song-table tbody td.col-lmemo {
+            white-space: normal;
+            word-break: break-word;
+            overflow: visible;
+            text-overflow: clip;
+            line-height: 1.55;
+        }
+
+        /* ─── 통계 패널 ─── */
+        .stats-panel {
+            padding: 16px;
+        }
+        .stats-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--muted);
+            letter-spacing: .04em;
+        }
+        .stat-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: 10px;
+            margin-bottom: 4px;
+            background: var(--surface);
+            transition: background .12s;
+        }
+        .stat-row:hover { background: var(--accent-light); }
+        .stat-rank {
+            width: 24px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+        .stat-rank.top3 { color: var(--accent-dark); font-size: 14px; }
+        .stat-info { flex: 1; overflow: hidden; }
+        .stat-title {
+            font-size: 13px;
+            font-weight: 700;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .stat-artist {
+            font-size: 11px;
+            color: var(--muted);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .stat-count {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-dark);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .stat-bar-wrap {
+            width: 60px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .stat-bar { height: 100%; background: var(--accent); border-radius: 2px; }
+
+        /* ─── 통계 대시보드 추가 ─── */
+        .stats-section { margin-bottom: 28px; }
+        .stats-sec-title {
+            font-size: 13px; font-weight: 700; color: var(--muted);
+            letter-spacing: .04em; margin-bottom: 10px;
+            padding-bottom: 6px; border-bottom: 1.5px solid var(--border);
+        }
+        .svg-chart-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .ym-table-wrap  { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .ym-table { border-collapse: collapse; font-size: 12px; min-width: 560px; }
+        .ym-table th, .ym-table td {
+            padding: 6px 10px; text-align: right;
+            border: 1px solid var(--border); white-space: nowrap;
+        }
+        .ym-table thead th { background: #eaf2e0; color: #4a6a30; font-weight: 700; text-align: center; font-size: 11px; }
+        .ym-table td.ym-year { font-weight: 700; text-align: center; padding: 6px 14px; }
+        .ym-table td.ym-total { font-weight: 700; color: var(--accent-dark); background: #f0f7e4; }
+        .ym-table td.ym-zero  { color: #ccc; }
+        .year-tops-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 12px; }
+        .year-top-card { background: var(--surface); border-radius: 12px; padding: 12px 14px; border: 1px solid var(--border); }
+        .year-top-head { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+        .year-top-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+        .year-top-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .year-top-rank { width: 16px; font-size: 11px; font-weight: 700; color: var(--muted); flex-shrink: 0; text-align: right; }
+        .year-top-info { flex: 1; overflow: hidden; min-width: 0; }
+        .year-top-song { font-size: 12px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .year-top-artist { font-size: 10px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .year-top-count { font-size: 12px; font-weight: 700; color: var(--accent-dark); white-space: nowrap; flex-shrink: 0; }
+
+        /* ─── 빈 상태 ─── */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--muted);
+        }
+        .empty-state svg { width: 40px; height: 40px; opacity: .2; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto; }
+        .empty-state p { font-size: 14px; }
+
+        /* ─── 로딩 ─── */
+        .skeleton {
+            background: linear-gradient(90deg, #ede9e4 25%, #e4e0db 50%, #ede9e4 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 4px;
+        }
+        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        .sk-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 14px 16px; border-bottom: 1px solid var(--border);
+        }
+        .sk-num  { width: 24px; height: 12px; flex-shrink: 0; }
+        .sk-body { flex: 1; }
+        .sk-t1   { height: 13px; margin-bottom: 6px; }
+        .sk-t2   { height: 11px; width: 55%; }
+        .sk-right{ width: 60px; height: 12px; flex-shrink: 0; }
+
+        /* ─── 랜덤 모달 ─── */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,.45); z-index: 500;
+            align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--surface); border-radius: 20px;
+            padding: 28px 24px 24px; width: 100%; max-width: 360px;
+            box-shadow: 0 12px 40px rgba(0,0,0,.18);
+            text-align: center;
+        }
+        .random-label {
+            font-size: 11px; font-weight: 700; letter-spacing: .08em;
+            color: var(--muted); text-transform: uppercase; margin-bottom: 16px;
+        }
+        .random-title {
+            font-size: 22px; font-weight: 700; line-height: 1.3;
+            margin-bottom: 6px; word-break: keep-all;
+        }
+        .random-artist {
+            font-size: 14px; color: var(--muted); margin-bottom: 14px;
+        }
+        .random-skill { font-size: 18px; letter-spacing: 1px; margin-bottom: 16px; }
+        .random-links { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+        .random-links .link-btn { padding: 6px 16px; font-size: 13px; }
+        .random-memo {
+            font-size: 12px; color: var(--muted);
+            background: var(--bg); border-radius: 8px;
+            padding: 8px 12px; margin-bottom: 16px;
+            text-align: left;
+        }
+        .modal-btns { display: flex; gap: 8px; }
+        .modal-btns button {
+            flex: 1; padding: 10px;
+            border: none; border-radius: 10px;
+            font-family: inherit; font-size: 14px; font-weight: 700;
+            cursor: pointer; transition: opacity .15s;
+        }
+        .modal-btns button:hover { opacity: .8; }
+        .btn-again { background: var(--accent); color: #fff; }
+        .btn-close  { background: var(--bg); color: var(--text); }
+
+        /* ─── 토스트 ─── */
+        .toast {
+            position: fixed; bottom: 24px; left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(30,30,30,.92); color: #fff;
+            padding: 10px 20px; border-radius: 24px;
+            font-size: 13px; opacity: 0; pointer-events: none;
+            transition: opacity .25s, transform .25s;
+            z-index: 9999; white-space: nowrap;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* ─── Welcome 페이지 ─── */
+        .wc-card {
+            max-width: 520px;
+            margin: 16px auto;
+            background: #bdd4a0;
+            border-radius: 8px;
+            padding: 18px;
+            border: 2px solid #7aaa40;
+        }
+        .wc-title {
+            text-align: center;
+            padding: 12px 16px;
+            border: 3px double #4e7028;
+            font-size: 18px;
+            font-weight: 700;
+            color: #2e4a15;
+            margin-bottom: 14px;
+            background: rgba(255,255,255,0.28);
+            letter-spacing: .04em;
+            border-radius: 2px;
+        }
+        .wc-img-wrap {
+            border: 2px solid #4e7028;
+            overflow: hidden;
+            margin-bottom: 4px;
+            background: #fff;
+            border-radius: 2px;
+        }
+        .wc-img { width: 100%; display: block; }
+        .wc-turtle { font-size: 16px; padding: 3px 0 7px 2px; }
+        .wc-info {
+            border: 1px dashed #5a8030;
+            padding: 9px 14px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: #2a3a15;
+            margin-bottom: 6px;
+            background: rgba(255,255,255,0.22);
+            border-radius: 3px;
+        }
+        .wc-stats-wrap {
+            border: 1px dashed #5a8030;
+            padding: 10px;
+            background: rgba(255,255,255,0.22);
+            border-radius: 3px;
+            margin-bottom: 6px;
+            overflow-x: auto;
+        }
+        .wc-stats {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 300px;
+        }
+        .wc-stats th, .wc-stats td {
+            border: 1px solid #4e7028;
+            padding: 6px 8px;
+            text-align: center;
+            font-weight: 700;
+            color: #2a3a15;
+            white-space: nowrap;
+        }
+        .wc-version {
+            text-align: right;
+            font-size: 11px;
+            color: #4a6a20;
+            font-weight: 700;
+        }
+
+        /* ─── 편집 FAB ─── */
+        #edit-fab {
+            position: fixed; bottom: 28px; right: 24px;
+            width: 52px; height: 52px; border-radius: 50%;
+            background: var(--accent); color: #fff; border: none;
+            font-size: 28px; line-height: 1;
+            cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.22);
+            display: none; align-items: center; justify-content: center;
+            transition: transform .15s, box-shadow .15s; z-index: 200;
+        }
+        #edit-fab:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(0,0,0,.28); }
+        #edit-fab.show { display: flex; }
+
+        /* ─── 편집 모달 ─── */
+        .edit-modal {
+            max-width: 460px; width: 100%; padding: 0;
+            border-radius: 16px; overflow: hidden; text-align: left;
+            max-height: 90vh; display: flex; flex-direction: column;
+        }
+        .emod-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 20px 14px; border-bottom: 1px solid var(--border);
+        }
+        .emod-header span { font-size: 15px; font-weight: 700; }
+        .emod-close {
+            border: none; background: none; cursor: pointer;
+            font-size: 18px; color: var(--muted); padding: 2px 6px; line-height: 1;
+        }
+        .emod-body { padding: 14px 20px; overflow-y: auto; flex: 1; }
+        .ef-row { margin-bottom: 12px; }
+        .ef-row label {
+            display: block; font-size: 11px; font-weight: 700;
+            color: var(--muted); letter-spacing: .04em;
+            margin-bottom: 4px; text-transform: uppercase;
+        }
+        .ef-row input, .ef-row select {
+            width: 100%; padding: 8px 12px;
+            border: 1.5px solid var(--border); border-radius: 8px;
+            font-family: inherit; font-size: 14px;
+            background: var(--bg); color: var(--text); outline: none;
+            transition: border-color .15s;
+        }
+        .ef-row input:focus, .ef-row select:focus { border-color: var(--accent); background: var(--surface); }
+        .emod-footer {
+            display: flex; align-items: center; gap: 8px;
+            padding: 12px 20px; border-top: 1px solid var(--border);
+        }
+        .btn-del { padding: 8px 14px; border: none; border-radius: 8px; background: #fdf0f0; color: #c0392b; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+        .btn-del:hover { background: #fde0e0; }
+        .btn-cancel-sm { padding: 8px 14px; border: none; border-radius: 8px; background: var(--bg); color: var(--text); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; margin-left: auto; }
+        .btn-save-sm { padding: 8px 18px; border: none; border-radius: 8px; background: var(--accent); color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+        .btn-save-sm:hover { background: var(--accent-dark); }
+        .btn-save-sm:disabled { opacity: .6; cursor: default; }
+
+        /* 숙련도 하트 피커 */
+        .skill-picker { display: flex; gap: 6px; padding: 4px 0; }
+        .skill-heart {
+            font-size: 22px; cursor: pointer; user-select: none;
+            transition: transform .1s;
+            filter: grayscale(0);
+        }
+        .skill-heart:hover { transform: scale(1.25); }
+
+        /* 편집 가능 행 */
+        .song-table tbody tr.editable { cursor: pointer; }
+        .song-table tbody tr.editable:hover .col-title { color: var(--accent-dark); text-decoration: underline; text-decoration-style: dotted; }
+
+        /* ─── 모바일: 테이블 가로 스크롤 ─── */
+        @media (max-width: 480px) {
+            .song-table { min-width: 520px; }
+            .col-memo, .col-lmemo { display: none; }
+            .stat-bar-wrap { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════ 헤더 ══════════════ -->
+<div class="sb-header">
+
+    <!-- 메인 탭 -->
+    <div class="sb-main-row">
+        <div class="main-tabs">
+            <button class="main-tab active" onclick="setMainTab('songbook')"><span class="main-tab-icon">🎵</span>노래책</button>
+            <button class="main-tab"        onclick="setMainTab('live')"><span class="main-tab-icon">📋</span>라이브 기록</button>
+        </div>
+    </div>
+
+    <!-- 서브 탭 -->
+    <div class="sb-sub-row">
+        <div id="songbook-subtabs" class="sub-tabs">
+            <button class="sub-tab active" data-cat="welcome"  onclick="setSongbookCat('welcome')">Welcome</button>
+            <button class="sub-tab"        data-cat="KPOP"     onclick="setSongbookCat('KPOP')">KPOP</button>
+            <button class="sub-tab"        data-cat="POP"      onclick="setSongbookCat('POP')">POP</button>
+            <button class="sub-tab"        data-cat="JPOP"     onclick="setSongbookCat('JPOP')">JPOP</button>
+            <button class="sub-tab"        data-cat="ETC"      onclick="setSongbookCat('ETC')">ETC</button>
+            <button class="sub-tab"        data-cat="애교송"    onclick="setSongbookCat('애교송')">애교송</button>
+            <button class="sub-tab"        data-cat="오리지널"  onclick="setSongbookCat('오리지널')">오리지널</button>
+        </div>
+        <div id="live-subtabs" class="sub-tabs" style="display:none">
+            <button class="sub-tab" onclick="setLiveYear('stats')">📊 통계</button>
+            <button class="sub-tab active" onclick="setLiveYear(2026)">2026</button>
+            <button class="sub-tab" onclick="setLiveYear(2025)">2025</button>
+            <button class="sub-tab" onclick="setLiveYear(2024)">2024</button>
+            <button class="sub-tab" onclick="setLiveYear(2023)">2023</button>
+            <button class="sub-tab" onclick="setLiveYear(2022)">2022</button>
+        </div>
+    </div>
+
+    <!-- 검색창 (항상 표시) -->
+    <div class="sb-search-row" id="sb-search-row" style="display:none">
+        <div class="search-wrap">
+            <button id="random-btn" onclick="pickRandom()" title="랜덤 뽑기">🎲</button>
+            <div class="search-input-wrap">
+                <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="search" id="search-input" placeholder="제목 또는 가수 검색..." oninput="onSearch(this.value)" autocomplete="off">
+                <button class="search-clear" id="search-clear" onclick="clearSearch()">×</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════ 본문 ══════════════ -->
+<div class="sb-body">
+    <div id="result-info" class="result-info" style="display:none"></div>
+
+    <!-- 노래책 섹션 -->
+    <div id="songbook-section">
+        <div class="song-table-wrap">
+            <div id="songbook-list"></div>
+        </div>
+    </div>
+
+    <!-- 라이브 섹션 -->
+    <div id="live-section" style="display:none">
+        <div class="song-table-wrap">
+            <div id="live-list"></div>
+        </div>
+        <div id="stats-panel" class="stats-panel" style="display:none"></div>
+    </div>
+</div>
+
+<!-- ══════════════ 랜덤 모달 ══════════════ -->
+<div id="random-modal" class="modal-overlay" onclick="if(event.target===this)closeRandom()">
+    <div class="modal">
+        <div class="random-label">🎲 랜덤 뽑기</div>
+        <div id="r-title"  class="random-title"></div>
+        <div id="r-artist" class="random-artist"></div>
+        <div id="r-skill"  class="random-skill"></div>
+        <div id="r-links"  class="random-links"></div>
+        <div id="r-memo"   class="random-memo" style="display:none"></div>
+        <div class="modal-btns">
+            <button class="btn-again" onclick="pickRandom()">다시 뽑기</button>
+            <button class="btn-close"  onclick="closeRandom()">닫기</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<button id="edit-fab" onclick="openAddModal()">+</button>
+
+<!-- ══════════════ 노래책 편집 모달 ══════════════ -->
+<div id="song-modal" class="modal-overlay" onclick="if(event.target===this)closeSongModal()">
+    <div class="modal edit-modal">
+        <div class="emod-header">
+            <span id="song-modal-title">노래 추가</span>
+            <button class="emod-close" onclick="closeSongModal()">✕</button>
+        </div>
+        <div class="emod-body">
+            <input type="hidden" id="ef-id">
+            <div class="ef-row"><label>분류 *</label>
+                <select id="ef-category">
+                    <option>KPOP</option><option>POP</option><option>JPOP</option>
+                    <option>ETC</option><option>애교송</option><option>오리지널</option>
+                </select>
+            </div>
+            <div class="ef-row"><label>제목 *</label><input type="text" id="ef-title" placeholder="노래 제목"></div>
+            <div class="ef-row"><label>가수</label><input type="text" id="ef-artist" placeholder="가수명"></div>
+            <div class="ef-row"><label>MR URL</label><input type="url" id="ef-mr" placeholder="https://..."></div>
+            <div class="ef-row"><label>구슬요 클립 URL</label><input type="url" id="ef-clip" placeholder="https://..."></div>
+            <div class="ef-row"><label>숙련도</label>
+                <div class="skill-picker" id="skill-picker">
+                    <span class="skill-heart" data-v="1">🤍</span>
+                    <span class="skill-heart" data-v="2">🤍</span>
+                    <span class="skill-heart" data-v="3">🤍</span>
+                    <span class="skill-heart" data-v="4">🤍</span>
+                    <span class="skill-heart" data-v="5">🤍</span>
+                </div>
+                <input type="hidden" id="ef-skill" value="0">
+            </div>
+            <div class="ef-row"><label>메모</label><input type="text" id="ef-memo" placeholder="(선택)"></div>
+        </div>
+        <div class="emod-footer">
+            <button class="btn-del" id="song-del-btn" onclick="deleteSong()" style="display:none">삭제</button>
+            <button class="btn-cancel-sm" onclick="closeSongModal()">취소</button>
+            <button class="btn-save-sm" id="song-save-btn" onclick="saveSong()">저장</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════ 라이브 기록 편집 모달 ══════════════ -->
+<div id="live-modal" class="modal-overlay" onclick="if(event.target===this)closeLiveModal()">
+    <div class="modal edit-modal">
+        <div class="emod-header">
+            <span id="live-modal-title">라이브 기록 추가</span>
+            <button class="emod-close" onclick="closeLiveModal()">✕</button>
+        </div>
+        <div class="emod-body">
+            <input type="hidden" id="lf-id">
+            <div class="ef-row"><label>연도 *</label><input type="number" id="lf-year" min="2022" max="2035" placeholder="2026"></div>
+            <div class="ef-row"><label>날짜</label><input type="date" id="lf-date"></div>
+            <div class="ef-row"><label>제목 *</label><input type="text" id="lf-title" placeholder="노래 제목"></div>
+            <div class="ef-row"><label>가수</label><input type="text" id="lf-artist" placeholder="가수명"></div>
+            <div class="ef-row"><label>메모</label><input type="text" id="lf-memo" placeholder="(선택)"></div>
+            <div class="ef-row"><label>구슬요 클립 URL</label><input type="url" id="lf-clip" placeholder="https://..."></div>
+            <div class="ef-row"><label>부른 횟수</label><input type="number" id="lf-times" min="1" placeholder="(선택)"></div>
+        </div>
+        <div class="emod-footer">
+            <button class="btn-del" id="live-del-btn" onclick="deleteLiveRecord()" style="display:none">삭제</button>
+            <button class="btn-cancel-sm" onclick="closeLiveModal()">취소</button>
+            <button class="btn-save-sm" id="live-save-btn" onclick="saveLiveRecord()">저장</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const SUPABASE_URL      = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
+
+// ── 상태 ──────────────────────────────────────────
+const S = {
+    mainTab:      'songbook',
+    songbookCat:  'welcome',
+    liveYear:     2026,
+    query:        '',
+    songbookData: null,
+    liveCache:    {},
+    liveLoading:  {},
+    session:      null,
+};
+
+// ── Supabase ─────────────────────────────────────
+let db = null, _dbReady = null;
+function ensureDb() {
+    if (db) return Promise.resolve(db);
+    if (_dbReady) return _dbReady;
+    _dbReady = new Promise((res, rej) => {
+        const s = document.createElement('script');
+        s.src = 'supabase.min.js';
+        s.onload = () => {
+                db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                    auth: { detectSessionInUrl: false }
+                });
+                initAuth();
+                res(db);
+            };
+        s.onerror = rej;
+        document.head.appendChild(s);
+    });
+    return _dbReady;
+}
+
+// Supabase에서 페이지네이션 처리해 전체 데이터 가져오기
+async function fetchAll(table, filters = {}, order = []) {
+    await ensureDb();
+    const PAGE = 1000;
+    let all = [], from = 0;
+    while (true) {
+        let q = db.from(table).select('*').range(from, from + PAGE - 1);
+        for (const [k, v] of Object.entries(filters)) q = q.eq(k, v);
+        for (const [col, asc] of order) q = q.order(col, { ascending: asc });
+        const { data, error } = await q;
+        if (error) { showToast('데이터 로드 실패: ' + error.message); break; }
+        if (!data || data.length === 0) break;
+        all.push(...data);
+        if (data.length < PAGE) break;
+        from += PAGE;
+    }
+    return all;
+}
+
+// ── 데이터 로드 ──────────────────────────────────
+async function loadSongbook() {
+    if (S.songbookData) { renderSongbook(); return; }
+    renderSkeleton('songbook-list');
+    S.songbookData = await fetchAll('songbook', {}, [['artist', true], ['title', true]]);
+    renderSongbook();
+}
+
+async function loadLive(year) {
+    const key = year === 'all' ? 'all' : year;
+    if (S.liveCache[key] !== undefined) return;
+    if (S.liveLoading[key]) return;
+    S.liveLoading[key] = true;
+
+    if (year === 'all') {
+        // 각 연도 로드 후 병합
+        renderSkeleton('live-list');
+        const years = [2022, 2023, 2024, 2025, 2026];
+        await Promise.all(years.map(y => loadLive(y)));
+        S.liveCache['all'] = years.flatMap(y => S.liveCache[y] || [])
+            .sort((a, b) => (b.performed_date || '') < (a.performed_date || '') ? -1 : 1);
+    } else {
+        if (S.liveCache[year] === undefined) {
+            S.liveCache[year] = await fetchAll(
+                'live_songs',
+                { year },
+                [['performed_date', false], ['id', false]]
+            );
+        }
+    }
+    delete S.liveLoading[key];
+}
+
+// ── 초성 검색 ────────────────────────────────────
+const CHOSUNG = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+function chosung(ch) {
+    const c = ch.charCodeAt(0);
+    return c >= 0xAC00 && c <= 0xD7A3 ? CHOSUNG[Math.floor((c - 0xAC00) / 28 / 21)] : null;
+}
+function matchQ(target, q) {
+    if (!q) return true;
+    const t = target.toLowerCase(), s = q.toLowerCase();
+    for (let i = 0; i <= t.length - s.length; i++) {
+        let ok = true;
+        for (let j = 0; j < s.length; j++) {
+            const sc = s[j], tc = t[i + j];
+            const code = sc.charCodeAt(0);
+            if (code >= 0x3131 && code <= 0x314E) {
+                if (chosung(tc) !== sc) { ok = false; break; }
+            } else if (tc !== sc) { ok = false; break; }
+        }
+        if (ok) return true;
+    }
+    return false;
+}
+function matches(title, artist, q) {
+    return matchQ(title || '', q) || matchQ(artist || '', q);
+}
+
+// ── 유틸 ─────────────────────────────────────────
+function esc(s) {
+    return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function skillDots(n) {
+    const filled = '💚', empty = '🤍';
+    return filled.repeat(Math.max(0, n)) + empty.repeat(Math.max(0, 5 - n));
+}
+function linkBtn(url, label, cls) {
+    if (!url) return '';
+    return `<a href="${esc(url)}" class="link-btn ${cls}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${label}</a>`;
+}
+function fmtDate(d) {
+    if (!d) return '';
+    const parts = d.split('-');
+    if (parts.length < 2) return d;
+    return `${parts[1]}/${parts[2] || ''}`;
+}
+
+// ── 렌더: Welcome 카드 ────────────────────────────
+function renderWelcomeCard() {
+    document.getElementById('sb-search-row').style.display = 'none';
+    document.getElementById('random-btn').classList.add('hidden');
+    document.getElementById('result-info').style.display   = 'none';
+
+    const el = document.getElementById('songbook-list');
+    if (!S.songbookData) {
+        el.innerHTML = '<div class="empty-state"><p>로딩 중...</p></div>';
+        return;
+    }
+    const counts = {};
+    for (const s of S.songbookData) {
+        counts[s.category] = (counts[s.category] || 0) + 1;
+    }
+    const cats = ['KPOP', 'POP', 'JPOP', '오리지널', '애교송', 'ETC'];
+    el.innerHTML = `
+    <div class="wc-card">
+        <div class="wc-title">💿 구슬요 노래책 💿</div>
+        <div class="wc-img-wrap"><img src="songbook-char.png" alt="구슬요" class="wc-img"></div>
+        <div class="wc-turtle">🐢</div>
+        <div class="wc-info">🔍 검색창에서 원하는 노래를 검색할 수 있습니다</div>
+        <div class="wc-info">🎵 노래 신청은 구슬요에게 물어봐주세요</div>
+        <div class="wc-stats-wrap">
+            <table class="wc-stats">
+                <thead><tr>
+                    <th>KPOP</th><th>POP</th><th>JPOP</th><th>오리지널</th><th>애교송</th><th>ETC</th><th>전체</th>
+                </tr></thead>
+                <tbody><tr>
+                    ${cats.map(c => `<td>${counts[c] || 0}</td>`).join('')}
+                    <td>${S.songbookData.length}</td>
+                </tr></tbody>
+            </table>
+        </div>
+        <div class="wc-version">v.1.0 (2025.05.13)</div>
+    </div>`;
+}
+
+// ── 렌더: 노래책 ────────────────────────────────
+function renderSongbook() {
+    if (S.songbookCat === 'welcome') { renderWelcomeCard(); return; }
+
+    document.getElementById('sb-search-row').style.display = '';
+    document.getElementById('random-btn').classList.remove('hidden');
+    document.getElementById('result-info').style.display   = '';
+
+    const el = document.getElementById('songbook-list');
+    if (!S.songbookData) { renderSkeleton('songbook-list'); return; }
+
+    const isAll = S.songbookCat === 'all';
+    const items = S.songbookData.filter(s =>
+        (isAll || s.category === S.songbookCat) &&
+        (!S.query || matches(s.title, s.artist, S.query))
+    );
+
+    updateResultInfo(items.length, S.songbookData.filter(s => isAll || s.category === S.songbookCat).length);
+
+    if (!items.length) {
+        el.innerHTML = emptyHtml(S.query ? `"${esc(S.query)}" 검색 결과가 없어요` : '등록된 곡이 없어요');
+        return;
+    }
+
+    const catCol = isAll ? `<th class="col-cat">분류</th>` : '';
+    el.innerHTML = `
+    <table class="song-table">
+        <thead><tr>
+            <th class="col-num">#</th>
+            ${catCol}
+            <th class="col-title">제목</th>
+            <th class="col-artist">가수</th>
+            <th class="col-mr th-center">MR</th>
+            <th class="col-clip th-center">구슬요 클립</th>
+            <th class="col-skill th-center">숙련도</th>
+            <th class="col-memo">메모</th>
+        </tr></thead>
+        <tbody>
+        ${items.map((s, i) => `
+            <tr ${S.session ? `class="editable" onclick="openSongModal(${s.id})"` : ''}>
+                <td class="col-num">${i + 1}</td>
+                ${isAll ? `<td class="col-cat"><span class="cat-badge">${esc(s.category)}</span></td>` : ''}
+                <td class="col-title">${esc(s.title)}</td>
+                <td class="col-artist">${esc(s.artist || '')}</td>
+                <td class="col-mr">${s.mr_url ? `<a href="${esc(s.mr_url)}" class="link-btn mr" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">MR</a>` : ''}</td>
+                <td class="col-clip">${s.clip_url ? `<a href="${esc(s.clip_url)}" class="link-btn clip" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">클립</a>` : ''}</td>
+                <td class="col-skill">${skillDots(s.skill_level || 0)}</td>
+                <td class="col-memo">${esc(s.memo || '')}</td>
+            </tr>`).join('')}
+        </tbody>
+    </table>`;
+}
+
+// ── 렌더: 라이브 ─────────────────────────────────
+async function renderLive() {
+    const year = S.liveYear;
+
+    if (year === 'stats') {
+        document.getElementById('live-list').parentElement.style.display = 'none';
+        document.getElementById('stats-panel').style.display = 'block';
+        await ensureStatsData();
+        renderStats();
+        return;
+    }
+
+    document.getElementById('live-list').parentElement.style.display = '';
+    document.getElementById('stats-panel').style.display = 'none';
+
+    const key = year === 'all' ? 'all' : year;
+    if (S.liveCache[key] === undefined) {
+        renderSkeleton('live-list');
+        await loadLive(year);
+    }
+
+    const raw = S.liveCache[key] || [];
+    const items = S.query ? raw.filter(r => matches(r.title, r.artist, S.query)) : raw;
+
+    updateResultInfo(items.length, raw.length);
+
+    const el = document.getElementById('live-list');
+    if (!items.length) {
+        el.innerHTML = emptyHtml(S.query ? `"${esc(S.query)}" 검색 결과가 없어요` : '기록된 곡이 없어요');
+        return;
+    }
+
+    el.innerHTML = `
+    <table class="song-table">
+        <thead><tr>
+            <th class="col-num">#</th>
+            <th class="col-date">날짜</th>
+            <th class="col-title">제목</th>
+            <th class="col-artist">가수</th>
+            <th class="col-lmemo">메모</th>
+            <th class="col-clip th-center">클립</th>
+        </tr></thead>
+        <tbody>
+        ${items.map((r, i) => `
+            <tr ${S.session ? `class="editable" onclick="openLiveModal(${r.id})"` : ''}>
+                <td class="col-num">${i + 1}</td>
+                <td class="col-date">${fmtDate(r.performed_date)}</td>
+                <td class="col-title">${esc(r.title)}</td>
+                <td class="col-artist">${esc(r.artist || '')}</td>
+                <td class="col-lmemo">${esc(r.memo || '')}</td>
+                <td class="col-clip">${r.clip_url ? `<a href="${esc(r.clip_url)}" class="link-btn clip" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">클립</a>` : ''}</td>
+            </tr>`).join('')}
+        </tbody>
+    </table>`;
+}
+
+// ── 렌더: 통계 ───────────────────────────────────
+async function ensureStatsData() {
+    if (S.liveCache['all'] !== undefined) return;
+    renderSkeleton('stats-panel');
+    await loadLive('all');
+}
+
+function renderStats() {
+    const panel = document.getElementById('stats-panel');
+    const all = S.liveCache['all'] || [];
+    if (!all.length) { panel.innerHTML = emptyHtml('데이터 없음'); return; }
+
+    const YEARS  = [2022, 2023, 2024, 2025, 2026];
+    const MONTHS = [1,2,3,4,5,6,7,8,9,10,11,12];
+    const YCLR   = { 2022:'#a8c8e8', 2023:'#e8a87c', 2024:'#e8d07c', 2025:'#8bc34a', 2026:'#e87ca8' };
+    const YBG    = { 2022:'#eef5fb', 2023:'#fdf0e8', 2024:'#fdf8e8', 2025:'#f0fae4', 2026:'#fde8f0' };
+
+    // ── 집계 ──────────────────────────────────────
+    const yearTotals = {}, ymCounts = {}, songMap = {}, yearSongMap = {};
+    YEARS.forEach(y => { yearTotals[y] = 0; ymCounts[y] = {}; MONTHS.forEach(m => ymCounts[y][m] = 0); yearSongMap[y] = {}; });
+
+    for (const r of all) {
+        const y = r.year;
+        const m = r.performed_date ? parseInt(r.performed_date.split('-')[1]) : null;
+        if (YEARS.includes(y)) {
+            yearTotals[y]++;
+            if (m >= 1 && m <= 12) ymCounts[y][m]++;
+        }
+        const key = `${(r.title||'').trim()}|||${(r.artist||'').trim()}`;
+        if (!songMap[key]) songMap[key] = { title: r.title, artist: r.artist, count: 0 };
+        songMap[key].count++;
+        if (YEARS.includes(y)) {
+            if (!yearSongMap[y][key]) yearSongMap[y][key] = { title: r.title, artist: r.artist, count: 0 };
+            yearSongMap[y][key].count++;
+        }
+    }
+
+    const topAll  = Object.values(songMap).sort((a,b) => b.count - a.count).slice(0, 30);
+    const maxTop  = topAll[0]?.count || 1;
+    const actYrs  = YEARS.filter(y => yearTotals[y] > 0);
+    const yearTop5 = {};
+    YEARS.forEach(y => { yearTop5[y] = Object.values(yearSongMap[y]).sort((a,b) => b.count - a.count).slice(0, 5); });
+
+    // ── SVG: 연도별 합계 바 차트 ──────────────────
+    const maxYr = Math.max(...YEARS.map(y => yearTotals[y]), 1);
+    const YBW = 48, YGAP = 14, YCH = 100, YAVH = YCH - 28;
+    const YSW = YEARS.length * (YBW + YGAP) + YGAP;
+    const yearBars = YEARS.map((y, i) => {
+        const v = yearTotals[y], bh = v > 0 ? Math.max(3, Math.round(v / maxYr * YAVH)) : 0;
+        const x = YGAP + i * (YBW + YGAP), by = YAVH - bh + 2;
+        return `<rect x="${x}" y="${by}" width="${YBW}" height="${bh}" fill="${YCLR[y]}" rx="4"/>
+            ${v > 0 ? `<text x="${x+YBW/2}" y="${by-4}" text-anchor="middle" font-size="11" font-weight="700" fill="#4a6a30">${v}</text>` : ''}
+            <text x="${x+YBW/2}" y="${YCH-2}" text-anchor="middle" font-size="11" fill="#888">${y}</text>`;
+    }).join('');
+
+    // ── SVG: 월별 그룹 바 차트 ────────────────────
+    const MB = 9, MBGAP = 1, MGGAP = 7, MCH = 130, MTR = 18, MBT = 20;
+    const MGW = actYrs.length * (MB + MBGAP) - MBGAP;
+    const MSW = 12 * (MGW + MGGAP) - MGGAP + 6;
+    const MAVH = MCH - MTR - MBT;
+    const maxMo = Math.max(...actYrs.flatMap(y => MONTHS.map(m => ymCounts[y][m] || 0)), 1);
+    const mLeg  = actYrs.map((y, i) => `<rect x="${i*46}" y="1" width="9" height="9" fill="${YCLR[y]}" rx="2"/>
+        <text x="${i*46+13}" y="10" font-size="9" fill="#666">${y}</text>`).join('');
+    const mBars = MONTHS.flatMap((m, mi) => {
+        const gx = mi * (MGW + MGGAP);
+        return [
+            ...actYrs.map((y, yi) => {
+                const v = ymCounts[y][m] || 0, bh = v > 0 ? Math.max(2, Math.round(v / maxMo * MAVH)) : 0;
+                const bx = gx + yi * (MB + MBGAP), by = MTR + MAVH - bh;
+                return `<rect x="${bx}" y="${by}" width="${MB}" height="${bh}" fill="${YCLR[y]}" rx="2"/>`;
+            }),
+            `<text x="${gx + MGW/2}" y="${MCH-2}" text-anchor="middle" font-size="9" fill="#999">${m}월</text>`
+        ];
+    }).join('');
+
+    // ── HTML: 연도 × 월 테이블 ────────────────────
+    const ymTable = `<table class="ym-table">
+        <thead><tr><th>연도</th>${MONTHS.map(m=>`<th>${m}월</th>`).join('')}<th>합계</th></tr></thead>
+        <tbody>${YEARS.map(y => `
+        <tr>
+            <td class="ym-year" style="background:${YBG[y]}">${y}</td>
+            ${MONTHS.map(m => { const v = ymCounts[y][m]; return `<td class="${v?'':'ym-zero'}">${v||0}</td>`; }).join('')}
+            <td class="ym-total">${yearTotals[y]||0}</td>
+        </tr>`).join('')}</tbody>
+    </table>`;
+
+    // ── HTML: 연도별 TOP 5 카드 ───────────────────
+    const top5Cards = actYrs.map(y => {
+        const songs = yearTop5[y]; if (!songs.length) return '';
+        return `<div class="year-top-card" style="border-top:3px solid ${YCLR[y]}">
+            <div class="year-top-head">${y}</div>
+            ${songs.map((s,i) => `
+            <div class="year-top-row">
+                <span class="year-top-rank">${i+1}</span>
+                <div class="year-top-info">
+                    <div class="year-top-song">${esc(s.title)}</div>
+                    <div class="year-top-artist">${esc(s.artist||'')}</div>
+                </div>
+                <span class="year-top-count">${s.count}번</span>
+            </div>`).join('')}
+        </div>`;
+    }).join('');
+
+    // ── 렌더 ─────────────────────────────────────
+    panel.innerHTML = `<div class="stats-dashboard">
+
+        <div class="stats-section">
+            <div class="stats-sec-title">연도별 라이브 노래 수</div>
+            <div class="svg-chart-wrap">
+                <svg width="${YSW}" height="${YCH}" viewBox="0 0 ${YSW} ${YCH}">${yearBars}</svg>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <div class="stats-sec-title">월별 라이브 노래 수</div>
+            <div class="svg-chart-wrap">
+                <svg width="${MSW}" height="${MCH}" viewBox="0 0 ${MSW} ${MCH}">
+                    <g transform="translate(2,2)">${mLeg}</g>
+                    <g transform="translate(0,16)">${mBars}</g>
+                </svg>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <div class="stats-sec-title">연도별 월간 기록</div>
+            <div class="ym-table-wrap">${ymTable}</div>
+        </div>
+
+        <div class="stats-section">
+            <div class="stats-sec-title">연도별 많이 부른 곡 TOP 5</div>
+            <div class="year-tops-grid">${top5Cards}</div>
+        </div>
+
+        <div class="stats-section">
+            <div class="stats-sec-title">전체 많이 부른 곡 TOP 30</div>
+            ${topAll.map((s,i) => `
+            <div class="stat-row">
+                <span class="stat-rank ${i<3?'top3':''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</span>
+                <div class="stat-info">
+                    <div class="stat-title">${esc(s.title)}</div>
+                    <div class="stat-artist">${esc(s.artist||'')}</div>
+                </div>
+                <div class="stat-bar-wrap"><div class="stat-bar" style="width:${Math.round(s.count/maxTop*100)}%"></div></div>
+                <span class="stat-count">${s.count}번</span>
+            </div>`).join('')}
+        </div>
+
+    </div>`;
+}
+
+// ── 결과 카운트 ─────────────────────────────────
+function updateResultInfo(shown, total) {
+    const el = document.getElementById('result-info');
+    if (S.query && shown !== total) {
+        el.textContent = `"${S.query}" — ${total}곡 중 ${shown}곡`;
+    } else {
+        el.textContent = `총 ${total}곡`;
+    }
+}
+
+// ── 스켈레톤 ────────────────────────────────────
+function renderSkeleton(id) {
+    document.getElementById(id).innerHTML = `
+    <table class="song-table">
+        <thead><tr>
+            <th class="col-num">#</th>
+            <th class="col-title">제목</th>
+            <th class="col-artist">가수</th>
+            <th class="col-mr">MR</th>
+            <th class="col-skill">숙련도</th>
+        </tr></thead>
+        <tbody>
+        ${Array(10).fill(0).map(() => `
+            <tr>
+                <td><div class="skeleton" style="height:12px;width:20px;border-radius:4px"></div></td>
+                <td><div class="skeleton" style="height:13px;border-radius:4px"></div></td>
+                <td><div class="skeleton" style="height:12px;width:80%;border-radius:4px"></div></td>
+                <td></td>
+                <td><div class="skeleton" style="height:12px;border-radius:4px"></div></td>
+            </tr>`).join('')}
+        </tbody>
+    </table>`;
+}
+
+
+
+function emptyHtml(msg) {
+    return `<div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+        </svg>
+        <p>${msg}</p>
+    </div>`;
+}
+
+// ── 탭 전환 ─────────────────────────────────────
+function setMainTab(tab) {
+    S.mainTab = tab;
+    document.querySelectorAll('.main-tab').forEach((el, i) =>
+        el.classList.toggle('active', ['songbook','live'][i] === tab));
+
+    const isSong = tab === 'songbook';
+    document.getElementById('songbook-section').style.display = isSong ? '' : 'none';
+    document.getElementById('live-section').style.display     = isSong ? 'none' : '';
+    document.getElementById('songbook-subtabs').style.display = isSong ? '' : 'none';
+    document.getElementById('live-subtabs').style.display     = isSong ? 'none' : '';
+
+    if (isSong) {
+        renderSongbook();
+    } else {
+        document.getElementById('sb-search-row').style.display = '';
+        document.getElementById('result-info').style.display   = '';
+        document.getElementById('random-btn').classList.add('hidden');
+        renderLive();
+    }
+    updateFab();
+}
+
+function setSongbookCat(cat) {
+    S.songbookCat = cat;
+    document.querySelectorAll('#songbook-subtabs .sub-tab').forEach(el =>
+        el.classList.toggle('active', el.dataset.cat === cat));
+    renderSongbook();
+    updateFab();
+}
+
+function setLiveYear(year) {
+    S.liveYear = year;
+    const vals = ['stats','2026','2025','2024','2023','2022'];
+    document.querySelectorAll('#live-subtabs .sub-tab').forEach((el, i) =>
+        el.classList.toggle('active', String(year) === vals[i]));
+    renderLive();
+    updateFab();
+}
+
+// ── 검색 ────────────────────────────────────────
+function onSearch(val) {
+    S.query = val.trim();
+    document.getElementById('search-clear').classList.toggle('show', !!S.query);
+    if (S.mainTab === 'songbook') renderSongbook();
+    else renderLive();
+}
+
+function clearSearch() {
+    document.getElementById('search-input').value = '';
+    S.query = '';
+    document.getElementById('search-clear').classList.remove('show');
+    if (S.mainTab === 'songbook') renderSongbook();
+    else renderLive();
+}
+
+// ── 랜덤 뽑기 ────────────────────────────────────
+function pickRandom() {
+    const pool = S.songbookData
+        ? S.songbookData.filter(s => S.songbookCat === 'all' || s.category === S.songbookCat)
+        : [];
+    if (!pool.length) { showToast('노래책 데이터를 먼저 불러오세요'); return; }
+
+    const s = pool[Math.floor(Math.random() * pool.length)];
+    document.getElementById('r-title').textContent  = s.title;
+    document.getElementById('r-artist').textContent = s.artist || '';
+    document.getElementById('r-skill').textContent  = skillDots(s.skill_level || 0);
+
+    const links = document.getElementById('r-links');
+    links.innerHTML = [
+        linkBtn(s.mr_url,   'MR',  'mr'),
+        linkBtn(s.clip_url, '클립', 'clip'),
+    ].filter(Boolean).join('') || '<span style="color:var(--muted);font-size:12px">링크 없음</span>';
+
+    const memo = document.getElementById('r-memo');
+    if (s.memo) { memo.textContent = s.memo; memo.style.display = ''; }
+    else          memo.style.display = 'none';
+
+    document.getElementById('random-modal').classList.add('open');
+}
+
+function closeRandom() {
+    document.getElementById('random-modal').classList.remove('open');
+}
+
+// ── 토스트 ───────────────────────────────────────
+let _toastTimer;
+function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ── 초기화 ───────────────────────────────────────
+async function init() {
+    await loadSongbook();
+    loadLive(2026);
+}
+
+function updateFab() {
+    const show = !!S.session && (
+        (S.mainTab === 'songbook' && S.songbookCat !== 'welcome') ||
+        (S.mainTab === 'live' && S.liveYear !== 'stats')
+    );
+    document.getElementById('edit-fab').classList.toggle('show', show);
+}
+
+// ── 인증 ─────────────────────────────────────────
+async function initAuth() {
+    const { data: { session } } = await db.auth.getSession();
+    S.session = session;
+    updateAuthUI();
+    db.auth.onAuthStateChange((_, sess) => { S.session = sess; updateAuthUI(); });
+}
+
+function updateAuthUI() {
+    updateFab();
+    if (S.mainTab === 'songbook' && S.songbookCat !== 'welcome') renderSongbook();
+    else if (S.mainTab === 'live' && S.liveYear !== 'stats') renderLive();
+}
+
+window.addEventListener('message', (e) => {
+    if (e.data?.type === 'beadyo-auth-sync' && db) {
+        db.auth.getSession().then(({ data: { session } }) => {
+            S.session = session;
+            updateAuthUI();
+        });
+    }
+});
+
+function openAddModal() {
+    if (S.mainTab === 'songbook') openSongModal(null);
+    else if (S.mainTab === 'live') openLiveModal(null);
+}
+
+// ── 노래책 CRUD ──────────────────────────────────
+function openSongModal(id) {
+    if (!S.session) return;
+    const s = id ? S.songbookData?.find(x => x.id === id) : null;
+    document.getElementById('song-modal-title').textContent = s ? '노래 수정' : '노래 추가';
+    document.getElementById('ef-id').value       = s?.id ?? '';
+    document.getElementById('ef-category').value = s?.category ?? 'KPOP';
+    document.getElementById('ef-title').value    = s?.title ?? '';
+    document.getElementById('ef-artist').value   = s?.artist ?? '';
+    document.getElementById('ef-mr').value       = s?.mr_url ?? '';
+    document.getElementById('ef-clip').value     = s?.clip_url ?? '';
+    document.getElementById('ef-skill').value    = s?.skill_level ?? 0;
+    updateSkillDisplay();
+    document.getElementById('ef-memo').value     = s?.memo ?? '';
+    document.getElementById('song-del-btn').style.display = s ? '' : 'none';
+    document.getElementById('song-modal').classList.add('open');
+}
+function closeSongModal() { document.getElementById('song-modal').classList.remove('open'); }
+
+function updateSkillDisplay(hoverVal) {
+    const val = hoverVal !== undefined ? hoverVal : parseInt(document.getElementById('ef-skill').value) || 0;
+    document.querySelectorAll('#skill-picker .skill-heart').forEach(el => {
+        el.textContent = parseInt(el.dataset.v) <= val ? '💚' : '🤍';
+    });
+}
+
+(function initSkillPicker() {
+    document.addEventListener('click', e => {
+        const el = e.target.closest('#skill-picker .skill-heart');
+        if (!el) return;
+        const v = parseInt(el.dataset.v);
+        const cur = parseInt(document.getElementById('ef-skill').value) || 0;
+        document.getElementById('ef-skill').value = v === cur ? 0 : v;
+        updateSkillDisplay();
+    });
+    document.addEventListener('mouseover', e => {
+        if (e.target.closest('#skill-picker')) {
+            const el = e.target.closest('.skill-heart');
+            if (el) updateSkillDisplay(parseInt(el.dataset.v));
+        }
+    });
+    document.addEventListener('mouseout', e => {
+        if (e.target.closest('#skill-picker')) updateSkillDisplay();
+    });
+})();
+
+async function saveSong() {
+    const titleVal = document.getElementById('ef-title').value.trim();
+    if (!titleVal) { document.getElementById('ef-title').focus(); return; }
+    const btn = document.getElementById('song-save-btn');
+    btn.disabled = true; btn.textContent = '저장 중...';
+
+    const id = document.getElementById('ef-id').value;
+    const payload = {
+        category:    document.getElementById('ef-category').value,
+        title:       titleVal,
+        artist:      document.getElementById('ef-artist').value.trim() || null,
+        mr_url:      document.getElementById('ef-mr').value.trim() || null,
+        clip_url:    document.getElementById('ef-clip').value.trim() || null,
+        skill_level: parseInt(document.getElementById('ef-skill').value),
+        memo:        document.getElementById('ef-memo').value.trim() || null,
+    };
+    await ensureDb();
+    const { error } = id
+        ? await db.from('songbook').update(payload).eq('id', parseInt(id))
+        : await db.from('songbook').insert(payload);
+
+    btn.disabled = false; btn.textContent = '저장';
+    if (error) { showToast('저장 실패: ' + error.message); return; }
+    showToast(id ? '수정 완료 ✓' : '추가 완료 ✓');
+    closeSongModal();
+    S.songbookData = null;
+    await loadSongbook();
+    if (S.songbookCat === 'welcome') renderWelcomeCard();
+}
+
+async function deleteSong() {
+    const id = parseInt(document.getElementById('ef-id').value);
+    if (!id || !confirm('이 곡을 삭제할까요?')) return;
+    await ensureDb();
+    const { error } = await db.from('songbook').delete().eq('id', id);
+    if (error) { showToast('삭제 실패: ' + error.message); return; }
+    showToast('삭제 완료');
+    closeSongModal();
+    S.songbookData = null;
+    await loadSongbook();
+    if (S.songbookCat === 'welcome') renderWelcomeCard();
+}
+
+// ── 라이브 기록 CRUD ─────────────────────────────
+function openLiveModal(id) {
+    if (!S.session) return;
+    const key = S.liveYear === 'all' ? 'all' : S.liveYear;
+    const r = id ? (S.liveCache[key] || []).find(x => x.id === id) : null;
+    document.getElementById('live-modal-title').textContent = r ? '라이브 기록 수정' : '라이브 기록 추가';
+    document.getElementById('lf-id').value     = r?.id ?? '';
+    document.getElementById('lf-year').value   = r?.year ?? (typeof S.liveYear === 'number' ? S.liveYear : new Date().getFullYear());
+    document.getElementById('lf-date').value   = r?.performed_date ?? '';
+    document.getElementById('lf-title').value  = r?.title ?? '';
+    document.getElementById('lf-artist').value = r?.artist ?? '';
+    document.getElementById('lf-memo').value   = r?.memo ?? '';
+    document.getElementById('lf-clip').value   = r?.clip_url ?? '';
+    document.getElementById('lf-times').value  = r?.times_sung ?? '';
+    document.getElementById('live-del-btn').style.display = r ? '' : 'none';
+    document.getElementById('live-modal').classList.add('open');
+}
+function closeLiveModal() { document.getElementById('live-modal').classList.remove('open'); }
+
+async function saveLiveRecord() {
+    const titleVal = document.getElementById('lf-title').value.trim();
+    const yearVal  = document.getElementById('lf-year').value;
+    if (!titleVal) { document.getElementById('lf-title').focus(); return; }
+    if (!yearVal)  { document.getElementById('lf-year').focus();  return; }
+    const btn = document.getElementById('live-save-btn');
+    btn.disabled = true; btn.textContent = '저장 중...';
+
+    const id = document.getElementById('lf-id').value;
+    const year = parseInt(yearVal);
+    const payload = {
+        year,
+        performed_date: document.getElementById('lf-date').value || null,
+        title:          titleVal,
+        artist:         document.getElementById('lf-artist').value.trim() || null,
+        memo:           document.getElementById('lf-memo').value.trim() || null,
+        clip_url:       document.getElementById('lf-clip').value.trim() || null,
+        times_sung:     parseInt(document.getElementById('lf-times').value) || null,
+    };
+    await ensureDb();
+    const { error } = id
+        ? await db.from('live_songs').update(payload).eq('id', parseInt(id))
+        : await db.from('live_songs').insert(payload);
+
+    btn.disabled = false; btn.textContent = '저장';
+    if (error) { showToast('저장 실패: ' + error.message); return; }
+    showToast(id ? '수정 완료 ✓' : '추가 완료 ✓');
+    closeLiveModal();
+    delete S.liveCache[year]; delete S.liveCache['all'];
+    await renderLive();
+}
+
+async function deleteLiveRecord() {
+    const id   = parseInt(document.getElementById('lf-id').value);
+    const year = parseInt(document.getElementById('lf-year').value);
+    if (!id || !confirm('이 기록을 삭제할까요?')) return;
+    await ensureDb();
+    const { error } = await db.from('live_songs').delete().eq('id', id);
+    if (error) { showToast('삭제 실패: ' + error.message); return; }
+    showToast('삭제 완료');
+    closeLiveModal();
+    delete S.liveCache[year]; delete S.liveCache['all'];
+    await renderLive();
+}
+
+init();
+</script>
+</body>
+</html>

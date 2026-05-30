@@ -8,6 +8,7 @@ const TABS = [
     { type: 'sheet', id: '1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw', gid: '1451717792', alwaysEdit: true },
     { type: 'sheet', id: '1bIhxhHDU_Ig5IuDrS4WvPtMVsiVWHnDvm6dU3E3Q8Mo', gid: '1565839847', alwaysEdit: true },
     { type: 'songs', src: 'songs.html', directUrl: 'songs.html' },
+    { type: 'songbook', src: 'songbook.html', directUrl: 'songbook.html' },
 ];
 
 const readOnlyUrl = s =>
@@ -47,7 +48,7 @@ const isMobile = window.matchMedia('(max-width: 640px)').matches;
 
 function getFrameUrl(index) {
     const tab = TABS[index];
-    if (tab.type === 'calendar' || tab.type === 'songs') return tab.src;
+    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook') return tab.src;
     if (tab.type === 'schedule') return scheduleUrl(tab);
     if (tab.alwaysEdit) return editUrl(tab);
     return readOnlyUrl(tab);
@@ -55,7 +56,7 @@ function getFrameUrl(index) {
 
 function getSheetDirectUrl(index) {
     const tab = TABS[index];
-    if (tab.type === 'calendar' || tab.type === 'songs') return tab.directUrl;
+    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook') return tab.directUrl;
     if (tab.type === 'schedule') return scheduleUrl(tab);
     return `https://docs.google.com/spreadsheets/d/${tab.id}/edit#gid=${tab.gid}`;
 }
@@ -71,7 +72,7 @@ function updateMobileFab(index) {
     const fab = document.getElementById('mobile-fab');
     if (!isMobile) return;
     const type = TABS[index]?.type;
-    if (type === 'calendar' || type === 'songs') {
+    if (type === 'calendar' || type === 'songs' || type === 'songbook') {
         fab.classList.remove('show');
         return;
     }
@@ -91,7 +92,7 @@ function getSerializableAuthUser(user = authUser) {
 function syncCalendarAuth() {
     const origin = window.location.origin === 'null' ? '*' : window.location.origin;
     const msg = { type: 'beadyo-auth-sync', user: getSerializableAuthUser() };
-    for (const id of ['frame-0', 'frame-4']) {
+    for (const id of ['frame-0', 'frame-4', 'frame-5']) {
         const frame = document.getElementById(id);
         if (frame?.contentWindow) frame.contentWindow.postMessage(msg, origin);
     }
@@ -156,12 +157,12 @@ function switchTab(index) {
 
     if (loaded.has(index) && index !== 1) {
         hideLoading(index);
-        if (index === 0) syncCalendarAuth();
+        if (index === 0 || index === 5) syncCalendarAuth();
     } else {
         document.getElementById('loading').style.display = 'flex';
         frame.onload = () => {
             hideLoading(index);
-            if (index === 0) syncCalendarAuth();
+            if (index === 0 || index === 5) syncCalendarAuth();
         };
         frame.src = getFrameUrl(index);
         loaded.add(index);
