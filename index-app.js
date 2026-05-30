@@ -172,8 +172,17 @@ function switchTab(index) {
 
 // 첫 탭 초기 로드
 try {
-    const saved = parseInt(localStorage.getItem('activeTab'));
-    switchTab(Number.isFinite(saved) && saved >= 0 && saved < TABS.length ? saved : 0);
+    let initialTab = 0;
+    if (window.location.hash === '#songbook') {
+        history.replaceState({}, document.title, window.location.pathname);
+        initialTab = 5;
+    } else {
+        const saved = parseInt(localStorage.getItem('activeTab'));
+        if (Number.isFinite(saved) && saved >= 0 && saved < TABS.length && saved !== 5) {
+            initialTab = saved;
+        }
+    }
+    switchTab(initialTab);
 } catch {
     switchTab(0);
 }
