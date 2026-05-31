@@ -178,7 +178,7 @@ try {
         initialTab = 5;
     } else {
         const saved = parseInt(localStorage.getItem('activeTab'));
-        if (Number.isFinite(saved) && saved >= 0 && saved < TABS.length && saved !== 5) {
+        if (Number.isFinite(saved) && saved >= 0 && saved < TABS.length) {
             initialTab = saved;
         }
     }
