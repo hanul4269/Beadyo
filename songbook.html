@@ -170,6 +170,50 @@
         }
         .search-clear.show { display: flex; }
 
+        /* 라이브 필터 버튼 */
+        .live-filter-btn {
+            height: 36px; flex-shrink: 0;
+            padding: 0 14px;
+            border: 1.5px solid var(--border); border-radius: 18px;
+            background: var(--bg); font-size: 13px; font-weight: 700; color: var(--text);
+            cursor: pointer; white-space: nowrap;
+            transition: background .15s, border-color .15s;
+        }
+        .live-filter-btn:hover, .live-filter-btn.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent-dark); }
+
+        /* 라이브 필터 패널 */
+        .live-filter-panel {
+            margin-top: 8px; padding: 12px 14px;
+            background: var(--surface); border: 1.5px solid var(--border);
+            border-radius: 12px; display: flex; flex-direction: column; gap: 10px;
+        }
+        .lf-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .lf-label { font-size: 11px; font-weight: 700; color: var(--muted); width: 28px; flex-shrink: 0; }
+        .lf-checks, .lf-sorts { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+        .lf-check, .lf-radio {
+            display: flex; align-items: center; gap: 4px;
+            padding: 4px 10px; border-radius: 16px; cursor: pointer;
+            font-size: 12px; font-weight: 700;
+            border: 1.5px solid var(--border); background: var(--bg);
+            transition: background .12s, border-color .12s;
+        }
+        .lf-check input, .lf-radio input { display: none; }
+        .lf-check:has(input:checked), .lf-radio:has(input:checked) {
+            background: var(--accent); color: #fff; border-color: var(--accent-dark);
+        }
+        .lf-dir-btns { display: flex; gap: 4px; margin-left: 4px; }
+        .lf-dir {
+            padding: 4px 10px; border-radius: 16px; cursor: pointer;
+            font-size: 12px; font-weight: 700;
+            border: 1.5px solid var(--border); background: var(--bg); color: var(--text);
+            transition: background .12s;
+        }
+        .lf-dir.active { background: #555; color: #fff; border-color: #333; }
+
+        /* 월 변경 구분선 */
+        .song-table tbody tr.month-start td { border-top: 2.5px solid var(--accent); }
+        .song-table tbody tr.month-start td.col-date { color: var(--accent-dark); }
+
         /* ─── 본문 ─── */
         .sb-body {
             max-width: 1200px;
@@ -387,6 +431,9 @@
 
         /* ─── 통계 대시보드 추가 ─── */
         .stats-section { margin-bottom: 28px; }
+        .stats-top-row { display: flex; gap: 40px; align-items: flex-start; margin-bottom: 28px; justify-content: center; flex-wrap: wrap; }
+        .stats-top-left { flex: 0 0 580px; width: 580px; }
+        .stats-top-right { flex: 0 0 640px; width: 640px; min-width: 0; }
         .stats-sec-title {
             font-size: 13px; font-weight: 700; color: var(--muted);
             letter-spacing: .04em; margin-bottom: 10px;
@@ -397,30 +444,33 @@
         .mo-charts-row > div { flex: 1; min-width: 0; }
         .mo-chart-label { font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
         .search-section-title { font-size: 13px; font-weight: 700; color: var(--accent-dark); padding: 10px 12px 4px; letter-spacing: .03em; }
-        .stats-top-row { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 28px; flex-wrap: wrap; }
-        .stats-top-left { flex: 0 0 auto; min-width: 260px; }
-        .stats-top-right { flex: 1; min-width: 280px; }
-        .per-year-charts { display: flex; flex-direction: column; gap: 4px; }
+        .stats-total-badge {
+            display: inline-block; margin-bottom: 14px;
+            padding: 6px 16px; border-radius: 20px;
+            background: var(--accent-light); border: 1.5px solid var(--accent);
+            font-size: 14px; font-weight: 700; color: var(--accent-dark);
+        }
+        .per-year-charts { display: flex; flex-direction: column; gap: 8px; max-width: 640px; }
         .per-year-chart { display: flex; align-items: center; gap: 8px; }
         .per-year-label { width: 36px; font-size: 12px; font-weight: 700; text-align: right; flex-shrink: 0; }
         .ym-table-wrap  { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .ym-table { border-collapse: collapse; font-size: 12px; min-width: 560px; }
+        .ym-table { border-collapse: collapse; font-size: 11px; width: 100%; }
         .ym-table th, .ym-table td {
-            padding: 6px 10px; text-align: right;
+            padding: 6px 4px; text-align: center;
             border: 1px solid var(--border); white-space: nowrap;
         }
-        .ym-table thead th { background: #eaf2e0; color: #4a6a30; font-weight: 700; text-align: center; font-size: 11px; }
-        .ym-table td.ym-year { font-weight: 700; text-align: center; padding: 6px 14px; }
+        .ym-table thead th { background: #eaf2e0; color: #4a6a30; font-weight: 700; text-align: center; font-size: 10px; }
+        .ym-table td.ym-year { font-weight: 700; text-align: center; padding: 6px 6px; }
         .ym-table td.ym-total { font-weight: 700; color: var(--accent-dark); background: #f0f7e4; }
         .ym-table td.ym-zero  { color: #ccc; }
-        .year-tops-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 12px; }
-        .year-top-card { background: var(--surface); border-radius: 12px; padding: 12px 14px; border: 1px solid var(--border); }
+        .year-tops-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .year-top-card { background: var(--surface); border-radius: 12px; padding: 12px 14px; border: 1px solid var(--border); min-width: 0; }
         .year-top-head { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
         .year-top-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border); }
         .year-top-row:last-child { border-bottom: none; padding-bottom: 0; }
         .year-top-rank { width: 16px; font-size: 11px; font-weight: 700; color: var(--muted); flex-shrink: 0; text-align: right; }
         .year-top-info { flex: 1; overflow: hidden; min-width: 0; }
-        .year-top-song { font-size: 12px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .year-top-song { font-size: 12px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: normal; word-break: break-word; line-height: 1.4; }
         .year-top-artist { font-size: 10px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .year-top-count { font-size: 12px; font-weight: 700; color: var(--accent-dark); white-space: nowrap; flex-shrink: 0; }
 
@@ -720,8 +770,8 @@
             <button class="sub-tab"        data-cat="오리지널"  onclick="setSongbookCat('오리지널')">오리지널</button>
         </div>
         <div id="live-subtabs" class="sub-tabs" style="display:none">
-            <button class="sub-tab" onclick="setLiveYear('stats')">📊 통계</button>
-            <button class="sub-tab active" onclick="setLiveYear(2026)">2026</button>
+            <button class="sub-tab active" onclick="setLiveYear('stats')">📊 통계</button>
+            <button class="sub-tab" onclick="setLiveYear(2026)">2026</button>
             <button class="sub-tab" onclick="setLiveYear(2025)">2025</button>
             <button class="sub-tab" onclick="setLiveYear(2024)">2024</button>
             <button class="sub-tab" onclick="setLiveYear(2023)">2023</button>
@@ -737,6 +787,32 @@
                 <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <input type="search" id="search-input" placeholder="제목 또는 가수 검색..." oninput="onSearch(this.value)" autocomplete="off">
                 <button class="search-clear" id="search-clear" onclick="clearSearch()">×</button>
+            </div>
+            <button id="live-filter-btn" class="live-filter-btn" onclick="toggleLiveFilter()" style="display:none">자세히</button>
+        </div>
+        <!-- 라이브 필터 패널 -->
+        <div id="live-filter-panel" class="live-filter-panel" style="display:none">
+            <div class="lf-row">
+                <span class="lf-label">연도</span>
+                <div class="lf-checks" id="lf-year-checks">
+                    <label class="lf-check"><input type="checkbox" value="2026" checked onchange="applyLiveFilter()"><span>2026</span></label>
+                    <label class="lf-check"><input type="checkbox" value="2025" checked onchange="applyLiveFilter()"><span>2025</span></label>
+                    <label class="lf-check"><input type="checkbox" value="2024" checked onchange="applyLiveFilter()"><span>2024</span></label>
+                    <label class="lf-check"><input type="checkbox" value="2023" checked onchange="applyLiveFilter()"><span>2023</span></label>
+                    <label class="lf-check"><input type="checkbox" value="2022" checked onchange="applyLiveFilter()"><span>2022</span></label>
+                </div>
+            </div>
+            <div class="lf-row">
+                <span class="lf-label">정렬</span>
+                <div class="lf-sorts">
+                    <label class="lf-radio"><input type="radio" name="lf-sort" value="date" checked onchange="applyLiveFilter()"><span>날짜</span></label>
+                    <label class="lf-radio"><input type="radio" name="lf-sort" value="title" onchange="applyLiveFilter()"><span>제목</span></label>
+                    <label class="lf-radio"><input type="radio" name="lf-sort" value="artist" onchange="applyLiveFilter()"><span>가수</span></label>
+                    <div class="lf-dir-btns">
+                        <button class="lf-dir active" id="lf-dir-desc" onclick="setLiveSortDir('desc')">↓내림</button>
+                        <button class="lf-dir" id="lf-dir-asc" onclick="setLiveSortDir('asc')">↑오름</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -888,7 +964,6 @@
             <div class="ef-row"><label>가수</label><input type="text" id="lf-artist" placeholder="가수명"></div>
             <div class="ef-row"><label>메모</label><input type="text" id="lf-memo" placeholder="(선택)"></div>
             <div class="ef-row"><label>구슬요 클립 URL</label><input type="url" id="lf-clip" placeholder="https://..."></div>
-            <div class="ef-row"><label>부른 횟수</label><input type="number" id="lf-times" min="1" placeholder="(선택)"></div>
         </div>
         <div class="emod-footer">
             <button class="btn-del" id="live-del-btn" onclick="deleteLiveRecord()" style="display:none">삭제</button>
@@ -912,7 +987,7 @@
                     <input type="number" id="live-bulk-year" min="2022" max="2035" style="width:80px;padding:5px 8px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;background:var(--bg);color:var(--text)">
                     <span class="bulk-cat-hint">※ 행별 연도 칸을 바꾸면 개별 적용</span>
                 </div>
-                <div class="bulk-paste-hint">💡 엑셀에서 복사한 셀을 아무 칸에나 붙여넣기 하면 자동 채워집니다<br>열 순서: 날짜(MM-DD) · 제목 · 가수 · 메모 · 클립 URL · 부른 횟수</div>
+                <div class="bulk-paste-hint">💡 엑셀에서 복사한 셀을 아무 칸에나 붙여넣기 하면 자동 채워집니다<br>열 순서: 날짜(MM-DD) · 제목 · 가수 · 메모 · 클립 URL</div>
             </div>
             <div class="bulk-table-wrap">
                 <table class="bulk-table" id="live-bulk-table">
@@ -924,7 +999,6 @@
                         <th class="bt-artist">가수</th>
                         <th class="bt-memo">메모</th>
                         <th class="bt-clip">클립 URL</th>
-                        <th class="bt-times">횟수</th>
                     </tr></thead>
                     <tbody id="live-bulk-rows"></tbody>
                 </table>
@@ -947,11 +1021,16 @@ const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const S = {
     mainTab:      'songbook',
     songbookCat:  'welcome',
-    liveYear:     2026,
+    liveYear:     'stats',
     query:        '',
     songbookData: null,
     liveCache:    {},
     liveLoading:  {},
+    liveFilter: {
+        years: new Set([2022, 2023, 2024, 2025, 2026]),
+        sort:  'date',
+        dir:   'desc',
+    },
     session:      null,
 };
 
@@ -1171,6 +1250,7 @@ async function renderLive() {
     if (year === 'stats') {
         document.getElementById('live-list').parentElement.style.display = 'none';
         document.getElementById('stats-panel').style.display = 'block';
+        document.getElementById('result-info').style.display = 'none';
         document.querySelector('.sb-body').classList.add('stats-wide');
         await ensureStatsData();
         renderStats();
@@ -1181,15 +1261,36 @@ async function renderLive() {
     document.getElementById('live-list').parentElement.style.display = '';
     document.getElementById('stats-panel').style.display = 'none';
 
-    // 검색 중이면 전체 연도 데이터 사용
-    const key = (S.query || year === 'all') ? 'all' : year;
+    // 검색 중이거나 필터 패널이 열려 있으면 전체 연도 데이터 사용
+    const filterOpen = document.getElementById('live-filter-panel')?.style.display !== 'none';
+    const key = (S.query || year === 'all' || filterOpen) ? 'all' : year;
     if (S.liveCache[key] === undefined) {
         renderSkeleton('live-list');
         await loadLive(key);
     }
 
     const raw = S.liveCache[key] || [];
-    const items = S.query ? raw.filter(r => matches(r.title, r.artist, S.query, r.memo)) : raw;
+
+    // 연도 필터 적용 (전체 데이터 사용 중일 때)
+    const filtered = key === 'all'
+        ? raw.filter(r => S.liveFilter.years.has(r.year))
+        : raw;
+
+    // 검색어 필터
+    const searched = S.query
+        ? filtered.filter(r => matches(r.title, r.artist, S.query, r.memo))
+        : filtered;
+
+    // 정렬
+    const { sort, dir } = S.liveFilter;
+    const asc = dir === 'asc';
+    const items = [...searched].sort((a, b) => {
+        let va, vb;
+        if (sort === 'title')  { va = a.title || ''; vb = b.title || ''; }
+        else if (sort === 'artist') { va = a.artist || ''; vb = b.artist || ''; }
+        else { va = a.performed_date || ''; vb = b.performed_date || ''; }
+        return asc ? va.localeCompare(vb) : vb.localeCompare(va);
+    });
 
     updateResultInfo(items.length, raw.length);
 
@@ -1199,11 +1300,12 @@ async function renderLive() {
         return;
     }
 
+    const showYear = S.query || key === 'all';
     el.innerHTML = `
     <table class="song-table">
         <thead><tr>
             <th class="col-num">#</th>
-            ${S.query ? `<th class="col-year">연도</th>` : ''}
+            ${showYear ? `<th class="col-year">연도</th>` : ''}
             <th class="col-date">날짜</th>
             <th class="col-title">제목</th>
             <th class="col-artist">가수</th>
@@ -1211,16 +1313,21 @@ async function renderLive() {
             <th class="col-clip th-center">클립</th>
         </tr></thead>
         <tbody>
-        ${items.map((r, i) => `
-            <tr ${S.session ? `class="editable" onclick="openLiveModal(${r.id})"` : ''}>
+        ${items.map((r, i) => {
+            const mo = r.performed_date ? r.performed_date.slice(0, 7) : '';
+            const prevMo = i > 0 ? (items[i-1].performed_date ? items[i-1].performed_date.slice(0, 7) : '') : mo;
+            const monthStart = i > 0 && mo !== prevMo;
+            return `
+            <tr class="${S.session ? 'editable ' : ''}${monthStart ? 'month-start' : ''}"${S.session ? ` onclick="openLiveModal(${r.id})"` : ''}>
                 <td class="col-num">${i + 1}</td>
-                ${S.query ? `<td class="col-year">${r.year || ''}</td>` : ''}
+                ${showYear ? `<td class="col-year">${r.year || ''}</td>` : ''}
                 <td class="col-date">${fmtDate(r.performed_date)}</td>
                 <td class="col-title">${esc(r.title)}</td>
                 <td class="col-artist">${esc(r.artist || '')}</td>
                 <td class="col-lmemo">${esc(r.memo || '')}</td>
                 <td class="col-clip">${r.clip_url ? `<a href="${esc(r.clip_url)}" class="link-btn clip" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">클립</a>` : ''}</td>
-            </tr>`).join('')}
+            </tr>`;
+        }).join('')}
         </tbody>
     </table>`;
 }
@@ -1282,8 +1389,8 @@ function renderStats() {
             <text x="${x+YBW/2}" y="${YCH-4}" text-anchor="middle" font-size="11" fill="#888">${y}</text>`;
     }).join('');
 
-    // ── SVG: 연도별 개별 월별 차트 ────────────────────
-    const PBW = 28, PGAP = 5, PCH = 110, PTOP = 18, PBOT = 16;
+    // ── SVG: 연도별 개별 월별 차트 (축소) ────────────────────
+    const PBW = 14, PGAP = 4, PCH = 70, PTOP = 12, PBOT = 12;
     const PAVH = PCH - PTOP - PBOT;
     const PSW = 12 * (PBW + PGAP) - PGAP;
     const maxMAll = Math.max(...actYrs.flatMap(y => MONTHS.map(m => ymCounts[y][m] || 0)), 1);
@@ -1294,8 +1401,8 @@ function renderStats() {
             const bx = mi * (PBW + PGAP);
             const by = PTOP + PAVH - bh;
             return `<rect x="${bx}" y="${by}" width="${PBW}" height="${bh}" fill="${YCLR[y]}" rx="3"/>
-                <text x="${bx+PBW/2}" y="${by-3}" text-anchor="middle" font-size="8" font-weight="700" fill="${YCLR[y]}">${v > 0 ? v : ''}</text>
-                <text x="${bx+PBW/2}" y="${PCH-2}" text-anchor="middle" font-size="9" fill="#999">${m}월</text>`;
+                <text x="${bx+PBW/2}" y="${by-2}" text-anchor="middle" font-size="7" font-weight="700" fill="${YCLR[y]}">${v > 0 ? v : ''}</text>
+                <text x="${bx+PBW/2}" y="${PCH-2}" text-anchor="middle" font-size="8" fill="#999">${m}월</text>`;
         }).join('');
         return `<div class="per-year-chart">
             <div class="per-year-label" style="color:${YCLR[y]}">${y}</div>
@@ -1304,7 +1411,7 @@ function renderStats() {
     }).join('');
 
     // ── SVG: 연도별 월별 그룹 바 차트 ────────────────────
-    const MB = 9, MBGAP = 1, MGGAP = 7, MCH = 150, MTR = 18, MBT = 20;
+    const MB = 9, MBGAP = 1, MGGAP = 7, MCH = 240, MTR = 36, MBT = 20;
     const MGW = actYrs.length * (MB + MBGAP) - MBGAP;
     const MSW = 12 * (MGW + MGGAP) - MGGAP + 6;
     const MAVH = MCH - MTR - MBT - 16;
@@ -1352,29 +1459,23 @@ function renderStats() {
         </div>`;
     }).join('');
 
+    const totalCount = Object.values(yearTotals).reduce((a, b) => a + b, 0);
+
     // ── 렌더 ─────────────────────────────────────
     panel.innerHTML = `<div class="stats-dashboard">
+        <div class="stats-total-badge">총 ${totalCount.toLocaleString()}곡</div>
 
         <div class="stats-top-row">
             <div class="stats-top-left">
                 <div class="stats-section">
                     <div class="stats-sec-title">연도별 라이브 노래 수</div>
                     <div class="svg-chart-wrap">
-                        <svg width="${YSW}" height="${YCH}" viewBox="0 0 ${YSW} ${YCH}">${yearBars}</svg>
+                        <svg width="100%" viewBox="0 0 ${YSW} ${YCH}" preserveAspectRatio="xMinYMid meet" style="display:block;max-height:${YCH*1.4}px">${yearBars}</svg>
                     </div>
                 </div>
                 <div class="stats-section">
                     <div class="stats-sec-title">연도별 월간 기록</div>
                     <div class="ym-table-wrap">${ymTable}</div>
-                </div>
-                <div class="stats-section">
-                    <div class="stats-sec-title">월별 통합</div>
-                    <div class="svg-chart-wrap">
-                        <svg width="100%" viewBox="0 0 ${MSW} ${MCH}" preserveAspectRatio="xMidYMid meet" style="display:block">
-                            <g transform="translate(2,2)">${mLeg}</g>
-                            ${mBars}
-                        </svg>
-                    </div>
                 </div>
             </div>
             <div class="stats-top-right">
@@ -1382,6 +1483,16 @@ function renderStats() {
                     <div class="stats-sec-title">월별 라이브 노래 수</div>
                     <div class="per-year-charts">${perYearCharts}</div>
                 </div>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <div class="stats-sec-title">월별 통합</div>
+            <div class="svg-chart-wrap" style="text-align:center">
+                <svg width="100%" viewBox="0 0 ${MSW} ${MCH}" preserveAspectRatio="xMidYMid meet" style="display:block;margin:0 auto;max-width:1100px">
+                    <g transform="translate(2,2)">${mLeg}</g>
+                    ${mBars}
+                </svg>
             </div>
         </div>
 
@@ -1463,6 +1574,7 @@ function setMainTab(tab) {
     document.getElementById('live-section').style.display     = isSong ? 'none' : '';
     document.getElementById('songbook-subtabs').style.display = isSong ? '' : 'none';
     document.getElementById('live-subtabs').style.display     = isSong ? 'none' : '';
+    document.getElementById('live-filter-btn').style.display  = isSong ? 'none' : '';
     document.getElementById('search-input').placeholder = isSong
         ? '노래책 전체 검색 (제목·가수·메모)...'
         : '라이브 기록 전체 검색 (제목·가수·메모)...';
@@ -1493,6 +1605,30 @@ function setLiveYear(year) {
         el.classList.toggle('active', String(year) === vals[i]));
     renderLive();
     updateFab();
+}
+
+// ── 라이브 필터 ──────────────────────────────────
+function toggleLiveFilter() {
+    const panel = document.getElementById('live-filter-panel');
+    const btn   = document.getElementById('live-filter-btn');
+    const open  = panel.style.display === 'none';
+    panel.style.display = open ? '' : 'none';
+    btn.classList.toggle('active', open);
+}
+
+function applyLiveFilter() {
+    S.liveFilter.years = new Set(
+        [...document.querySelectorAll('#lf-year-checks input:checked')].map(el => parseInt(el.value))
+    );
+    S.liveFilter.sort = document.querySelector('input[name="lf-sort"]:checked')?.value || 'date';
+    renderLive();
+}
+
+function setLiveSortDir(dir) {
+    S.liveFilter.dir = dir;
+    document.getElementById('lf-dir-asc').classList.toggle('active', dir === 'asc');
+    document.getElementById('lf-dir-desc').classList.toggle('active', dir === 'desc');
+    renderLive();
 }
 
 // ── 검색 ────────────────────────────────────────
@@ -1860,7 +1996,6 @@ function addLiveBulkRow(vals) {
     const artist= vals?.[3] ?? '';
     const memo  = vals?.[4] ?? '';
     const clip  = vals?.[5] ?? '';
-    const times = vals?.[6] ?? '';
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -1870,10 +2005,9 @@ function addLiveBulkRow(vals) {
         <td class="bt-title"><input class="blr-title" type="text" value="${esc(title)}" placeholder="제목"></td>
         <td class="bt-artist"><input class="blr-artist" type="text" value="${esc(artist)}" placeholder="가수"></td>
         <td class="bt-memo"><input class="blr-memo" type="text" value="${esc(memo)}" placeholder="메모"></td>
-        <td class="bt-clip"><input class="blr-clip" type="url" value="${esc(clip)}" placeholder="https://..."></td>
-        <td class="bt-times"><input class="blr-times" type="number" min="1" value="${esc(times)}" placeholder="1"></td>`;
+        <td class="bt-clip"><input class="blr-clip" type="url" value="${esc(clip)}" placeholder="https://..."></td>`;
 
-    const FIELDS_L = ['blr-year','blr-date','blr-title','blr-artist','blr-memo','blr-clip','blr-times'];
+    const FIELDS_L = ['blr-year','blr-date','blr-title','blr-artist','blr-memo','blr-clip'];
     tr.querySelectorAll('input').forEach((el, colIdx) => {
         el.addEventListener('paste', e => handleLiveBulkPaste(e, tr, colIdx));
     });
@@ -1891,7 +2025,7 @@ function handleLiveBulkPaste(e, startTr, startColIdx) {
     let allRows = [...tbody.querySelectorAll('tr')];
     let trIdx = allRows.indexOf(startTr);
 
-    const FIELDS_L = ['blr-year','blr-date','blr-title','blr-artist','blr-memo','blr-clip','blr-times'];
+    const FIELDS_L = ['blr-year','blr-date','blr-title','blr-artist','blr-memo','blr-clip'];
 
     for (let ri = 0; ri < rows.length; ri++) {
         const rowData = rows[ri];
@@ -1928,7 +2062,6 @@ async function saveLiveBulk() {
             artist:     tr.querySelector('.blr-artist').value.trim() || null,
             memo:       tr.querySelector('.blr-memo').value.trim() || null,
             clip_url:   tr.querySelector('.blr-clip').value.trim() || null,
-            times_sung: parseInt(tr.querySelector('.blr-times').value) || null,
         };
     }).filter(r => r.title && r.year);
 
@@ -1962,7 +2095,6 @@ function openLiveModal(id) {
     document.getElementById('lf-artist').value = r?.artist ?? '';
     document.getElementById('lf-memo').value   = r?.memo ?? '';
     document.getElementById('lf-clip').value   = r?.clip_url ?? '';
-    document.getElementById('lf-times').value  = r?.times_sung ?? '';
     document.getElementById('live-del-btn').style.display = r ? '' : 'none';
     document.getElementById('live-modal').classList.add('open');
 }
@@ -1985,7 +2117,6 @@ async function saveLiveRecord() {
         artist:         document.getElementById('lf-artist').value.trim() || null,
         memo:           document.getElementById('lf-memo').value.trim() || null,
         clip_url:       document.getElementById('lf-clip').value.trim() || null,
-        times_sung:     parseInt(document.getElementById('lf-times').value) || null,
     };
     await ensureDb();
     const { error } = id
