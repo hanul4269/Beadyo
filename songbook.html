@@ -176,6 +176,9 @@
             margin: 0 auto;
             padding: 4px 0 60px;
         }
+        .sb-body.stats-wide {
+            max-width: 1600px;
+        }
 
         /* 결과 카운트 */
         .result-info {
@@ -320,6 +323,8 @@
         /* ─── 통계 패널 ─── */
         .stats-panel {
             padding: 16px;
+            max-width: 1600px;
+            margin: 0 auto;
         }
         .stats-title {
             font-size: 14px;
@@ -392,6 +397,12 @@
         .mo-charts-row > div { flex: 1; min-width: 0; }
         .mo-chart-label { font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
         .search-section-title { font-size: 13px; font-weight: 700; color: var(--accent-dark); padding: 10px 12px 4px; letter-spacing: .03em; }
+        .stats-top-row { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 28px; flex-wrap: wrap; }
+        .stats-top-left { flex: 0 0 auto; min-width: 260px; }
+        .stats-top-right { flex: 1; min-width: 280px; }
+        .per-year-charts { display: flex; flex-direction: column; gap: 4px; }
+        .per-year-chart { display: flex; align-items: center; gap: 8px; }
+        .per-year-label { width: 36px; font-size: 12px; font-weight: 700; text-align: right; flex-shrink: 0; }
         .ym-table-wrap  { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .ym-table { border-collapse: collapse; font-size: 12px; min-width: 560px; }
         .ym-table th, .ym-table td {
@@ -1160,10 +1171,12 @@ async function renderLive() {
     if (year === 'stats') {
         document.getElementById('live-list').parentElement.style.display = 'none';
         document.getElementById('stats-panel').style.display = 'block';
+        document.querySelector('.sb-body').classList.add('stats-wide');
         await ensureStatsData();
         renderStats();
         return;
     }
+    document.querySelector('.sb-body').classList.remove('stats-wide');
 
     document.getElementById('live-list').parentElement.style.display = '';
     document.getElementById('stats-panel').style.display = 'none';
@@ -1225,6 +1238,7 @@ function renderStats() {
     if (!all.length) { panel.innerHTML = emptyHtml('데이터 없음'); return; }
 
     const YEARS  = [2022, 2023, 2024, 2025, 2026];
+    const CHART_YEARS = [2023, 2024, 2025, 2026];
     const MONTHS = [1,2,3,4,5,6,7,8,9,10,11,12];
     const YCLR   = { 2022:'#a8c8e8', 2023:'#e8a87c', 2024:'#e8d07c', 2025:'#8bc34a', 2026:'#e87ca8' };
     const YBG    = { 2022:'#eef5fb', 2023:'#fdf0e8', 2024:'#fdf8e8', 2025:'#f0fae4', 2026:'#fde8f0' };
@@ -1251,16 +1265,16 @@ function renderStats() {
 
     const topAll  = Object.values(songMap).sort((a,b) => b.count - a.count).slice(0, 30);
     const maxTop  = topAll[0]?.count || 1;
-    const actYrs  = YEARS.filter(y => yearTotals[y] > 0);
+    const actYrs  = CHART_YEARS.filter(y => yearTotals[y] > 0);
     const yearTop10 = {};
     YEARS.forEach(y => { yearTop10[y] = Object.values(yearSongMap[y]).sort((a,b) => b.count - a.count).slice(0, 10); });
 
     // ── SVG: 연도별 합계 바 차트 ──────────────────
-    const maxYr = Math.max(...YEARS.map(y => yearTotals[y]), 1);
+    const maxYr = Math.max(...CHART_YEARS.map(y => yearTotals[y]), 1);
     const YBW = 48, YGAP = 14, YCH = 160, YTOP = 24, YBOT = 22;
     const YAVH = YCH - YTOP - YBOT;
-    const YSW = YEARS.length * (YBW + YGAP) + YGAP;
-    const yearBars = YEARS.map((y, i) => {
+    const YSW = CHART_YEARS.length * (YBW + YGAP) + YGAP;
+    const yearBars = CHART_YEARS.map((y, i) => {
         const v = yearTotals[y], bh = v > 0 ? Math.max(3, Math.round(v / maxYr * YAVH)) : 0;
         const x = YGAP + i * (YBW + YGAP), by = YTOP + YAVH - bh;
         return `<rect x="${x}" y="${by}" width="${YBW}" height="${bh}" fill="${YCLR[y]}" rx="4"/>
@@ -1268,19 +1282,25 @@ function renderStats() {
             <text x="${x+YBW/2}" y="${YCH-4}" text-anchor="middle" font-size="11" fill="#888">${y}</text>`;
     }).join('');
 
-    // ── SVG: 월별 총합 바 차트 ────────────────────
-    const MB_SUM = 18, MGGAP_SUM = 6, MCH_SUM = 120, MBT_SUM = 18, MTR_SUM = 12;
-    const MSW_SUM = 12 * (MB_SUM + MGGAP_SUM) - MGGAP_SUM + 6;
-    const MAVH_SUM = MCH_SUM - MTR_SUM - MBT_SUM;
-    const moTotals = MONTHS.map(m => actYrs.reduce((acc, y) => acc + (ymCounts[y][m] || 0), 0));
-    const maxMoSum = Math.max(...moTotals, 1);
-    const mSumBars = MONTHS.map((m, mi) => {
-        const v = moTotals[mi];
-        const bh = v > 0 ? Math.max(2, Math.round(v / maxMoSum * MAVH_SUM)) : 0;
-        const bx = mi * (MB_SUM + MGGAP_SUM), by = MTR_SUM + MAVH_SUM - bh;
-        return `<rect x="${bx}" y="${by}" width="${MB_SUM}" height="${bh}" fill="#8bc34a" rx="3"/>
-            ${v > 0 ? `<text x="${bx + MB_SUM/2}" y="${by - 3}" text-anchor="middle" font-size="9" font-weight="700" fill="#4a6a30">${v}</text>` : ''}
-            <text x="${bx + MB_SUM/2}" y="${MCH_SUM - 2}" text-anchor="middle" font-size="9" fill="#999">${m}월</text>`;
+    // ── SVG: 연도별 개별 월별 차트 ────────────────────
+    const PBW = 28, PGAP = 5, PCH = 110, PTOP = 18, PBOT = 16;
+    const PAVH = PCH - PTOP - PBOT;
+    const PSW = 12 * (PBW + PGAP) - PGAP;
+    const maxMAll = Math.max(...actYrs.flatMap(y => MONTHS.map(m => ymCounts[y][m] || 0)), 1);
+    const perYearCharts = actYrs.map(y => {
+        const bars = MONTHS.map((m, mi) => {
+            const v = ymCounts[y][m] || 0;
+            const bh = v > 0 ? Math.max(2, Math.round(v / maxMAll * PAVH)) : 0;
+            const bx = mi * (PBW + PGAP);
+            const by = PTOP + PAVH - bh;
+            return `<rect x="${bx}" y="${by}" width="${PBW}" height="${bh}" fill="${YCLR[y]}" rx="3"/>
+                <text x="${bx+PBW/2}" y="${by-3}" text-anchor="middle" font-size="8" font-weight="700" fill="${YCLR[y]}">${v > 0 ? v : ''}</text>
+                <text x="${bx+PBW/2}" y="${PCH-2}" text-anchor="middle" font-size="9" fill="#999">${m}월</text>`;
+        }).join('');
+        return `<div class="per-year-chart">
+            <div class="per-year-label" style="color:${YCLR[y]}">${y}</div>
+            <svg width="100%" viewBox="0 0 ${PSW} ${PCH}" preserveAspectRatio="xMidYMid meet" style="display:block">${bars}</svg>
+        </div>`;
     }).join('');
 
     // ── SVG: 연도별 월별 그룹 바 차트 ────────────────────
@@ -1316,7 +1336,7 @@ function renderStats() {
     </table>`;
 
     // ── HTML: 연도별 TOP 10 카드 ───────────────────
-    const top10Cards = actYrs.map(y => {
+    const top10Cards = actYrs.filter(y => y >= 2023).map(y => {
         const songs = yearTop10[y]; if (!songs.length) return '';
         return `<div class="year-top-card" style="border-top:3px solid ${YCLR[y]}">
             <div class="year-top-head">${y}</div>
@@ -1335,24 +1355,20 @@ function renderStats() {
     // ── 렌더 ─────────────────────────────────────
     panel.innerHTML = `<div class="stats-dashboard">
 
-        <div class="stats-section">
-            <div class="stats-sec-title">연도별 라이브 노래 수</div>
-            <div class="svg-chart-wrap">
-                <svg width="${YSW}" height="${YCH}" viewBox="0 0 ${YSW} ${YCH}">${yearBars}</svg>
-            </div>
-        </div>
-
-        <div class="stats-section">
-            <div class="stats-sec-title">월별 라이브 노래 수</div>
-            <div class="mo-charts-row">
-                <div>
-                    <div class="mo-chart-label">전체 합계</div>
+        <div class="stats-top-row">
+            <div class="stats-top-left">
+                <div class="stats-section">
+                    <div class="stats-sec-title">연도별 라이브 노래 수</div>
                     <div class="svg-chart-wrap">
-                        <svg width="100%" viewBox="0 0 ${MSW_SUM} ${MCH_SUM}" preserveAspectRatio="xMidYMid meet" style="display:block"><g transform="translate(0,0)">${mSumBars}</g></svg>
+                        <svg width="${YSW}" height="${YCH}" viewBox="0 0 ${YSW} ${YCH}">${yearBars}</svg>
                     </div>
                 </div>
-                <div>
-                    <div class="mo-chart-label">연도별</div>
+                <div class="stats-section">
+                    <div class="stats-sec-title">연도별 월간 기록</div>
+                    <div class="ym-table-wrap">${ymTable}</div>
+                </div>
+                <div class="stats-section">
+                    <div class="stats-sec-title">월별 통합</div>
                     <div class="svg-chart-wrap">
                         <svg width="100%" viewBox="0 0 ${MSW} ${MCH}" preserveAspectRatio="xMidYMid meet" style="display:block">
                             <g transform="translate(2,2)">${mLeg}</g>
@@ -1361,11 +1377,12 @@ function renderStats() {
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="stats-section">
-            <div class="stats-sec-title">연도별 월간 기록</div>
-            <div class="ym-table-wrap">${ymTable}</div>
+            <div class="stats-top-right">
+                <div class="stats-section">
+                    <div class="stats-sec-title">월별 라이브 노래 수</div>
+                    <div class="per-year-charts">${perYearCharts}</div>
+                </div>
+            </div>
         </div>
 
         <div class="stats-section">
