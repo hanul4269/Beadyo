@@ -1167,10 +1167,11 @@ async function renderLive() {
     document.getElementById('live-list').parentElement.style.display = '';
     document.getElementById('stats-panel').style.display = 'none';
 
-    const key = year === 'all' ? 'all' : year;
+    // 검색 중이면 전체 연도 데이터 사용
+    const key = (S.query || year === 'all') ? 'all' : year;
     if (S.liveCache[key] === undefined) {
         renderSkeleton('live-list');
-        await loadLive(year);
+        await loadLive(key);
     }
 
     const raw = S.liveCache[key] || [];
@@ -1442,6 +1443,9 @@ function setMainTab(tab) {
     document.getElementById('live-section').style.display     = isSong ? 'none' : '';
     document.getElementById('songbook-subtabs').style.display = isSong ? '' : 'none';
     document.getElementById('live-subtabs').style.display     = isSong ? 'none' : '';
+    document.getElementById('search-input').placeholder = isSong
+        ? '노래책 전체 검색 (제목·가수·메모)...'
+        : '라이브 기록 전체 검색 (제목·가수·메모)...';
 
     if (isSong) {
         renderSongbook();
@@ -1475,22 +1479,17 @@ function setLiveYear(year) {
 function onSearch(val) {
     S.query = val.trim();
     document.getElementById('search-clear').classList.toggle('show', !!S.query);
-    if (S.query) {
-        // 전체 검색: 두 섹션 모두 표시
-        document.getElementById('songbook-section').style.display = '';
-        document.getElementById('live-section').style.display     = '';
-        document.getElementById('songbook-subtabs').style.display = '';
-        document.getElementById('live-subtabs').style.display     = '';
-        document.getElementById('songbook-section-title').style.display = '';
-        document.getElementById('live-section-title').style.display     = '';
-        renderSongbook(true);
-        if (S.liveYear === 'stats') S.liveYear = 2026;
-        renderLive();
+    document.getElementById('songbook-section-title').style.display = 'none';
+    document.getElementById('live-section-title').style.display     = 'none';
+
+    if (S.mainTab === 'songbook') {
+        // 노래책: 현재 서브탭 무시하고 전체 검색
+        if (S.query) renderSongbook(true);
+        else renderSongbook();
     } else {
-        // 검색 해제: 현재 탭만, 타이틀 숨기기
-        document.getElementById('songbook-section-title').style.display = 'none';
-        document.getElementById('live-section-title').style.display     = 'none';
-        setMainTab(S.mainTab);
+        // 라이브 기록: 연도 무시하고 전체 검색
+        if (S.query && S.liveYear === 'stats') S.liveYear = 2026;
+        renderLive();
     }
 }
 
@@ -1498,7 +1497,10 @@ function clearSearch() {
     document.getElementById('search-input').value = '';
     S.query = '';
     document.getElementById('search-clear').classList.remove('show');
-    setMainTab(S.mainTab);
+    document.getElementById('songbook-section-title').style.display = 'none';
+    document.getElementById('live-section-title').style.display     = 'none';
+    if (S.mainTab === 'songbook') renderSongbook();
+    else renderLive();
 }
 
 // ── 랜덤 뽑기 ────────────────────────────────────
