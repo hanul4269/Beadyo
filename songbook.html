@@ -108,11 +108,10 @@
             display: block; pointer-events: none;
         }
         #random-btn:hover { border-color: var(--accent); box-shadow: 0 2px 10px rgba(139,195,74,.4); }
-        #random-btn.spinning { animation: rb-spin .6s ease-in-out; }
+        #random-btn.spinning { animation: rb-spin .45s linear infinite; }
         @keyframes rb-spin {
-            0%   { transform: rotate(0deg)   scale(1); }
-            50%  { transform: rotate(360deg) scale(1.15); }
-            100% { transform: rotate(720deg) scale(1); }
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
         }
         #random-btn.hidden { display: none; }
 
@@ -243,47 +242,6 @@
             font-weight: 500;
         }
 
-        /* ─── 노래 행 (공통) ─── */
-        .song-list { }
-
-        .song-row {
-            display: grid;
-            align-items: center;
-            padding: 10px 16px;
-            gap: 0 10px;
-            border-bottom: 1px solid var(--border);
-            transition: background .12s;
-            min-height: 52px;
-        }
-        .song-row:hover { background: var(--row-hover); }
-        .song-row:last-child { border-bottom: none; }
-
-        .row-title {
-            font-size: 14px;
-            font-weight: 700;
-            line-height: 1.3;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .row-artist {
-            font-size: 12px;
-            color: var(--muted);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            margin-top: 2px;
-        }
-        .row-links { display: flex; gap: 5px; justify-content: flex-end; flex-wrap: nowrap; }
-        .row-col-link { display: flex; justify-content: center; }
-        .row-col-memo {
-            font-size: 11px;
-            color: var(--muted);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 120px;
-        }
         .link-btn {
             display: inline-block;
             padding: 4px 12px;
@@ -361,6 +319,7 @@
         .col-date   { width: 70px;  font-size: 15px; text-align: center; font-weight: 700; }
         .col-year   { width: 52px;  font-size: 13px; text-align: center; font-weight: 700; color: var(--muted); }
         .col-lmemo  { width: 180px; color: var(--muted); font-size: 12px; }
+        .col-cnt    { width: 48px;  text-align: center; font-weight: 700; color: var(--accent-dark); }
 
         /* 제목/가수/메모 줄바꿈 허용 */
         .song-table tbody td.col-title,
@@ -379,13 +338,6 @@
             padding: 16px;
             max-width: 1600px;
             margin: 0 auto;
-        }
-        .stats-title {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--muted);
-            letter-spacing: .04em;
         }
         .stat-row {
             display: flex;
@@ -450,26 +402,22 @@
             padding-bottom: 6px; border-bottom: 1.5px solid var(--border);
         }
         .svg-chart-wrap { width: 100%; }
-        .mo-charts-row { display: flex; gap: 24px; flex-wrap: wrap; }
-        .mo-charts-row > div { flex: 1; min-width: 0; }
-        .mo-chart-label { font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
-        .search-section-title { font-size: 13px; font-weight: 700; color: var(--accent-dark); padding: 10px 12px 4px; letter-spacing: .03em; }
         .stats-total-badge {
             display: inline-block; margin-bottom: 14px;
             padding: 6px 16px; border-radius: 20px;
             background: var(--accent-light); border: 1.5px solid var(--accent);
             font-size: 14px; font-weight: 700; color: var(--accent-dark);
         }
-        .per-year-charts { display: flex; flex-direction: column; gap: 8px; max-width: 640px; }
+        .per-year-charts { display: flex; flex-direction: column; gap: 8px; max-width: 520px; }
         .per-year-chart { display: flex; align-items: center; gap: 8px; }
-        .per-year-label { width: 36px; font-size: 12px; font-weight: 700; text-align: right; flex-shrink: 0; }
+        .per-year-label { width: 42px; font-size: 15px; font-weight: 700; text-align: right; flex-shrink: 0; }
         .ym-table-wrap  { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .ym-table { border-collapse: collapse; font-size: 11px; width: 100%; }
+        .ym-table { border-collapse: collapse; font-size: 12.5px; width: 100%; }
         .ym-table th, .ym-table td {
-            padding: 6px 4px; text-align: center;
+            padding: 7px 4px; text-align: center;
             border: 1px solid var(--border); white-space: nowrap;
         }
-        .ym-table thead th { background: #eaf2e0; color: #4a6a30; font-weight: 700; text-align: center; font-size: 10px; }
+        .ym-table thead th { background: #eaf2e0; color: #4a6a30; font-weight: 700; text-align: center; font-size: 11px; }
         .ym-table td.ym-year { font-weight: 700; text-align: center; padding: 6px 6px; }
         .ym-table td.ym-total { font-weight: 700; color: var(--accent-dark); background: #f0f7e4; }
         .ym-table td.ym-zero  { color: #ccc; }
@@ -501,15 +449,6 @@
             border-radius: 4px;
         }
         @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-        .sk-row {
-            display: flex; align-items: center; gap: 10px;
-            padding: 14px 16px; border-bottom: 1px solid var(--border);
-        }
-        .sk-num  { width: 24px; height: 12px; flex-shrink: 0; }
-        .sk-body { flex: 1; }
-        .sk-t1   { height: 13px; margin-bottom: 6px; }
-        .sk-t2   { height: 11px; width: 55%; }
-        .sk-right{ width: 60px; height: 12px; flex-shrink: 0; }
 
         /* ─── 랜덤 모달 ─── */
         .modal-overlay {
@@ -737,7 +676,6 @@
         .bt-memo  { width: 120px; }
         .bt-year  { width: 76px; }
         .bt-date  { width: 90px; }
-        .bt-times { width: 55px; }
         .bt-del-btn { background: none; border: none; color: #c0392b; font-size: 15px; cursor: pointer; padding: 2px 4px; border-radius: 4px; }
         .bt-del-btn:hover { background: #fde0e0; }
         .bulk-add-row-btn { margin-top: 8px; padding: 6px 14px; border: 1.5px dashed var(--accent); border-radius: 8px; background: none; color: var(--accent-dark); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
@@ -803,12 +741,12 @@
     <div class="sb-search-row" id="sb-search-row" style="display:none">
         <div class="search-wrap">
             <button id="random-btn" onclick="pickRandom()" title="랜덤 뽑기"><img src="random-face.png" alt="랜덤"></button>
+            <button id="live-filter-btn" class="live-filter-btn" onclick="toggleLiveFilter()" style="display:none">상세검색</button>
             <div class="search-input-wrap">
                 <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <input type="search" id="search-input" placeholder="제목 또는 가수 검색..." oninput="onSearch(this.value)" autocomplete="off">
                 <button class="search-clear" id="search-clear" onclick="clearSearch()">×</button>
             </div>
-            <button id="live-filter-btn" class="live-filter-btn" onclick="toggleLiveFilter()" style="display:none">상세검색</button>
         </div>
         <!-- 라이브 필터 패널 -->
         <div id="live-filter-panel" class="live-filter-panel" style="display:none">
@@ -844,7 +782,6 @@
 
     <!-- 노래책 섹션 -->
     <div id="songbook-section">
-        <div id="songbook-section-title" class="search-section-title" style="display:none">🎵 노래책</div>
         <div class="song-table-wrap">
             <div id="songbook-list"></div>
         </div>
@@ -852,7 +789,6 @@
 
     <!-- 라이브 섹션 -->
     <div id="live-section" style="display:none">
-        <div id="live-section-title" class="search-section-title" style="display:none">📋 라이브 기록</div>
         <div class="song-table-wrap">
             <div id="live-list"></div>
         </div>
@@ -1114,7 +1050,7 @@ async function loadLive(year) {
         const years = [2022, 2023, 2024, 2025, 2026];
         await Promise.all(years.map(y => loadLive(y)));
         S.liveCache['all'] = years.flatMap(y => S.liveCache[y] || [])
-            .sort((a, b) => (b.performed_date || '') < (a.performed_date || '') ? -1 : 1);
+            .sort((a, b) => (b.performed_date || '').localeCompare(a.performed_date || ''));
     } else {
         if (S.liveCache[year] === undefined) {
             S.liveCache[year] = await fetchAll(
@@ -1314,6 +1250,13 @@ async function renderLive() {
 
     updateResultInfo(items.length, raw.length);
 
+    // 당해 누적 횟수 맵 (연도+제목+가수 기준)
+    const countMap = {};
+    for (const r of raw) {
+        const k = `${r.year}|${(r.title||'').trim()}|${(r.artist||'').trim()}`;
+        countMap[k] = (countMap[k] || 0) + 1;
+    }
+
     const el = document.getElementById('live-list');
     if (!items.length) {
         el.innerHTML = emptyHtml(S.query ? `"${esc(S.query)}" 검색 결과가 없어요` : '기록된 곡이 없어요');
@@ -1321,6 +1264,7 @@ async function renderLive() {
     }
 
     const showYear = S.query || key === 'all';
+    const YCLR = { 2022:'#5b9bd5', 2023:'#d98841', 2024:'#c9a227', 2025:'#6aa121', 2026:'#d44f8c' };
     el.innerHTML = `
     <table class="song-table">
         <thead><tr>
@@ -1331,21 +1275,24 @@ async function renderLive() {
             <th class="col-artist">가수</th>
             <th class="col-lmemo">메모</th>
             <th class="col-clip th-center">클립</th>
+            <th class="col-cnt th-center">누적</th>
         </tr></thead>
         <tbody>
         ${items.map((r, i) => {
             const mo = r.performed_date ? r.performed_date.slice(0, 7) : '';
             const prevMo = i > 0 ? (items[i-1].performed_date ? items[i-1].performed_date.slice(0, 7) : '') : mo;
             const monthStart = i > 0 && mo !== prevMo;
+            const cnt = countMap[`${r.year}|${(r.title||'').trim()}|${(r.artist||'').trim()}`] || 1;
             return `
             <tr class="${S.session ? 'editable ' : ''}${monthStart ? 'month-start' : ''}"${S.session ? ` onclick="openLiveModal(${r.id})"` : ''}>
                 <td class="col-num">${i + 1}</td>
-                ${showYear ? `<td class="col-year">${r.year || ''}</td>` : ''}
+                ${showYear ? `<td class="col-year" style="color:${YCLR[r.year]||'var(--text)'}">${r.year || ''}</td>` : ''}
                 <td class="col-date">${fmtDate(r.performed_date)}</td>
                 <td class="col-title">${esc(r.title)}</td>
                 <td class="col-artist">${esc(r.artist || '')}</td>
                 <td class="col-lmemo">${esc(r.memo || '')}</td>
                 <td class="col-clip">${r.clip_url ? `<a href="${esc(r.clip_url)}" class="link-btn clip" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">클립</a>` : ''}</td>
+                <td class="col-cnt">${cnt}</td>
             </tr>`;
         }).join('')}
         </tbody>
@@ -1422,7 +1369,7 @@ function renderStats() {
             const by = PTOP + PAVH - bh;
             return `<rect x="${bx}" y="${by}" width="${PBW}" height="${bh}" fill="${YCLR[y]}" rx="3"/>
                 <text x="${bx+PBW/2}" y="${by-2}" text-anchor="middle" font-size="7" font-weight="700" fill="${YCLR[y]}">${v > 0 ? v : ''}</text>
-                <text x="${bx+PBW/2}" y="${PCH-2}" text-anchor="middle" font-size="8" fill="#999">${m}월</text>`;
+                <text x="${bx+PBW/2}" y="${PCH-2}" text-anchor="middle" font-size="6" fill="#999">${m}월</text>`;
         }).join('');
         return `<div class="per-year-chart">
             <div class="per-year-label" style="color:${YCLR[y]}">${y}</div>
@@ -1431,7 +1378,7 @@ function renderStats() {
     }).join('');
 
     // ── SVG: 연도별 월별 그룹 바 차트 ────────────────────
-    const MB = 9, MBGAP = 1, MGGAP = 7, MCH = 240, MTR = 36, MBT = 20;
+    const MB = 9, MBGAP = 1, MGGAP = 16, MCH = 240, MTR = 36, MBT = 20;
     const MGW = actYrs.length * (MB + MBGAP) - MBGAP;
     const MSW = 12 * (MGW + MGGAP) - MGGAP + 6;
     const MAVH = MCH - MTR - MBT - 16;
@@ -1463,7 +1410,7 @@ function renderStats() {
     </table>`;
 
     // ── HTML: 연도별 TOP 10 카드 ───────────────────
-    const top10Cards = actYrs.filter(y => y >= 2023).map(y => {
+    const top10Cards = actYrs.map(y => {
         const songs = yearTop10[y]; if (!songs.length) return '';
         return `<div class="year-top-card" style="border-top:3px solid ${YCLR[y]}">
             <div class="year-top-head">${y}</div>
@@ -1655,8 +1602,6 @@ function setLiveSortDir(dir) {
 function onSearch(val) {
     S.query = val.trim();
     document.getElementById('search-clear').classList.toggle('show', !!S.query);
-    document.getElementById('songbook-section-title').style.display = 'none';
-    document.getElementById('live-section-title').style.display     = 'none';
 
     if (S.mainTab === 'songbook') {
         // 노래책: 현재 서브탭 무시하고 전체 검색
@@ -1673,8 +1618,6 @@ function clearSearch() {
     document.getElementById('search-input').value = '';
     S.query = '';
     document.getElementById('search-clear').classList.remove('show');
-    document.getElementById('songbook-section-title').style.display = 'none';
-    document.getElementById('live-section-title').style.display     = 'none';
     if (S.mainTab === 'songbook') renderSongbook();
     else renderLive();
 }
@@ -1682,14 +1625,13 @@ function clearSearch() {
 // ── 랜덤 뽑기 ────────────────────────────────────
 let _shuffleTimer = null;
 function pickRandom() {
-    const pool = S.songbookData
-        ? S.songbookData.filter(s => S.songbookCat === 'all' || s.category === S.songbookCat)
-        : [];
+    // 장르 탭과 무관하게 전체 곡에서 뽑기
+    const pool = S.songbookData || [];
     if (!pool.length) { showToast('노래책 데이터를 먼저 불러오세요'); return; }
 
-    // 버튼 회전
+    // 버튼: 셔플 도는 동안 계속 회전
     const btn = document.getElementById('random-btn');
-    if (btn) { btn.classList.remove('spinning'); void btn.offsetWidth; btn.classList.add('spinning'); }
+    if (btn) btn.classList.add('spinning');
 
     const modal = document.getElementById('random-modal');
     const titleEl  = document.getElementById('r-title');
@@ -1705,9 +1647,9 @@ function pickRandom() {
     document.querySelector('#random-modal .modal').classList.add('shuffling');
     titleEl.classList.remove('r-revealed');
 
-    // 셔플 모션: 빠르게 노래 제목을 바꿔가며 점점 느려짐
+    // 셔플 모션: 빠르게 노래 제목을 바꿔가며 점점 느려짐 (~800ms)
     if (_shuffleTimer) clearTimeout(_shuffleTimer);
-    const delays = [50,50,50,60,60,70,80,90,110,140,180,230,300];
+    const delays = [40,40,50,55,65,80,100,140,200];
     let step = 0;
 
     function tick() {
@@ -1720,6 +1662,7 @@ function pickRandom() {
             step++;
         } else {
             // 최종 결과 표시
+            if (btn) btn.classList.remove('spinning');
             document.querySelector('#random-modal .modal').classList.remove('shuffling');
             titleEl.textContent  = final.title;
             artistEl.textContent = final.artist || '';
@@ -1741,6 +1684,8 @@ function pickRandom() {
 
 function closeRandom() {
     if (_shuffleTimer) { clearTimeout(_shuffleTimer); _shuffleTimer = null; }
+    const btn = document.getElementById('random-btn');
+    if (btn) btn.classList.remove('spinning');
     document.querySelector('#random-modal .modal').classList.remove('shuffling');
     document.getElementById('random-modal').classList.remove('open');
 }
@@ -1792,11 +1737,6 @@ window.addEventListener('message', (e) => {
     }
 });
 
-function openAddModal() {
-    if (S.mainTab === 'songbook') openSongModal(null);
-    else if (S.mainTab === 'live') openLiveModal(null);
-}
-
 function openFabMenu(e) {
     e.stopPropagation();
     const isSong = S.mainTab === 'songbook';
@@ -1818,13 +1758,17 @@ function openBulkModal() {
 }
 
 // 공통 분류 변경 시 비어있는 행에 일괄 적용
+// 공통 분류/연도 변경 시 비어있는 행에 일괄 적용
 document.addEventListener('change', e => {
     if (e.target.id === 'bulk-category') {
         const cat = e.target.value;
         document.querySelectorAll('#bulk-rows .bc-title').forEach(input => {
-            if (!input.value.trim()) {
-                input.closest('tr').querySelector('.bc-cat').value = cat;
-            }
+            if (!input.value.trim()) input.closest('tr').querySelector('.bc-cat').value = cat;
+        });
+    } else if (e.target.id === 'live-bulk-year') {
+        const yr = e.target.value;
+        document.querySelectorAll('#live-bulk-rows .blr-title').forEach(input => {
+            if (!input.value.trim()) input.closest('tr').querySelector('.blr-year').value = yr;
         });
     }
 });
@@ -1863,46 +1807,43 @@ function addBulkRow(vals) {
     document.getElementById('bulk-rows').appendChild(tr);
 }
 
-function handleBulkPaste(e, startTr, startColIdx) {
+// 엑셀 TSV 붙여넣기 공통 처리: 시작 칸부터 행·열을 채우고, 부족한 행은 자동 추가
+function handleTsvPaste(e, startTr, startColIdx, { tbodyId, fields, addRow, transform }) {
     const text = (e.clipboardData || window.clipboardData).getData('text');
     if (!text.includes('\t') && !text.includes('\n')) return; // 단일 값은 기본 붙여넣기
     e.preventDefault();
 
     const rows = text.split('\n').map(r => r.replace(/\r$/, '').split('\t'));
-    const tbody = document.getElementById('bulk-rows');
-    const allRows = [...tbody.querySelectorAll('tr')];
-    let trIdx = allRows.indexOf(startTr);
-
-    // 열 인덱스: del(0) cat(1) title(2) artist(3) mr(4) clip(5) skill(6) memo(7) → startColIdx는 input 순서
-    // input 순서: cat=0, title=1, artist=2, mr=3, clip=4, skill=5, memo=6
-    const FIELDS = ['bc-cat','bc-title','bc-artist','bc-mr','bc-clip','bc-skill','bc-memo'];
+    const tbody = document.getElementById(tbodyId);
+    const trIdx = [...tbody.querySelectorAll('tr')].indexOf(startTr);
 
     for (let ri = 0; ri < rows.length; ri++) {
         const rowData = rows[ri];
         if (rowData.length === 1 && rowData[0] === '') continue;
-
-        // 필요한 만큼 행 추가
-        while (trIdx + ri >= allRows.length) { addBulkRow(); allRows.push(tbody.querySelectorAll('tr')[allRows.length]); }
+        while (trIdx + ri >= tbody.querySelectorAll('tr').length) addRow();
         const targetTr = tbody.querySelectorAll('tr')[trIdx + ri];
-
         for (let ci = 0; ci < rowData.length; ci++) {
             const fieldIdx = startColIdx + ci;
-            if (fieldIdx >= FIELDS.length) break;
-            const el = targetTr.querySelector('.' + FIELDS[fieldIdx]);
-            if (!el) continue;
-            if (el.tagName === 'SELECT') {
-                const v = rowData[ci].trim();
-                if (FIELDS[fieldIdx] === 'bc-skill') {
-                    el.value = parseInt(v) || 0;
-                } else {
-                    const opt = [...el.options].find(o => o.value === v);
-                    if (opt) el.value = v;
-                }
-            } else {
-                el.value = rowData[ci];
-            }
+            if (fieldIdx >= fields.length) break;
+            const el = targetTr.querySelector('.' + fields[fieldIdx]);
+            if (el) transform(fields[fieldIdx], rowData[ci], el);
         }
     }
+}
+
+function handleBulkPaste(e, startTr, startColIdx) {
+    handleTsvPaste(e, startTr, startColIdx, {
+        tbodyId: 'bulk-rows',
+        fields: ['bc-cat','bc-title','bc-artist','bc-mr','bc-clip','bc-skill','bc-memo'],
+        addRow: addBulkRow,
+        transform: (field, raw, el) => {
+            if (el.tagName === 'SELECT') {
+                const v = raw.trim();
+                if (field === 'bc-skill') el.value = parseInt(v) || 0;
+                else { const opt = [...el.options].find(o => o.value === v); if (opt) el.value = v; }
+            } else el.value = raw;
+        },
+    });
 }
 
 async function saveBulk() {
@@ -2037,15 +1978,6 @@ function openLiveBulkModal() {
 
 function closeLiveBulkModal() { document.getElementById('live-bulk-modal').classList.remove('open'); }
 
-document.addEventListener('change', e => {
-    if (e.target.id === 'live-bulk-year') {
-        const yr = e.target.value;
-        document.querySelectorAll('#live-bulk-rows .blr-title').forEach(input => {
-            if (!input.value.trim()) input.closest('tr').querySelector('.blr-year').value = yr;
-        });
-    }
-});
-
 function addLiveBulkRow(vals) {
     const year  = vals?.[0] ?? document.getElementById('live-bulk-year').value;
     const date  = vals?.[1] ?? '';
@@ -2064,7 +1996,6 @@ function addLiveBulkRow(vals) {
         <td class="bt-memo"><input class="blr-memo" type="text" value="${esc(memo)}" placeholder="메모"></td>
         <td class="bt-clip"><input class="blr-clip" type="url" value="${esc(clip)}" placeholder="https://..."></td>`;
 
-    const FIELDS_L = ['blr-year','blr-date','blr-title','blr-artist','blr-memo','blr-clip'];
     tr.querySelectorAll('input').forEach((el, colIdx) => {
         el.addEventListener('paste', e => handleLiveBulkPaste(e, tr, colIdx));
     });
@@ -2073,35 +2004,17 @@ function addLiveBulkRow(vals) {
 }
 
 function handleLiveBulkPaste(e, startTr, startColIdx) {
-    const text = (e.clipboardData || window.clipboardData).getData('text');
-    if (!text.includes('\t') && !text.includes('\n')) return;
-    e.preventDefault();
-
-    const rows = text.split('\n').map(r => r.replace(/\r$/, '').split('\t'));
-    const tbody = document.getElementById('live-bulk-rows');
-    let allRows = [...tbody.querySelectorAll('tr')];
-    let trIdx = allRows.indexOf(startTr);
-
-    const FIELDS_L = ['blr-year','blr-date','blr-title','blr-artist','blr-memo','blr-clip'];
-
-    for (let ri = 0; ri < rows.length; ri++) {
-        const rowData = rows[ri];
-        if (rowData.length === 1 && rowData[0] === '') continue;
-
-        while (trIdx + ri >= allRows.length) { addLiveBulkRow(); allRows = [...tbody.querySelectorAll('tr')]; }
-        const targetTr = tbody.querySelectorAll('tr')[trIdx + ri];
-
-        for (let ci = 0; ci < rowData.length; ci++) {
-            const fieldIdx = startColIdx + ci;
-            if (fieldIdx >= FIELDS_L.length) break;
-            const el = targetTr.querySelector('.' + FIELDS_L[fieldIdx]);
-            if (!el) continue;
-            let v = rowData[ci].trim();
+    handleTsvPaste(e, startTr, startColIdx, {
+        tbodyId: 'live-bulk-rows',
+        fields: ['blr-year','blr-date','blr-title','blr-artist','blr-memo','blr-clip'],
+        addRow: addLiveBulkRow,
+        transform: (field, raw, el) => {
+            let v = raw.trim();
             // YYYY-MM-DD → MM-DD (날짜 칸에 붙여넣기 시)
-            if (FIELDS_L[fieldIdx] === 'blr-date' && /^\d{4}-\d{2}-\d{2}$/.test(v)) v = v.slice(5);
+            if (field === 'blr-date' && /^\d{4}-\d{2}-\d{2}$/.test(v)) v = v.slice(5);
             el.value = v;
-        }
-    }
+        },
+    });
 }
 
 async function saveLiveBulk() {
