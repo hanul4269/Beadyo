@@ -387,6 +387,10 @@
             padding-bottom: 6px; border-bottom: 1.5px solid var(--border);
         }
         .svg-chart-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .mo-charts-row { display: flex; gap: 24px; flex-wrap: wrap; }
+        .mo-charts-row > div { flex: 1; min-width: 0; }
+        .mo-chart-label { font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+        .search-section-title { font-size: 13px; font-weight: 700; color: var(--accent-dark); padding: 10px 12px 4px; letter-spacing: .03em; }
         .ym-table-wrap  { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .ym-table { border-collapse: collapse; font-size: 12px; min-width: 560px; }
         .ym-table th, .ym-table td {
@@ -573,6 +577,21 @@
         }
         #edit-fab:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(0,0,0,.28); }
         #edit-fab.show { display: flex; }
+        .fab-menu {
+            position: fixed; bottom: 88px; right: 24px;
+            display: flex; flex-direction: column; gap: 6px;
+            z-index: 201; opacity: 0; pointer-events: none;
+            transform: translateY(8px); transition: opacity .15s, transform .15s;
+        }
+        .fab-menu.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .fab-menu button {
+            padding: 10px 18px; border-radius: 20px; border: none;
+            background: var(--surface); color: var(--text);
+            font-family: inherit; font-size: 13px; font-weight: 700;
+            cursor: pointer; white-space: nowrap;
+            box-shadow: 0 2px 10px rgba(0,0,0,.15);
+        }
+        .fab-menu button:hover { background: var(--accent-light); color: var(--accent-dark); }
 
         /* ─── 편집 모달 ─── */
         .edit-modal {
@@ -614,6 +633,34 @@
         .btn-save-sm { padding: 8px 18px; border: none; border-radius: 8px; background: var(--accent); color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
         .btn-save-sm:hover { background: var(--accent-dark); }
         .btn-save-sm:disabled { opacity: .6; cursor: default; }
+
+        /* 일괄 추가 */
+        .bulk-top-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+        .bulk-cat-hint { font-size: 11px; color: var(--muted); }
+        .bulk-paste-hint { font-size: 11px; color: var(--muted); line-height: 1.6; background: var(--bg); border-radius: 8px; padding: 7px 10px; border: 1px solid var(--border); }
+        .bulk-table-wrap { overflow-x: auto; max-height: 360px; overflow-y: auto; border: 1.5px solid var(--border); border-radius: 8px; }
+        .bulk-table { border-collapse: collapse; width: 100%; min-width: 700px; font-size: 13px; }
+        .bulk-table thead th { background: #eaf2e0; padding: 7px 8px; font-size: 11px; font-weight: 700; color: #4a6a30; text-align: left; white-space: nowrap; border-bottom: 2px solid rgba(100,150,50,.2); position: sticky; top: 0; z-index: 1; }
+        .bulk-table tbody td { padding: 4px 4px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        .bulk-table tbody tr:last-child td { border-bottom: none; }
+        .bulk-table input, .bulk-table select { width: 100%; box-sizing: border-box; padding: 5px 7px; border: 1.5px solid transparent; border-radius: 6px; background: transparent; font-family: inherit; font-size: 13px; color: var(--text); }
+        .bulk-table input:focus, .bulk-table select:focus { border-color: var(--accent); background: var(--surface); outline: none; }
+        .bt-del   { width: 28px; }
+        .bt-cat   { width: 80px; }
+        .bt-title { min-width: 140px; }
+        .bt-artist{ width: 120px; }
+        .bt-mr    { width: 130px; }
+        .bt-clip  { width: 130px; }
+        .bt-skill { width: 72px; }
+        .bt-memo  { width: 120px; }
+        .bt-year  { width: 76px; }
+        .bt-date  { width: 90px; }
+        .bt-times { width: 55px; }
+        .bt-del-btn { background: none; border: none; color: #c0392b; font-size: 15px; cursor: pointer; padding: 2px 4px; border-radius: 4px; }
+        .bt-del-btn:hover { background: #fde0e0; }
+        .bulk-add-row-btn { margin-top: 8px; padding: 6px 14px; border: 1.5px dashed var(--accent); border-radius: 8px; background: none; color: var(--accent-dark); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+        .bulk-add-row-btn:hover { background: var(--accent-light); }
+        .bulk-status { font-size: 12px; color: var(--muted); flex: 1; }
 
         /* 숙련도 하트 피커 */
         .skill-picker { display: flex; gap: 6px; padding: 4px 0; }
@@ -689,6 +736,7 @@
 
     <!-- 노래책 섹션 -->
     <div id="songbook-section">
+        <div id="songbook-section-title" class="search-section-title" style="display:none">🎵 노래책</div>
         <div class="song-table-wrap">
             <div id="songbook-list"></div>
         </div>
@@ -696,6 +744,7 @@
 
     <!-- 라이브 섹션 -->
     <div id="live-section" style="display:none">
+        <div id="live-section-title" class="search-section-title" style="display:none">📋 라이브 기록</div>
         <div class="song-table-wrap">
             <div id="live-list"></div>
         </div>
@@ -721,7 +770,13 @@
 
 <div id="toast" class="toast"></div>
 
-<button id="edit-fab" onclick="openAddModal()">+</button>
+<button id="edit-fab" onclick="openFabMenu(event)">+</button>
+<div id="fab-menu" class="fab-menu">
+    <button class="fab-menu-song" onclick="closeFabMenu(); openSongModal(null)">한 곡 추가</button>
+    <button class="fab-menu-song" onclick="closeFabMenu(); openBulkModal()">여러 곡 추가</button>
+    <button class="fab-menu-live" onclick="closeFabMenu(); openLiveModal(null)">한 곡 추가</button>
+    <button class="fab-menu-live" onclick="closeFabMenu(); openLiveBulkModal()">여러 곡 추가</button>
+</div>
 
 <!-- ══════════════ 노래책 편집 모달 ══════════════ -->
 <div id="song-modal" class="modal-overlay" onclick="if(event.target===this)closeSongModal()">
@@ -762,6 +817,50 @@
     </div>
 </div>
 
+<!-- ══════════════ 노래 일괄 추가 모달 ══════════════ -->
+<div id="bulk-modal" class="modal-overlay" onclick="if(event.target===this)closeBulkModal()">
+    <div class="modal edit-modal" style="max-width:820px;width:96vw">
+        <div class="emod-header">
+            <span>노래 여러 개 추가</span>
+            <button class="emod-close" onclick="closeBulkModal()">✕</button>
+        </div>
+        <div class="emod-body" style="padding:12px 14px">
+            <div class="bulk-top-row">
+                <div class="ef-row" style="margin:0;display:flex;align-items:center;gap:8px">
+                    <label style="white-space:nowrap">공통 분류</label>
+                    <select id="bulk-category">
+                        <option>KPOP</option><option>POP</option><option>JPOP</option>
+                        <option>ETC</option><option>애교송</option><option>오리지널</option>
+                    </select>
+                    <span class="bulk-cat-hint">※ 행별 분류 칸을 바꾸면 개별 적용</span>
+                </div>
+                <div class="bulk-paste-hint">💡 엑셀에서 복사한 셀을 아무 칸에나 붙여넣기 하면 자동 채워집니다<br>열 순서: 제목 · 가수 · MR URL · 클립 URL · 숙련도(0-5) · 메모</div>
+            </div>
+            <div class="bulk-table-wrap">
+                <table class="bulk-table" id="bulk-table">
+                    <thead><tr>
+                        <th class="bt-del"></th>
+                        <th class="bt-cat">분류</th>
+                        <th class="bt-title">제목 *</th>
+                        <th class="bt-artist">가수</th>
+                        <th class="bt-mr">MR URL</th>
+                        <th class="bt-clip">클립 URL</th>
+                        <th class="bt-skill">숙련도</th>
+                        <th class="bt-memo">메모</th>
+                    </tr></thead>
+                    <tbody id="bulk-rows"></tbody>
+                </table>
+            </div>
+            <button class="bulk-add-row-btn" onclick="addBulkRow()">+ 행 추가</button>
+        </div>
+        <div class="emod-footer">
+            <span id="bulk-status" class="bulk-status"></span>
+            <button class="btn-cancel-sm" onclick="closeBulkModal()">취소</button>
+            <button class="btn-save-sm" id="bulk-save-btn" onclick="saveBulk()">추가</button>
+        </div>
+    </div>
+</div>
+
 <!-- ══════════════ 라이브 기록 편집 모달 ══════════════ -->
 <div id="live-modal" class="modal-overlay" onclick="if(event.target===this)closeLiveModal()">
     <div class="modal edit-modal">
@@ -783,6 +882,47 @@
             <button class="btn-del" id="live-del-btn" onclick="deleteLiveRecord()" style="display:none">삭제</button>
             <button class="btn-cancel-sm" onclick="closeLiveModal()">취소</button>
             <button class="btn-save-sm" id="live-save-btn" onclick="saveLiveRecord()">저장</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════ 라이브 기록 일괄 추가 모달 ══════════════ -->
+<div id="live-bulk-modal" class="modal-overlay" onclick="if(event.target===this)closeLiveBulkModal()">
+    <div class="modal edit-modal" style="max-width:760px;width:96vw">
+        <div class="emod-header">
+            <span>라이브 기록 여러 개 추가</span>
+            <button class="emod-close" onclick="closeLiveBulkModal()">✕</button>
+        </div>
+        <div class="emod-body" style="padding:12px 14px">
+            <div class="bulk-top-row">
+                <div class="ef-row" style="margin:0;display:flex;align-items:center;gap:8px">
+                    <label style="white-space:nowrap">공통 연도</label>
+                    <input type="number" id="live-bulk-year" min="2022" max="2035" style="width:80px;padding:5px 8px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;background:var(--bg);color:var(--text)">
+                    <span class="bulk-cat-hint">※ 행별 연도 칸을 바꾸면 개별 적용</span>
+                </div>
+                <div class="bulk-paste-hint">💡 엑셀에서 복사한 셀을 아무 칸에나 붙여넣기 하면 자동 채워집니다<br>열 순서: 날짜(MM-DD) · 제목 · 가수 · 메모 · 클립 URL · 부른 횟수</div>
+            </div>
+            <div class="bulk-table-wrap">
+                <table class="bulk-table" id="live-bulk-table">
+                    <thead><tr>
+                        <th class="bt-del"></th>
+                        <th class="bt-year">연도</th>
+                        <th class="bt-date">날짜</th>
+                        <th class="bt-title">제목 *</th>
+                        <th class="bt-artist">가수</th>
+                        <th class="bt-memo">메모</th>
+                        <th class="bt-clip">클립 URL</th>
+                        <th class="bt-times">횟수</th>
+                    </tr></thead>
+                    <tbody id="live-bulk-rows"></tbody>
+                </table>
+            </div>
+            <button class="bulk-add-row-btn" onclick="addLiveBulkRow()">+ 행 추가</button>
+        </div>
+        <div class="emod-footer">
+            <span id="live-bulk-status" class="bulk-status"></span>
+            <button class="btn-cancel-sm" onclick="closeLiveBulkModal()">취소</button>
+            <button class="btn-save-sm" id="live-bulk-save-btn" onclick="saveLiveBulk()">추가</button>
         </div>
     </div>
 </div>
@@ -898,8 +1038,8 @@ function matchQ(target, q) {
     }
     return false;
 }
-function matches(title, artist, q) {
-    return matchQ(title || '', q) || matchQ(artist || '', q);
+function matches(title, artist, q, memo) {
+    return matchQ(title || '', q) || matchQ(artist || '', q) || matchQ(memo || '', q);
 }
 
 // ── 유틸 ─────────────────────────────────────────
@@ -960,8 +1100,8 @@ function renderWelcomeCard() {
 }
 
 // ── 렌더: 노래책 ────────────────────────────────
-function renderSongbook() {
-    if (S.songbookCat === 'welcome') { renderWelcomeCard(); return; }
+function renderSongbook(forceAll) {
+    if (!forceAll && S.songbookCat === 'welcome') { renderWelcomeCard(); return; }
 
     document.getElementById('sb-search-row').style.display = '';
     document.getElementById('random-btn').classList.remove('hidden');
@@ -970,10 +1110,10 @@ function renderSongbook() {
     const el = document.getElementById('songbook-list');
     if (!S.songbookData) { renderSkeleton('songbook-list'); return; }
 
-    const isAll = S.songbookCat === 'all';
+    const isAll = forceAll || S.songbookCat === 'all';
     const items = S.songbookData.filter(s =>
         (isAll || s.category === S.songbookCat) &&
-        (!S.query || matches(s.title, s.artist, S.query))
+        (!S.query || matches(s.title, s.artist, S.query, s.memo))
     );
 
     updateResultInfo(items.length, S.songbookData.filter(s => isAll || s.category === S.songbookCat).length);
@@ -1034,7 +1174,7 @@ async function renderLive() {
     }
 
     const raw = S.liveCache[key] || [];
-    const items = S.query ? raw.filter(r => matches(r.title, r.artist, S.query)) : raw;
+    const items = S.query ? raw.filter(r => matches(r.title, r.artist, S.query, r.memo)) : raw;
 
     updateResultInfo(items.length, raw.length);
 
@@ -1108,26 +1248,42 @@ function renderStats() {
     const topAll  = Object.values(songMap).sort((a,b) => b.count - a.count).slice(0, 30);
     const maxTop  = topAll[0]?.count || 1;
     const actYrs  = YEARS.filter(y => yearTotals[y] > 0);
-    const yearTop5 = {};
-    YEARS.forEach(y => { yearTop5[y] = Object.values(yearSongMap[y]).sort((a,b) => b.count - a.count).slice(0, 5); });
+    const yearTop10 = {};
+    YEARS.forEach(y => { yearTop10[y] = Object.values(yearSongMap[y]).sort((a,b) => b.count - a.count).slice(0, 10); });
 
     // ── SVG: 연도별 합계 바 차트 ──────────────────
     const maxYr = Math.max(...YEARS.map(y => yearTotals[y]), 1);
-    const YBW = 48, YGAP = 14, YCH = 100, YAVH = YCH - 28;
+    const YBW = 48, YGAP = 14, YCH = 160, YTOP = 24, YBOT = 22;
+    const YAVH = YCH - YTOP - YBOT;
     const YSW = YEARS.length * (YBW + YGAP) + YGAP;
     const yearBars = YEARS.map((y, i) => {
         const v = yearTotals[y], bh = v > 0 ? Math.max(3, Math.round(v / maxYr * YAVH)) : 0;
-        const x = YGAP + i * (YBW + YGAP), by = YAVH - bh + 2;
+        const x = YGAP + i * (YBW + YGAP), by = YTOP + YAVH - bh;
         return `<rect x="${x}" y="${by}" width="${YBW}" height="${bh}" fill="${YCLR[y]}" rx="4"/>
-            ${v > 0 ? `<text x="${x+YBW/2}" y="${by-4}" text-anchor="middle" font-size="11" font-weight="700" fill="#4a6a30">${v}</text>` : ''}
-            <text x="${x+YBW/2}" y="${YCH-2}" text-anchor="middle" font-size="11" fill="#888">${y}</text>`;
+            ${v > 0 ? `<text x="${x+YBW/2}" y="${by-5}" text-anchor="middle" font-size="12" font-weight="700" fill="#4a6a30">${v}</text>` : ''}
+            <text x="${x+YBW/2}" y="${YCH-4}" text-anchor="middle" font-size="11" fill="#888">${y}</text>`;
     }).join('');
 
-    // ── SVG: 월별 그룹 바 차트 ────────────────────
-    const MB = 9, MBGAP = 1, MGGAP = 7, MCH = 130, MTR = 18, MBT = 20;
+    // ── SVG: 월별 총합 바 차트 ────────────────────
+    const MB_SUM = 18, MGGAP_SUM = 6, MCH_SUM = 120, MBT_SUM = 18, MTR_SUM = 12;
+    const MSW_SUM = 12 * (MB_SUM + MGGAP_SUM) - MGGAP_SUM + 6;
+    const MAVH_SUM = MCH_SUM - MTR_SUM - MBT_SUM;
+    const moTotals = MONTHS.map(m => actYrs.reduce((acc, y) => acc + (ymCounts[y][m] || 0), 0));
+    const maxMoSum = Math.max(...moTotals, 1);
+    const mSumBars = MONTHS.map((m, mi) => {
+        const v = moTotals[mi];
+        const bh = v > 0 ? Math.max(2, Math.round(v / maxMoSum * MAVH_SUM)) : 0;
+        const bx = mi * (MB_SUM + MGGAP_SUM), by = MTR_SUM + MAVH_SUM - bh;
+        return `<rect x="${bx}" y="${by}" width="${MB_SUM}" height="${bh}" fill="#8bc34a" rx="3"/>
+            ${v > 0 ? `<text x="${bx + MB_SUM/2}" y="${by - 3}" text-anchor="middle" font-size="9" font-weight="700" fill="#4a6a30">${v}</text>` : ''}
+            <text x="${bx + MB_SUM/2}" y="${MCH_SUM - 2}" text-anchor="middle" font-size="9" fill="#999">${m}월</text>`;
+    }).join('');
+
+    // ── SVG: 연도별 월별 그룹 바 차트 ────────────────────
+    const MB = 9, MBGAP = 1, MGGAP = 7, MCH = 150, MTR = 18, MBT = 20;
     const MGW = actYrs.length * (MB + MBGAP) - MBGAP;
     const MSW = 12 * (MGW + MGGAP) - MGGAP + 6;
-    const MAVH = MCH - MTR - MBT;
+    const MAVH = MCH - MTR - MBT - 16;
     const maxMo = Math.max(...actYrs.flatMap(y => MONTHS.map(m => ymCounts[y][m] || 0)), 1);
     const mLeg  = actYrs.map((y, i) => `<rect x="${i*46}" y="1" width="9" height="9" fill="${YCLR[y]}" rx="2"/>
         <text x="${i*46+13}" y="10" font-size="9" fill="#666">${y}</text>`).join('');
@@ -1137,9 +1293,10 @@ function renderStats() {
             ...actYrs.map((y, yi) => {
                 const v = ymCounts[y][m] || 0, bh = v > 0 ? Math.max(2, Math.round(v / maxMo * MAVH)) : 0;
                 const bx = gx + yi * (MB + MBGAP), by = MTR + MAVH - bh;
-                return `<rect x="${bx}" y="${by}" width="${MB}" height="${bh}" fill="${YCLR[y]}" rx="2"/>`;
+                return `<rect x="${bx}" y="${by}" width="${MB}" height="${bh}" fill="${YCLR[y]}" rx="2"/>
+                    ${v > 0 ? `<text x="${bx + MB/2}" y="${by - 2}" text-anchor="middle" font-size="7" fill="${YCLR[y]}" font-weight="700">${v}</text>` : ''}`;
             }),
-            `<text x="${gx + MGW/2}" y="${MCH-2}" text-anchor="middle" font-size="9" fill="#999">${m}월</text>`
+            `<text x="${gx + MGW/2}" y="${MTR + MAVH + 14}" text-anchor="middle" font-size="9" fill="#999">${m}월</text>`
         ];
     }).join('');
 
@@ -1154,9 +1311,9 @@ function renderStats() {
         </tr>`).join('')}</tbody>
     </table>`;
 
-    // ── HTML: 연도별 TOP 5 카드 ───────────────────
-    const top5Cards = actYrs.map(y => {
-        const songs = yearTop5[y]; if (!songs.length) return '';
+    // ── HTML: 연도별 TOP 10 카드 ───────────────────
+    const top10Cards = actYrs.map(y => {
+        const songs = yearTop10[y]; if (!songs.length) return '';
         return `<div class="year-top-card" style="border-top:3px solid ${YCLR[y]}">
             <div class="year-top-head">${y}</div>
             ${songs.map((s,i) => `
@@ -1183,11 +1340,22 @@ function renderStats() {
 
         <div class="stats-section">
             <div class="stats-sec-title">월별 라이브 노래 수</div>
-            <div class="svg-chart-wrap">
-                <svg width="${MSW}" height="${MCH}" viewBox="0 0 ${MSW} ${MCH}">
-                    <g transform="translate(2,2)">${mLeg}</g>
-                    <g transform="translate(0,16)">${mBars}</g>
-                </svg>
+            <div class="mo-charts-row">
+                <div>
+                    <div class="mo-chart-label">전체 합계</div>
+                    <div class="svg-chart-wrap">
+                        <svg width="${MSW_SUM}" height="${MCH_SUM}" viewBox="0 0 ${MSW_SUM} ${MCH_SUM}"><g transform="translate(0,0)">${mSumBars}</g></svg>
+                    </div>
+                </div>
+                <div>
+                    <div class="mo-chart-label">연도별</div>
+                    <div class="svg-chart-wrap">
+                        <svg width="${MSW}" height="${MCH}" viewBox="0 0 ${MSW} ${MCH}">
+                            <g transform="translate(2,2)">${mLeg}</g>
+                            ${mBars}
+                        </svg>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1197,8 +1365,8 @@ function renderStats() {
         </div>
 
         <div class="stats-section">
-            <div class="stats-sec-title">연도별 많이 부른 곡 TOP 5</div>
-            <div class="year-tops-grid">${top5Cards}</div>
+            <div class="stats-sec-title">연도별 많이 부른 곡 TOP 10</div>
+            <div class="year-tops-grid">${top10Cards}</div>
         </div>
 
         <div class="stats-section">
@@ -1307,16 +1475,30 @@ function setLiveYear(year) {
 function onSearch(val) {
     S.query = val.trim();
     document.getElementById('search-clear').classList.toggle('show', !!S.query);
-    if (S.mainTab === 'songbook') renderSongbook();
-    else renderLive();
+    if (S.query) {
+        // 전체 검색: 두 섹션 모두 표시
+        document.getElementById('songbook-section').style.display = '';
+        document.getElementById('live-section').style.display     = '';
+        document.getElementById('songbook-subtabs').style.display = '';
+        document.getElementById('live-subtabs').style.display     = '';
+        document.getElementById('songbook-section-title').style.display = '';
+        document.getElementById('live-section-title').style.display     = '';
+        renderSongbook(true);
+        if (S.liveYear === 'stats') S.liveYear = 2026;
+        renderLive();
+    } else {
+        // 검색 해제: 현재 탭만, 타이틀 숨기기
+        document.getElementById('songbook-section-title').style.display = 'none';
+        document.getElementById('live-section-title').style.display     = 'none';
+        setMainTab(S.mainTab);
+    }
 }
 
 function clearSearch() {
     document.getElementById('search-input').value = '';
     S.query = '';
     document.getElementById('search-clear').classList.remove('show');
-    if (S.mainTab === 'songbook') renderSongbook();
-    else renderLive();
+    setMainTab(S.mainTab);
 }
 
 // ── 랜덤 뽑기 ────────────────────────────────────
@@ -1398,6 +1580,142 @@ window.addEventListener('message', (e) => {
 function openAddModal() {
     if (S.mainTab === 'songbook') openSongModal(null);
     else if (S.mainTab === 'live') openLiveModal(null);
+}
+
+function openFabMenu(e) {
+    e.stopPropagation();
+    const isSong = S.mainTab === 'songbook';
+    document.querySelectorAll('.fab-menu-song').forEach(el => el.style.display = isSong ? '' : 'none');
+    document.querySelectorAll('.fab-menu-live').forEach(el => el.style.display = isSong ? 'none' : '');
+    document.getElementById('fab-menu').classList.toggle('open');
+}
+function closeFabMenu() { document.getElementById('fab-menu').classList.remove('open'); }
+document.addEventListener('click', closeFabMenu);
+
+function openBulkModal() {
+    if (!S.session) return;
+    document.getElementById('bulk-rows').innerHTML = '';
+    document.getElementById('bulk-status').textContent = '';
+    document.getElementById('bulk-save-btn').disabled = false;
+    document.getElementById('bulk-save-btn').textContent = '추가';
+    addBulkRow(); addBulkRow(); addBulkRow();
+    document.getElementById('bulk-modal').classList.add('open');
+}
+
+// 공통 분류 변경 시 비어있는 행에 일괄 적용
+document.addEventListener('change', e => {
+    if (e.target.id === 'bulk-category') {
+        const cat = e.target.value;
+        document.querySelectorAll('#bulk-rows .bc-title').forEach(input => {
+            if (!input.value.trim()) {
+                input.closest('tr').querySelector('.bc-cat').value = cat;
+            }
+        });
+    }
+});
+
+function closeBulkModal() { document.getElementById('bulk-modal').classList.remove('open'); }
+
+const BULK_CATS = ['KPOP','POP','JPOP','ETC','애교송','오리지널'];
+
+function addBulkRow(vals) {
+    const cat     = vals?.[0] ?? document.getElementById('bulk-category').value;
+    const title   = vals?.[1] ?? '';
+    const artist  = vals?.[2] ?? '';
+    const mr      = vals?.[3] ?? '';
+    const clip    = vals?.[4] ?? '';
+    const skill   = parseInt(vals?.[5]) || 0;
+    const memo    = vals?.[6] ?? '';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td class="bt-del"><button class="bt-del-btn" onclick="this.closest('tr').remove()" title="삭제">✕</button></td>
+        <td class="bt-cat"><select class="bc-cat">${BULK_CATS.map(c=>`<option${c===cat?' selected':''}>${c}</option>`).join('')}</select></td>
+        <td class="bt-title"><input class="bc-title" type="text" value="${esc(title)}" placeholder="제목"></td>
+        <td class="bt-artist"><input class="bc-artist" type="text" value="${esc(artist)}" placeholder="가수"></td>
+        <td class="bt-mr"><input class="bc-mr" type="url" value="${esc(mr)}" placeholder="https://..."></td>
+        <td class="bt-clip"><input class="bc-clip" type="url" value="${esc(clip)}" placeholder="https://..."></td>
+        <td class="bt-skill"><select class="bc-skill">
+            ${[0,1,2,3,4,5].map(v=>`<option value="${v}"${v===skill?' selected':''}>${'💚'.repeat(v)}${'🤍'.repeat(5-v)}</option>`).join('')}
+        </select></td>
+        <td class="bt-memo"><input class="bc-memo" type="text" value="${esc(memo)}" placeholder="메모"></td>`;
+
+    // 붙여넣기 핸들러 (엑셀 TSV)
+    tr.querySelectorAll('input, select').forEach((el, colIdx) => {
+        el.addEventListener('paste', e => handleBulkPaste(e, tr, colIdx));
+    });
+
+    document.getElementById('bulk-rows').appendChild(tr);
+}
+
+function handleBulkPaste(e, startTr, startColIdx) {
+    const text = (e.clipboardData || window.clipboardData).getData('text');
+    if (!text.includes('\t') && !text.includes('\n')) return; // 단일 값은 기본 붙여넣기
+    e.preventDefault();
+
+    const rows = text.split('\n').map(r => r.replace(/\r$/, '').split('\t'));
+    const tbody = document.getElementById('bulk-rows');
+    const allRows = [...tbody.querySelectorAll('tr')];
+    let trIdx = allRows.indexOf(startTr);
+
+    // 열 인덱스: del(0) cat(1) title(2) artist(3) mr(4) clip(5) skill(6) memo(7) → startColIdx는 input 순서
+    // input 순서: cat=0, title=1, artist=2, mr=3, clip=4, skill=5, memo=6
+    const FIELDS = ['bc-cat','bc-title','bc-artist','bc-mr','bc-clip','bc-skill','bc-memo'];
+
+    for (let ri = 0; ri < rows.length; ri++) {
+        const rowData = rows[ri];
+        if (rowData.length === 1 && rowData[0] === '') continue;
+
+        // 필요한 만큼 행 추가
+        while (trIdx + ri >= allRows.length) { addBulkRow(); allRows.push(tbody.querySelectorAll('tr')[allRows.length]); }
+        const targetTr = tbody.querySelectorAll('tr')[trIdx + ri];
+
+        for (let ci = 0; ci < rowData.length; ci++) {
+            const fieldIdx = startColIdx + ci;
+            if (fieldIdx >= FIELDS.length) break;
+            const el = targetTr.querySelector('.' + FIELDS[fieldIdx]);
+            if (!el) continue;
+            if (el.tagName === 'SELECT') {
+                const v = rowData[ci].trim();
+                if (FIELDS[fieldIdx] === 'bc-skill') {
+                    el.value = parseInt(v) || 0;
+                } else {
+                    const opt = [...el.options].find(o => o.value === v);
+                    if (opt) el.value = v;
+                }
+            } else {
+                el.value = rowData[ci];
+            }
+        }
+    }
+}
+
+async function saveBulk() {
+    const rows = [...document.getElementById('bulk-rows').querySelectorAll('tr')];
+    const records = rows.map(tr => ({
+        category:    tr.querySelector('.bc-cat').value,
+        title:       tr.querySelector('.bc-title').value.trim(),
+        artist:      tr.querySelector('.bc-artist').value.trim() || null,
+        mr_url:      tr.querySelector('.bc-mr').value.trim() || null,
+        clip_url:    tr.querySelector('.bc-clip').value.trim() || null,
+        skill_level: parseInt(tr.querySelector('.bc-skill').value) || 0,
+        memo:        tr.querySelector('.bc-memo').value.trim() || null,
+    })).filter(r => r.title);
+
+    if (!records.length) { showToast('제목을 하나 이상 입력해주세요'); return; }
+
+    const btn = document.getElementById('bulk-save-btn');
+    btn.disabled = true; btn.textContent = '저장 중...';
+
+    await ensureDb();
+    const { error } = await db.from('songbook').insert(records);
+    btn.disabled = false; btn.textContent = '추가';
+
+    if (error) { showToast('저장 실패: ' + error.message); return; }
+    showToast(`${records.length}곡 추가 완료 ✓`);
+    closeBulkModal();
+    S.songbookData = null;
+    await loadSongbook();
 }
 
 // ── 노래책 CRUD ──────────────────────────────────
@@ -1487,6 +1805,126 @@ async function deleteSong() {
     S.songbookData = null;
     await loadSongbook();
     if (S.songbookCat === 'welcome') renderWelcomeCard();
+}
+
+// ── 라이브 기록 일괄 추가 ────────────────────────
+function openLiveBulkModal() {
+    if (!S.session) return;
+    document.getElementById('live-bulk-rows').innerHTML = '';
+    document.getElementById('live-bulk-status').textContent = '';
+    document.getElementById('live-bulk-save-btn').disabled = false;
+    document.getElementById('live-bulk-save-btn').textContent = '추가';
+    const curYear = typeof S.liveYear === 'number' ? S.liveYear : new Date().getFullYear();
+    document.getElementById('live-bulk-year').value = curYear;
+    addLiveBulkRow(); addLiveBulkRow(); addLiveBulkRow();
+    document.getElementById('live-bulk-modal').classList.add('open');
+}
+
+function closeLiveBulkModal() { document.getElementById('live-bulk-modal').classList.remove('open'); }
+
+document.addEventListener('change', e => {
+    if (e.target.id === 'live-bulk-year') {
+        const yr = e.target.value;
+        document.querySelectorAll('#live-bulk-rows .blr-title').forEach(input => {
+            if (!input.value.trim()) input.closest('tr').querySelector('.blr-year').value = yr;
+        });
+    }
+});
+
+function addLiveBulkRow(vals) {
+    const year  = vals?.[0] ?? document.getElementById('live-bulk-year').value;
+    const date  = vals?.[1] ?? '';
+    const title = vals?.[2] ?? '';
+    const artist= vals?.[3] ?? '';
+    const memo  = vals?.[4] ?? '';
+    const clip  = vals?.[5] ?? '';
+    const times = vals?.[6] ?? '';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td class="bt-del"><button class="bt-del-btn" onclick="this.closest('tr').remove()" title="삭제">✕</button></td>
+        <td class="bt-year"><input class="blr-year" type="number" min="2022" max="2035" value="${esc(year)}" placeholder="2026"></td>
+        <td class="bt-date"><input class="blr-date" type="text" value="${esc(date)}" placeholder="MM-DD" maxlength="5"></td>
+        <td class="bt-title"><input class="blr-title" type="text" value="${esc(title)}" placeholder="제목"></td>
+        <td class="bt-artist"><input class="blr-artist" type="text" value="${esc(artist)}" placeholder="가수"></td>
+        <td class="bt-memo"><input class="blr-memo" type="text" value="${esc(memo)}" placeholder="메모"></td>
+        <td class="bt-clip"><input class="blr-clip" type="url" value="${esc(clip)}" placeholder="https://..."></td>
+        <td class="bt-times"><input class="blr-times" type="number" min="1" value="${esc(times)}" placeholder="1"></td>`;
+
+    const FIELDS_L = ['blr-year','blr-date','blr-title','blr-artist','blr-memo','blr-clip','blr-times'];
+    tr.querySelectorAll('input').forEach((el, colIdx) => {
+        el.addEventListener('paste', e => handleLiveBulkPaste(e, tr, colIdx));
+    });
+
+    document.getElementById('live-bulk-rows').appendChild(tr);
+}
+
+function handleLiveBulkPaste(e, startTr, startColIdx) {
+    const text = (e.clipboardData || window.clipboardData).getData('text');
+    if (!text.includes('\t') && !text.includes('\n')) return;
+    e.preventDefault();
+
+    const rows = text.split('\n').map(r => r.replace(/\r$/, '').split('\t'));
+    const tbody = document.getElementById('live-bulk-rows');
+    let allRows = [...tbody.querySelectorAll('tr')];
+    let trIdx = allRows.indexOf(startTr);
+
+    const FIELDS_L = ['blr-year','blr-date','blr-title','blr-artist','blr-memo','blr-clip','blr-times'];
+
+    for (let ri = 0; ri < rows.length; ri++) {
+        const rowData = rows[ri];
+        if (rowData.length === 1 && rowData[0] === '') continue;
+
+        while (trIdx + ri >= allRows.length) { addLiveBulkRow(); allRows = [...tbody.querySelectorAll('tr')]; }
+        const targetTr = tbody.querySelectorAll('tr')[trIdx + ri];
+
+        for (let ci = 0; ci < rowData.length; ci++) {
+            const fieldIdx = startColIdx + ci;
+            if (fieldIdx >= FIELDS_L.length) break;
+            const el = targetTr.querySelector('.' + FIELDS_L[fieldIdx]);
+            if (!el) continue;
+            let v = rowData[ci].trim();
+            // YYYY-MM-DD → MM-DD (날짜 칸에 붙여넣기 시)
+            if (FIELDS_L[fieldIdx] === 'blr-date' && /^\d{4}-\d{2}-\d{2}$/.test(v)) v = v.slice(5);
+            el.value = v;
+        }
+    }
+}
+
+async function saveLiveBulk() {
+    const rows = [...document.getElementById('live-bulk-rows').querySelectorAll('tr')];
+    const records = rows.map(tr => {
+        const year = parseInt(tr.querySelector('.blr-year').value) || null;
+        const dateRaw = tr.querySelector('.blr-date').value.trim();
+        const performed_date = dateRaw && year
+            ? (/^\d{4}-/.test(dateRaw) ? dateRaw : `${year}-${dateRaw.replace(/^(\d)-/, '0$1-').replace(/-(\d)$/, '-0$1')}`)
+            : (dateRaw || null);
+        return {
+            year,
+            performed_date,
+            title:      tr.querySelector('.blr-title').value.trim(),
+            artist:     tr.querySelector('.blr-artist').value.trim() || null,
+            memo:       tr.querySelector('.blr-memo').value.trim() || null,
+            clip_url:   tr.querySelector('.blr-clip').value.trim() || null,
+            times_sung: parseInt(tr.querySelector('.blr-times').value) || null,
+        };
+    }).filter(r => r.title && r.year);
+
+    if (!records.length) { showToast('제목과 연도를 하나 이상 입력해주세요'); return; }
+
+    const btn = document.getElementById('live-bulk-save-btn');
+    btn.disabled = true; btn.textContent = '저장 중...';
+
+    await ensureDb();
+    const { error } = await db.from('live_songs').insert(records);
+    btn.disabled = false; btn.textContent = '추가';
+
+    if (error) { showToast('저장 실패: ' + error.message); return; }
+    showToast(`${records.length}곡 추가 완료 ✓`);
+    closeLiveBulkModal();
+    S.liveCache = {};
+    const yr = typeof S.liveYear === 'number' ? S.liveYear : new Date().getFullYear();
+    await loadLive(yr);
 }
 
 // ── 라이브 기록 CRUD ─────────────────────────────
