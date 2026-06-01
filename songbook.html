@@ -1542,6 +1542,11 @@ function setMainTab(tab) {
     document.getElementById('songbook-subtabs').style.display = isSong ? '' : 'none';
     document.getElementById('live-subtabs').style.display     = isSong ? 'none' : '';
     document.getElementById('live-filter-btn').style.display  = isSong ? 'none' : '';
+    if (isSong) {
+        const panel = document.getElementById('live-filter-panel');
+        panel.style.display = 'none';
+        document.getElementById('live-filter-btn').classList.remove('active');
+    }
     document.getElementById('search-input').placeholder = isSong
         ? '노래책 전체 검색 (제목·가수·메모)...'
         : '라이브 기록 전체 검색 (제목·가수·메모)...';
