@@ -97,13 +97,23 @@
         /* 랜덤 버튼 (검색창 왼쪽) */
         #random-btn {
             width: 72px; height: 72px; flex-shrink: 0;
-            border: 1px solid var(--border); border-radius: 50%;
-            background: var(--bg);
-            cursor: pointer; font-size: 34px;
+            border: 2px solid var(--border); border-radius: 50%;
+            background: var(--bg); padding: 0; overflow: hidden;
+            cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            transition: background .15s, border-color .15s;
+            transition: border-color .15s, box-shadow .15s;
         }
-        #random-btn:hover { background: var(--accent-light); border-color: var(--accent); }
+        #random-btn img {
+            width: 100%; height: 100%; object-fit: cover;
+            display: block; pointer-events: none;
+        }
+        #random-btn:hover { border-color: var(--accent); box-shadow: 0 2px 10px rgba(139,195,74,.4); }
+        #random-btn.spinning { animation: rb-spin .6s ease-in-out; }
+        @keyframes rb-spin {
+            0%   { transform: rotate(0deg)   scale(1); }
+            50%  { transform: rotate(360deg) scale(1.15); }
+            100% { transform: rotate(720deg) scale(1); }
+        }
         #random-btn.hidden { display: none; }
 
         /* 서브 탭 행 */
@@ -522,6 +532,16 @@
             font-size: 22px; font-weight: 700; line-height: 1.3;
             margin-bottom: 6px; word-break: keep-all;
         }
+        /* 셔플 모션 */
+        .modal.shuffling .random-title { color: var(--muted); opacity: .85; }
+        .modal.shuffling #r-skill, .modal.shuffling #r-links, .modal.shuffling #r-memo,
+        .modal.shuffling .modal-btns { opacity: .35; pointer-events: none; }
+        @keyframes r-pop {
+            0% { transform: scale(.7); opacity: 0; }
+            60% { transform: scale(1.12); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .modal .random-title.r-revealed { animation: r-pop .4s ease-out; }
         .random-artist {
             font-size: 14px; color: var(--muted); margin-bottom: 14px;
         }
@@ -782,13 +802,13 @@
     <!-- 검색창 (항상 표시) -->
     <div class="sb-search-row" id="sb-search-row" style="display:none">
         <div class="search-wrap">
-            <button id="random-btn" onclick="pickRandom()" title="랜덤 뽑기">🎲</button>
+            <button id="random-btn" onclick="pickRandom()" title="랜덤 뽑기"><img src="random-face.png" alt="랜덤"></button>
             <div class="search-input-wrap">
                 <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <input type="search" id="search-input" placeholder="제목 또는 가수 검색..." oninput="onSearch(this.value)" autocomplete="off">
                 <button class="search-clear" id="search-clear" onclick="clearSearch()">×</button>
             </div>
-            <button id="live-filter-btn" class="live-filter-btn" onclick="toggleLiveFilter()" style="display:none">자세히</button>
+            <button id="live-filter-btn" class="live-filter-btn" onclick="toggleLiveFilter()" style="display:none">상세검색</button>
         </div>
         <!-- 라이브 필터 패널 -->
         <div id="live-filter-panel" class="live-filter-panel" style="display:none">
@@ -1660,31 +1680,68 @@ function clearSearch() {
 }
 
 // ── 랜덤 뽑기 ────────────────────────────────────
+let _shuffleTimer = null;
 function pickRandom() {
     const pool = S.songbookData
         ? S.songbookData.filter(s => S.songbookCat === 'all' || s.category === S.songbookCat)
         : [];
     if (!pool.length) { showToast('노래책 데이터를 먼저 불러오세요'); return; }
 
-    const s = pool[Math.floor(Math.random() * pool.length)];
-    document.getElementById('r-title').textContent  = s.title;
-    document.getElementById('r-artist').textContent = s.artist || '';
-    document.getElementById('r-skill').textContent  = skillDots(s.skill_level || 0);
+    // 버튼 회전
+    const btn = document.getElementById('random-btn');
+    if (btn) { btn.classList.remove('spinning'); void btn.offsetWidth; btn.classList.add('spinning'); }
 
-    const links = document.getElementById('r-links');
-    links.innerHTML = [
-        linkBtn(s.mr_url,   'MR',  'mr'),
-        linkBtn(s.clip_url, '클립', 'clip'),
-    ].filter(Boolean).join('') || '<span style="color:var(--muted);font-size:12px">링크 없음</span>';
+    const modal = document.getElementById('random-modal');
+    const titleEl  = document.getElementById('r-title');
+    const artistEl = document.getElementById('r-artist');
+    const skillEl  = document.getElementById('r-skill');
+    const linksEl  = document.getElementById('r-links');
+    const memoEl   = document.getElementById('r-memo');
 
-    const memo = document.getElementById('r-memo');
-    if (s.memo) { memo.textContent = s.memo; memo.style.display = ''; }
-    else          memo.style.display = 'none';
+    // 최종 결과 미리 결정
+    const final = pool[Math.floor(Math.random() * pool.length)];
 
-    document.getElementById('random-modal').classList.add('open');
+    modal.classList.add('open');
+    document.querySelector('#random-modal .modal').classList.add('shuffling');
+    titleEl.classList.remove('r-revealed');
+
+    // 셔플 모션: 빠르게 노래 제목을 바꿔가며 점점 느려짐
+    if (_shuffleTimer) clearTimeout(_shuffleTimer);
+    const delays = [50,50,50,60,60,70,80,90,110,140,180,230,300];
+    let step = 0;
+
+    function tick() {
+        if (step < delays.length) {
+            const rnd = pool[Math.floor(Math.random() * pool.length)];
+            titleEl.textContent  = rnd.title;
+            artistEl.textContent = rnd.artist || '';
+            skillEl.textContent  = '';
+            _shuffleTimer = setTimeout(tick, delays[step]);
+            step++;
+        } else {
+            // 최종 결과 표시
+            document.querySelector('#random-modal .modal').classList.remove('shuffling');
+            titleEl.textContent  = final.title;
+            artistEl.textContent = final.artist || '';
+            skillEl.textContent  = skillDots(final.skill_level || 0);
+            titleEl.classList.remove('r-revealed'); void titleEl.offsetWidth; titleEl.classList.add('r-revealed');
+
+            linksEl.innerHTML = [
+                linkBtn(final.mr_url,   'MR',  'mr'),
+                linkBtn(final.clip_url, '클립', 'clip'),
+            ].filter(Boolean).join('') || '<span style="color:var(--muted);font-size:12px">링크 없음</span>';
+
+            if (final.memo) { memoEl.textContent = final.memo; memoEl.style.display = ''; }
+            else            memoEl.style.display = 'none';
+            _shuffleTimer = null;
+        }
+    }
+    tick();
 }
 
 function closeRandom() {
+    if (_shuffleTimer) { clearTimeout(_shuffleTimer); _shuffleTimer = null; }
+    document.querySelector('#random-modal .modal').classList.remove('shuffling');
     document.getElementById('random-modal').classList.remove('open');
 }
 
