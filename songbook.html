@@ -386,7 +386,7 @@
             letter-spacing: .04em; margin-bottom: 10px;
             padding-bottom: 6px; border-bottom: 1.5px solid var(--border);
         }
-        .svg-chart-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .svg-chart-wrap { width: 100%; }
         .mo-charts-row { display: flex; gap: 24px; flex-wrap: wrap; }
         .mo-charts-row > div { flex: 1; min-width: 0; }
         .mo-chart-label { font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
@@ -1344,13 +1344,13 @@ function renderStats() {
                 <div>
                     <div class="mo-chart-label">전체 합계</div>
                     <div class="svg-chart-wrap">
-                        <svg width="${MSW_SUM}" height="${MCH_SUM}" viewBox="0 0 ${MSW_SUM} ${MCH_SUM}"><g transform="translate(0,0)">${mSumBars}</g></svg>
+                        <svg width="100%" viewBox="0 0 ${MSW_SUM} ${MCH_SUM}" preserveAspectRatio="xMidYMid meet" style="display:block"><g transform="translate(0,0)">${mSumBars}</g></svg>
                     </div>
                 </div>
                 <div>
                     <div class="mo-chart-label">연도별</div>
                     <div class="svg-chart-wrap">
-                        <svg width="${MSW}" height="${MCH}" viewBox="0 0 ${MSW} ${MCH}">
+                        <svg width="100%" viewBox="0 0 ${MSW} ${MCH}" preserveAspectRatio="xMidYMid meet" style="display:block">
                             <g transform="translate(2,2)">${mLeg}</g>
                             ${mBars}
                         </svg>
