@@ -302,6 +302,7 @@
 
         /* 라이브 열 너비 */
         .col-date   { width: 70px;  font-size: 15px; text-align: center; font-weight: 700; }
+        .col-year   { width: 52px;  font-size: 13px; text-align: center; font-weight: 700; color: var(--muted); }
         .col-lmemo  { width: 180px; color: var(--muted); font-size: 12px; }
 
         /* 제목/가수/메모 줄바꿈 허용 */
@@ -1189,6 +1190,7 @@ async function renderLive() {
     <table class="song-table">
         <thead><tr>
             <th class="col-num">#</th>
+            ${S.query ? `<th class="col-year">연도</th>` : ''}
             <th class="col-date">날짜</th>
             <th class="col-title">제목</th>
             <th class="col-artist">가수</th>
@@ -1199,6 +1201,7 @@ async function renderLive() {
         ${items.map((r, i) => `
             <tr ${S.session ? `class="editable" onclick="openLiveModal(${r.id})"` : ''}>
                 <td class="col-num">${i + 1}</td>
+                ${S.query ? `<td class="col-year">${r.year || ''}</td>` : ''}
                 <td class="col-date">${fmtDate(r.performed_date)}</td>
                 <td class="col-title">${esc(r.title)}</td>
                 <td class="col-artist">${esc(r.artist || '')}</td>
