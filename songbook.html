@@ -1134,6 +1134,19 @@ function matches(title, artist, q, memo) {
 function esc(s) {
     return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+function normalizeLiveStatText(value) {
+    return String(value ?? '')
+        .replace(/\([^)]*\)/g, '')
+        .replace(/（[^）]*）/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase();
+}
+function liveStatKey(row, includeYear = false) {
+    const title = normalizeLiveStatText(row.title);
+    const artist = normalizeLiveStatText(row.artist);
+    return includeYear ? `${row.year}|${title}|${artist}` : `${title}|||${artist}`;
+}
 function skillDots(n) {
     const filled = '💚', empty = '🤍';
     return filled.repeat(Math.max(0, n)) + empty.repeat(Math.max(0, 5 - n));
@@ -1294,7 +1307,7 @@ async function renderLive() {
     const countMap = {};
     for (const r of raw) {
         if (r.exclude_from_stats) continue;
-        const k = `${r.year}|${(r.title||'').trim()}|${(r.artist||'').trim()}`;
+        const k = liveStatKey(r, true);
         countMap[k] = (countMap[k] || 0) + 1;
     }
 
@@ -1322,7 +1335,7 @@ async function renderLive() {
             const mo = r.performed_date ? r.performed_date.slice(0, 7) : '';
             const prevMo = i > 0 ? (items[i-1].performed_date ? items[i-1].performed_date.slice(0, 7) : '') : mo;
             const monthStart = i > 0 && mo !== prevMo;
-            const cnt = countMap[`${r.year}|${(r.title||'').trim()}|${(r.artist||'').trim()}`] || 1;
+            const cnt = countMap[liveStatKey(r, true)] || 1;
             const excluded = !!r.exclude_from_stats;
             return `
             <tr class="${S.session ? 'editable ' : ''}${monthStart ? 'month-start' : ''}"${S.session ? ` onclick="openLiveModal(${r.id})"` : ''}>
@@ -1371,7 +1384,7 @@ function renderStats() {
             yearTotals[y]++;
             if (m >= 1 && m <= 12) ymCounts[y][m]++;
         }
-        const key = `${(r.title||'').trim()}|||${(r.artist||'').trim()}`;
+        const key = liveStatKey(r);
         if (!songMap[key]) songMap[key] = { title: r.title, artist: r.artist, count: 0 };
         songMap[key].count++;
         if (YEARS.includes(y)) {
