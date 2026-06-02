@@ -331,6 +331,7 @@
         .col-year   { width: 52px;  font-size: 13px; text-align: center; font-weight: 700; color: var(--text); }
         .col-lmemo  { width: 180px; color: var(--muted); font-size: 12px; }
         .col-cnt    { width: 48px;  text-align: center; font-weight: 700; color: var(--accent-dark); }
+        .col-cnt.excluded { color: #c06b7c; font-size: 11px; }
 
         /* 제목/가수/메모 줄바꿈 허용 */
         .song-table tbody td.col-title,
@@ -655,6 +656,16 @@
             transition: border-color .15s;
         }
         .ef-row input:focus, .ef-row select:focus { border-color: var(--accent); background: var(--surface); }
+        .ef-check {
+            display: flex; align-items: center; gap: 8px;
+            padding: 9px 12px;
+            border: 1.5px solid var(--border); border-radius: 8px;
+            background: var(--bg);
+            font-size: 13px; font-weight: 700; color: var(--text);
+            cursor: pointer;
+        }
+        .ef-check input { width: auto; flex-shrink: 0; accent-color: var(--accent); }
+        .ef-check small { display: block; margin-top: 2px; font-size: 11px; font-weight: 500; color: var(--muted); }
         .emod-footer {
             display: flex; align-items: center; gap: 8px;
             padding: 12px 20px; border-top: 1px solid var(--border);
@@ -676,6 +687,7 @@
         .bulk-table tbody td { padding: 4px 4px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         .bulk-table tbody tr:last-child td { border-bottom: none; }
         .bulk-table input, .bulk-table select { width: 100%; box-sizing: border-box; padding: 5px 7px; border: 1.5px solid transparent; border-radius: 6px; background: transparent; font-family: inherit; font-size: 13px; color: var(--text); }
+        .bulk-table input[type="checkbox"] { width: auto; accent-color: var(--accent); }
         .bulk-table input:focus, .bulk-table select:focus { border-color: var(--accent); background: var(--surface); outline: none; }
         .bt-del   { width: 28px; }
         .bt-cat   { width: 80px; }
@@ -687,6 +699,7 @@
         .bt-memo  { width: 120px; }
         .bt-year  { width: 76px; }
         .bt-date  { width: 90px; }
+        .bt-exclude { width: 72px; text-align: center; }
         .bt-del-btn { background: none; border: none; color: #c0392b; font-size: 15px; cursor: pointer; padding: 2px 4px; border-radius: 4px; }
         .bt-del-btn:hover { background: #fde0e0; }
         .bulk-add-row-btn { margin-top: 8px; padding: 6px 14px; border: 1.5px dashed var(--accent); border-radius: 8px; background: none; color: var(--accent-dark); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
@@ -931,6 +944,12 @@
             <div class="ef-row"><label>가수</label><input type="text" id="lf-artist" placeholder="가수명"></div>
             <div class="ef-row"><label>메모</label><input type="text" id="lf-memo" placeholder="(선택)"></div>
             <div class="ef-row"><label>구슬요 클립 URL</label><input type="url" id="lf-clip" placeholder="https://..."></div>
+            <div class="ef-row">
+                <label class="ef-check">
+                    <input type="checkbox" id="lf-exclude-stats">
+                    <span>집계 제외<small>기록에는 보이고 통계/누적 계산에서는 제외됩니다</small></span>
+                </label>
+            </div>
         </div>
         <div class="emod-footer">
             <button class="btn-del" id="live-del-btn" onclick="deleteLiveRecord()" style="display:none">삭제</button>
@@ -966,6 +985,7 @@
                         <th class="bt-artist">가수</th>
                         <th class="bt-memo">메모</th>
                         <th class="bt-clip">클립 URL</th>
+                        <th class="bt-exclude">집계 제외</th>
                     </tr></thead>
                     <tbody id="live-bulk-rows"></tbody>
                 </table>
@@ -1020,6 +1040,15 @@ function ensureDb() {
         document.head.appendChild(s);
     });
     return _dbReady;
+}
+
+let _liveExcludeColumnReady = null;
+async function ensureLiveExcludeColumn() {
+    if (_liveExcludeColumnReady !== null) return _liveExcludeColumnReady;
+    await ensureDb();
+    const { error } = await db.from('live_songs').select('exclude_from_stats').limit(1);
+    _liveExcludeColumnReady = !error;
+    return _liveExcludeColumnReady;
 }
 
 // Supabase에서 페이지네이션 처리해 전체 데이터 가져오기
@@ -1263,6 +1292,7 @@ async function renderLive() {
     // 당해 누적 횟수 맵 (연도+제목+가수 기준)
     const countMap = {};
     for (const r of raw) {
+        if (r.exclude_from_stats) continue;
         const k = `${r.year}|${(r.title||'').trim()}|${(r.artist||'').trim()}`;
         countMap[k] = (countMap[k] || 0) + 1;
     }
@@ -1292,6 +1322,7 @@ async function renderLive() {
             const prevMo = i > 0 ? (items[i-1].performed_date ? items[i-1].performed_date.slice(0, 7) : '') : mo;
             const monthStart = i > 0 && mo !== prevMo;
             const cnt = countMap[`${r.year}|${(r.title||'').trim()}|${(r.artist||'').trim()}`] || 1;
+            const excluded = !!r.exclude_from_stats;
             return `
             <tr class="${S.session ? 'editable ' : ''}${monthStart ? 'month-start' : ''}"${S.session ? ` onclick="openLiveModal(${r.id})"` : ''}>
                 <td class="col-num">${i + 1}</td>
@@ -1301,7 +1332,7 @@ async function renderLive() {
                 <td class="col-artist">${esc(r.artist || '')}</td>
                 <td class="col-lmemo">${esc(r.memo || '')}</td>
                 <td class="col-clip">${r.clip_url ? `<a href="${esc(r.clip_url)}" class="link-btn clip" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">클립</a>` : ''}</td>
-                <td class="col-cnt">${cnt}</td>
+                <td class="col-cnt${excluded ? ' excluded' : ''}">${excluded ? '제외' : cnt}</td>
             </tr>`;
         }).join('')}
         </tbody>
@@ -1319,6 +1350,8 @@ function renderStats() {
     const panel = document.getElementById('stats-panel');
     const all = S.liveCache['all'] || [];
     if (!all.length) { panel.innerHTML = emptyHtml('데이터 없음'); return; }
+    const statRows = all.filter(r => !r.exclude_from_stats);
+    if (!statRows.length) { panel.innerHTML = emptyHtml('집계할 데이터가 없어요'); return; }
 
     const YEARS  = [2022, 2023, 2024, 2025, 2026];
     const CHART_YEARS = [2023, 2024, 2025, 2026];
@@ -1330,7 +1363,7 @@ function renderStats() {
     const yearTotals = {}, ymCounts = {}, songMap = {}, yearSongMap = {};
     YEARS.forEach(y => { yearTotals[y] = 0; ymCounts[y] = {}; MONTHS.forEach(m => ymCounts[y][m] = 0); yearSongMap[y] = {}; });
 
-    for (const r of all) {
+    for (const r of statRows) {
         const y = r.year;
         const m = r.performed_date ? parseInt(r.performed_date.split('-')[1]) : null;
         if (YEARS.includes(y)) {
@@ -2008,9 +2041,10 @@ function addLiveBulkRow(vals) {
         <td class="bt-title"><input class="blr-title" type="text" value="${esc(title)}" placeholder="제목"></td>
         <td class="bt-artist"><input class="blr-artist" type="text" value="${esc(artist)}" placeholder="가수"></td>
         <td class="bt-memo"><input class="blr-memo" type="text" value="${esc(memo)}" placeholder="메모"></td>
-        <td class="bt-clip"><input class="blr-clip" type="url" value="${esc(clip)}" placeholder="https://..."></td>`;
+        <td class="bt-clip"><input class="blr-clip" type="url" value="${esc(clip)}" placeholder="https://..."></td>
+        <td class="bt-exclude"><input class="blr-exclude" type="checkbox" title="집계 제외"></td>`;
 
-    tr.querySelectorAll('input').forEach((el, colIdx) => {
+    tr.querySelectorAll('input:not(.blr-exclude)').forEach((el, colIdx) => {
         el.addEventListener('paste', e => handleLiveBulkPaste(e, tr, colIdx));
     });
 
@@ -2033,13 +2067,19 @@ function handleLiveBulkPaste(e, startTr, startColIdx) {
 
 async function saveLiveBulk() {
     const rows = [...document.getElementById('live-bulk-rows').querySelectorAll('tr')];
+    const hasExcluded = rows.some(tr => tr.querySelector('.blr-exclude')?.checked);
+    const canUseExclude = hasExcluded ? await ensureLiveExcludeColumn() : false;
+    if (hasExcluded && !canUseExclude) {
+        showToast('Supabase에 집계 제외 컬럼을 먼저 추가해주세요');
+        return;
+    }
     const records = rows.map(tr => {
         const year = parseInt(tr.querySelector('.blr-year').value) || null;
         const dateRaw = tr.querySelector('.blr-date').value.trim();
         const performed_date = dateRaw && year
             ? (/^\d{4}-/.test(dateRaw) ? dateRaw : `${year}-${dateRaw.replace(/^(\d)-/, '0$1-').replace(/-(\d)$/, '-0$1')}`)
             : (dateRaw || null);
-        return {
+        const record = {
             year,
             performed_date,
             title:      tr.querySelector('.blr-title').value.trim(),
@@ -2047,6 +2087,8 @@ async function saveLiveBulk() {
             memo:       tr.querySelector('.blr-memo').value.trim() || null,
             clip_url:   tr.querySelector('.blr-clip').value.trim() || null,
         };
+        if (canUseExclude) record.exclude_from_stats = !!tr.querySelector('.blr-exclude')?.checked;
+        return record;
     }).filter(r => r.title && r.year);
 
     if (!records.length) { showToast('제목과 연도를 하나 이상 입력해주세요'); return; }
@@ -2079,6 +2121,7 @@ function openLiveModal(id) {
     document.getElementById('lf-artist').value = r?.artist ?? '';
     document.getElementById('lf-memo').value   = r?.memo ?? '';
     document.getElementById('lf-clip').value   = r?.clip_url ?? '';
+    document.getElementById('lf-exclude-stats').checked = !!r?.exclude_from_stats;
     document.getElementById('live-del-btn').style.display = r ? '' : 'none';
     document.getElementById('live-modal').classList.add('open');
 }
@@ -2094,6 +2137,13 @@ async function saveLiveRecord() {
 
     const id = document.getElementById('lf-id').value;
     const year = parseInt(yearVal);
+    const excludeStats = document.getElementById('lf-exclude-stats').checked;
+    const canUseExclude = await ensureLiveExcludeColumn();
+    if (excludeStats && !canUseExclude) {
+        btn.disabled = false; btn.textContent = '저장';
+        showToast('Supabase에 집계 제외 컬럼을 먼저 추가해주세요');
+        return;
+    }
     const payload = {
         year,
         performed_date: document.getElementById('lf-date').value || null,
@@ -2102,6 +2152,7 @@ async function saveLiveRecord() {
         memo:           document.getElementById('lf-memo').value.trim() || null,
         clip_url:       document.getElementById('lf-clip').value.trim() || null,
     };
+    if (canUseExclude) payload.exclude_from_stats = excludeStats;
     await ensureDb();
     const { error } = id
         ? await db.from('live_songs').update(payload).eq('id', parseInt(id))

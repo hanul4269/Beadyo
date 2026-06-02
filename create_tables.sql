@@ -27,7 +27,8 @@ create table if not exists live_songs (
   artist         text,
   memo           text,
   clip_url       text,
-  times_sung     integer
+  times_sung     integer,
+  exclude_from_stats boolean default false
 );
 
 alter table live_songs enable row level security;
