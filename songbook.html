@@ -404,7 +404,14 @@
         .stat-bar { height: 100%; background: var(--accent); border-radius: 2px; }
 
         /* ─── 통계 대시보드 추가 ─── */
-        .stats-section { margin-bottom: 28px; }
+        .stats-section {
+            margin-bottom: 22px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: 0 1px 0 rgba(255,255,255,0.65);
+        }
         .stats-top-row { display: flex; gap: 40px; align-items: flex-start; margin-bottom: 28px; justify-content: center; flex-wrap: wrap; }
         .stats-top-left { flex: 0 0 580px; width: 580px; }
         .stats-top-right { flex: 0 0 640px; width: 640px; min-width: 0; }
@@ -419,6 +426,65 @@
             padding: 6px 16px; border-radius: 20px;
             background: var(--accent-light); border: 1.5px solid var(--accent);
             font-size: 14px; font-weight: 700; color: var(--accent-dark);
+        }
+        .stats-feature-grid {
+            display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px; margin-bottom: 28px;
+        }
+        .stats-feature-grid.trio {
+            grid-template-columns: minmax(420px, 1.15fr) minmax(260px, .75fr) minmax(360px, 1fr);
+            align-items: start;
+        }
+        .stats-feature-grid.focus {
+            grid-template-columns: minmax(640px, 1fr) minmax(300px, 380px);
+            align-items: stretch;
+        }
+        .stats-feature-grid.compact {
+            grid-template-columns: minmax(260px, 380px) minmax(0, 1fr);
+            align-items: start;
+        }
+        .stats-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: 14px;
+            min-width: 0;
+            height: 100%;
+        }
+        .stats-card .stats-sec-title { margin-bottom: 12px; }
+        .stats-card .stats-section { padding: 0; border: none; background: transparent; box-shadow: none; }
+        .stats-mini-grid {
+            display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .stats-subtitle {
+            font-size: 12px; font-weight: 700; color: var(--accent-dark);
+            margin-bottom: 8px;
+        }
+        .stat-empty { padding: 16px 8px; font-size: 12px; color: var(--muted); text-align: center; }
+        .trend-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .trend-table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 360px; }
+        .trend-table th, .trend-table td {
+            padding: 5px 6px; border: 1px solid var(--border);
+            text-align: center; white-space: nowrap;
+        }
+        .trend-table thead th { background: #eaf2e0; color: #4a6a30; font-weight: 700; }
+        .trend-high { color: var(--accent-dark); font-weight: 700; background: var(--accent-light); }
+        .trend-zero { color: #ccc; }
+        .stats-title-row { margin-bottom: 10px; }
+        .stats-title-row .stats-sec-title { margin-bottom: 0; }
+        .stats-toggle {
+            display: inline-flex; gap: 4px; padding: 3px;
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 18px; flex-shrink: 0;
+            margin-bottom: 8px;
+        }
+        .stats-toggle button {
+            border: none; border-radius: 14px; padding: 5px 10px;
+            background: transparent; color: var(--muted);
+            font-family: inherit; font-size: 11px; font-weight: 700;
+            cursor: pointer; white-space: nowrap;
+        }
+        .stats-toggle button.active {
+            background: var(--accent); color: #fff;
         }
         .per-year-charts { display: flex; flex-direction: column; gap: 8px; max-width: 520px; }
         .per-year-chart { display: flex; align-items: center; gap: 8px; }
@@ -443,6 +509,10 @@
         .year-top-song { font-size: 12px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: normal; word-break: break-word; line-height: 1.4; }
         .year-top-artist { font-size: 10px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .year-top-count { font-size: 12px; font-weight: 700; color: var(--accent-dark); white-space: nowrap; flex-shrink: 0; }
+
+        @media (max-width: 900px) {
+            .stats-feature-grid, .stats-feature-grid.trio, .stats-feature-grid.focus, .stats-feature-grid.compact, .stats-mini-grid { grid-template-columns: 1fr; }
+        }
 
         /* ─── 빈 상태 ─── */
         .empty-state {
@@ -1019,6 +1089,7 @@ const S = {
         sort:  'date',
         dir:   'desc',
     },
+    statsTopMode: 'song',
     session:      null,
 };
 
@@ -1160,6 +1231,14 @@ function fmtDate(d) {
     const parts = d.split('-');
     if (parts.length < 2) return d;
     return `${parts[1]}/${parts[2] || ''}`;
+}
+function parseLiveDate(d) {
+    if (!d) return null;
+    const date = new Date(`${d}T00:00:00`);
+    return Number.isNaN(date.getTime()) ? null : date;
+}
+function daysBetween(a, b) {
+    return Math.max(0, Math.floor((a - b) / 86400000));
 }
 
 // ── 렌더: Welcome 카드 ────────────────────────────
@@ -1374,19 +1453,33 @@ function renderStats() {
     const YBG    = { 2022:'#eef5fb', 2023:'#fdf0e8', 2024:'#fdf8e8', 2025:'#f0fae4', 2026:'#fde8f0' };
 
     // ── 집계 ──────────────────────────────────────
-    const yearTotals = {}, ymCounts = {}, songMap = {}, yearSongMap = {};
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const yearTotals = {}, ymCounts = {}, songMap = {}, yearSongMap = {}, artistMap = {};
     YEARS.forEach(y => { yearTotals[y] = 0; ymCounts[y] = {}; MONTHS.forEach(m => ymCounts[y][m] = 0); yearSongMap[y] = {}; });
 
     for (const r of statRows) {
         const y = r.year;
-        const m = r.performed_date ? parseInt(r.performed_date.split('-')[1]) : null;
+        const rowDate = parseLiveDate(r.performed_date);
+        const m = rowDate ? rowDate.getMonth() + 1 : null;
         if (YEARS.includes(y)) {
             yearTotals[y]++;
             if (m >= 1 && m <= 12) ymCounts[y][m]++;
         }
         const key = liveStatKey(r);
-        if (!songMap[key]) songMap[key] = { title: r.title, artist: r.artist, count: 0 };
+        if (!songMap[key]) songMap[key] = { title: r.title, artist: r.artist, count: 0, lastDate: null, lastDateText: '' };
         songMap[key].count++;
+        if (rowDate && (!songMap[key].lastDate || rowDate > songMap[key].lastDate)) {
+            songMap[key].lastDate = rowDate;
+            songMap[key].lastDateText = r.performed_date;
+        }
+
+        const artistKey = normalizeLiveStatText(r.artist);
+        if (artistKey) {
+            if (!artistMap[artistKey]) artistMap[artistKey] = { artist: r.artist, count: 0 };
+            artistMap[artistKey].count++;
+        }
+
         if (YEARS.includes(y)) {
             if (!yearSongMap[y][key]) yearSongMap[y][key] = { title: r.title, artist: r.artist, count: 0 };
             yearSongMap[y][key].count++;
@@ -1398,6 +1491,74 @@ function renderStats() {
     const actYrs  = CHART_YEARS.filter(y => yearTotals[y] > 0);
     const yearTop10 = {};
     YEARS.forEach(y => { yearTop10[y] = Object.values(yearSongMap[y]).sort((a,b) => b.count - a.count).slice(0, 10); });
+
+    function countRecentSongs(days) {
+        const cutoff = new Date(today);
+        cutoff.setDate(cutoff.getDate() - days + 1);
+        const map = {};
+        for (const r of statRows) {
+            const rowDate = parseLiveDate(r.performed_date);
+            if (!rowDate || rowDate < cutoff || rowDate > today) continue;
+            const key = liveStatKey(r);
+            if (!map[key]) map[key] = { title: r.title, artist: r.artist, count: 0 };
+            map[key].count++;
+        }
+        const items = Object.values(map).sort((a,b) => b.count - a.count).slice(0, 10);
+        return { items, max: items[0]?.count || 1 };
+    }
+    const recent30 = countRecentSongs(30);
+    const recent90 = countRecentSongs(90);
+    const oldSongs = Object.values(songMap)
+        .filter(s => s.lastDate)
+        .sort((a,b) => a.lastDate - b.lastDate)
+        .slice(0, 10)
+        .map(s => ({ ...s, daysAgo: daysBetween(today, s.lastDate) }));
+    const topArtists = Object.values(artistMap).sort((a,b) => b.count - a.count).slice(0, 30);
+
+    function statListHtml(items, max, opts = {}) {
+        if (!items.length) return '<div class="stat-empty">표시할 데이터가 없어요</div>';
+        return items.map((s, i) => `
+            <div class="stat-row">
+                <span class="stat-rank ${i<3?'top3':''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</span>
+                <div class="stat-info">
+                    <div class="stat-title">${esc(opts.title ? opts.title(s) : s.title)}</div>
+                    <div class="stat-artist">${esc(opts.sub ? opts.sub(s) : (s.artist || ''))}</div>
+                </div>
+                <div class="stat-bar-wrap"><div class="stat-bar" style="width:${Math.round((opts.value ? opts.value(s) : s.count) / max * 100)}%"></div></div>
+                <span class="stat-count">${esc(opts.count ? opts.count(s) : `${s.count}번`)}</span>
+            </div>`).join('');
+    }
+
+    const trendYears = actYrs.length ? actYrs : CHART_YEARS;
+    const cumulativeMax = Math.max(...trendYears.flatMap(y => {
+        let sum = 0;
+        return MONTHS.map(m => {
+            sum += ymCounts[y]?.[m] || 0;
+            return sum;
+        });
+    }), 1);
+    const trendTable = `<div class="trend-table-wrap"><table class="trend-table">
+        <thead><tr><th>월</th>${trendYears.map(y => `<th>${y}</th>`).join('')}</tr></thead>
+        <tbody>${MONTHS.map(m => `
+            <tr>
+                <th>${m}월</th>
+                ${trendYears.map(y => {
+                    let total = 0;
+                    for (let mi = 1; mi <= m; mi++) total += ymCounts[y]?.[mi] || 0;
+                    const cls = total === 0 ? 'trend-zero' : total === cumulativeMax ? 'trend-high' : '';
+                    return `<td class="${cls}">${total || '-'}</td>`;
+                }).join('')}
+            </tr>`).join('')}</tbody>
+    </table></div>`;
+    const topMode = S.statsTopMode === 'artist' ? 'artist' : 'song';
+    const top30Items = topMode === 'artist' ? topArtists : topAll;
+    const top30Max = top30Items[0]?.count || 1;
+    const top30Html = topMode === 'artist'
+        ? statListHtml(top30Items, top30Max, {
+            title: s => s.artist || '가수 미상',
+            sub: () => '라이브 기록 기준'
+        })
+        : statListHtml(top30Items, top30Max);
 
     // ── SVG: 연도별 합계 바 차트 ──────────────────
     const maxYr = Math.max(...CHART_YEARS.map(y => yearTotals[y]), 1);
@@ -1488,6 +1649,30 @@ function renderStats() {
     panel.innerHTML = `<div class="stats-dashboard">
         <div class="stats-total-badge">총 ${totalCount.toLocaleString()}곡</div>
 
+        <div class="stats-feature-grid focus">
+            <div class="stats-card">
+                <div class="stats-sec-title">최근 많이 부른 곡</div>
+                <div class="stats-mini-grid">
+                    <div>
+                        <div class="stats-subtitle">최근 30일</div>
+                        ${statListHtml(recent30.items, recent30.max)}
+                    </div>
+                    <div>
+                        <div class="stats-subtitle">최근 90일</div>
+                        ${statListHtml(recent90.items, recent90.max)}
+                    </div>
+                </div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-sec-title">부른지 오래된 곡</div>
+                ${statListHtml(oldSongs, oldSongs[0]?.daysAgo || 1, {
+                    sub: s => `${s.artist || '가수 미상'} · 마지막 ${s.lastDateText || '날짜 없음'}`,
+                    value: s => s.daysAgo,
+                    count: s => `${s.daysAgo}일`
+                })}
+            </div>
+        </div>
+
         <div class="stats-top-row">
             <div class="stats-top-left">
                 <div class="stats-section">
@@ -1499,6 +1684,10 @@ function renderStats() {
                 <div class="stats-section">
                     <div class="stats-sec-title">연도별 월간 기록</div>
                     <div class="ym-table-wrap">${ymTable}</div>
+                </div>
+                <div class="stats-section">
+                    <div class="stats-sec-title">연도별 누적 페이스</div>
+                    ${trendTable}
                 </div>
             </div>
             <div class="stats-top-right">
@@ -1525,17 +1714,14 @@ function renderStats() {
         </div>
 
         <div class="stats-section">
-            <div class="stats-sec-title">전체 많이 부른 곡 TOP 30</div>
-            ${topAll.map((s,i) => `
-            <div class="stat-row">
-                <span class="stat-rank ${i<3?'top3':''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</span>
-                <div class="stat-info">
-                    <div class="stat-title">${esc(s.title)}</div>
-                    <div class="stat-artist">${esc(s.artist||'')}</div>
+            <div class="stats-title-row">
+                <div class="stats-toggle">
+                    <button class="${topMode === 'song' ? 'active' : ''}" onclick="setStatsTopMode('song')">노래 TOP 30</button>
+                    <button class="${topMode === 'artist' ? 'active' : ''}" onclick="setStatsTopMode('artist')">가수 TOP 30</button>
                 </div>
-                <div class="stat-bar-wrap"><div class="stat-bar" style="width:${Math.round(s.count/maxTop*100)}%"></div></div>
-                <span class="stat-count">${s.count}번</span>
-            </div>`).join('')}
+                <div class="stats-sec-title">전체 많이 부른 ${topMode === 'artist' ? '가수' : '곡'} TOP 30</div>
+            </div>
+            ${top30Html}
         </div>
 
     </div>`;
@@ -1661,6 +1847,11 @@ function setLiveSortDir(dir) {
     document.getElementById('lf-dir-asc').classList.toggle('active', dir === 'asc');
     document.getElementById('lf-dir-desc').classList.toggle('active', dir === 'desc');
     renderLive();
+}
+
+function setStatsTopMode(mode) {
+    S.statsTopMode = mode === 'artist' ? 'artist' : 'song';
+    renderStats();
 }
 
 // ── 검색 ────────────────────────────────────────
