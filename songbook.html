@@ -427,16 +427,45 @@
             background: var(--accent-light); border: 1.5px solid var(--accent);
             font-size: 14px; font-weight: 700; color: var(--accent-dark);
         }
+        .stats-fold {
+            margin-bottom: 18px;
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            background: var(--bg);
+            overflow: hidden;
+        }
+        .stats-fold-head {
+            width: 100%;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px;
+            padding: 12px 16px;
+            border: none; border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            font-family: inherit;
+            cursor: pointer;
+        }
+        .stats-fold-title { font-size: 14px; font-weight: 800; }
+        .stats-fold-icon {
+            width: 26px; height: 26px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            background: var(--accent-light); color: var(--accent-dark);
+            font-size: 14px; font-weight: 800;
+            flex-shrink: 0;
+        }
+        .stats-fold-body { padding: 16px; }
+        .stats-fold.collapsed .stats-fold-head { border-bottom: none; }
+        .stats-fold.collapsed .stats-fold-body { display: none; }
         .stats-feature-grid {
             display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 18px; margin-bottom: 28px;
+            gap: 18px;
         }
         .stats-feature-grid.trio {
             grid-template-columns: minmax(420px, 1.15fr) minmax(260px, .75fr) minmax(360px, 1fr);
             align-items: start;
         }
         .stats-feature-grid.focus {
-            grid-template-columns: minmax(640px, 1fr) minmax(300px, 380px);
+            grid-template-columns: minmax(620px, 1fr) minmax(340px, 520px);
             align-items: stretch;
         }
         .stats-feature-grid.compact {
@@ -460,6 +489,14 @@
             margin-bottom: 8px;
         }
         .stat-empty { padding: 16px 8px; font-size: 12px; color: var(--muted); text-align: center; }
+        .stat-clip {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 3px 8px; border-radius: 12px;
+            background: #eaf2ff; color: #4b7fbf;
+            text-decoration: none; font-size: 10px; font-weight: 800;
+            flex-shrink: 0; white-space: nowrap;
+        }
+        .stat-clip:hover { background: #d9eaff; }
         .trend-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .trend-table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 360px; }
         .trend-table th, .trend-table td {
@@ -469,6 +506,13 @@
         .trend-table thead th { background: #eaf2e0; color: #4a6a30; font-weight: 700; }
         .trend-high { color: var(--accent-dark); font-weight: 700; background: var(--accent-light); }
         .trend-zero { color: #ccc; }
+        .pace-chart-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .pace-chart {
+            display: block;
+            width: 100%;
+            min-width: 520px;
+            max-height: 340px;
+        }
         .stats-title-row { margin-bottom: 10px; }
         .stats-title-row .stats-sec-title { margin-bottom: 0; }
         .stats-toggle {
@@ -1090,6 +1134,12 @@ const S = {
         dir:   'desc',
     },
     statsTopMode: 'song',
+    statsCollapsed: {
+        summary: false,
+        graphs: false,
+        yearly: false,
+        overall: false,
+    },
     session:      null,
 };
 
@@ -1467,11 +1517,15 @@ function renderStats() {
             if (m >= 1 && m <= 12) ymCounts[y][m]++;
         }
         const key = liveStatKey(r);
-        if (!songMap[key]) songMap[key] = { title: r.title, artist: r.artist, count: 0, lastDate: null, lastDateText: '' };
+        if (!songMap[key]) songMap[key] = { title: r.title, artist: r.artist, count: 0, lastDate: null, lastDateText: '', clipUrl: '', clipDate: null };
         songMap[key].count++;
         if (rowDate && (!songMap[key].lastDate || rowDate > songMap[key].lastDate)) {
             songMap[key].lastDate = rowDate;
             songMap[key].lastDateText = r.performed_date;
+        }
+        if (r.clip_url && (!songMap[key].clipDate || (rowDate && rowDate >= songMap[key].clipDate))) {
+            songMap[key].clipUrl = r.clip_url;
+            songMap[key].clipDate = rowDate || songMap[key].clipDate;
         }
 
         const artistKey = normalizeLiveStatText(r.artist);
@@ -1500,8 +1554,12 @@ function renderStats() {
             const rowDate = parseLiveDate(r.performed_date);
             if (!rowDate || rowDate < cutoff || rowDate > today) continue;
             const key = liveStatKey(r);
-            if (!map[key]) map[key] = { title: r.title, artist: r.artist, count: 0 };
+            if (!map[key]) map[key] = { title: r.title, artist: r.artist, count: 0, clipUrl: '', clipDate: null };
             map[key].count++;
+            if (r.clip_url && (!map[key].clipDate || rowDate >= map[key].clipDate)) {
+                map[key].clipUrl = r.clip_url;
+                map[key].clipDate = rowDate;
+            }
         }
         const items = Object.values(map).sort((a,b) => b.count - a.count).slice(0, 10);
         return { items, max: items[0]?.count || 1 };
@@ -1522,34 +1580,63 @@ function renderStats() {
                 <span class="stat-rank ${i<3?'top3':''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</span>
                 <div class="stat-info">
                     <div class="stat-title">${esc(opts.title ? opts.title(s) : s.title)}</div>
-                    <div class="stat-artist">${esc(opts.sub ? opts.sub(s) : (s.artist || ''))}</div>
+                    <div class="stat-artist">${esc(opts.sub ? opts.sub(s) : (s.artist || ''))}${opts.clipInSub && s.clipUrl ? ` <a class="stat-clip" href="${esc(s.clipUrl)}" target="_blank" rel="noopener noreferrer" title="최근 클립" onclick="event.stopPropagation()">클립</a>` : ''}</div>
                 </div>
-                <div class="stat-bar-wrap"><div class="stat-bar" style="width:${Math.round((opts.value ? opts.value(s) : s.count) / max * 100)}%"></div></div>
+                ${opts.noBar ? '' : `<div class="stat-bar-wrap"><div class="stat-bar" style="width:${Math.round((opts.value ? opts.value(s) : s.count) / max * 100)}%"></div></div>`}
                 <span class="stat-count">${esc(opts.count ? opts.count(s) : `${s.count}번`)}</span>
+                ${opts.clipAfterCount && s.clipUrl ? `<a class="stat-clip" href="${esc(s.clipUrl)}" target="_blank" rel="noopener noreferrer" title="최근 클립" onclick="event.stopPropagation()">클립</a>` : ''}
             </div>`).join('');
     }
 
     const trendYears = actYrs.length ? actYrs : CHART_YEARS;
-    const cumulativeMax = Math.max(...trendYears.flatMap(y => {
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth() + 1;
+    const paceData = trendYears.map(y => {
+        const latestMonth = Math.max(0, ...MONTHS.filter(m => ymCounts[y]?.[m] > 0));
+        const limit = y === currentYear ? Math.min(12, Math.max(currentMonth, latestMonth)) : 12;
         let sum = 0;
-        return MONTHS.map(m => {
-            sum += ymCounts[y]?.[m] || 0;
-            return sum;
-        });
-    }), 1);
-    const trendTable = `<div class="trend-table-wrap"><table class="trend-table">
-        <thead><tr><th>월</th>${trendYears.map(y => `<th>${y}</th>`).join('')}</tr></thead>
-        <tbody>${MONTHS.map(m => `
-            <tr>
-                <th>${m}월</th>
-                ${trendYears.map(y => {
-                    let total = 0;
-                    for (let mi = 1; mi <= m; mi++) total += ymCounts[y]?.[mi] || 0;
-                    const cls = total === 0 ? 'trend-zero' : total === cumulativeMax ? 'trend-high' : '';
-                    return `<td class="${cls}">${total || '-'}</td>`;
-                }).join('')}
-            </tr>`).join('')}</tbody>
-    </table></div>`;
+        return {
+            year: y,
+            points: MONTHS.slice(0, limit).map(m => {
+                sum += ymCounts[y]?.[m] || 0;
+                return { month: m, total: sum };
+            }),
+        };
+    });
+    const cumulativeMax = Math.max(...paceData.flatMap(d => d.points.map(p => p.total)), 1);
+    const PCW = 760, PCHT = 300, PL = 54, PR = 22, PT = 22, PB = 42;
+    const plotW = PCW - PL - PR, plotH = PCHT - PT - PB;
+    const px = m => PL + (m - 1) / 11 * plotW;
+    const py = v => PT + plotH - (v / cumulativeMax) * plotH;
+    const yTicks = [0, .25, .5, .75, 1].map(r => Math.round(cumulativeMax * r));
+    const paceGrid = yTicks.map(v => {
+        const y = py(v);
+        return `<line x1="${PL}" y1="${y}" x2="${PCW - PR}" y2="${y}" stroke="rgba(0,0,0,.08)"/>
+            <text x="${PL - 8}" y="${y + 4}" text-anchor="end" font-size="10" fill="#999">${v}</text>`;
+    }).join('');
+    const paceMonthLabels = MONTHS.map(m => `<text x="${px(m)}" y="${PCHT - 14}" text-anchor="middle" font-size="10" fill="#999">${m}월</text>`).join('');
+    const paceLines = paceData.map(d => {
+        const pts = d.points.map(p => `${px(p.month)},${py(p.total)}`).join(' ');
+        const dots = d.points.map(p => `<circle cx="${px(p.month)}" cy="${py(p.total)}" r="3" fill="${YCLR[d.year]}">
+            <title>${d.year}년 ${p.month}월까지 ${p.total}곡</title>
+        </circle>`).join('');
+        return `<polyline points="${pts}" fill="none" stroke="${YCLR[d.year]}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            ${dots}`;
+    }).join('');
+    const paceLegend = paceData.map((d, i) => `<g transform="translate(${PL + i * 76}, 8)">
+        <rect x="0" y="0" width="10" height="10" rx="2" fill="${YCLR[d.year]}"/>
+        <text x="15" y="10" font-size="11" fill="#666">${d.year}</text>
+    </g>`).join('');
+    const paceChart = `<div class="pace-chart-wrap">
+        <svg class="pace-chart" viewBox="0 0 ${PCW} ${PCHT}" preserveAspectRatio="xMidYMid meet">
+            ${paceGrid}
+            <line x1="${PL}" y1="${PT}" x2="${PL}" y2="${PCHT - PB}" stroke="rgba(0,0,0,.22)"/>
+            <line x1="${PL}" y1="${PCHT - PB}" x2="${PCW - PR}" y2="${PCHT - PB}" stroke="rgba(0,0,0,.22)"/>
+            ${paceMonthLabels}
+            ${paceLines}
+            ${paceLegend}
+        </svg>
+    </div>`;
     const topMode = S.statsTopMode === 'artist' ? 'artist' : 'song';
     const top30Items = topMode === 'artist' ? topArtists : topAll;
     const top30Max = top30Items[0]?.count || 1;
@@ -1644,22 +1731,28 @@ function renderStats() {
     }).join('');
 
     const totalCount = Object.values(yearTotals).reduce((a, b) => a + b, 0);
+    const foldHtml = (key, title, body) => {
+        const closed = !!S.statsCollapsed[key];
+        return `<section class="stats-fold${closed ? ' collapsed' : ''}">
+            <button class="stats-fold-head" onclick="toggleStatsFold('${key}')">
+                <span class="stats-fold-title">${title}</span>
+                <span class="stats-fold-icon">${closed ? '∨' : '∧'}</span>
+            </button>
+            <div class="stats-fold-body">${body}</div>
+        </section>`;
+    };
 
-    // ── 렌더 ─────────────────────────────────────
-    panel.innerHTML = `<div class="stats-dashboard">
-        <div class="stats-total-badge">총 ${totalCount.toLocaleString()}곡</div>
-
-        <div class="stats-feature-grid focus">
-            <div class="stats-card">
-                <div class="stats-sec-title">최근 많이 부른 곡</div>
+    const summaryRow = `<div class="stats-feature-grid focus">
+        <div class="stats-card">
+            <div class="stats-sec-title">최근 많이 부른 곡</div>
                 <div class="stats-mini-grid">
                     <div>
                         <div class="stats-subtitle">최근 30일</div>
-                        ${statListHtml(recent30.items, recent30.max)}
+                        ${statListHtml(recent30.items, recent30.max, { noBar: true, clipAfterCount: true })}
                     </div>
                     <div>
                         <div class="stats-subtitle">최근 90일</div>
-                        ${statListHtml(recent90.items, recent90.max)}
+                        ${statListHtml(recent90.items, recent90.max, { noBar: true, clipAfterCount: true })}
                     </div>
                 </div>
             </div>
@@ -1668,62 +1761,71 @@ function renderStats() {
                 ${statListHtml(oldSongs, oldSongs[0]?.daysAgo || 1, {
                     sub: s => `${s.artist || '가수 미상'} · 마지막 ${s.lastDateText || '날짜 없음'}`,
                     value: s => s.daysAgo,
-                    count: s => `${s.daysAgo}일`
+                    count: s => `${s.daysAgo}일`,
+                    clipAfterCount: true,
+                    noBar: true
                 })}
             </div>
-        </div>
+    </div>`;
 
-        <div class="stats-top-row">
-            <div class="stats-top-left">
-                <div class="stats-section">
-                    <div class="stats-sec-title">연도별 라이브 노래 수</div>
-                    <div class="svg-chart-wrap">
-                        <svg width="100%" viewBox="0 0 ${YSW} ${YCH}" preserveAspectRatio="xMinYMid meet" style="display:block;max-height:${YCH*1.4}px">${yearBars}</svg>
-                    </div>
-                </div>
-                <div class="stats-section">
-                    <div class="stats-sec-title">연도별 월간 기록</div>
-                    <div class="ym-table-wrap">${ymTable}</div>
-                </div>
-                <div class="stats-section">
-                    <div class="stats-sec-title">연도별 누적 페이스</div>
-                    ${trendTable}
+    const graphRow = `<div class="stats-top-row">
+        <div class="stats-top-left">
+            <div class="stats-section">
+                <div class="stats-sec-title">연도별 라이브 노래 수</div>
+                <div class="svg-chart-wrap">
+                    <svg width="100%" viewBox="0 0 ${YSW} ${YCH}" preserveAspectRatio="xMinYMid meet" style="display:block;max-height:${YCH*1.4}px">${yearBars}</svg>
                 </div>
             </div>
-            <div class="stats-top-right">
-                <div class="stats-section">
-                    <div class="stats-sec-title">월별 라이브 노래 수</div>
-                    <div class="per-year-charts">${perYearCharts}</div>
-                </div>
+            <div class="stats-section">
+                <div class="stats-sec-title">연도별 월간 기록</div>
+                <div class="ym-table-wrap">${ymTable}</div>
+            </div>
+            <div class="stats-section">
+                <div class="stats-sec-title">연도별 누적 페이스</div>
+                ${paceChart}
             </div>
         </div>
-
-        <div class="stats-section">
-            <div class="stats-sec-title">월별 통합</div>
-            <div class="svg-chart-wrap" style="text-align:center">
-                <svg width="100%" viewBox="0 0 ${MSW} ${MCH}" preserveAspectRatio="xMidYMid meet" style="display:block;margin:0 auto;max-width:1100px">
-                    <g transform="translate(2,2)">${mLeg}</g>
-                    ${mBars}
-                </svg>
+        <div class="stats-top-right">
+            <div class="stats-section">
+                <div class="stats-sec-title">월별 라이브 노래 수</div>
+                <div class="per-year-charts">${perYearCharts}</div>
             </div>
         </div>
+    </div>
 
-        <div class="stats-section">
-            <div class="stats-sec-title">연도별 많이 부른 곡 TOP 10</div>
-            <div class="year-tops-grid">${top10Cards}</div>
+    <div class="stats-section">
+        <div class="stats-sec-title">월별 통합</div>
+        <div class="svg-chart-wrap" style="text-align:center">
+            <svg width="100%" viewBox="0 0 ${MSW} ${MCH}" preserveAspectRatio="xMidYMid meet" style="display:block;margin:0 auto;max-width:1100px">
+                <g transform="translate(2,2)">${mLeg}</g>
+                ${mBars}
+            </svg>
         </div>
+    </div>`;
 
-        <div class="stats-section">
-            <div class="stats-title-row">
-                <div class="stats-toggle">
-                    <button class="${topMode === 'song' ? 'active' : ''}" onclick="setStatsTopMode('song')">노래 TOP 30</button>
-                    <button class="${topMode === 'artist' ? 'active' : ''}" onclick="setStatsTopMode('artist')">가수 TOP 30</button>
-                </div>
-                <div class="stats-sec-title">전체 많이 부른 ${topMode === 'artist' ? '가수' : '곡'} TOP 30</div>
+    const yearlyRow = `<div class="stats-section">
+        <div class="stats-sec-title">연도별 많이 부른 곡 TOP 10</div>
+        <div class="year-tops-grid">${top10Cards}</div>
+    </div>`;
+
+    const overallRow = `<div class="stats-section">
+        <div class="stats-title-row">
+            <div class="stats-toggle">
+                <button class="${topMode === 'song' ? 'active' : ''}" onclick="setStatsTopMode('song')">노래 TOP 30</button>
+                <button class="${topMode === 'artist' ? 'active' : ''}" onclick="setStatsTopMode('artist')">가수 TOP 30</button>
             </div>
-            ${top30Html}
+            <div class="stats-sec-title">전체 많이 부른 ${topMode === 'artist' ? '가수' : '곡'} TOP 30</div>
         </div>
+        ${top30Html}
+    </div>`;
 
+    // ── 렌더 ─────────────────────────────────────
+    panel.innerHTML = `<div class="stats-dashboard">
+        <div class="stats-total-badge">총 ${totalCount.toLocaleString()}곡</div>
+        ${foldHtml('summary', '1. 요약 통계', summaryRow)}
+        ${foldHtml('graphs', '2. 그래프 / 월별 기록', graphRow)}
+        ${foldHtml('yearly', '3. 연도별 많이 부른 곡', yearlyRow)}
+        ${foldHtml('overall', '4. 전체 많이 부른 곡', overallRow)}
     </div>`;
 }
 
@@ -1851,6 +1953,11 @@ function setLiveSortDir(dir) {
 
 function setStatsTopMode(mode) {
     S.statsTopMode = mode === 'artist' ? 'artist' : 'song';
+    renderStats();
+}
+
+function toggleStatsFold(key) {
+    S.statsCollapsed[key] = !S.statsCollapsed[key];
     renderStats();
 }
 
