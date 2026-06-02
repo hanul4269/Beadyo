@@ -210,6 +210,17 @@
         .lf-check:has(input:checked), .lf-radio:has(input:checked) {
             background: var(--accent); color: #fff; border-color: var(--accent-dark);
         }
+        .lf-year-check {
+            background: #fff;
+            border-color: var(--year-bg);
+            color: var(--year-strong);
+        }
+        .lf-year-check:has(input:checked) {
+            background: var(--year-bg);
+            border-color: var(--year-color);
+            color: var(--year-strong);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
         .lf-dir-btns { display: flex; gap: 4px; margin-left: 4px; }
         .lf-dir {
             padding: 4px 10px; border-radius: 16px; cursor: pointer;
@@ -317,7 +328,7 @@
 
         /* 라이브 열 너비 */
         .col-date   { width: 70px;  font-size: 15px; text-align: center; font-weight: 700; }
-        .col-year   { width: 52px;  font-size: 13px; text-align: center; font-weight: 700; color: var(--muted); }
+        .col-year   { width: 52px;  font-size: 13px; text-align: center; font-weight: 700; color: var(--text); }
         .col-lmemo  { width: 180px; color: var(--muted); font-size: 12px; }
         .col-cnt    { width: 48px;  text-align: center; font-weight: 700; color: var(--accent-dark); }
 
@@ -753,11 +764,11 @@
             <div class="lf-row">
                 <span class="lf-label">연도</span>
                 <div class="lf-checks" id="lf-year-checks">
-                    <label class="lf-check"><input type="checkbox" value="2026" checked onchange="applyLiveFilter()"><span>2026</span></label>
-                    <label class="lf-check"><input type="checkbox" value="2025" checked onchange="applyLiveFilter()"><span>2025</span></label>
-                    <label class="lf-check"><input type="checkbox" value="2024" checked onchange="applyLiveFilter()"><span>2024</span></label>
-                    <label class="lf-check"><input type="checkbox" value="2023" checked onchange="applyLiveFilter()"><span>2023</span></label>
-                    <label class="lf-check"><input type="checkbox" value="2022" checked onchange="applyLiveFilter()"><span>2022</span></label>
+                    <label class="lf-check lf-year-check" style="--year-color:#e87ca8;--year-bg:#fde8f0;--year-strong:#b7356a"><input type="checkbox" value="2026" checked onchange="applyLiveFilter()"><span>2026</span></label>
+                    <label class="lf-check lf-year-check" style="--year-color:#8bc34a;--year-bg:#f0fae4;--year-strong:#5f8f23"><input type="checkbox" value="2025" checked onchange="applyLiveFilter()"><span>2025</span></label>
+                    <label class="lf-check lf-year-check" style="--year-color:#e8d07c;--year-bg:#fdf8e8;--year-strong:#a68523"><input type="checkbox" value="2024" checked onchange="applyLiveFilter()"><span>2024</span></label>
+                    <label class="lf-check lf-year-check" style="--year-color:#e8a87c;--year-bg:#fdf0e8;--year-strong:#b96935"><input type="checkbox" value="2023" checked onchange="applyLiveFilter()"><span>2023</span></label>
+                    <label class="lf-check lf-year-check" style="--year-color:#a8c8e8;--year-bg:#eef5fb;--year-strong:#4d82b8"><input type="checkbox" value="2022" checked onchange="applyLiveFilter()"><span>2022</span></label>
                 </div>
             </div>
             <div class="lf-row">
@@ -1217,9 +1228,8 @@ async function renderLive() {
     document.getElementById('live-list').parentElement.style.display = '';
     document.getElementById('stats-panel').style.display = 'none';
 
-    // 검색 중이거나 필터 패널이 열려 있으면 전체 연도 데이터 사용
-    const filterOpen = document.getElementById('live-filter-panel')?.style.display !== 'none';
-    const key = (S.query || year === 'all' || filterOpen) ? 'all' : year;
+    // 검색 중일 때만 전체 연도 데이터 사용
+    const key = (S.query || year === 'all') ? 'all' : year;
     if (S.liveCache[key] === undefined) {
         renderSkeleton('live-list');
         await loadLive(key);
@@ -1264,13 +1274,12 @@ async function renderLive() {
     }
 
     const showYear = S.query || key === 'all';
-    const YCLR = { 2022:'#5b9bd5', 2023:'#d98841', 2024:'#c9a227', 2025:'#6aa121', 2026:'#d44f8c' };
     el.innerHTML = `
     <table class="song-table">
         <thead><tr>
-            <th class="col-num">#</th>
+            <th class="col-num th-center">#</th>
             ${showYear ? `<th class="col-year">연도</th>` : ''}
-            <th class="col-date">날짜</th>
+            <th class="col-date th-center">날짜</th>
             <th class="col-title">제목</th>
             <th class="col-artist">가수</th>
             <th class="col-lmemo">메모</th>
@@ -1286,7 +1295,7 @@ async function renderLive() {
             return `
             <tr class="${S.session ? 'editable ' : ''}${monthStart ? 'month-start' : ''}"${S.session ? ` onclick="openLiveModal(${r.id})"` : ''}>
                 <td class="col-num">${i + 1}</td>
-                ${showYear ? `<td class="col-year" style="color:${YCLR[r.year]||'var(--text)'}">${r.year || ''}</td>` : ''}
+                ${showYear ? `<td class="col-year">${r.year || ''}</td>` : ''}
                 <td class="col-date">${fmtDate(r.performed_date)}</td>
                 <td class="col-title">${esc(r.title)}</td>
                 <td class="col-artist">${esc(r.artist || '')}</td>
