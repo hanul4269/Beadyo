@@ -119,7 +119,7 @@
         .sb-sub-row {
             overflow-x: auto;
             scrollbar-width: none;
-            padding: 0 12px 8px;
+            padding: 8px 12px;
         }
         .sb-sub-row::-webkit-scrollbar { display: none; }
         .sub-tabs { display: flex; gap: 6px; white-space: nowrap; }
@@ -733,7 +733,7 @@
 <div class="sb-header">
 
     <!-- 메인 탭 -->
-    <div class="sb-main-row">
+    <div class="sb-main-row" style="display:none">
         <div class="main-tabs">
             <button class="main-tab active" onclick="setMainTab('songbook')"><span class="main-tab-icon">🎵</span>노래책</button>
             <button class="main-tab"        onclick="setMainTab('live')"><span class="main-tab-icon">📋</span>라이브 기록</button>
@@ -1003,10 +1003,11 @@
 <script>
 const SUPABASE_URL      = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
+const INITIAL_VIEW = new URLSearchParams(location.search).get('view') === 'live' ? 'live' : 'songbook';
 
 // ── 상태 ──────────────────────────────────────────
 const S = {
-    mainTab:      'songbook',
+    mainTab:      INITIAL_VIEW,
     songbookCat:  'welcome',
     liveYear:     'stats',
     query:        '',
@@ -1604,6 +1605,10 @@ function setMainTab(tab) {
     updateFab();
 }
 
+function applyInitialView() {
+    setMainTab(S.mainTab);
+}
+
 function setSongbookCat(cat) {
     S.songbookCat = cat;
     document.querySelectorAll('#songbook-subtabs .sub-tab').forEach(el =>
@@ -1751,6 +1756,7 @@ function showToast(msg) {
 async function init() {
     await loadSongbook();
     loadLive(2026);
+    applyInitialView();
 }
 
 function updateFab() {

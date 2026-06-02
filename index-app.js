@@ -8,7 +8,8 @@ const TABS = [
     { type: 'sheet', id: '1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw', gid: '1451717792', alwaysEdit: true },
     { type: 'sheet', id: '1bIhxhHDU_Ig5IuDrS4WvPtMVsiVWHnDvm6dU3E3Q8Mo', gid: '1565839847', alwaysEdit: true },
     { type: 'songs', src: 'songs.html', directUrl: 'songs.html' },
-    { type: 'songbook', src: 'songbook.html', directUrl: 'songbook.html' },
+    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook' },
+    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live' },
 ];
 
 const readOnlyUrl = s =>
@@ -92,7 +93,7 @@ function getSerializableAuthUser(user = authUser) {
 function syncCalendarAuth() {
     const origin = window.location.origin === 'null' ? '*' : window.location.origin;
     const msg = { type: 'beadyo-auth-sync', user: getSerializableAuthUser() };
-    for (const id of ['frame-0', 'frame-4', 'frame-5']) {
+    for (const id of ['frame-0', 'frame-4', 'frame-5', 'frame-6']) {
         const frame = document.getElementById(id);
         if (frame?.contentWindow) frame.contentWindow.postMessage(msg, origin);
     }
@@ -158,12 +159,12 @@ function switchTab(index) {
 
     if (loaded.has(index) && index !== 1) {
         hideLoading(index);
-        if (index === 0 || index === 5) syncCalendarAuth();
+        if (index === 0 || index === 5 || index === 6) syncCalendarAuth();
     } else {
         document.getElementById('loading').style.display = 'flex';
         frame.onload = () => {
             hideLoading(index);
-            if (index === 0 || index === 5) syncCalendarAuth();
+            if (index === 0 || index === 5 || index === 6) syncCalendarAuth();
         };
         frame.src = getFrameUrl(index);
         loaded.add(index);
