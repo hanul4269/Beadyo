@@ -409,6 +409,17 @@
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
         }
+        .date-num.date-button {
+            border: 0;
+            background: transparent;
+            padding: 0;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .date-num.date-button:hover {
+            color: var(--accent-dark);
+            transform: translateY(-1px);
+        }
         .date-num.sun { color: #e53935; }
         .date-num.sat { color: #1976d2; }
 
@@ -1251,6 +1262,114 @@
         .view-section { margin-bottom: 12px; }
         .view-label { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
         .view-value { font-size: 15px; }
+        .day-modal-section {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+        .day-section-title {
+            font-size: 13px;
+            font-weight: 900;
+            color: var(--accent-dark);
+            margin-bottom: 10px;
+        }
+        .day-section-title.sub {
+            margin-top: 12px;
+            color: var(--muted);
+        }
+        .day-event-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .day-event-card {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            justify-content: space-between;
+            border: 1.5px solid;
+            border-radius: 14px;
+            padding: 10px 11px;
+        }
+        .day-event-main { min-width: 0; flex: 1; }
+        .day-event-head {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-wrap: wrap;
+            margin-bottom: 5px;
+        }
+        .day-type-chip,
+        .day-event-time {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            background: rgba(255,255,255,.68);
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: 900;
+        }
+        .day-event-title {
+            font-size: 16px;
+            font-weight: 900;
+            line-height: 1.35;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+        .day-event-sub,
+        .day-event-meta,
+        .day-event-memo {
+            font-size: 12px;
+            line-height: 1.45;
+            opacity: .82;
+            margin-top: 3px;
+            white-space: pre-wrap;
+        }
+        .day-link-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 9px;
+        }
+        .day-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.72);
+            color: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+        .day-link.yt { background: #fff0f0; color: #d33; }
+        .day-edit-btn {
+            border: 0;
+            border-radius: 999px;
+            background: rgba(255,255,255,.72);
+            color: inherit;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 6px 10px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .broadcast-card {
+            border: 1.5px solid rgba(139,195,74,.35);
+            border-radius: 14px;
+            background: #f7fbf1;
+            padding: 12px;
+        }
+        .broadcast-links .vod-link { margin-top: 0; }
+        .day-empty {
+            border-radius: 14px;
+            background: #f7f7f7;
+            color: var(--muted);
+            font-size: 13px;
+            padding: 14px;
+            text-align: center;
+        }
 
         .type-badge {
             display: inline-block;
@@ -1905,6 +2024,38 @@
         <div class="btn-row">
             <button class="btn btn-primary" onclick="saveEvent()">저장</button>
             <button class="btn btn-secondary" onclick="closeEditModal()">취소</button>
+        </div>
+    </div>
+</div>
+
+<!-- ─── 방송정보 모달 ─── -->
+<div class="modal-overlay" id="broadcastModal" onmousedown="if(event.target===this)closeBroadcastModal()">
+    <div class="modal">
+        <button class="modal-close" onclick="closeBroadcastModal()">×</button>
+        <div class="modal-title" id="broadcastModalTitle">방송정보</div>
+        <input type="hidden" id="broadcastDate">
+        <div class="field-row" style="margin-bottom:13px;">
+            <div class="field">
+                <label>방송 시작</label>
+                <input type="time" id="broadcastStartTime">
+            </div>
+            <div class="field">
+                <label>방송 종료</label>
+                <input type="time" id="broadcastEndTime">
+            </div>
+        </div>
+        <div class="field">
+            <label>다시보기 URL</label>
+            <textarea id="broadcastVodUrls" rows="3" placeholder="다시보기 링크를 한 줄에 하나씩 입력"></textarea>
+        </div>
+        <div class="field">
+            <label>메모</label>
+            <textarea id="broadcastMemo" rows="3" placeholder="방송정보 메모"></textarea>
+        </div>
+        <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveBroadcastInfo()">저장</button>
+            <button class="btn btn-danger" id="broadcastDeleteBtn" onclick="deleteBroadcastInfo()">삭제</button>
+            <button class="btn btn-secondary" onclick="closeBroadcastModal()">취소</button>
         </div>
     </div>
 </div>
