@@ -28,3 +28,6 @@ ON broadcast_infos
 FOR ALL
 USING (true)
 WITH CHECK (true);
+
+ALTER TABLE schedules
+ADD COLUMN IF NOT EXISTS sort_order INTEGER;

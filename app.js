@@ -373,19 +373,46 @@ function _scheduleLoadRetry(delay = 3000) {
     _retryTimer = setTimeout(() => { if (!_eventsLoaded) loadEvents(); }, delay);
 }
 
-function getLocalOrder(dateStr, events) {
-    const saved = localStorage.getItem('beadyo_order_' + dateStr);
-    if (!saved) return events.map(e => e.id);
-    const ids = saved.split(',');
-    const ordered = [];
-    ids.forEach(id => { if (events.find(e => e.id === id)) ordered.push(id); });
-    events.forEach(ev => { if (!ordered.includes(ev.id)) ordered.push(ev.id); });
-    return ordered;
+function eventOrderValue(ev) {
+    return Number.isFinite(Number(ev.sort_order)) ? Number(ev.sort_order) : 9999;
 }
 
-function applyLocalOrder(dateStr, events) {
-    const order = getLocalOrder(dateStr, events);
-    return order.map(id => events.find(e => e.id === id)).filter(Boolean);
+function sortCalendarEvents(events) {
+    return [...events].sort((a, b) => {
+        if (!!b.is_rest !== !!a.is_rest) return (b.is_rest ? 1 : 0) - (a.is_rest ? 1 : 0);
+        const orderDiff = eventOrderValue(a) - eventOrderValue(b);
+        if (orderDiff !== 0) return orderDiff;
+        const timeDiff = String(a.start_time || '99:99').localeCompare(String(b.start_time || '99:99'));
+        if (timeDiff !== 0) return timeDiff;
+        return String(a.created_at || a.id || '').localeCompare(String(b.created_at || b.id || ''));
+    });
+}
+
+function eventsOnDateUnsorted(dateStr) {
+    return state.events.filter(ev => eventOnDate(ev, dateStr));
+}
+
+function nextSortOrderForDate(dateStr) {
+    const dayEvents = eventsOnDateUnsorted(dateStr);
+    const orders = dayEvents.map(eventOrderValue).filter(n => n < 9999);
+    return orders.length ? Math.max(...orders) + 1 : dayEvents.length;
+}
+
+async function saveDateOrder(dateStr, orderedEvents) {
+    if (!state.isEditor) return false;
+    await _ensureDb();
+    orderedEvents.forEach((ev, i) => { ev.sort_order = i; });
+    const updates = orderedEvents
+        .filter(ev => ev.date === dateStr)
+        .map((ev, i) => db.from('schedules').update({ sort_order: i }).eq('id', ev.id));
+    if (!updates.length) return true;
+    const results = await Promise.all(updates);
+    const failed = results.find(res => res.error);
+    if (failed) {
+        showToast('순서 저장 실패: ' + failed.error.message);
+        return false;
+    }
+    return true;
 }
 
 function dragStart(e, id, dateStr) {
@@ -419,17 +446,14 @@ async function dragDrop(e, targetId, targetDateStr) {
     if (!sourceId || sourceId === targetId) return;
 
     if (srcDate === targetDateStr) {
-        const cellEvents = state.events.filter(ev => {
-            const endDate = ev.end_date || ev.date;
-            return targetDateStr >= ev.date && targetDateStr <= endDate;
-        });
-        const order = getLocalOrder(targetDateStr, cellEvents);
-        const fromIdx = order.indexOf(sourceId);
-        const toIdx   = order.indexOf(targetId);
+        const orderedEvents = calendarEventsForDate(targetDateStr);
+        const fromIdx = orderedEvents.findIndex(ev => ev.id === sourceId);
+        const toIdx   = orderedEvents.findIndex(ev => ev.id === targetId);
         if (fromIdx === -1 || toIdx === -1) return;
-        order.splice(fromIdx, 1);
-        order.splice(toIdx, 0, sourceId);
-        localStorage.setItem('beadyo_order_' + targetDateStr, order.join(','));
+        const [moved] = orderedEvents.splice(fromIdx, 1);
+        orderedEvents.splice(toIdx, 0, moved);
+        const saved = await saveDateOrder(targetDateStr, orderedEvents);
+        if (!saved) await loadEvents();
         renderCalendar();
     } else {
         await moveEventToDate(sourceId, srcDate, targetDateStr);
@@ -457,7 +481,7 @@ async function moveEventToDate(eventId, srcDate, targetDate) {
     await _ensureDb();
     const ev = state.events.find(e => e.id === eventId);
     if (!ev) return;
-    const payload = { date: targetDate };
+    const payload = { date: targetDate, sort_order: nextSortOrderForDate(targetDate) };
     if (ev.end_date && ev.end_date !== ev.date) {
         const [sy, sm, sd] = srcDate.split('-').map(Number);
         const [ty, tm, td] = targetDate.split('-').map(Number);
@@ -508,11 +532,14 @@ async function loadEvents() {
     }
 
     // Supabase 클라이언트 초기화 행 방지 — REST API 직접 호출
-    const cols = 'id,date,end_date,start_time,duration,title,type,collab,subtitle,vod_url,memo,is_rest,youtube_links';
-    const url  = `${SUPABASE_URL}/rest/v1/schedules` +
-        `?select=${cols}` +
+    const baseCols = 'id,date,end_date,start_time,duration,title,type,collab,subtitle,vod_url,memo,is_rest,youtube_links';
+    const cols = `${baseCols},sort_order,created_at`;
+    const baseQuery = `${SUPABASE_URL}/rest/v1/schedules` +
         `&date=gte.${extFirst}` +
-        `&date=lte.${last}` +
+        `&date=lte.${last}`;
+    const url = `${baseQuery.replace('&', '?select=' + cols + '&')}` +
+        `&order=date.asc,sort_order.asc.nullslast,start_time.asc.nullslast`;
+    const fallbackUrl = `${baseQuery.replace('&', '?select=' + baseCols + '&')}` +
         `&order=date.asc,start_time.asc.nullslast`;
 
     const controller = new AbortController();
@@ -520,13 +547,22 @@ async function loadEvents() {
 
     let data;
     try {
-        const res = await fetch(url, {
+        let res = await fetch(url, {
             headers: {
                 'apikey': SUPABASE_ANON_KEY,
                 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             },
             signal: controller.signal,
         });
+        if (!res.ok && res.status === 400) {
+            res = await fetch(fallbackUrl, {
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                },
+                signal: controller.signal,
+            });
+        }
         clearTimeout(tid);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         data = await res.json();
@@ -624,10 +660,7 @@ function eventsForDate(dateStr) {
 }
 
 function calendarEventsForDate(dateStr) {
-    return applyLocalOrder(dateStr,
-        state.events.filter(ev => eventOnDate(ev, dateStr))
-            .sort((a, b) => (b.is_rest ? 1 : 0) - (a.is_rest ? 1 : 0))
-    );
+    return sortCalendarEvents(eventsOnDateUnsorted(dateStr));
 }
 
 function renderMobileSchedule() {
@@ -1792,8 +1825,9 @@ async function repeatWeekly(id) {
     }
     const payloads = Array.from({ length: count }, (_, i) => {
         const offset = (i + 1) * 7;
+        const nextDate = dateToStr(addDays(dateFromStr(ev.date), offset));
         const payload = {
-            date: dateToStr(addDays(dateFromStr(ev.date), offset)),
+            date: nextDate,
             end_date: ev.end_date ? dateToStr(addDays(dateFromStr(ev.end_date), offset)) : null,
             start_time: ev.start_time || null,
             duration: ev.duration || null,
@@ -1805,6 +1839,7 @@ async function repeatWeekly(id) {
             memo: ev.memo || null,
             is_rest: !!ev.is_rest,
             youtube_links: ev.youtube_links || null,
+            sort_order: nextSortOrderForDate(nextDate),
         };
         return payload;
     });
@@ -1837,6 +1872,7 @@ async function saveEvent() {
     };
 
     const id = document.getElementById('editId').value;
+    if (!id) payload.sort_order = nextSortOrderForDate(date);
     const { error } = id
         ? await db.from('schedules').update(payload).eq('id', id)
         : await db.from('schedules').insert(payload);
