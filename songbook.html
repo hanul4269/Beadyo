@@ -104,7 +104,8 @@
             transition: border-color .15s, box-shadow .15s;
         }
         #random-btn img {
-            width: 100%; height: 100%; object-fit: cover;
+            width: 100%; height: 100%; object-fit: contain;
+            background: #eef8e5; padding: 3px; box-sizing: border-box;
             display: block; pointer-events: none;
         }
         #random-btn:hover { border-color: var(--accent); box-shadow: 0 2px 10px rgba(139,195,74,.4); }
@@ -796,72 +797,226 @@
 
         /* ─── Welcome 페이지 ─── */
         .wc-card {
-            max-width: 520px;
-            margin: 16px auto;
-            background: #bdd4a0;
-            border-radius: 8px;
-            padding: 18px;
-            border: 2px solid #7aaa40;
+            max-width: 1180px;
+            margin: 14px auto 0;
+            padding: 20px 22px 28px;
+            background: var(--surface);
+            border-top: 3px solid var(--accent);
+            border-bottom: 3px solid var(--accent);
+        }
+        .wc-hero {
+            display: grid;
+            grid-template-columns: minmax(210px, 280px) minmax(360px, 1fr) minmax(180px, 240px);
+            align-items: center;
+            gap: 28px;
+        }
+        .wc-photo-panel {
+            height: 260px;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+        }
+        .wc-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            opacity: 1;
+        }
+        .wc-main {
+            min-width: 0;
         }
         .wc-title {
-            text-align: center;
-            padding: 12px 16px;
-            border: 3px double #4e7028;
-            font-size: 18px;
-            font-weight: 700;
-            color: #2e4a15;
-            margin-bottom: 14px;
-            background: rgba(255,255,255,0.28);
-            letter-spacing: .04em;
-            border-radius: 2px;
+            color: #111;
+            margin: 0 0 18px;
+            letter-spacing: 0;
         }
-        .wc-img-wrap {
-            border: 2px solid #4e7028;
-            overflow: hidden;
-            margin-bottom: 4px;
-            background: #fff;
-            border-radius: 2px;
+        .wc-title-main {
+            display: block;
+            font-size: clamp(34px, 4.5vw, 54px);
+            line-height: .95;
+            font-weight: 900;
         }
-        .wc-img { width: 100%; display: block; }
-        .wc-turtle { font-size: 16px; padding: 3px 0 7px 2px; }
-        .wc-info {
-            border: 1px dashed #5a8030;
-            padding: 9px 14px;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 700;
-            color: #2a3a15;
-            margin-bottom: 6px;
-            background: rgba(255,255,255,0.22);
-            border-radius: 3px;
+        .wc-title-sub {
+            display: block;
+            margin-top: 8px;
+            font-size: clamp(20px, 2.35vw, 34px);
+            line-height: 1;
+            font-weight: 900;
+            letter-spacing: .02em;
         }
         .wc-stats-wrap {
-            border: 1px dashed #5a8030;
+            border: 1.5px solid rgba(139, 195, 74, .36);
+            border-radius: 18px;
             padding: 10px;
-            background: rgba(255,255,255,0.22);
-            border-radius: 3px;
-            margin-bottom: 6px;
+            background: linear-gradient(180deg, #f4faed 0%, #eaf5dc 100%);
+            margin-top: 26px;
             overflow-x: auto;
+            box-shadow: 0 8px 20px rgba(101, 138, 70, .12), inset 0 0 0 1px rgba(255,255,255,.78);
         }
         .wc-stats {
             width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            min-width: 300px;
+            border-collapse: separate;
+            border-spacing: 7px 0;
+            font-size: 15px;
+            min-width: 520px;
         }
-        .wc-stats th, .wc-stats td {
-            border: 1px solid #4e7028;
-            padding: 6px 8px;
+        .wc-stats th,
+        .wc-stats td {
+            border: none;
+            padding: 8px 11px;
             text-align: center;
-            font-weight: 700;
-            color: #2a3a15;
+            font-weight: 900;
+            color: #324c25;
             white-space: nowrap;
         }
-        .wc-version {
-            text-align: right;
-            font-size: 11px;
-            color: #4a6a20;
-            font-weight: 700;
+        .wc-stats th {
+            background: rgba(255,255,255,.84);
+            border-radius: 13px 13px 8px 8px;
+            box-shadow: inset 0 -2px 0 rgba(139,195,74,.16);
+        }
+        .wc-stats td {
+            background: #fff;
+            border-radius: 8px 8px 13px 13px;
+            color: var(--accent-dark);
+            box-shadow: 0 2px 7px rgba(101, 138, 70, .1);
+        }
+        .wc-random-panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .wc-random-btn {
+            position: relative;
+            width: 190px;
+            height: 220px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+            font-family: inherit;
+            color: #111;
+        }
+        .wc-random-arc {
+            position: absolute;
+            top: 56px;
+            left: 50%;
+            width: 188px;
+            height: 58px;
+            transform: translateX(-50%);
+            overflow: visible;
+            pointer-events: none;
+        }
+        .wc-random-arc text {
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: .12em;
+        }
+        .wc-random-face {
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            width: 142px;
+            height: 142px;
+            transform: translateX(-50%);
+            border-radius: 50%;
+            object-fit: contain;
+            background: #eef8e5;
+            padding: 5px;
+            box-sizing: border-box;
+            box-shadow: 0 5px 18px rgba(0,0,0,.16);
+            transition: transform .18s, box-shadow .18s;
+        }
+        .wc-random-btn:hover .wc-random-face {
+            transform: translateX(-50%) translateY(-2px) scale(1.03);
+            box-shadow: 0 8px 22px rgba(139,195,74,.34);
+        }
+        .wc-random-btn.spinning .wc-random-face {
+            animation: wc-rb-spin .45s linear infinite;
+        }
+        @keyframes wc-rb-spin {
+            from { transform: translateX(-50%) rotate(0deg); }
+            to   { transform: translateX(-50%) rotate(360deg); }
+        }
+        .wc-search-zone {
+            margin-top: 22px;
+            padding-top: 22px;
+            border-top: 3px solid var(--accent);
+            display: block;
+        }
+        .wc-search-wrap {
+            position: relative;
+            width: 100%;
+        }
+        .wc-search-wrap svg {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            stroke: var(--muted);
+            fill: none;
+            pointer-events: none;
+        }
+        .wc-search-input {
+            width: 100%;
+            height: 42px;
+            border: 1.5px solid var(--border);
+            border-radius: 22px;
+            padding: 0 18px 0 42px;
+            font-family: inherit;
+            font-size: 15px;
+            color: var(--text);
+            background: var(--surface);
+            outline: none;
+            transition: border-color .15s, box-shadow .15s;
+        }
+        .wc-search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(139,195,74,.15);
+        }
+        .wc-search-results {
+            margin-top: 20px;
+        }
+        .wc-results-head {
+            margin: 0 0 10px;
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--accent-dark);
+        }
+        .wc-search-results .song-table-wrap {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: auto;
+            background: var(--surface);
+            box-shadow: 0 2px 8px rgba(0,0,0,.04);
+        }
+        .wc-search-results .empty-state {
+            margin: 0;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: #fff;
+        }
+        @media (max-width: 900px) {
+            .wc-card { padding: 16px 14px 24px; }
+            .wc-hero {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+            .wc-photo-panel { height: 220px; }
+            .wc-random-panel { order: 3; }
+            .wc-search-zone { display: block; }
+        }
+        @media (max-width: 480px) {
+            .wc-photo-panel { height: 180px; }
+            .wc-stats { min-width: 460px; font-size: 13px; }
+            .wc-random-btn { width: 160px; height: 190px; }
+            .wc-random-face { width: 122px; height: 122px; }
+            .wc-random-arc { top: 52px; width: 166px; height: 50px; }
+            .wc-random-arc text { font-size: 20px; }
         }
 
         /* ─── 편집 FAB ─── */
@@ -1039,7 +1194,7 @@
     <!-- 검색창 (항상 표시) -->
     <div class="sb-search-row" id="sb-search-row" style="display:none">
         <div class="search-wrap">
-            <button id="random-btn" onclick="pickRandom()" title="랜덤 뽑기"><img src="random-face.png" alt="랜덤"></button>
+            <button id="random-btn" onclick="pickRandom()" title="랜덤 뽑기"><img src="random-mustache-2.png" alt="랜덤"></button>
             <button id="live-filter-btn" class="live-filter-btn" onclick="toggleLiveFilter()" style="display:none">상세검색</button>
             <div class="search-input-wrap">
                 <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -1456,6 +1611,47 @@ function daysBetween(a, b) {
     return Math.max(0, Math.floor((a - b) / 86400000));
 }
 
+function welcomeSearchResultsHtml() {
+    if (!S.query) return '';
+    const items = S.songbookData.filter(s => matches(s.title, s.artist, S.query, s.memo));
+    if (!items.length) return emptyHtml(`"${esc(S.query)}" 검색 결과가 없어요`);
+
+    return `
+        <div class="wc-results-head">"${esc(S.query)}" 검색 결과 ${items.length}곡</div>
+        <div class="song-table-wrap">
+            <table class="song-table">
+                <thead><tr>
+                    <th class="col-num">#</th>
+                    <th class="col-cat">분류</th>
+                    <th class="col-title">제목</th>
+                    <th class="col-artist">가수</th>
+                    <th class="col-mr th-center">MR</th>
+                    <th class="col-clip th-center">구슬요 클립</th>
+                    <th class="col-skill th-center">숙련도</th>
+                    <th class="col-memo">메모</th>
+                </tr></thead>
+                <tbody>
+                ${items.map((s, i) => `
+                    <tr ${S.session ? `class="editable" onclick="openSongModal(${s.id})"` : ''}>
+                        <td class="col-num">${i + 1}</td>
+                        <td class="col-cat"><span class="cat-badge">${esc(s.category)}</span></td>
+                        <td class="col-title">${esc(s.title)}</td>
+                        <td class="col-artist">${esc(s.artist || '')}</td>
+                        <td class="col-mr">${s.mr_url ? `<a href="${esc(s.mr_url)}" class="link-btn mr" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">MR</a>` : ''}</td>
+                        <td class="col-clip">${s.clip_url ? `<a href="${esc(s.clip_url)}" class="link-btn clip" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">클립</a>` : ''}</td>
+                        <td class="col-skill">${skillDots(s.skill_level || 0)}</td>
+                        <td class="col-memo">${esc(s.memo || '')}</td>
+                    </tr>`).join('')}
+                </tbody>
+            </table>
+        </div>`;
+}
+
+function renderWelcomeSearchResults() {
+    const el = document.getElementById('wc-search-results');
+    if (el) el.innerHTML = welcomeSearchResultsHtml();
+}
+
 // ── 렌더: Welcome 카드 ────────────────────────────
 function renderWelcomeCard() {
     document.getElementById('sb-search-row').style.display = 'none';
@@ -1474,23 +1670,48 @@ function renderWelcomeCard() {
     const cats = ['KPOP', 'POP', 'JPOP', '오리지널', '애교송', 'ETC'];
     el.innerHTML = `
     <div class="wc-card">
-        <div class="wc-title">💿 구슬요 노래책 💿</div>
-        <div class="wc-img-wrap"><img src="songbook-char.png" alt="구슬요" class="wc-img"></div>
-        <div class="wc-turtle">🐢</div>
-        <div class="wc-info">🔍 검색창에서 원하는 노래를 검색할 수 있습니다</div>
-        <div class="wc-info">🎵 노래 신청은 구슬요에게 물어봐주세요</div>
-        <div class="wc-stats-wrap">
-            <table class="wc-stats">
-                <thead><tr>
-                    <th>KPOP</th><th>POP</th><th>JPOP</th><th>오리지널</th><th>애교송</th><th>ETC</th><th>전체</th>
-                </tr></thead>
-                <tbody><tr>
-                    ${cats.map(c => `<td>${counts[c] || 0}</td>`).join('')}
-                    <td>${S.songbookData.length}</td>
-                </tr></tbody>
-            </table>
+        <div class="wc-hero">
+            <div class="wc-photo-panel">
+                <img src="songbook-char.png" alt="구슬요" class="wc-img">
+            </div>
+            <div class="wc-main">
+                <h1 class="wc-title">
+                    <span class="wc-title-main">BEADYO</span>
+                    <span class="wc-title-sub">SONG BOOK</span>
+                </h1>
+                <div class="wc-stats-wrap">
+                    <table class="wc-stats">
+                        <thead><tr>
+                            <th>KPOP</th><th>POP</th><th>JPOP</th><th>오리지널</th><th>애교송</th><th>ETC</th><th>전체</th>
+                        </tr></thead>
+                        <tbody><tr>
+                            ${cats.map(c => `<td>${counts[c] || 0}</td>`).join('')}
+                            <td>${S.songbookData.length}</td>
+                        </tr></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="wc-random-panel">
+                <button class="wc-random-btn" onclick="pickRandom()" aria-label="랜덤 노래 뽑기">
+                    <svg class="wc-random-arc" viewBox="0 0 220 80">
+                        <defs>
+                            <path id="randomSongArc" d="M24 68 C50 10 170 10 196 68"/>
+                        </defs>
+                        <text>
+                            <textPath href="#randomSongArc" startOffset="50%" text-anchor="middle">RANDOM SONG</textPath>
+                        </text>
+                    </svg>
+                    <img src="random-mustache-2.png" alt="" class="wc-random-face">
+                </button>
+            </div>
         </div>
-        <div class="wc-version">v.1.0 (2025.05.13)</div>
+        <div class="wc-search-zone">
+            <div class="wc-search-wrap">
+                <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input class="wc-search-input" type="search" value="${esc(S.query)}" placeholder="노래책 전체 검색 (제목·가수·메모)..." oninput="onWelcomeSearch(this.value)" autocomplete="off">
+            </div>
+        </div>
+        <div class="wc-search-results" id="wc-search-results">${welcomeSearchResultsHtml()}</div>
     </div>`;
 }
 
@@ -2173,6 +2394,13 @@ function onSearch(val) {
     }
 }
 
+function onWelcomeSearch(val) {
+    S.query = val.trim();
+    document.getElementById('search-input').value = S.query;
+    document.getElementById('search-clear').classList.toggle('show', !!S.query);
+    renderWelcomeSearchResults();
+}
+
 function clearSearch() {
     document.getElementById('search-input').value = '';
     S.query = '';
@@ -2191,6 +2419,8 @@ function pickRandom() {
     // 버튼: 셔플 도는 동안 계속 회전
     const btn = document.getElementById('random-btn');
     if (btn) btn.classList.add('spinning');
+    const welcomeBtn = document.querySelector('.wc-random-btn');
+    if (welcomeBtn) welcomeBtn.classList.add('spinning');
 
     const modal = document.getElementById('random-modal');
     const titleEl  = document.getElementById('r-title');
@@ -2222,6 +2452,7 @@ function pickRandom() {
         } else {
             // 최종 결과 표시
             if (btn) btn.classList.remove('spinning');
+            if (welcomeBtn) welcomeBtn.classList.remove('spinning');
             document.querySelector('#random-modal .modal').classList.remove('shuffling');
             titleEl.textContent  = final.title;
             artistEl.textContent = final.artist || '';
@@ -2245,6 +2476,8 @@ function closeRandom() {
     if (_shuffleTimer) { clearTimeout(_shuffleTimer); _shuffleTimer = null; }
     const btn = document.getElementById('random-btn');
     if (btn) btn.classList.remove('spinning');
+    const welcomeBtn = document.querySelector('.wc-random-btn');
+    if (welcomeBtn) welcomeBtn.classList.remove('spinning');
     document.querySelector('#random-modal .modal').classList.remove('shuffling');
     document.getElementById('random-modal').classList.remove('open');
 }
