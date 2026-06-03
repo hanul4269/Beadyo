@@ -117,12 +117,24 @@
 
         /* 서브 탭 행 */
         .sb-sub-row {
-            overflow-x: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow: hidden;
             scrollbar-width: none;
             padding: 8px 12px;
         }
         .sb-sub-row::-webkit-scrollbar { display: none; }
-        .sub-tabs { display: flex; gap: 6px; white-space: nowrap; }
+        .sub-tabs {
+            display: flex;
+            gap: 6px;
+            white-space: nowrap;
+            flex: 1;
+            min-width: 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .sub-tabs::-webkit-scrollbar { display: none; }
         .sub-tab {
             padding: 6px 16px;
             border: 1.5px solid rgba(0,0,0,0.1);
@@ -178,6 +190,30 @@
             cursor: pointer; display: none; align-items: center; justify-content: center;
         }
         .search-clear.show { display: flex; }
+        .sheet-open-link {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1.5px solid var(--accent);
+            background: var(--surface);
+            color: var(--accent-dark);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(139,195,74,0.18);
+            transition: transform .12s, box-shadow .12s, background .12s;
+        }
+        .sheet-open-link:hover {
+            background: var(--accent-light);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139,195,74,0.26);
+        }
+        .sheet-open-link svg {
+            width: 18px;
+            height: 18px;
+        }
 
         /* 라이브 필터 버튼 */
         .live-filter-btn {
@@ -341,6 +377,15 @@
         #songbook-list .song-table tbody td.col-title,
         #songbook-list .song-table tbody td.col-artist {
             text-align: center;
+        }
+        #songbook-list .song-table {
+            min-width: 1140px;
+        }
+        #songbook-list .col-title {
+            width: 300px;
+        }
+        #songbook-list .col-artist {
+            width: 280px;
         }
         #songbook-list .song-table tbody td.col-memo {
             text-align: left;
@@ -938,6 +983,7 @@
             .song-table { min-width: 520px; }
             .col-memo, .col-lmemo { display: none; }
             .stat-bar-wrap { display: none; }
+            .sheet-open-link { width: 36px; height: 36px; }
         }
     </style>
 </head>
@@ -973,6 +1019,15 @@
             <button class="sub-tab" onclick="setLiveYear(2023)">2023</button>
             <button class="sub-tab" onclick="setLiveYear(2022)">2022</button>
         </div>
+        <a class="sheet-open-link" id="sheet-open-link" href="#" target="_blank" rel="noopener noreferrer" title="Google 스프레드시트 열기" aria-label="Google 스프레드시트 열기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+                <path d="M14 3v5h5"/>
+                <path d="M8 13h8"/>
+                <path d="M8 17h8"/>
+                <path d="M8 9h2"/>
+            </svg>
+        </a>
     </div>
 
     <!-- 검색창 (항상 표시) -->
@@ -1218,6 +1273,10 @@
 const SUPABASE_URL      = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const INITIAL_VIEW = new URLSearchParams(location.search).get('view') === 'live' ? 'live' : 'songbook';
+const SHEET_LINKS = {
+    songbook: 'https://docs.google.com/spreadsheets/d/1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw/edit#gid=1451717792',
+    live: 'https://docs.google.com/spreadsheets/d/1bIhxhHDU_Ig5IuDrS4WvPtMVsiVWHnDvm6dU3E3Q8Mo/edit#gid=1565839847',
+};
 
 // ── 상태 ──────────────────────────────────────────
 const S = {
@@ -2013,6 +2072,7 @@ function setMainTab(tab) {
     document.getElementById('search-input').placeholder = isSong
         ? '노래책 전체 검색 (제목·가수·메모)...'
         : '라이브 기록 전체 검색 (제목·가수·메모)...';
+    updateSheetOpenLink();
 
     if (isSong) {
         renderSongbook();
@@ -2023,6 +2083,15 @@ function setMainTab(tab) {
         renderLive();
     }
     updateFab();
+}
+
+function updateSheetOpenLink() {
+    const link = document.getElementById('sheet-open-link');
+    if (!link) return;
+    const isSong = S.mainTab === 'songbook';
+    link.href = isSong ? SHEET_LINKS.songbook : SHEET_LINKS.live;
+    link.title = isSong ? '노래책 Google 스프레드시트 열기' : '라이브 기록 Google 스프레드시트 열기';
+    link.setAttribute('aria-label', link.title);
 }
 
 function applyInitialView() {

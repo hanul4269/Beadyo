@@ -5,11 +5,9 @@ const OWNER_EMAIL = 'riosniper12@gmail.com';
 const TABS = [
     { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
-    { type: 'sheet', id: '1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw', gid: '1451717792', alwaysEdit: true },
-    { type: 'sheet', id: '1bIhxhHDU_Ig5IuDrS4WvPtMVsiVWHnDvm6dU3E3Q8Mo', gid: '1565839847', alwaysEdit: true },
-    { type: 'songs', src: 'songs.html', directUrl: 'songs.html' },
     { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook' },
     { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live' },
+    { type: 'songs', src: 'songs.html', directUrl: 'songs.html' },
 ];
 
 const readOnlyUrl = s =>
@@ -93,7 +91,7 @@ function getSerializableAuthUser(user = authUser) {
 function syncCalendarAuth() {
     const origin = window.location.origin === 'null' ? '*' : window.location.origin;
     const msg = { type: 'beadyo-auth-sync', user: getSerializableAuthUser() };
-    for (const id of ['frame-0', 'frame-4', 'frame-5', 'frame-6']) {
+    for (const id of ['frame-0', 'frame-2', 'frame-3', 'frame-4']) {
         const frame = document.getElementById(id);
         if (frame?.contentWindow) frame.contentWindow.postMessage(msg, origin);
     }
@@ -159,12 +157,12 @@ function switchTab(index) {
 
     if (loaded.has(index) && index !== 1) {
         hideLoading(index);
-        if (index === 0 || index === 5 || index === 6) syncCalendarAuth();
+        if (index === 0 || index === 2 || index === 3 || index === 4) syncCalendarAuth();
     } else {
         document.getElementById('loading').style.display = 'flex';
         frame.onload = () => {
             hideLoading(index);
-            if (index === 0 || index === 5 || index === 6) syncCalendarAuth();
+            if (index === 0 || index === 2 || index === 3 || index === 4) syncCalendarAuth();
         };
         frame.src = getFrameUrl(index);
         loaded.add(index);
@@ -176,7 +174,7 @@ try {
     let initialTab = 0;
     if (window.location.hash === '#songbook') {
         history.replaceState({}, document.title, window.location.pathname);
-        initialTab = 5;
+        initialTab = 2;
     } else {
         const saved = parseInt(localStorage.getItem('activeTab'));
         if (Number.isFinite(saved) && saved >= 0 && saved < TABS.length) {
