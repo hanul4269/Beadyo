@@ -348,6 +348,7 @@
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
             min-height: 165px;
+            min-width: 0;
             padding: 8px;
             position: relative;
             transition: box-shadow 0.15s, transform 0.1s;
@@ -547,6 +548,16 @@
             white-space: normal;
             overflow: visible;
             display: flex;
+        }
+        .chips-area.single .event-chip.rest-chip {
+            min-height: 0;
+            padding: 9px 10px;
+        }
+        .chips-area.single .event-chip.rest-chip .chip-body {
+            font-size: clamp(16px, 1.55vw, 21px) !important;
+            line-height: 1.15;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
         }
 
         .chips-area.stable-list {

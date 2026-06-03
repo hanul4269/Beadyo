@@ -641,7 +641,8 @@ function renderCalendar() {
             cells.push({ day: daysInP - i, dateStr: toDateStr(state.year, state.month - 1, daysInP - i), other: true });
         for (let d = 1; d <= daysInM; d++)
             cells.push({ day: d, dateStr: toDateStr(state.year, state.month, d), other: false });
-        for (let d = 1; cells.length < 42; d++)
+        const totalCells = Math.ceil((firstWd + daysInM) / 7) * 7;
+        for (let d = 1; cells.length < totalCells; d++)
             cells.push({ day: d, dateStr: toDateStr(state.year, state.month + 1, d), other: true });
     }
 
@@ -706,6 +707,7 @@ function renderCalendar() {
                 : ev.subtitle ? ' has-subtitle'
                 : ev.collab   ? ' has-collab'
                 : '';
+            const restClass = ev.is_rest || ev.type === 'rest' ? ' rest-chip' : '';
 
             const memoAttr = isStart && ev.memo
                 ? `data-memo="${esc(ev.memo)}"` : '';
@@ -727,7 +729,7 @@ function renderCalendar() {
 
             const timeClass = isStart && ev.start_time ? ' has-time' : '';
 
-            return `<button class="event-chip ${titleSizeClass}${subtitleClass}${timeClass}${newlineClass}"
+            return `<button class="event-chip ${titleSizeClass}${subtitleClass}${timeClass}${newlineClass}${restClass}"
                 style="${typeStyle(t)}border-radius:${br};"
                 onclick="if(!_dragged)openViewModal('${esc(ev.id)}')"
                 ${memoAttr} ${memoEvents} ${dragAttrs}
