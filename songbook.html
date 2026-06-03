@@ -328,10 +328,45 @@
 
         /* 라이브 열 너비 */
         .col-date   { width: 70px;  font-size: 15px; text-align: center; font-weight: 700; }
-        .col-year   { width: 52px;  font-size: 13px; text-align: center; font-weight: 700; color: var(--text); }
+        .col-year   { width: 74px;  font-size: 13px; text-align: center; font-weight: 700; color: var(--text); }
         .col-lmemo  { width: 180px; color: var(--muted); font-size: 12px; }
         .col-cnt    { width: 48px;  text-align: center; font-weight: 700; color: var(--accent-dark); }
         .col-cnt.excluded { color: #c06b7c; font-size: 11px; }
+        #live-list .song-table thead th,
+        #live-list .song-table tbody td {
+            text-align: center;
+        }
+        #songbook-list .song-table thead th,
+        #songbook-list .song-table tbody td.col-num,
+        #songbook-list .song-table tbody td.col-title,
+        #songbook-list .song-table tbody td.col-artist {
+            text-align: center;
+        }
+        #songbook-list .song-table tbody td.col-memo {
+            text-align: left;
+        }
+        .year-badge {
+            --year-color: var(--border);
+            --year-bg: var(--bg);
+            --year-strong: var(--text);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1.5px solid var(--year-color);
+            background: var(--year-bg);
+            color: var(--year-strong);
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1;
+        }
+        .year-badge.y2026 { --year-color:#e87ca8; --year-bg:#fde8f0; --year-strong:#b7356a; }
+        .year-badge.y2025 { --year-color:#8bc34a; --year-bg:#f0fae4; --year-strong:#5f8f23; }
+        .year-badge.y2024 { --year-color:#e8d07c; --year-bg:#fdf8e8; --year-strong:#a68523; }
+        .year-badge.y2023 { --year-color:#e8a87c; --year-bg:#fdf0e8; --year-strong:#b96935; }
+        .year-badge.y2022 { --year-color:#a8c8e8; --year-bg:#eef5fb; --year-strong:#4d82b8; }
 
         /* 제목/가수/메모 줄바꿈 허용 */
         .song-table tbody td.col-title,
@@ -408,7 +443,7 @@
             gap: 6px;
         }
         .stat-side-meta {
-            font-size: 10px;
+            font-size: 12.5px;
             line-height: 1;
             color: var(--muted);
             white-space: nowrap;
@@ -620,7 +655,7 @@
                 line-height: 1.35;
             }
             .stat-side { gap: 2px; }
-            .stat-side-meta { font-size: 9px; }
+            .stat-side-meta { font-size: 11.5px; }
         }
 
         /* ─── 빈 상태 ─── */
@@ -1534,7 +1569,7 @@ async function renderLive() {
             return `
             <tr class="${S.session ? 'editable ' : ''}${monthStart ? 'month-start' : ''}"${S.session ? ` onclick="openLiveModal(${r.id})"` : ''}>
                 <td class="col-num">${i + 1}</td>
-                ${showYear ? `<td class="col-year">${r.year || ''}</td>` : ''}
+                ${showYear ? `<td class="col-year">${r.year ? `<span class="year-badge y${r.year}">${r.year}</span>` : ''}</td>` : ''}
                 <td class="col-date">${fmtDate(r.performed_date)}</td>
                 <td class="col-title">${esc(r.title)}</td>
                 <td class="col-artist">${esc(r.artist || '')}</td>
@@ -1682,9 +1717,9 @@ function renderStats() {
     const paceGrid = yTicks.map(v => {
         const y = py(v);
         return `<line x1="${PL}" y1="${y}" x2="${PCW - PR}" y2="${y}" stroke="rgba(0,0,0,.08)"/>
-            <text x="${PL - 8}" y="${y + 4}" text-anchor="end" font-size="10" fill="#999">${v}</text>`;
+            <text x="${PL - 8}" y="${y + 4}" text-anchor="end" font-size="12" fill="#888">${v}</text>`;
     }).join('');
-    const paceMonthLabels = MONTHS.map(m => `<text x="${px(m)}" y="${PCHT - 14}" text-anchor="middle" font-size="10" fill="#999">${m}월</text>`).join('');
+    const paceMonthLabels = MONTHS.map(m => `<text x="${px(m)}" y="${PCHT - 14}" text-anchor="middle" font-size="12" fill="#888">${m}월</text>`).join('');
     const paceLines = paceData.map(d => {
         const pts = d.points.map(p => `${px(p.month)},${py(p.total)}`).join(' ');
         const dots = d.points.map(p => `<circle cx="${px(p.month)}" cy="${py(p.total)}" r="3" fill="${YCLR[d.year]}">
@@ -1695,7 +1730,7 @@ function renderStats() {
     }).join('');
     const paceLegend = paceData.map((d, i) => `<g transform="translate(${PL + i * 76}, 8)">
         <rect x="0" y="0" width="10" height="10" rx="2" fill="${YCLR[d.year]}"/>
-        <text x="15" y="10" font-size="11" fill="#666">${d.year}</text>
+        <text x="15" y="11" font-size="12" font-weight="700" fill="#666">${d.year}</text>
     </g>`).join('');
     const paceChart = `<div class="pace-chart-wrap">
         <svg class="pace-chart" viewBox="0 0 ${PCW} ${PCHT}" preserveAspectRatio="xMidYMid meet">
