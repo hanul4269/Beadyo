@@ -1709,7 +1709,7 @@ function renderStats() {
         };
     });
     const cumulativeMax = Math.max(...paceData.flatMap(d => d.points.map(p => p.total)), 1);
-    const PCW = 760, PCHT = 300, PL = 54, PR = 22, PT = 22, PB = 42;
+    const PCW = 760, PCHT = 320, PL = 64, PR = 24, PT = 38, PB = 54;
     const plotW = PCW - PL - PR, plotH = PCHT - PT - PB;
     const px = m => PL + (m - 1) / 11 * plotW;
     const py = v => PT + plotH - (v / cumulativeMax) * plotH;
@@ -1717,9 +1717,9 @@ function renderStats() {
     const paceGrid = yTicks.map(v => {
         const y = py(v);
         return `<line x1="${PL}" y1="${y}" x2="${PCW - PR}" y2="${y}" stroke="rgba(0,0,0,.08)"/>
-            <text x="${PL - 8}" y="${y + 4}" text-anchor="end" font-size="12" fill="#888">${v}</text>`;
+            <text x="${PL - 10}" y="${y + 6}" text-anchor="end" font-size="18" font-weight="800" fill="#666">${v}</text>`;
     }).join('');
-    const paceMonthLabels = MONTHS.map(m => `<text x="${px(m)}" y="${PCHT - 14}" text-anchor="middle" font-size="12" fill="#888">${m}월</text>`).join('');
+    const paceMonthLabels = MONTHS.map(m => `<text x="${px(m)}" y="${PCHT - 16}" text-anchor="middle" font-size="16" font-weight="800" fill="#666">${m}월</text>`).join('');
     const paceLines = paceData.map(d => {
         const pts = d.points.map(p => `${px(p.month)},${py(p.total)}`).join(' ');
         const dots = d.points.map(p => `<circle cx="${px(p.month)}" cy="${py(p.total)}" r="3" fill="${YCLR[d.year]}">
@@ -1728,9 +1728,9 @@ function renderStats() {
         return `<polyline points="${pts}" fill="none" stroke="${YCLR[d.year]}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
             ${dots}`;
     }).join('');
-    const paceLegend = paceData.map((d, i) => `<g transform="translate(${PL + i * 76}, 8)">
-        <rect x="0" y="0" width="10" height="10" rx="2" fill="${YCLR[d.year]}"/>
-        <text x="15" y="11" font-size="12" font-weight="700" fill="#666">${d.year}</text>
+    const paceLegend = paceData.map((d, i) => `<g transform="translate(${PL + i * 86}, 4)">
+        <rect x="0" y="0" width="12" height="12" rx="3" fill="${YCLR[d.year]}"/>
+        <text x="18" y="14" font-size="17" font-weight="800" fill="#555">${d.year}</text>
     </g>`).join('');
     const paceChart = `<div class="pace-chart-wrap">
         <svg class="pace-chart" viewBox="0 0 ${PCW} ${PCHT}" preserveAspectRatio="xMidYMid meet">
