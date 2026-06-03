@@ -393,6 +393,26 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
+        .stat-side {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 3px;
+            flex-shrink: 0;
+            min-width: max-content;
+        }
+        .stat-side-main {
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+        }
+        .stat-side-meta {
+            font-size: 10px;
+            line-height: 1;
+            color: var(--muted);
+            white-space: nowrap;
+        }
         .stat-bar-wrap {
             width: 60px;
             height: 4px;
@@ -556,6 +576,51 @@
 
         @media (max-width: 900px) {
             .stats-feature-grid, .stats-feature-grid.trio, .stats-feature-grid.focus, .stats-feature-grid.compact, .stats-mini-grid { grid-template-columns: 1fr; }
+            .stats-panel {
+                max-width: 100%;
+                padding-left: 10px;
+                padding-right: 10px;
+                overflow-x: hidden;
+            }
+            .stats-fold-body { padding: 10px; }
+            .stats-section {
+                padding: 12px;
+                overflow: hidden;
+            }
+            .stats-top-row {
+                display: block;
+                margin-bottom: 16px;
+            }
+            .stats-top-left,
+            .stats-top-right {
+                width: 100%;
+                flex: 1 1 auto;
+            }
+            .stats-sec-title {
+                white-space: normal;
+                overflow-wrap: anywhere;
+            }
+            .pace-chart { min-width: 0; }
+            .year-tops-grid { grid-template-columns: 1fr; }
+            .per-year-charts { max-width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-card { padding: 12px 10px; }
+            .stat-row {
+                gap: 7px;
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+            .stat-title,
+            .stat-artist {
+                white-space: normal;
+                overflow: visible;
+                text-overflow: clip;
+                line-height: 1.35;
+            }
+            .stat-side { gap: 2px; }
+            .stat-side-meta { font-size: 9px; }
         }
 
         /* ─── 빈 상태 ─── */
@@ -1583,8 +1648,13 @@ function renderStats() {
                     <div class="stat-artist">${esc(opts.sub ? opts.sub(s) : (s.artist || ''))}${opts.clipInSub && s.clipUrl ? ` <a class="stat-clip" href="${esc(s.clipUrl)}" target="_blank" rel="noopener noreferrer" title="최근 클립" onclick="event.stopPropagation()">클립</a>` : ''}</div>
                 </div>
                 ${opts.noBar ? '' : `<div class="stat-bar-wrap"><div class="stat-bar" style="width:${Math.round((opts.value ? opts.value(s) : s.count) / max * 100)}%"></div></div>`}
-                <span class="stat-count">${esc(opts.count ? opts.count(s) : `${s.count}번`)}</span>
-                ${opts.clipAfterCount && s.clipUrl ? `<a class="stat-clip" href="${esc(s.clipUrl)}" target="_blank" rel="noopener noreferrer" title="최근 클립" onclick="event.stopPropagation()">클립</a>` : ''}
+                <div class="stat-side">
+                    ${opts.sideMeta ? `<span class="stat-side-meta">${esc(opts.sideMeta(s))}</span>` : ''}
+                    <div class="stat-side-main">
+                        <span class="stat-count">${esc(opts.count ? opts.count(s) : `${s.count}번`)}</span>
+                        ${opts.clipAfterCount && s.clipUrl ? `<a class="stat-clip" href="${esc(s.clipUrl)}" target="_blank" rel="noopener noreferrer" title="최근 클립" onclick="event.stopPropagation()">클립</a>` : ''}
+                    </div>
+                </div>
             </div>`).join('');
     }
 
@@ -1759,7 +1829,8 @@ function renderStats() {
             <div class="stats-card">
                 <div class="stats-sec-title">부른지 오래된 곡</div>
                 ${statListHtml(oldSongs, oldSongs[0]?.daysAgo || 1, {
-                    sub: s => `${s.artist || '가수 미상'} · 마지막 ${s.lastDateText || '날짜 없음'}`,
+                    sub: s => s.artist || '가수 미상',
+                    sideMeta: s => s.lastDateText || '날짜 없음',
                     value: s => s.daysAgo,
                     count: s => `${s.daysAgo}일`,
                     clipAfterCount: true,
