@@ -207,12 +207,36 @@ function broadcastInfoForDate(dateStr) {
 }
 function timeInputValue(value) {
     if (!value) return '';
-    const match = String(value).match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?/);
-    if (!match) return '';
-    const hh = match[1].padStart(2, '0');
-    const mm = match[2];
-    const ss = match[3] ?? '00';
-    return `${hh}:${mm}:${ss}`;
+    return normalizeTimeInput(value) || '';
+}
+function normalizeTimeInput(value) {
+    const raw = String(value ?? '').trim();
+    if (!raw) return '';
+    let h, m, s = 0;
+    const colon = raw.match(/^(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?$/);
+    if (colon) {
+        h = Number(colon[1]);
+        m = Number(colon[2]);
+        s = colon[3] === undefined ? 0 : Number(colon[3]);
+    } else {
+        const digits = raw.replace(/\D/g, '');
+        if (digits.length === 3) {
+            h = Number(digits.slice(0, 1));
+            m = Number(digits.slice(1, 3));
+        } else if (digits.length === 4) {
+            h = Number(digits.slice(0, 2));
+            m = Number(digits.slice(2, 4));
+        } else if (digits.length === 6) {
+            h = Number(digits.slice(0, 2));
+            m = Number(digits.slice(2, 4));
+            s = Number(digits.slice(4, 6));
+        } else {
+            return null;
+        }
+    }
+    if (![h, m, s].every(Number.isInteger)) return null;
+    if (h < 0 || h > 23 || m < 0 || m > 59 || s < 0 || s > 59) return null;
+    return `${pad(h)}:${pad(m)}:${pad(s)}`;
 }
 function timeDisplayValue(value) {
     const normalized = timeInputValue(value);
@@ -247,6 +271,12 @@ function broadcastLinks(info) {
         const fallback = urls.length > 1 ? `다시보기 ${i + 1}` : '다시보기';
         return { url, title: customTitle || fallback };
     });
+}
+function broadcastRows(info) {
+    const urls = broadcastUrls(info);
+    const titles = broadcastTitles(info);
+    const rows = urls.map((url, i) => ({ title: titles[i] || '', url }));
+    return rows.length ? rows : [{ title: '', url: '' }];
 }
 function typeStyle(t) {
     return `background:${t.color};color:${t.text};border-color:${t.border || t.text};`;
@@ -1131,6 +1161,53 @@ async function deleteYtLink(id) {
 // ─── 방송정보 모달 ───
 let _broadcastModalDate = null;
 
+function renderBroadcastVodRows(rows = [{ title: '', url: '' }]) {
+    const list = document.getElementById('broadcastVodList');
+    if (!list) return;
+    const normalizedRows = rows.length ? rows : [{ title: '', url: '' }];
+    list.innerHTML = normalizedRows.map((row, i) => `
+        <div class="broadcast-vod-row">
+            <input type="text" class="broadcast-vod-title" value="${esc(row.title || '')}" placeholder="${i === 0 ? '다시보기' : `다시보기 ${i + 1}`}">
+            <input type="url" class="broadcast-vod-url" value="${esc(row.url || '')}" placeholder="https://...">
+            <button type="button" class="broadcast-vod-remove" onclick="removeBroadcastVodRow(this)" title="삭제">×</button>
+        </div>
+    `).join('');
+    updateBroadcastVodRemoveButtons();
+}
+
+function addBroadcastVodRow(title = '', url = '') {
+    const list = document.getElementById('broadcastVodList');
+    if (!list) return;
+    const rows = readBroadcastVodRows({ includeEmpty: true });
+    rows.push({ title, url });
+    renderBroadcastVodRows(rows);
+}
+
+function removeBroadcastVodRow(button) {
+    const row = button?.closest('.broadcast-vod-row');
+    if (!row) return;
+    row.remove();
+    const rows = readBroadcastVodRows({ includeEmpty: true });
+    renderBroadcastVodRows(rows.length ? rows : [{ title: '', url: '' }]);
+}
+
+function updateBroadcastVodRemoveButtons() {
+    const rows = document.querySelectorAll('#broadcastVodList .broadcast-vod-row');
+    rows.forEach(btnRow => {
+        const btn = btnRow.querySelector('.broadcast-vod-remove');
+        if (btn) btn.style.visibility = rows.length <= 1 ? 'hidden' : '';
+    });
+}
+
+function readBroadcastVodRows({ includeEmpty = false } = {}) {
+    return Array.from(document.querySelectorAll('#broadcastVodList .broadcast-vod-row'))
+        .map(row => ({
+            title: row.querySelector('.broadcast-vod-title')?.value.trim() || '',
+            url: row.querySelector('.broadcast-vod-url')?.value.trim() || '',
+        }))
+        .filter(row => includeEmpty || row.title || row.url);
+}
+
 function openBroadcastModal(dateStr) {
     if (!state.isEditor) return;
     _broadcastModalDate = dateStr;
@@ -1139,8 +1216,7 @@ function openBroadcastModal(dateStr) {
     document.getElementById('broadcastDate').value = dateStr;
     document.getElementById('broadcastStartTime').value = timeInputValue(info?.start_time);
     document.getElementById('broadcastEndTime').value = timeInputValue(info?.end_time);
-    document.getElementById('broadcastVodUrls').value = info?.vod_urls || '';
-    document.getElementById('broadcastVodTitles').value = info?.vod_titles || '';
+    renderBroadcastVodRows(broadcastRows(info));
     document.getElementById('broadcastMemo').value = info?.memo || '';
     document.getElementById('broadcastDeleteBtn').style.display = info ? '' : 'none';
     document.getElementById('broadcastModal').classList.add('open');
@@ -1154,20 +1230,21 @@ function closeBroadcastModal() {
 async function saveBroadcastInfo() {
     if (!_broadcastModalDate || !state.isEditor) return;
     await _ensureDb();
-    const vodUrlLines = document.getElementById('broadcastVodUrls').value
-        .split('\n')
-        .map(url => url.trim())
-        .filter(Boolean);
-    const vodTitleLines = document.getElementById('broadcastVodTitles').value
-        .split('\n')
-        .map(title => title.trim());
-    const vodUrls = vodUrlLines.join('\n');
-    const vodTitles = vodTitleLines.slice(0, vodUrlLines.length).join('\n');
-    const hasVodTitles = vodTitleLines.some(Boolean);
+    const startTime = normalizeTimeInput(document.getElementById('broadcastStartTime').value);
+    const endTime = normalizeTimeInput(document.getElementById('broadcastEndTime').value);
+    if (startTime === null || endTime === null) {
+        showToast('방송시간은 18:01 또는 18:01:00 형식으로 입력해주세요');
+        return;
+    }
+    const vodRows = readBroadcastVodRows()
+        .filter(row => row.url);
+    const vodUrls = vodRows.map(row => row.url).join('\n');
+    const vodTitles = vodRows.map(row => row.title).join('\n');
+    const hasVodTitles = vodRows.some(row => row.title);
     const payload = {
         date: _broadcastModalDate,
-        start_time: document.getElementById('broadcastStartTime').value || null,
-        end_time: document.getElementById('broadcastEndTime').value || null,
+        start_time: startTime || null,
+        end_time: endTime || null,
         vod_urls: vodUrls || null,
         vod_titles: hasVodTitles ? vodTitles : null,
         memo: document.getElementById('broadcastMemo').value.trim() || null,
