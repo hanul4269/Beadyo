@@ -2037,16 +2037,20 @@
         <div class="field-row" style="margin-bottom:13px;">
             <div class="field">
                 <label>방송 시작</label>
-                <input type="time" id="broadcastStartTime">
+                <input type="time" id="broadcastStartTime" step="1">
             </div>
             <div class="field">
                 <label>방송 종료</label>
-                <input type="time" id="broadcastEndTime">
+                <input type="time" id="broadcastEndTime" step="1">
             </div>
         </div>
         <div class="field">
             <label>다시보기 URL</label>
             <textarea id="broadcastVodUrls" rows="3" placeholder="다시보기 링크를 한 줄에 하나씩 입력"></textarea>
+        </div>
+        <div class="field">
+            <label>다시보기 제목</label>
+            <textarea id="broadcastVodTitles" rows="2" placeholder="제목을 한 줄에 하나씩 입력 (비워두면 다시보기)"></textarea>
         </div>
         <div class="field">
             <label>메모</label>

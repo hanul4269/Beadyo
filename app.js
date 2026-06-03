@@ -205,10 +205,24 @@ function eventOnDate(ev, dateStr) {
 function broadcastInfoForDate(dateStr) {
     return state.broadcastInfos.find(info => info.date === dateStr) || null;
 }
+function timeInputValue(value) {
+    if (!value) return '';
+    const match = String(value).match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+    if (!match) return '';
+    const hh = match[1].padStart(2, '0');
+    const mm = match[2];
+    const ss = match[3] ?? '00';
+    return `${hh}:${mm}:${ss}`;
+}
+function timeDisplayValue(value) {
+    const normalized = timeInputValue(value);
+    if (!normalized) return '';
+    return normalized.endsWith(':00') ? normalized.slice(0, 5) : normalized;
+}
 function broadcastTimeLabel(info) {
     if (!info) return '';
-    const start = info.start_time ? info.start_time.slice(0, 5) : '';
-    const end = info.end_time ? info.end_time.slice(0, 5) : '';
+    const start = timeDisplayValue(info.start_time);
+    const end = timeDisplayValue(info.end_time);
     if (start && end) return `${start} ~ ${end}`;
     return start || end || '';
 }
@@ -218,6 +232,21 @@ function broadcastUrls(info) {
         .split('\n')
         .map(url => url.trim())
         .filter(Boolean);
+}
+function broadcastTitles(info) {
+    if (!info || !info.vod_titles) return [];
+    return String(info.vod_titles)
+        .split('\n')
+        .map(title => title.trim());
+}
+function broadcastLinks(info) {
+    const urls = broadcastUrls(info);
+    const titles = broadcastTitles(info);
+    return urls.map((url, i) => {
+        const customTitle = titles[i] || '';
+        const fallback = urls.length > 1 ? `다시보기 ${i + 1}` : '다시보기';
+        return { url, title: customTitle || fallback };
+    });
 }
 function typeStyle(t) {
     return `background:${t.color};color:${t.text};border-color:${t.border || t.text};`;
@@ -550,10 +579,17 @@ async function loadYtLinks() {
 
 async function loadBroadcastInfos(from, to) {
     try {
-        const res = await fetch(
-            `${SUPABASE_URL}/rest/v1/broadcast_infos?select=id,date,start_time,end_time,vod_urls,memo&date=gte.${from}&date=lte.${to}&order=date.asc`,
-            { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+        const headers = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` };
+        let res = await fetch(
+            `${SUPABASE_URL}/rest/v1/broadcast_infos?select=id,date,start_time,end_time,vod_urls,vod_titles,memo&date=gte.${from}&date=lte.${to}&order=date.asc`,
+            { headers }
         );
+        if (!res.ok && res.status === 400) {
+            res = await fetch(
+                `${SUPABASE_URL}/rest/v1/broadcast_infos?select=id,date,start_time,end_time,vod_urls,memo&date=gte.${from}&date=lte.${to}&order=date.asc`,
+                { headers }
+            );
+        }
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         state.broadcastInfos = Array.isArray(data) ? data : [];
@@ -585,6 +621,13 @@ function eventsForDate(dateStr) {
             if (!!b.is_rest !== !!a.is_rest) return (b.is_rest ? 1 : 0) - (a.is_rest ? 1 : 0);
             return String(a.start_time || '99:99').localeCompare(String(b.start_time || '99:99'));
         });
+}
+
+function calendarEventsForDate(dateStr) {
+    return applyLocalOrder(dateStr,
+        state.events.filter(ev => eventOnDate(ev, dateStr))
+            .sort((a, b) => (b.is_rest ? 1 : 0) - (a.is_rest ? 1 : 0))
+    );
 }
 
 function renderMobileSchedule() {
@@ -683,11 +726,7 @@ function renderCalendar() {
     document.getElementById('calGrid').innerHTML = cells.map(({ day, dateStr, other }, idx) => {
         const dow     = idx % 7;
         const isToday = !other && dateStr === todayStr;
-        const events  = other ? [] : applyLocalOrder(dateStr,
-            state.events.filter(e => {
-                return eventOnDate(e, dateStr);
-            }).sort((a, b) => (b.is_rest ? 1 : 0) - (a.is_rest ? 1 : 0))
-        );
+        const events  = other ? [] : calendarEventsForDate(dateStr);
         const hasRest = events.some(e => e.is_rest);
 
         const isEmpty = !other && events.length === 0;
@@ -1065,9 +1104,10 @@ function openBroadcastModal(dateStr) {
     const info = broadcastInfoForDate(dateStr);
     document.getElementById('broadcastModalTitle').textContent = `${formatDate(dateStr)} 방송정보`;
     document.getElementById('broadcastDate').value = dateStr;
-    document.getElementById('broadcastStartTime').value = info?.start_time ? info.start_time.slice(0, 5) : '';
-    document.getElementById('broadcastEndTime').value = info?.end_time ? info.end_time.slice(0, 5) : '';
+    document.getElementById('broadcastStartTime').value = timeInputValue(info?.start_time);
+    document.getElementById('broadcastEndTime').value = timeInputValue(info?.end_time);
     document.getElementById('broadcastVodUrls').value = info?.vod_urls || '';
+    document.getElementById('broadcastVodTitles').value = info?.vod_titles || '';
     document.getElementById('broadcastMemo').value = info?.memo || '';
     document.getElementById('broadcastDeleteBtn').style.display = info ? '' : 'none';
     document.getElementById('broadcastModal').classList.add('open');
@@ -1081,21 +1121,27 @@ function closeBroadcastModal() {
 async function saveBroadcastInfo() {
     if (!_broadcastModalDate || !state.isEditor) return;
     await _ensureDb();
-    const vodUrls = document.getElementById('broadcastVodUrls').value
+    const vodUrlLines = document.getElementById('broadcastVodUrls').value
         .split('\n')
         .map(url => url.trim())
-        .filter(Boolean)
-        .join('\n');
+        .filter(Boolean);
+    const vodTitleLines = document.getElementById('broadcastVodTitles').value
+        .split('\n')
+        .map(title => title.trim());
+    const vodUrls = vodUrlLines.join('\n');
+    const vodTitles = vodTitleLines.slice(0, vodUrlLines.length).join('\n');
+    const hasVodTitles = vodTitleLines.some(Boolean);
     const payload = {
         date: _broadcastModalDate,
         start_time: document.getElementById('broadcastStartTime').value || null,
         end_time: document.getElementById('broadcastEndTime').value || null,
         vod_urls: vodUrls || null,
+        vod_titles: hasVodTitles ? vodTitles : null,
         memo: document.getElementById('broadcastMemo').value.trim() || null,
         updated_at: new Date().toISOString(),
     };
 
-    if (!payload.start_time && !payload.end_time && !payload.vod_urls && !payload.memo) {
+    if (!payload.start_time && !payload.end_time && !payload.vod_urls && !payload.vod_titles && !payload.memo) {
         showToast('방송정보를 하나 이상 입력해주세요');
         return;
     }
@@ -1157,7 +1203,6 @@ function dayEventCardHtml(ev, dateStr) {
             ${ev.subtitle ? `<div class="day-event-sub">${esc(ev.subtitle)}</div>` : ''}
             ${ev.collab ? `<div class="day-event-sub">w. ${esc(ev.collab)}</div>` : ''}
             ${dateRange ? `<div class="day-event-meta">${dateRange}</div>` : ''}
-            ${ev.memo ? `<div class="day-event-memo">${esc(ev.memo)}</div>` : ''}
             ${links.length ? `<div class="day-link-row">${links.join('')}</div>` : ''}
         </div>
         ${state.isEditor ? `<button class="day-edit-btn" onclick="openEditModal('${esc(ev.id)}')">수정</button>` : ''}
@@ -1165,10 +1210,10 @@ function dayEventCardHtml(ev, dateStr) {
 }
 
 function openDayViewModal(dateStr) {
-    const events = eventsForDate(dateStr);
+    const events = calendarEventsForDate(dateStr);
     const info = broadcastInfoForDate(dateStr);
     const time = broadcastTimeLabel(info);
-    const urls = broadcastUrls(info);
+    const links = broadcastLinks(info);
     const ytLinks = state.ytLinks.filter(yl => yl.date === dateStr);
 
     let html = `<div class="modal-title">${formatDate(dateStr)}</div>`;
@@ -1185,7 +1230,7 @@ function openDayViewModal(dateStr) {
             ? `<div class="broadcast-card">
                 ${time ? `<div class="view-section"><div class="view-label">방송시간</div><div class="view-value">${esc(time)}</div></div>` : ''}
                 ${info.memo ? `<div class="view-section"><div class="view-label">메모</div><div class="view-value" style="white-space:pre-wrap">${esc(info.memo)}</div></div>` : ''}
-                ${urls.length ? `<div class="day-link-row broadcast-links">${urls.map((url, i) => `<a class="vod-link" href="${safeUrl(url)}" target="_blank" rel="noopener noreferrer">▶ 다시보기 ${urls.length > 1 ? i + 1 : ''}</a>`).join('')}</div>` : ''}
+                ${links.length ? `<div class="day-link-row broadcast-links">${links.map(link => `<a class="vod-link" href="${safeUrl(link.url)}" target="_blank" rel="noopener noreferrer">▶ ${esc(link.title)}</a>`).join('')}</div>` : ''}
             </div>`
             : `<div class="day-empty">아직 방송정보가 등록되지 않았어요</div>`}
         ${ytLinks.length ? `<div class="day-section-title sub">YouTube 링크</div><div class="day-link-row">${ytLinks.map(yl => {

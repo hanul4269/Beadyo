@@ -284,6 +284,9 @@
             margin: 0 auto;
             padding: 4px 0 60px;
         }
+        .sb-body.welcome-wide {
+            max-width: 1320px;
+        }
         .sb-body.stats-wide {
             max-width: 1600px;
         }
@@ -299,7 +302,7 @@
 
         .link-btn {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 4px 13px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 700;
@@ -317,7 +320,7 @@
         /* 분류 뱃지 */
         .cat-badge {
             display: inline-block;
-            padding: 2px 7px; border-radius: 8px;
+            padding: 3px 8px; border-radius: 999px;
             font-size: 11px; font-weight: 700;
             background: #dff0c8; color: #3d6618;
             white-space: nowrap;
@@ -362,10 +365,10 @@
 
         /* 열 너비 */
         .col-num    { width: 46px;  text-align: center; font-weight: 700; }
-        .col-cat    { width: 62px; }
+        .col-cat    { width: 88px; }
         .col-title  { width: 240px; font-weight: 700; }
         .col-artist { width: 220px; font-weight: 700; }
-        .col-mr     { width: 62px;  text-align: center; }
+        .col-mr     { width: 78px;  text-align: center; }
         .col-clip   { width: 90px;  text-align: center; }
         .col-skill  { width: 96px;  text-align: center; letter-spacing: -1px; }
         .col-memo   { width: 210px; color: var(--muted); font-size: 12px; }
@@ -381,19 +384,31 @@
             text-align: center;
         }
         #songbook-list .song-table thead th,
+        #wc-search-results .song-table thead th,
         #songbook-list .song-table tbody td.col-num,
+        #wc-search-results .song-table tbody td.col-num,
+        #songbook-list .song-table tbody td.col-cat,
+        #wc-search-results .song-table tbody td.col-cat,
         #songbook-list .song-table tbody td.col-title,
-        #songbook-list .song-table tbody td.col-artist {
+        #wc-search-results .song-table tbody td.col-title,
+        #songbook-list .song-table tbody td.col-artist,
+        #wc-search-results .song-table tbody td.col-artist {
             text-align: center;
         }
         #songbook-list .song-table {
-            min-width: 1140px;
+            min-width: 1200px;
+        }
+        #songbook-list .col-cat {
+            width: 96px;
         }
         #songbook-list .col-title {
-            width: 300px;
+            width: 292px;
         }
         #songbook-list .col-artist {
-            width: 280px;
+            width: 270px;
+        }
+        #songbook-list .col-mr {
+            width: 82px;
         }
         #songbook-list .song-table tbody td.col-memo {
             text-align: left;
@@ -797,7 +812,7 @@
 
         /* ─── Welcome 페이지 ─── */
         .wc-card {
-            max-width: 1180px;
+            max-width: 1280px;
             margin: 14px auto 0;
             padding: 20px 22px 28px;
             background: var(--surface);
@@ -1570,6 +1585,32 @@ function matchQ(target, q) {
 function matches(title, artist, q, memo) {
     return matchQ(title || '', q) || matchQ(artist || '', q) || matchQ(memo || '', q);
 }
+function normalizeSongbookCompare(value) {
+    return String(value ?? '')
+        .replace(/\([^)]*\)/g, '')
+        .replace(/（[^）]*）/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase();
+}
+function songbookCompareKey(song) {
+    return `${normalizeSongbookCompare(song.title)}|||${normalizeSongbookCompare(song.artist)}`;
+}
+function filteredSongbookItems({ forceAll = false, category = S.songbookCat, query = S.query } = {}) {
+    const isAll = forceAll || category === 'all';
+    const originalKeys = new Set(
+        (S.songbookData || [])
+            .filter(s => s.category === '오리지널')
+            .map(songbookCompareKey)
+    );
+
+    return (S.songbookData || []).filter(s => {
+        if (!isAll && s.category !== category) return false;
+        if (query && !matches(s.title, s.artist, query, s.memo)) return false;
+        if (query && s.category !== '오리지널' && originalKeys.has(songbookCompareKey(s))) return false;
+        return true;
+    });
+}
 
 // ── 유틸 ─────────────────────────────────────────
 function esc(s) {
@@ -1613,7 +1654,7 @@ function daysBetween(a, b) {
 
 function welcomeSearchResultsHtml() {
     if (!S.query) return '';
-    const items = S.songbookData.filter(s => matches(s.title, s.artist, S.query, s.memo));
+    const items = filteredSongbookItems({ forceAll: true });
     if (!items.length) return emptyHtml(`"${esc(S.query)}" 검색 결과가 없어요`);
 
     return `
@@ -1654,6 +1695,8 @@ function renderWelcomeSearchResults() {
 
 // ── 렌더: Welcome 카드 ────────────────────────────
 function renderWelcomeCard() {
+    document.querySelector('.sb-body').classList.add('welcome-wide');
+    document.querySelector('.sb-body').classList.remove('stats-wide');
     document.getElementById('sb-search-row').style.display = 'none';
     document.getElementById('random-btn').classList.add('hidden');
     document.getElementById('result-info').style.display   = 'none';
@@ -1719,6 +1762,7 @@ function renderWelcomeCard() {
 function renderSongbook(forceAll) {
     if (!forceAll && S.songbookCat === 'welcome') { renderWelcomeCard(); return; }
 
+    document.querySelector('.sb-body').classList.remove('welcome-wide', 'stats-wide');
     document.getElementById('sb-search-row').style.display = '';
     document.getElementById('random-btn').classList.remove('hidden');
     document.getElementById('result-info').style.display   = '';
@@ -1727,10 +1771,7 @@ function renderSongbook(forceAll) {
     if (!S.songbookData) { renderSkeleton('songbook-list'); return; }
 
     const isAll = forceAll || S.songbookCat === 'all';
-    const items = S.songbookData.filter(s =>
-        (isAll || s.category === S.songbookCat) &&
-        (!S.query || matches(s.title, s.artist, S.query, s.memo))
-    );
+    const items = filteredSongbookItems({ forceAll: isAll });
 
     updateResultInfo(items.length, S.songbookData.filter(s => isAll || s.category === S.songbookCat).length);
 
@@ -1771,6 +1812,7 @@ function renderSongbook(forceAll) {
 // ── 렌더: 라이브 ─────────────────────────────────
 async function renderLive() {
     const year = S.liveYear;
+    document.querySelector('.sb-body').classList.remove('welcome-wide');
 
     if (year === 'stats') {
         document.getElementById('live-list').parentElement.style.display = 'none';

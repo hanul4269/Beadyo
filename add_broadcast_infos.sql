@@ -4,10 +4,14 @@ CREATE TABLE IF NOT EXISTS broadcast_infos (
     start_time TIME,
     end_time   TIME,
     vod_urls   TEXT,
+    vod_titles TEXT,
     memo       TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+ALTER TABLE broadcast_infos
+ADD COLUMN IF NOT EXISTS vod_titles TEXT;
 
 ALTER TABLE broadcast_infos ENABLE ROW LEVEL SECURITY;
 
