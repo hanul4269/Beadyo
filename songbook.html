@@ -1628,6 +1628,19 @@ function filteredSongbookItems({ forceAll = false, category = S.songbookCat, que
 function esc(s) {
     return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+function safeUrl(s) {
+    try {
+        const u = new URL(String(s || '').trim());
+        if (u.protocol === 'http:' || u.protocol === 'https:') return u.toString();
+    } catch {}
+    return '#';
+}
+function normalizeOptionalUrl(s) {
+    const raw = String(s ?? '').trim();
+    if (!raw) return '';
+    const url = safeUrl(raw);
+    return url === '#' ? null : url;
+}
 function normalizeLiveStatText(value) {
     return String(value ?? '')
         .replace(/\([^)]*\)/g, '')
@@ -1647,7 +1660,7 @@ function skillDots(n) {
 }
 function linkBtn(url, label, cls) {
     if (!url) return '';
-    return `<a href="${esc(url)}" class="link-btn ${cls}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${label}</a>`;
+    return `<a href="${esc(safeUrl(url))}" class="link-btn ${cls}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${label}</a>`;
 }
 function fmtDate(d) {
     if (!d) return '';
@@ -1690,8 +1703,8 @@ function welcomeSearchResultsHtml() {
                         <td class="col-cat"><span class="cat-badge">${esc(s.category)}</span></td>
                         <td class="col-title">${esc(s.title)}</td>
                         <td class="col-artist">${esc(s.artist || '')}</td>
-                        <td class="col-mr">${s.mr_url ? `<a href="${esc(s.mr_url)}" class="link-btn mr" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">MR</a>` : ''}</td>
-                        <td class="col-clip">${s.clip_url ? `<a href="${esc(s.clip_url)}" class="link-btn clip" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">클립</a>` : ''}</td>
+                        <td class="col-mr">${s.mr_url ? `<a href="${esc(safeUrl(s.mr_url))}" class="link-btn mr" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">MR</a>` : ''}</td>
+                        <td class="col-clip">${s.clip_url ? `<a href="${esc(safeUrl(s.clip_url))}" class="link-btn clip" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">클립</a>` : ''}</td>
                         <td class="col-skill">${skillDots(s.skill_level || 0)}</td>
                         <td class="col-memo">${esc(s.memo || '')}</td>
                     </tr>`).join('')}
@@ -1812,8 +1825,8 @@ function renderSongbook(forceAll) {
                 ${isAll ? `<td class="col-cat"><span class="cat-badge">${esc(s.category)}</span></td>` : ''}
                 <td class="col-title">${esc(s.title)}</td>
                 <td class="col-artist">${esc(s.artist || '')}</td>
-                <td class="col-mr">${s.mr_url ? `<a href="${esc(s.mr_url)}" class="link-btn mr" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">MR</a>` : ''}</td>
-                <td class="col-clip">${s.clip_url ? `<a href="${esc(s.clip_url)}" class="link-btn clip" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">클립</a>` : ''}</td>
+                <td class="col-mr">${s.mr_url ? `<a href="${esc(safeUrl(s.mr_url))}" class="link-btn mr" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">MR</a>` : ''}</td>
+                <td class="col-clip">${s.clip_url ? `<a href="${esc(safeUrl(s.clip_url))}" class="link-btn clip" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">클립</a>` : ''}</td>
                 <td class="col-skill">${skillDots(s.skill_level || 0)}</td>
                 <td class="col-memo">${esc(s.memo || '')}</td>
             </tr>`).join('')}
@@ -1914,7 +1927,7 @@ async function renderLive() {
                 <td class="col-title">${esc(r.title)}</td>
                 <td class="col-artist">${esc(r.artist || '')}</td>
                 <td class="col-lmemo">${esc(r.memo || '')}</td>
-                <td class="col-clip">${r.clip_url ? `<a href="${esc(r.clip_url)}" class="link-btn clip" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">클립</a>` : ''}</td>
+                <td class="col-clip">${r.clip_url ? `<a href="${esc(safeUrl(r.clip_url))}" class="link-btn clip" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">클립</a>` : ''}</td>
                 <td class="col-cnt${excluded ? ' excluded' : ''}">${excluded ? '제외' : cnt}</td>
             </tr>`;
         }).join('')}
@@ -2020,14 +2033,14 @@ function renderStats() {
                 <span class="stat-rank ${i<3?'top3':''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</span>
                 <div class="stat-info">
                     <div class="stat-title">${esc(opts.title ? opts.title(s) : s.title)}</div>
-                    <div class="stat-artist">${esc(opts.sub ? opts.sub(s) : (s.artist || ''))}${opts.clipInSub && s.clipUrl ? ` <a class="stat-clip" href="${esc(s.clipUrl)}" target="_blank" rel="noopener noreferrer" title="최근 클립" onclick="event.stopPropagation()">클립</a>` : ''}</div>
+                    <div class="stat-artist">${esc(opts.sub ? opts.sub(s) : (s.artist || ''))}${opts.clipInSub && s.clipUrl ? ` <a class="stat-clip" href="${esc(safeUrl(s.clipUrl))}" target="_blank" rel="noopener noreferrer" title="최근 클립" onclick="event.stopPropagation()">클립</a>` : ''}</div>
                 </div>
                 ${opts.noBar ? '' : `<div class="stat-bar-wrap"><div class="stat-bar" style="width:${Math.round((opts.value ? opts.value(s) : s.count) / max * 100)}%"></div></div>`}
                 <div class="stat-side">
                     ${opts.sideMeta ? `<span class="stat-side-meta">${esc(opts.sideMeta(s))}</span>` : ''}
                     <div class="stat-side-main">
                         <span class="stat-count">${esc(opts.count ? opts.count(s) : `${s.count}번`)}</span>
-                        ${opts.clipAfterCount && s.clipUrl ? `<a class="stat-clip" href="${esc(s.clipUrl)}" target="_blank" rel="noopener noreferrer" title="최근 클립" onclick="event.stopPropagation()">클립</a>` : ''}
+                        ${opts.clipAfterCount && s.clipUrl ? `<a class="stat-clip" href="${esc(safeUrl(s.clipUrl))}" target="_blank" rel="noopener noreferrer" title="최근 클립" onclick="event.stopPropagation()">클립</a>` : ''}
                     </div>
                 </div>
             </div>`).join('');
@@ -2695,17 +2708,24 @@ function handleBulkPaste(e, startTr, startColIdx) {
 
 async function saveBulk() {
     const rows = [...document.getElementById('bulk-rows').querySelectorAll('tr')];
-    const records = rows.map(tr => ({
-        category:    tr.querySelector('.bc-cat').value,
-        title:       tr.querySelector('.bc-title').value.trim(),
-        artist:      tr.querySelector('.bc-artist').value.trim() || null,
-        mr_url:      tr.querySelector('.bc-mr').value.trim() || null,
-        clip_url:    tr.querySelector('.bc-clip').value.trim() || null,
-        skill_level: parseInt(tr.querySelector('.bc-skill').value) || 0,
-        memo:        tr.querySelector('.bc-memo').value.trim() || null,
-    })).filter(r => r.title);
+    const records = rows.map(tr => {
+        const mrInput = tr.querySelector('.bc-mr').value.trim();
+        const clipInput = tr.querySelector('.bc-clip').value.trim();
+        return {
+            category:    tr.querySelector('.bc-cat').value,
+            title:       tr.querySelector('.bc-title').value.trim(),
+            artist:      tr.querySelector('.bc-artist').value.trim() || null,
+            mr_url:      normalizeOptionalUrl(mrInput) || null,
+            clip_url:    normalizeOptionalUrl(clipInput) || null,
+            skill_level: parseInt(tr.querySelector('.bc-skill').value) || 0,
+            memo:        tr.querySelector('.bc-memo').value.trim() || null,
+            _invalidUrl: (mrInput && !normalizeOptionalUrl(mrInput)) || (clipInput && !normalizeOptionalUrl(clipInput)),
+        };
+    }).filter(r => r.title);
 
     if (!records.length) { showToast('제목을 하나 이상 입력해주세요'); return; }
+    if (records.some(r => r._invalidUrl)) { showToast('MR/클립 URL은 http 또는 https 주소로 입력해주세요'); return; }
+    records.forEach(r => delete r._invalidUrl);
 
     const btn = document.getElementById('bulk-save-btn');
     btn.disabled = true; btn.textContent = '저장 중...';
@@ -2770,6 +2790,14 @@ function updateSkillDisplay(hoverVal) {
 async function saveSong() {
     const titleVal = document.getElementById('ef-title').value.trim();
     if (!titleVal) { document.getElementById('ef-title').focus(); return; }
+    const mrInput = document.getElementById('ef-mr').value.trim();
+    const clipInput = document.getElementById('ef-clip').value.trim();
+    const mrUrl = normalizeOptionalUrl(mrInput);
+    const clipUrl = normalizeOptionalUrl(clipInput);
+    if ((mrInput && !mrUrl) || (clipInput && !clipUrl)) {
+        showToast('MR/클립 URL은 http 또는 https 주소로 입력해주세요');
+        return;
+    }
     const btn = document.getElementById('song-save-btn');
     btn.disabled = true; btn.textContent = '저장 중...';
 
@@ -2778,8 +2806,8 @@ async function saveSong() {
         category:    document.getElementById('ef-category').value,
         title:       titleVal,
         artist:      document.getElementById('ef-artist').value.trim() || null,
-        mr_url:      document.getElementById('ef-mr').value.trim() || null,
-        clip_url:    document.getElementById('ef-clip').value.trim() || null,
+        mr_url:      mrUrl || null,
+        clip_url:    clipUrl || null,
         skill_level: parseInt(document.getElementById('ef-skill').value),
         memo:        document.getElementById('ef-memo').value.trim() || null,
     };
@@ -2876,6 +2904,7 @@ async function saveLiveBulk() {
     const records = rows.map(tr => {
         const year = parseInt(tr.querySelector('.blr-year').value) || null;
         const dateRaw = tr.querySelector('.blr-date').value.trim();
+        const clipInput = tr.querySelector('.blr-clip').value.trim();
         const performed_date = dateRaw && year
             ? (/^\d{4}-/.test(dateRaw) ? dateRaw : `${year}-${dateRaw.replace(/^(\d)-/, '0$1-').replace(/-(\d)$/, '-0$1')}`)
             : (dateRaw || null);
@@ -2885,13 +2914,16 @@ async function saveLiveBulk() {
             title:      tr.querySelector('.blr-title').value.trim(),
             artist:     tr.querySelector('.blr-artist').value.trim() || null,
             memo:       tr.querySelector('.blr-memo').value.trim() || null,
-            clip_url:   tr.querySelector('.blr-clip').value.trim() || null,
+            clip_url:   normalizeOptionalUrl(clipInput) || null,
+            _invalidUrl: clipInput && !normalizeOptionalUrl(clipInput),
         };
         if (canUseExclude) record.exclude_from_stats = !!tr.querySelector('.blr-exclude')?.checked;
         return record;
     }).filter(r => r.title && r.year);
 
     if (!records.length) { showToast('제목과 연도를 하나 이상 입력해주세요'); return; }
+    if (records.some(r => r._invalidUrl)) { showToast('클립 URL은 http 또는 https 주소로 입력해주세요'); return; }
+    records.forEach(r => delete r._invalidUrl);
 
     const btn = document.getElementById('live-bulk-save-btn');
     btn.disabled = true; btn.textContent = '저장 중...';
@@ -2937,6 +2969,13 @@ async function saveLiveRecord() {
 
     const id = document.getElementById('lf-id').value;
     const year = parseInt(yearVal);
+    const clipInput = document.getElementById('lf-clip').value.trim();
+    const clipUrl = normalizeOptionalUrl(clipInput);
+    if (clipInput && !clipUrl) {
+        btn.disabled = false; btn.textContent = '저장';
+        showToast('클립 URL은 http 또는 https 주소로 입력해주세요');
+        return;
+    }
     const excludeStats = document.getElementById('lf-exclude-stats').checked;
     const canUseExclude = await ensureLiveExcludeColumn();
     if (excludeStats && !canUseExclude) {
@@ -2950,7 +2989,7 @@ async function saveLiveRecord() {
         title:          titleVal,
         artist:         document.getElementById('lf-artist').value.trim() || null,
         memo:           document.getElementById('lf-memo').value.trim() || null,
-        clip_url:       document.getElementById('lf-clip').value.trim() || null,
+        clip_url:       clipUrl || null,
     };
     if (canUseExclude) payload.exclude_from_stats = excludeStats;
     await ensureDb();

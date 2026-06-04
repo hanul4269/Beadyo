@@ -84,7 +84,7 @@ function getSerializableAuthUser(user = authUser) {
     return {
         email: user.email || '',
         name: user.user_metadata?.full_name || user.user_metadata?.name || user.email || '',
-        picture: user.user_metadata?.avatar_url || user.user_metadata?.picture || '',
+        picture: safeImageUrl(user.user_metadata?.avatar_url || user.user_metadata?.picture || ''),
     };
 }
 
@@ -117,6 +117,23 @@ function closeAuthMenu() {
 
 document.addEventListener('click', closeAuthMenu);
 
+function escAttr(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function safeImageUrl(value) {
+    try {
+        const u = new URL(String(value || '').trim());
+        if (u.protocol === 'http:' || u.protocol === 'https:') return u.toString();
+    } catch {}
+    return '';
+}
+
 function openCalendarAdmin() {
     closeAuthMenu();
     switchTab(0);
@@ -131,11 +148,11 @@ async function updateAuthUI() {
         return;
     }
 
-    const picture = authUser.user_metadata?.avatar_url || authUser.user_metadata?.picture || '';
+    const picture = safeImageUrl(authUser.user_metadata?.avatar_url || authUser.user_metadata?.picture || '');
     const canAdmin = await isEditorUser(authUser);
     badge.innerHTML = `<div class="auth-menu-wrap">
         <button class="auth-trigger" onclick="toggleAuthMenu(event)" aria-label="계정 메뉴">
-            ${picture ? `<img src="${picture}" alt="">` : `<img src="login-icon.png" alt="">`}
+            ${picture ? `<img src="${escAttr(picture)}" alt="">` : `<img src="login-icon.png" alt="">`}
         </button>
         <div class="auth-menu" id="auth-menu">
             ${canAdmin ? `<button onclick="openCalendarAdmin()">⚙ 편집 설정</button>` : ''}
@@ -256,6 +273,7 @@ function openGuideModal() {
     const overlay = document.getElementById('guide-overlay');
     const frame = document.getElementById('guide-frame');
     if (frame && !frame.src) frame.src = 'guide.html';
+    if (!overlay) return;
     overlay.classList.add('open');
     closeQuickMenu();
 }

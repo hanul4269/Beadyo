@@ -170,11 +170,16 @@ function typeOf(key) {
     return EVENT_TYPES.find(t => t.key === key) ?? EVENT_TYPES.find(t => t.key === 'general');
 }
 function ytLinkType(url) {
-    if (!url || typeof url !== 'string') return null;
-    url = url.trim();
-    if (!url) return null;
-    if (url.includes('/shorts/')) return 'short';
-    if (url.includes('youtube.com') || url.includes('youtu.be')) return 'long';
+    const normalized = normalizeOptionalUrl(url);
+    if (!normalized) return null;
+    try {
+        const u = new URL(normalized);
+        const host = u.hostname.toLowerCase();
+        if (host === 'youtu.be') return 'long';
+        if (host === 'youtube.com' || host === 'www.youtube.com') {
+            return u.pathname.includes('/shorts/') ? 'short' : 'long';
+        }
+    } catch {}
     return null;
 }
 function pad(n) { return String(n).padStart(2, '0'); }
@@ -292,6 +297,25 @@ function safeUrl(s) {
         if (u.protocol === 'http:' || u.protocol === 'https:') return u.toString();
     } catch {}
     return '#';
+}
+function safeImageUrl(s, fallback = '') {
+    const url = safeUrl(s);
+    return url === '#' ? fallback : url;
+}
+function normalizeOptionalUrl(s) {
+    const raw = String(s ?? '').trim();
+    if (!raw) return '';
+    const url = safeUrl(raw);
+    return url === '#' ? null : url;
+}
+function isAllowedHostUrl(url, allowedHosts) {
+    const normalized = normalizeOptionalUrl(url);
+    if (!normalized) return false;
+    try {
+        const host = new URL(normalized).hostname.toLowerCase();
+        return allowedHosts.some(allowed => host === allowed || host.endsWith(`.${allowed}`));
+    } catch {}
+    return false;
 }
 
 function showMemoTooltip(e) {
@@ -902,7 +926,7 @@ function renderCalendar() {
             : '';
         const ytBadgesHtml = (ytBadges.length || ytAddBtn)
             ? `<div class="yt-badges">${ytBadges.map(({ url, type }) =>
-                `<a class="yt-badge yt-${type}" href="${safeUrl(url)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" title="${type === 'long' ? 'YouTube' : 'YouTube Shorts'}">${type === 'long' ? 'Y' : 'S'}</a>`
+                `<a class="yt-badge yt-${type}" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" title="${type === 'long' ? 'YouTube' : 'YouTube Shorts'}">${type === 'long' ? 'Y' : 'S'}</a>`
               ).join('')}${ytAddBtn}</div>` : '';
 
         const chipsClass = `chips-area${isSingle ? ' single' : ''}${isStableList ? ' stable-list' : ''}${isPacked ? ' packed' : ''}${isCompact ? ' compact' : ''}${isStableList ? ` count-${events.length}` : ''}`;
@@ -996,12 +1020,13 @@ async function addMemoCard() {
     const content = (document.getElementById('memoNewContent')?.value || '').trim();
     const url     = (document.getElementById('memoNewUrl')?.value || '').trim();
     if (!content) { showToast('내용을 입력해 주세요'); return; }
-    if (url && safeUrl(url) === '#') { showToast('올바른 URL을 입력해 주세요'); return; }
+    const normalizedUrl = normalizeOptionalUrl(url);
+    if (url && !normalizedUrl) { showToast('올바른 URL을 입력해 주세요'); return; }
     const ym = `${state.year}-${String(state.month + 1).padStart(2, '0')}`;
     const maxOrder = state.memoCards.reduce((m, c) => Math.max(m, c.sort_order ?? 0), -1);
     await _ensureDb();
     const { data, error } = await db.from('memo_cards')
-        .insert({ content, url: url || null, sort_order: maxOrder + 1, year_month: ym })
+        .insert({ content, url: normalizedUrl || null, sort_order: maxOrder + 1, year_month: ym })
         .select();
     if (error) { showToast('저장 실패: ' + error.message); return; }
     state.memoCards.push(data[0]);
@@ -1128,16 +1153,17 @@ function renderYtLinkList() {
         const badge = type ? `<span class="yt-badge yt-${type}">${type === 'long' ? 'Y' : 'S'}</span>` : '';
         return `<div class="yt-link-item">
             ${badge}
-            <a href="${safeUrl(yl.url)}" target="_blank" rel="noopener noreferrer">${esc(yl.url)}</a>
+            <a href="${esc(safeUrl(yl.url))}" target="_blank" rel="noopener noreferrer">${esc(yl.url)}</a>
             <button class="yt-link-del" onclick="deleteYtLink('${esc(yl.id)}')" title="삭제">✕</button>
         </div>`;
     }).join('');
 }
 
 async function saveYtLink() {
-    const url = document.getElementById('ytLinkInput').value.trim();
-    if (!url || !_ytModalDate) return;
-    if (!ytLinkType(url)) { showToast('유효한 YouTube URL을 입력해 주세요'); return; }
+    const urlInput = document.getElementById('ytLinkInput').value.trim();
+    if (!urlInput || !_ytModalDate) return;
+    const url = normalizeOptionalUrl(urlInput);
+    if (!url || !ytLinkType(url)) { showToast('유효한 YouTube URL을 입력해 주세요'); return; }
     const existing = state.ytLinks.filter(yl => yl.date === _ytModalDate);
     if (existing.length >= 3) { showToast('날짜당 최대 3개까지 등록할 수 있어요'); return; }
     await _ensureDb();
@@ -1237,7 +1263,12 @@ async function saveBroadcastInfo() {
         return;
     }
     const vodRows = readBroadcastVodRows()
-        .filter(row => row.url);
+        .filter(row => row.url)
+        .map(row => ({ ...row, url: normalizeOptionalUrl(row.url) }));
+    if (vodRows.some(row => !row.url)) {
+        showToast('다시보기 URL은 http 또는 https 주소로 입력해주세요');
+        return;
+    }
     const vodUrls = vodRows.map(row => row.url).join('\n');
     const vodTitles = vodRows.map(row => row.title).join('\n');
     const hasVodTitles = vodRows.some(row => row.title);
@@ -1295,11 +1326,11 @@ function dayEventCardHtml(ev, dateStr) {
         ? `${formatDate(ev.date)} ~ ${formatDate(ev.end_date)}`
         : '';
     const links = [];
-    if (ev.vod_url) links.push(`<a class="day-link" href="${safeUrl(ev.vod_url)}" target="_blank" rel="noopener noreferrer">다시보기</a>`);
+    if (ev.vod_url) links.push(`<a class="day-link" href="${esc(safeUrl(ev.vod_url))}" target="_blank" rel="noopener noreferrer">다시보기</a>`);
     if (ev.youtube_links) {
         ev.youtube_links.split('\n').filter(Boolean).forEach(url => {
             const type = ytLinkType(url);
-            if (type) links.push(`<a class="day-link yt" href="${safeUrl(url)}" target="_blank" rel="noopener noreferrer">${type === 'long' ? 'YouTube' : 'Shorts'}</a>`);
+            if (type) links.push(`<a class="day-link yt" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">${type === 'long' ? 'YouTube' : 'Shorts'}</a>`);
         });
     }
 
@@ -1340,12 +1371,12 @@ function openDayViewModal(dateStr) {
             ? `<div class="broadcast-card">
                 ${time ? `<div class="view-section"><div class="view-label">방송시간</div><div class="view-value">${esc(time)}</div></div>` : ''}
                 ${info.memo ? `<div class="view-section"><div class="view-label">메모</div><div class="view-value" style="white-space:pre-wrap">${esc(info.memo)}</div></div>` : ''}
-                ${links.length ? `<div class="day-link-row broadcast-links">${links.map(link => `<a class="vod-link" href="${safeUrl(link.url)}" target="_blank" rel="noopener noreferrer">▶ ${esc(link.title)}</a>`).join('')}</div>` : ''}
+                ${links.length ? `<div class="day-link-row broadcast-links">${links.map(link => `<a class="vod-link" href="${esc(safeUrl(link.url))}" target="_blank" rel="noopener noreferrer">▶ ${esc(link.title)}</a>`).join('')}</div>` : ''}
             </div>`
             : `<div class="day-empty">아직 방송정보가 등록되지 않았어요</div>`}
         ${ytLinks.length ? `<div class="day-section-title sub">YouTube 링크</div><div class="day-link-row">${ytLinks.map(yl => {
             const type = ytLinkType(yl.url);
-            return `<a class="vod-link yt-vod-link" href="${safeUrl(yl.url)}" target="_blank" rel="noopener noreferrer">${type === 'short' ? '▶ YouTube Shorts' : '▶ YouTube'}</a>`;
+            return `<a class="vod-link yt-vod-link" href="${esc(safeUrl(yl.url))}" target="_blank" rel="noopener noreferrer">${type === 'short' ? '▶ YouTube Shorts' : '▶ YouTube'}</a>`;
         }).join('')}</div>` : ''}
     </div>`;
 
@@ -1383,11 +1414,11 @@ function openViewModal(id) {
     if (ev.memo)
         html += `<div class="view-section"><div class="view-label">메모</div><div class="view-value" style="white-space:pre-wrap">${esc(ev.memo)}</div></div>`;
     if (ev.vod_url)
-        html += `<a class="vod-link" href="${safeUrl(ev.vod_url)}" target="_blank" rel="noopener noreferrer">▶ 다시보기</a>`;
+        html += `<a class="vod-link" href="${esc(safeUrl(ev.vod_url))}" target="_blank" rel="noopener noreferrer">▶ 다시보기</a>`;
     if (ev.youtube_links) {
         ev.youtube_links.split('\n').filter(Boolean).forEach(url => {
             const type = ytLinkType(url);
-            if (type) html += `<a class="vod-link yt-vod-link" href="${safeUrl(url)}" target="_blank" rel="noopener noreferrer">${type === 'long' ? '▶ YouTube' : '▶ YouTube Shorts'}</a>`;
+            if (type) html += `<a class="vod-link yt-vod-link" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">${type === 'long' ? '▶ YouTube' : '▶ YouTube Shorts'}</a>`;
         });
     }
 
@@ -1531,7 +1562,7 @@ function renderUpModal(data, fetchLive = false) {
                     onclick="window.open(this.dataset.href,'_blank','noopener noreferrer')"
                     onkeydown="if(event.key==='Enter')window.open(this.dataset.href,'_blank','noopener noreferrer')">
                     <div class="up-rank-num${cls}">${r.rank}</div>
-                    <img class="up-rank-profile" src="${esc(r.profile_url)}"
+                    <img class="up-rank-profile" src="${esc(safeImageUrl(r.profile_url, 'stickers/s8.png'))}"
                          onerror="this.src='stickers/s8.png'" alt="" loading="lazy">
                     <div class="up-rank-info">
                         <div class="up-rank-name">${esc(r.name)}</div>
@@ -1547,7 +1578,7 @@ function renderUpModal(data, fetchLive = false) {
             <div class="up-tabs">${tabs}</div>
             <div class="up-event-header">
                 <div class="up-event-title">${esc(ev.title)}</div>
-                <a class="up-goto-btn" href="${esc(ev.soop_url)}" target="_blank" rel="noopener">UP 바로가기 ↗</a>
+                <a class="up-goto-btn" href="${esc(safeUrl(ev.soop_url))}" target="_blank" rel="noopener noreferrer">UP 바로가기 ↗</a>
             </div>
             <div class="up-ranking-list">${items}</div>
             <div class="up-updated">업데이트: ${updatedStr}</div>`;
@@ -1933,6 +1964,9 @@ async function saveEvent() {
     if (!title) { showToast('제목을 입력해주세요'); return; }
     const date = document.getElementById('editDate').value;
     if (!date)  { showToast('날짜를 선택해주세요'); return; }
+    const vodUrlInput = document.getElementById('editVodUrl').value.trim();
+    const vodUrl = normalizeOptionalUrl(vodUrlInput);
+    if (vodUrlInput && !vodUrl) { showToast('다시보기 URL은 http 또는 https 주소로 입력해주세요'); return; }
 
     const payload = {
         date,
@@ -1943,7 +1977,7 @@ async function saveEvent() {
         type:       document.getElementById('editType').value,
         collab:     document.getElementById('editCollab').value.trim()   || null,
         subtitle:   document.getElementById('editSubtitle').value.trim() || null,
-        vod_url:    document.getElementById('editVodUrl').value.trim()   || null,
+        vod_url:    vodUrl || null,
         memo:       document.getElementById('editMemo').value.trim()     || null,
         is_rest:    document.getElementById('editIsRest').checked,
     };
@@ -2078,11 +2112,12 @@ async function addUpEvent() {
     const soopUrl  = document.getElementById('newUpUrl').value.trim();
     const sortOrder = parseInt(document.getElementById('newUpOrder').value) || 0;
     if (!tabName || !title || !soopUrl) { showToast('탭 이름, 제목, URL을 모두 입력해주세요'); return; }
-    if (!soopUrl.includes('sooplive') && !soopUrl.includes('afreecatv')) {
+    const normalizedSoopUrl = normalizeOptionalUrl(soopUrl);
+    if (!normalizedSoopUrl || !isAllowedHostUrl(normalizedSoopUrl, ['sooplive.co.kr', 'afreecatv.com'])) {
         showToast('올바른 SOOP URL을 입력해주세요'); return;
     }
     const { error } = await db.from('up_events').insert({
-        tab_name: tabName, title, soop_url: soopUrl, sort_order: sortOrder, is_active: true,
+        tab_name: tabName, title, soop_url: normalizedSoopUrl, sort_order: sortOrder, is_active: true,
     });
     if (error) { showToast('추가 실패: ' + error.message); return; }
     ['newUpTab','newUpTitle','newUpUrl','newUpOrder'].forEach(id => {
@@ -2174,7 +2209,7 @@ function normalizeAuthUser(userLike) {
     return {
         email: userLike.email,
         name: userLike.name || userLike.user_metadata?.full_name || userLike.user_metadata?.name || userLike.email,
-        picture: userLike.picture || userLike.user_metadata?.avatar_url || userLike.user_metadata?.picture || '',
+        picture: safeImageUrl(userLike.picture || userLike.user_metadata?.avatar_url || userLike.user_metadata?.picture || ''),
     };
 }
 
@@ -2207,7 +2242,7 @@ async function setSessionUser(user) {
     state.user = user ? {
         email: user.email,
         name: user.name || user.email,
-        picture: user.picture || '',
+        picture: safeImageUrl(user.picture || ''),
     } : null;
     if (!state.user) {
         state.isEditor = false;
