@@ -19,16 +19,18 @@
     <link rel="preload" href="supabase.min.js" as="script">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script defer src="supabase.min.js"></script>
-    <script defer src="index-app.js?v=guide-modal-20260604"></script>
+    <script defer src="index-app.js?v=design-20260604"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --accent: #8bc34a;
-            --accent-light: #f1f8e9;
-            --header-bg: #8bc34a;
-            --tab-hover: rgba(139,195,74,0.1);
-            --bg: #f7f7f9;
+            --accent: #7fb83f;
+            --accent-light: #eef7e4;
+            --header-bg: #76ad39;
+            --tab-hover: rgba(255,255,255,0.12);
+            --bg: #f4f5f1;
+            --ink: #222720;
+            --line: rgba(34,39,32,0.09);
         }
 
         body {
@@ -880,7 +882,7 @@
             position: fixed;
             inset: 0;
             z-index: 720;
-            background: rgba(0,0,0,0.38);
+            background: rgba(26,31,24,0.42);
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
             align-items: center;
@@ -894,23 +896,24 @@
             width: min(1120px, 96vw);
             height: min(760px, 90vh);
             background: #fff;
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 24px 70px rgba(0,0,0,0.25);
+            box-shadow: 0 26px 80px rgba(22,28,18,0.28);
+            border: 1px solid rgba(255,255,255,0.75);
             animation: modalIn 0.2s ease;
             display: flex;
             flex-direction: column;
         }
 
         .guide-modal-head {
-            height: 48px;
-            padding: 0 12px 0 18px;
+            height: 50px;
+            padding: 0 12px 0 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid rgba(0,0,0,0.08);
-            background: #fff;
-            color: #333;
+            border-bottom: 1px solid var(--line);
+            background: #fbfcf8;
+            color: var(--ink);
             font-size: 15px;
             font-weight: 800;
             flex-shrink: 0;

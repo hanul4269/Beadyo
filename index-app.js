@@ -5,9 +5,9 @@ const OWNER_EMAIL = 'riosniper12@gmail.com';
 const TABS = [
     { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
-    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook' },
-    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live' },
-    { type: 'songs', src: 'songs.html', directUrl: 'songs.html' },
+    { type: 'songbook', src: 'songbook.html?view=songbook&v=design-20260604', directUrl: 'songbook.html?view=songbook' },
+    { type: 'songbook', src: 'songbook.html?view=live&v=design-20260604', directUrl: 'songbook.html?view=live' },
+    { type: 'songs', src: 'songs.html?v=design-20260604', directUrl: 'songs.html' },
 ];
 
 const readOnlyUrl = s =>
@@ -272,7 +272,7 @@ function handleLoginOverlayClick(e) {
 function openGuideModal() {
     const overlay = document.getElementById('guide-overlay');
     const frame = document.getElementById('guide-frame');
-    if (frame && !frame.src) frame.src = 'guide.html';
+    if (frame && !frame.src) frame.src = 'guide.html?v=design-20260604';
     if (!overlay) return;
     overlay.classList.add('open');
     closeQuickMenu();
