@@ -19,7 +19,7 @@
     <link rel="preload" href="supabase.min.js" as="script">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script defer src="supabase.min.js"></script>
-    <script defer src="index-app.js"></script>
+    <script defer src="index-app.js?v=guide-modal-20260604"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -706,6 +706,7 @@
         .qm-header-btns {
             display: flex;
             gap: 8px;
+            flex-shrink: 0;
         }
 
         .qm-header-btn {
@@ -723,6 +724,8 @@
             font-family: 'Noto Sans KR', sans-serif;
             text-decoration: none;
             transition: background 0.15s;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
         .qm-header-btn:hover { background: var(--accent-light); }
@@ -871,6 +874,74 @@
 
         .login-back-btn:hover { background: #ebebeb; }
 
+        /* ── 이용가이드 모달 ── */
+        .guide-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 720;
+            background: rgba(0,0,0,0.38);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+
+        .guide-overlay.open { display: flex; }
+
+        .guide-modal {
+            width: min(1120px, 96vw);
+            height: min(760px, 90vh);
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 24px 70px rgba(0,0,0,0.25);
+            animation: modalIn 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .guide-modal-head {
+            height: 48px;
+            padding: 0 12px 0 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            background: #fff;
+            color: #333;
+            font-size: 15px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .guide-close-btn {
+            width: 34px;
+            height: 34px;
+            border: none;
+            border-radius: 50%;
+            background: transparent;
+            color: #777;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .guide-close-btn:hover {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        .guide-frame {
+            width: 100%;
+            flex: 1;
+            min-height: 0;
+            border: none;
+            background: #f5f4f0;
+        }
+
         /* ── 로딩 ── */
         .loading {
             position: absolute;
@@ -937,6 +1008,7 @@
                 <a class="header-link desktop-only icon-only" href="https://fancim.me/celeb/profile.aspx?url=851033" target="_blank" rel="noopener noreferrer" title="팬심"><img src="fancim-icon.ico"></a>
                 <a class="header-link desktop-only icon-only" href="https://www.instagram.com/bead.yo?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" title="인스타그램"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#E1306C"/><rect x="4.5" y="4.5" width="15" height="15" rx="4" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="16.5" cy="7.5" r="1" fill="#fff"/></svg></a>
                 <a class="header-link desktop-only icon-only" href="https://www.tiktok.com/@beadyo97?_r=1&_t=ZS-96UX4UbmWnd" target="_blank" rel="noopener noreferrer" title="틱톡"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#010101"/><path d="M17.5 6.2a4.1 4.1 0 01-2.6-3.2h-2.5v9.8a2.1 2.1 0 11-2.1-2.1c.2 0 .4 0 .6.1V8.2a4.7 4.7 0 00-.6 0 4.6 4.6 0 00-4.6 4.6 4.6 4.6 0 004.6 4.6 4.6 4.6 0 004.6-4.6V8.4a6.5 6.5 0 003.4 1V7a4.1 4.1 0 01-.8-.8z" fill="#fff"/></svg></a>
+                <button class="header-link desktop-only icon-only" onclick="openGuideModal()" title="이용가이드" aria-label="이용가이드 열기"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9" fill="rgba(255,255,255,0.14)"/><path d="M9.5 9a3 3 0 0 1 5.2 2c0 2-2.7 2.2-2.7 4"/><line x1="12" y1="18" x2="12" y2="18"/></svg></button>
                 <span id="auth-badge">✏️ 편집 모드 <button id="signout-btn" onclick="signOut()">로그아웃</button></span>
                 <button class="header-link desktop-only login-btn" onclick="openLoginModal()">로그인</button>
                 <button class="header-link desktop-only" id="mobile-restore-btn" onclick="viewMobile()" style="display:none">← 모바일</button>
@@ -975,6 +1047,16 @@
                 Google 계정으로 로그인
             </button>
             <button class="login-back-btn" onclick="closeLoginModal()">홈으로 돌아가기</button>
+        </div>
+    </div>
+
+    <div class="guide-overlay" id="guide-overlay" onclick="handleGuideOverlayClick(event)">
+        <div class="guide-modal" role="dialog" aria-modal="true" aria-label="이용가이드">
+            <div class="guide-modal-head">
+                <span>이용가이드</span>
+                <button class="guide-close-btn" onclick="closeGuideModal()" aria-label="닫기">×</button>
+            </div>
+            <iframe class="guide-frame" id="guide-frame" title="BEADYO 이용가이드"></iframe>
         </div>
     </div>
 
@@ -1066,7 +1148,7 @@
                 <span class="loading-text loading-dots">대기 중</span>
             </div>
 
-            <iframe class="sheet-frame calendar-frame-host active" id="frame-0" onload="hideLoading(0)"></iframe>
+            <iframe class="sheet-frame calendar-frame-host active" id="frame-0"></iframe>
             <iframe class="sheet-frame" id="frame-1"></iframe>
             <iframe class="sheet-frame local-frame-host" id="frame-2"></iframe>
             <iframe class="sheet-frame local-frame-host" id="frame-3"></iframe>

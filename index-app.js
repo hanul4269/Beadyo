@@ -251,6 +251,23 @@ function handleLoginOverlayClick(e) {
     if (e.target === document.getElementById('login-overlay')) closeLoginModal();
 }
 
+// ── 이용가이드 모달 ──
+function openGuideModal() {
+    const overlay = document.getElementById('guide-overlay');
+    const frame = document.getElementById('guide-frame');
+    if (frame && !frame.src) frame.src = 'guide.html';
+    overlay.classList.add('open');
+    closeQuickMenu();
+}
+
+function closeGuideModal() {
+    document.getElementById('guide-overlay')?.classList.remove('open');
+}
+
+function handleGuideOverlayClick(e) {
+    if (e.target === document.getElementById('guide-overlay')) closeGuideModal();
+}
+
 // ── 퀵메뉴 ──
 function toggleQuickMenu() {
     const panel = document.getElementById('quick-menu-panel');

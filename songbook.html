@@ -370,8 +370,20 @@
         .col-artist { width: 220px; font-weight: 700; }
         .col-mr     { width: 78px;  text-align: center; }
         .col-clip   { width: 90px;  text-align: center; }
-        .col-skill  { width: 96px;  text-align: center; letter-spacing: -1px; }
+        .col-skill  { width: 118px; text-align: center; letter-spacing: 0; }
         .col-memo   { width: 210px; color: var(--muted); font-size: 12px; }
+        .song-table thead th.col-skill {
+            padding-left: 6px;
+            padding-right: 6px;
+        }
+        .song-table tbody td.col-skill {
+            padding-left: 6px;
+            padding-right: 6px;
+            overflow: visible;
+            text-overflow: clip;
+            font-size: 13px;
+            letter-spacing: -2px;
+        }
 
         /* 라이브 열 너비 */
         .col-date   { width: 70px;  font-size: 15px; text-align: center; font-weight: 700; }
@@ -396,7 +408,7 @@
             text-align: center;
         }
         #songbook-list .song-table {
-            min-width: 1200px;
+            min-width: 1240px;
         }
         #songbook-list .col-cat {
             width: 96px;
@@ -1118,7 +1130,7 @@
         .bulk-cat-hint { font-size: 11px; color: var(--muted); }
         .bulk-paste-hint { font-size: 11px; color: var(--muted); line-height: 1.6; background: var(--bg); border-radius: 8px; padding: 7px 10px; border: 1px solid var(--border); }
         .bulk-table-wrap { overflow-x: auto; max-height: 360px; overflow-y: auto; border: 1.5px solid var(--border); border-radius: 8px; }
-        .bulk-table { border-collapse: collapse; width: 100%; min-width: 700px; font-size: 13px; }
+        .bulk-table { border-collapse: collapse; width: 100%; min-width: 860px; font-size: 13px; }
         .bulk-table thead th { background: #eaf2e0; padding: 7px 8px; font-size: 11px; font-weight: 700; color: #4a6a30; text-align: left; white-space: nowrap; border-bottom: 2px solid rgba(100,150,50,.2); position: sticky; top: 0; z-index: 1; }
         .bulk-table tbody td { padding: 4px 4px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         .bulk-table tbody tr:last-child td { border-bottom: none; }
@@ -1131,7 +1143,7 @@
         .bt-artist{ width: 120px; }
         .bt-mr    { width: 130px; }
         .bt-clip  { width: 130px; }
-        .bt-skill { width: 72px; }
+        .bt-skill { width: 116px; }
         .bt-memo  { width: 120px; }
         .bt-year  { width: 76px; }
         .bt-date  { width: 90px; }
