@@ -13,17 +13,14 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --accent: #7fb83f;
-            --accent-dark: #4f7f25;
-            --accent-soft: #eef7e4;
-            --bg: #f4f5f1;
+            --accent: #8bc34a;
+            --accent-dark: #5f8f28;
+            --accent-soft: #eef8df;
+            --bg: #f5f4f0;
             --surface: #ffffff;
-            --surface-2: #fbfcf8;
-            --border: rgba(34,39,32,0.09);
-            --text: #222720;
-            --muted: #737b70;
-            --coral: #db7b62;
-            --gold: #c49a34;
+            --border: rgba(0,0,0,0.08);
+            --text: #232323;
+            --muted: #747474;
         }
 
         body {
@@ -36,19 +33,19 @@
         .page {
             max-width: 1120px;
             margin: 0 auto;
-            padding: 22px 18px 38px;
+            padding: 28px 18px 44px;
         }
 
         .guide-header {
             display: grid;
             grid-template-columns: minmax(0, 1fr) auto;
-            gap: 18px;
+            gap: 20px;
             align-items: center;
-            padding: 22px;
+            padding: 26px;
             border-radius: 8px;
-            background: linear-gradient(180deg, #ffffff 0%, #fbfcf8 100%);
+            background: var(--surface);
             border: 1px solid var(--border);
-            box-shadow: 0 8px 24px rgba(34,39,32,0.06);
+            box-shadow: 0 8px 26px rgba(0,0,0,0.06);
         }
 
         .eyebrow {
@@ -60,7 +57,7 @@
         }
 
         h1 {
-            font-size: 28px;
+            font-size: 30px;
             line-height: 1.25;
             letter-spacing: 0;
             margin-bottom: 10px;
@@ -87,16 +84,15 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 12px;
-            margin: 16px 0;
+            margin: 18px 0;
         }
 
         .step {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 14px;
-            min-height: 112px;
-            box-shadow: 0 1px 2px rgba(34,39,32,0.04);
+            padding: 16px;
+            min-height: 124px;
         }
 
         .step-num {
@@ -128,9 +124,9 @@
         }
 
         .section-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 800;
-            margin: 26px 0 12px;
+            margin: 30px 0 12px;
         }
 
         .guide-grid {
@@ -143,8 +139,7 @@
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 16px;
-            box-shadow: 0 1px 2px rgba(34,39,32,0.04);
+            padding: 18px;
         }
 
         .card-head {
@@ -155,8 +150,8 @@
         }
 
         .icon {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 8px;
             display: inline-flex;
             align-items: center;
@@ -206,31 +201,10 @@
 
         .note {
             margin-top: 18px;
-            padding: 16px;
+            padding: 18px;
             border-radius: 8px;
-            background: var(--surface-2);
+            background: #fbfdf7;
             border: 1px solid rgba(139,195,74,0.28);
-        }
-
-        .guide-shortcuts {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 14px;
-        }
-
-        .shortcut-chip {
-            display: inline-flex;
-            align-items: center;
-            height: 28px;
-            padding: 0 10px;
-            border-radius: 999px;
-            background: var(--accent-soft);
-            color: var(--accent-dark);
-            border: 1px solid rgba(127,184,63,0.26);
-            font-size: 12px;
-            font-weight: 800;
-            white-space: nowrap;
         }
 
         .note strong {
@@ -278,12 +252,6 @@
                 <div class="eyebrow">BEADYO GUIDE</div>
                 <h1>구슬요모아보기 이용가이드</h1>
                 <p class="lead">방송 일정, 편성표, 노래책, 라이브 기록, 발매곡을 한곳에서 빠르게 확인하는 팬 사이트입니다. 위쪽 탭이나 모바일 QUICK MENU에서 원하는 메뉴로 이동하면 됩니다.</p>
-                <div class="guide-shortcuts" aria-label="주요 메뉴">
-                    <span class="shortcut-chip">CALENDAR</span>
-                    <span class="shortcut-chip">SONGBOOK</span>
-                    <span class="shortcut-chip">LIVE RECORD</span>
-                    <span class="shortcut-chip">MUSIC</span>
-                </div>
             </div>
             <img class="mascot" src="stickers/kyabuki.gif" alt="">
         </section>
