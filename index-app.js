@@ -8,7 +8,7 @@ const TABS = [
     { type: 'songbook', src: 'songbook.html?view=songbook&v=design-20260604', directUrl: 'songbook.html?view=songbook' },
     { type: 'songbook', src: 'songbook.html?view=live&v=design-20260604', directUrl: 'songbook.html?view=live' },
     { type: 'songs', src: 'songs.html?v=design-20260604', directUrl: 'songs.html' },
-    { type: 'games', src: 'games.html?v=games-preview-20260606', directUrl: 'games.html' },
+    { type: 'games', src: 'games.html?v=games-preview-hidefix-20260606', directUrl: 'games.html' },
 ];
 
 const GAME_TAB_INDEX = 5;
@@ -301,7 +301,7 @@ function handleLoginOverlayClick(e) {
 function openGuideModal() {
     const overlay = document.getElementById('guide-overlay');
     const frame = document.getElementById('guide-frame');
-    if (frame && !frame.src) frame.src = 'guide.html?v=games-preview-20260606';
+    if (frame && !frame.src) frame.src = 'guide.html?v=games-preview-hidefix-20260606';
     if (!overlay) return;
     overlay.classList.add('open');
     closeQuickMenu();
