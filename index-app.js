@@ -8,7 +8,25 @@ const TABS = [
     { type: 'songbook', src: 'songbook.html?view=songbook&v=design-20260604', directUrl: 'songbook.html?view=songbook' },
     { type: 'songbook', src: 'songbook.html?view=live&v=design-20260604', directUrl: 'songbook.html?view=live' },
     { type: 'songs', src: 'songs.html?v=design-20260604', directUrl: 'songs.html' },
+    { type: 'games', src: 'games.html?v=games-20260604', directUrl: 'games.html' },
 ];
+
+const GAME_TAB_INDEX = 5;
+const gamePreviewEnabled = (() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('preview') === 'games' ||
+        params.get('tab') === 'game' ||
+        params.has('gamePreview') ||
+        window.location.hash === '#games' ||
+        window.location.hash === '#game-preview';
+})();
+
+function applyGamePreviewVisibility() {
+    if (!gamePreviewEnabled) return;
+    document.querySelectorAll('[data-game-preview]').forEach(el => {
+        el.hidden = false;
+    });
+}
 
 const readOnlyUrl = s =>
     `https://docs.google.com/spreadsheets/d/${s.id}/htmlview?gid=${s.gid}&embedded=true`;
@@ -47,7 +65,7 @@ const isMobile = window.matchMedia('(max-width: 640px)').matches;
 
 function getFrameUrl(index) {
     const tab = TABS[index];
-    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook') return tab.src;
+    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'games') return tab.src;
     if (tab.type === 'schedule') return scheduleUrl(tab);
     if (tab.alwaysEdit) return editUrl(tab);
     return readOnlyUrl(tab);
@@ -55,7 +73,7 @@ function getFrameUrl(index) {
 
 function getSheetDirectUrl(index) {
     const tab = TABS[index];
-    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook') return tab.directUrl;
+    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'games') return tab.directUrl;
     if (tab.type === 'schedule') return scheduleUrl(tab);
     return `https://docs.google.com/spreadsheets/d/${tab.id}/edit#gid=${tab.gid}`;
 }
@@ -71,7 +89,7 @@ function updateMobileFab(index) {
     const fab = document.getElementById('mobile-fab');
     if (!isMobile) return;
     const type = TABS[index]?.type;
-    if (type === 'calendar' || type === 'songs' || type === 'songbook') {
+    if (type === 'calendar' || type === 'songs' || type === 'songbook' || type === 'games') {
         fab.classList.remove('show');
         return;
     }
@@ -164,6 +182,7 @@ async function updateAuthUI() {
 }
 
 function switchTab(index) {
+    if (index === GAME_TAB_INDEX && !gamePreviewEnabled) index = 0;
     document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
     document.querySelectorAll('.sheet-frame').forEach((f, i) => f.classList.toggle('active', i === index));
 
@@ -188,13 +207,23 @@ function switchTab(index) {
 
 // 첫 탭 초기 로드
 try {
+    applyGamePreviewVisibility();
     let initialTab = 0;
-    if (window.location.hash === '#songbook') {
+    if (gamePreviewEnabled && (
+        window.location.hash === '#games' ||
+        window.location.hash === '#game-preview' ||
+        new URLSearchParams(window.location.search).get('tab') === 'game'
+    )) {
+        if (window.location.hash === '#games' || window.location.hash === '#game-preview') {
+            history.replaceState({}, document.title, window.location.pathname + window.location.search);
+        }
+        initialTab = GAME_TAB_INDEX;
+    } else if (window.location.hash === '#songbook') {
         history.replaceState({}, document.title, window.location.pathname);
         initialTab = 2;
     } else {
         const saved = parseInt(localStorage.getItem('activeTab'));
-        if (Number.isFinite(saved) && saved >= 0 && saved < TABS.length) {
+        if (Number.isFinite(saved) && saved >= 0 && saved < TABS.length && (saved !== GAME_TAB_INDEX || gamePreviewEnabled)) {
             initialTab = saved;
         }
     }

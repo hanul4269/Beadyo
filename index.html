@@ -1038,6 +1038,10 @@
             <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polygon points="10,8 16,10 10,12" fill="currentColor" stroke="none"/></svg></span>
             MUSIC
         </div>
+        <div class="tab" onclick="switchTab(5)" data-game-preview hidden>
+            <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><path d="M7 10v4M17 10v4M10 7h4M10 17h4"/></svg></span>
+            GAME
+        </div>
     </div>
     </div>
 
@@ -1103,6 +1107,10 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polygon points="10,8 16,10 10,12" fill="currentColor" stroke="none"/></svg>
                         MUSIC
                     </button>
+                    <button class="qm-item" onclick="switchTab(5); closeQuickMenu()" data-game-preview hidden>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><path d="M7 10v4M17 10v4M10 7h4M10 17h4"/></svg>
+                        GAME
+                    </button>
                 </div>
             </div>
         </div>
@@ -1156,6 +1164,7 @@
             <iframe class="sheet-frame local-frame-host" id="frame-2"></iframe>
             <iframe class="sheet-frame local-frame-host" id="frame-3"></iframe>
             <iframe class="sheet-frame" id="frame-4"></iframe>
+            <iframe class="sheet-frame local-frame-host" id="frame-5" data-game-preview hidden></iframe>
         </div>
         <footer class="site-footer">
             <div class="footer-line">

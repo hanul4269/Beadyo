@@ -1,0 +1,2697 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEADYO Games</title>
+    <link rel="icon" href="logo-icon.webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet"></noscript>
+    <style>
+        * { box-sizing: border-box; }
+
+        :root {
+            --accent: #7fb83f;
+            --accent-dark: #4f7f25;
+            --accent-soft: #eef7e4;
+            --ink: #2b2f29;
+            --muted: #74796f;
+            --line: rgba(42, 47, 41, .1);
+            --bg: #f5f6f2;
+            --stage: #fff;
+            --rail: #6f776b;
+            --rail-soft: #8b947f;
+            --highlight: #c69c3a;
+            --highlight-soft: #fff8e6;
+            --blue: #5b8fc7;
+            --gold: #c69c3a;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                linear-gradient(180deg, rgba(238,247,228,.76) 0%, rgba(244,245,241,0) 220px),
+                var(--bg);
+            color: var(--ink);
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        button,
+        textarea {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .page {
+            min-height: 100vh;
+            padding: 22px 28px 34px;
+        }
+
+        .top {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .eyebrow {
+            color: var(--accent-dark);
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: .08em;
+        }
+
+        h1 {
+            margin: 1px 0 6px;
+            font-size: 34px;
+            line-height: 1.1;
+            letter-spacing: 0;
+        }
+
+        .mode-tabs {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255,255,255,.8);
+            box-shadow: 0 1px 3px rgba(42,47,41,.04);
+        }
+
+        .mode-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-height: 38px;
+            padding: 0 16px;
+            border: 0;
+            border-radius: 6px;
+            background: transparent;
+            color: #687061;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .mode-btn.active {
+            color: #fff;
+            background: var(--accent);
+            box-shadow: 0 5px 14px rgba(127,184,63,.28);
+        }
+
+        .mode-btn svg,
+        .action-btn svg,
+        .icon-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+        }
+
+        .game-panel {
+            display: none;
+        }
+
+        .game-panel.active {
+            display: block;
+        }
+
+        .play-stage {
+            position: relative;
+            min-height: calc(100vh - 142px);
+            padding: 28px 32px 26px;
+            border-color: rgba(127,184,63,.2);
+            border-radius: 12px;
+            background:
+                linear-gradient(180deg, #ffffff 0%, #fbfcf8 100%);
+            box-shadow: 0 10px 28px rgba(42,47,41,.06);
+            overflow: hidden;
+        }
+
+        .stage-toolbar {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .counter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 46px;
+            padding: 4px;
+            border: 1px solid rgba(127,184,63,.22);
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(42,47,41,.05);
+        }
+
+        .icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border: 0;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--accent-dark);
+            box-shadow: none;
+        }
+
+        .icon-btn:hover {
+            background: var(--accent-soft);
+        }
+
+        .count-num {
+            min-width: 96px;
+            text-align: center;
+            color: var(--ink);
+            font-size: 18px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 46px;
+            padding: 0 18px;
+            border: 1px solid rgba(127,184,63,.22);
+            border-radius: 8px;
+            background: #fff;
+            color: #4d5549;
+            font-weight: 900;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(42,47,41,.05);
+        }
+
+        .action-btn.reset {
+            border-color: rgba(34,39,32,.12);
+            background: #f7f8f4;
+            color: #687061;
+            box-shadow: 0 4px 12px rgba(42,47,41,.04);
+        }
+
+        .action-btn.reset:hover {
+            border-color: rgba(127,184,63,.34);
+            background: var(--accent-soft);
+            color: var(--accent-dark);
+        }
+
+        .action-btn.green {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(127,184,63,.22);
+        }
+
+        .ladder-board {
+            --cols: 4;
+            position: relative;
+            display: grid;
+            grid-template-rows: auto minmax(420px, 1fr) auto;
+            gap: 12px;
+            min-height: calc(100vh - 248px);
+        }
+
+        .slot-row {
+            display: grid;
+            grid-template-columns: repeat(var(--cols), minmax(92px, 1fr));
+            gap: 22px;
+            align-items: end;
+            padding: 0 46px;
+        }
+
+        .slot {
+            display: grid;
+            justify-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .top .slot {
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 78px;
+            height: 78px;
+            padding: 8px;
+            border: 1px solid rgba(127,184,63,.24);
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 32% 24%, rgba(255,255,255,.98) 0 18%, transparent 19%),
+                linear-gradient(150deg, #ffffff 0%, #eef7e4 100%);
+            object-fit: contain;
+            box-shadow: 0 7px 16px rgba(42,47,41,.11);
+            filter: drop-shadow(0 4px 7px rgba(42,47,41,.12));
+        }
+
+        .slot-card {
+            display: grid;
+            place-items: center;
+            width: min(132px, 100%);
+            min-height: 48px;
+            padding: 0 12px;
+            border: 1px solid rgba(34,39,32,.1);
+            border-radius: 8px;
+            background: #fff;
+            color: #5b5f58;
+            font-size: 18px;
+            font-weight: 900;
+            box-shadow: 0 4px 12px rgba(42,47,41,.06);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .slot-card[contenteditable="true"] {
+            cursor: text;
+            outline: none;
+        }
+
+        .slot-card[contenteditable="true"]:focus {
+            border-color: rgba(127,184,63,.62);
+            box-shadow: 0 0 0 3px rgba(127,184,63,.14), 0 4px 12px rgba(42,47,41,.06);
+            background: #fff;
+        }
+
+        .slot-card[contenteditable="true"]:empty::before {
+            content: attr(data-placeholder);
+            color: #a1a79b;
+        }
+
+        .arrow {
+            width: 0;
+            height: 0;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-top: 9px solid var(--rail);
+        }
+
+        .ladder-canvas-wrap {
+            position: relative;
+            min-height: 420px;
+            padding: 0 46px;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .ladder-token {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            padding: 7px;
+            border: 1px solid rgba(127,184,63,.26);
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 32% 24%, rgba(255,255,255,.98) 0 18%, transparent 19%),
+                linear-gradient(150deg, #ffffff 0%, #eef7e4 100%);
+            object-fit: contain;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            filter: drop-shadow(0 8px 12px rgba(42,47,41,.22));
+            transition: none;
+            z-index: 4;
+        }
+
+        .bottom .slot-card {
+            min-height: 48px;
+            color: var(--accent-dark);
+        }
+
+        .roulette-stage {
+            display: grid;
+            grid-template-columns: minmax(360px, 1fr) 320px;
+            gap: 24px;
+            align-items: center;
+            min-height: calc(100vh - 250px);
+            padding: 12px 8px 0;
+        }
+
+        .wheel-area {
+            position: relative;
+            display: grid;
+            place-items: center;
+            min-height: 560px;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 17px solid transparent;
+            border-right: 17px solid transparent;
+            border-top: 31px solid var(--highlight);
+            z-index: 4;
+            filter: drop-shadow(0 4px 4px rgba(42,47,41,.2));
+        }
+
+        #roulette-canvas {
+            width: min(560px, 90vw);
+            height: min(560px, 90vw);
+            max-width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: inset 0 0 0 12px rgba(255,255,255,.75), 0 18px 40px rgba(42,47,41,.14);
+            transition: transform 4s cubic-bezier(.12,.68,.11,1);
+        }
+
+        .wheel-center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            display: grid;
+            place-items: center;
+            width: 92px;
+            height: 92px;
+            border: 7px solid var(--accent-soft);
+            border-radius: 50%;
+            background: #fff;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            box-shadow: 0 9px 20px rgba(42,47,41,.16);
+        }
+
+        .wheel-center img {
+            width: 68px;
+            height: 68px;
+            object-fit: contain;
+        }
+
+        .winner-box {
+            display: grid;
+            justify-items: center;
+            align-content: center;
+            min-height: 360px;
+            padding: 22px;
+            border: 1px solid rgba(127,184,63,.2);
+            border-radius: 12px;
+            background: linear-gradient(180deg, #fff 0%, #fbfcf8 100%);
+        }
+
+        .winner-box img {
+            width: 122px;
+            height: 122px;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 12px rgba(42,47,41,.14));
+        }
+
+        .winner-label {
+            margin-top: 14px;
+            color: var(--accent-dark);
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: .06em;
+        }
+
+        .winner-name {
+            margin-top: 4px;
+            max-width: 100%;
+            color: var(--ink);
+            font-size: 34px;
+            font-weight: 900;
+            line-height: 1.2;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .history {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 16px;
+        }
+
+        .chip {
+            max-width: 100%;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #fff;
+            color: var(--accent-dark);
+            border: 1px solid rgba(127,184,63,.22);
+            font-size: 12px;
+            font-weight: 900;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .gacha-stage {
+            display: grid;
+            grid-template-columns: minmax(360px, 1fr) 320px;
+            gap: 24px;
+            align-items: center;
+            min-height: calc(100vh - 250px);
+            padding: 12px 8px 0;
+        }
+
+        .gacha-machine {
+            position: relative;
+            display: grid;
+            grid-template-rows: minmax(380px, 1fr) 150px;
+            gap: 12px;
+            min-height: 560px;
+            padding: 26px 28px 20px;
+            border: 1px solid rgba(127,184,63,.18);
+            border-radius: 16px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,.95) 0%, rgba(251,252,248,.98) 100%);
+            box-shadow: inset 0 0 0 6px rgba(238,247,228,.42), 0 12px 28px rgba(42,47,41,.06);
+        }
+
+        .gacha-machine::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 8px;
+            width: min(330px, 54%);
+            height: 28px;
+            border: 1px solid rgba(127,184,63,.18);
+            border-radius: 0 0 12px 12px;
+            background: linear-gradient(180deg, #eef7e4 0%, #fff 100%);
+            transform: translateX(-50%);
+            box-shadow: 0 4px 10px rgba(42,47,41,.04);
+        }
+
+        .gacha-machine::after {
+            content: "";
+            position: absolute;
+            left: 10%;
+            right: 10%;
+            bottom: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(42,47,41,.08);
+            filter: blur(4px);
+            pointer-events: none;
+        }
+
+        .gacha-bowl {
+            position: relative;
+            width: min(560px, 100%);
+            aspect-ratio: 1 / .78;
+            min-height: 380px;
+            justify-self: center;
+            border: 7px solid rgba(238,247,228,.95);
+            outline: 1px solid rgba(127,184,63,.24);
+            border-radius: 8px;
+            background:
+                linear-gradient(135deg, rgba(255,255,255,.86) 0 12%, transparent 12% 18%, rgba(255,255,255,.42) 18% 28%, transparent 28%),
+                linear-gradient(180deg, rgba(238,247,228,.72) 0%, rgba(255,255,255,.9) 100%);
+            box-shadow:
+                inset 0 0 0 8px rgba(255,255,255,.5),
+                inset 0 -24px 36px rgba(127,184,63,.1),
+                0 10px 24px rgba(42,47,41,.08);
+            overflow: hidden;
+        }
+
+        .gacha-bowl::before {
+            content: "";
+            position: absolute;
+            left: 18px;
+            top: 18px;
+            width: 42%;
+            height: 2px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.74);
+            box-shadow: 0 22px 0 rgba(255,255,255,.38);
+            z-index: 1;
+        }
+
+        .gacha-bowl::after {
+            content: "";
+            position: absolute;
+            left: 12%;
+            right: 12%;
+            bottom: 18px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(127,184,63,.12);
+            filter: blur(2px);
+        }
+
+        .gacha-ball {
+            position: absolute;
+            display: grid;
+            place-items: center;
+            width: 86px;
+            height: 86px;
+            border: 1px solid rgba(127,184,63,.24);
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 32% 24%, rgba(255,255,255,.98) 0 18%, transparent 19%),
+                linear-gradient(150deg, #ffffff 0%, #eef7e4 100%);
+            box-shadow: 0 9px 18px rgba(42,47,41,.12);
+        }
+
+        .gacha-ball img {
+            width: 62px;
+            height: 62px;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+        .gacha-ball.pick {
+            left: 50%;
+            top: 50%;
+            z-index: 4;
+            transform: translate(-50%, -50%) scale(1);
+            animation: gacha-roll-out 1.45s cubic-bezier(.2,.72,.2,1) both;
+        }
+
+        @keyframes gacha-roll-out {
+            0% { transform: translate(-155%, -255%) scale(.78) rotate(-180deg); opacity: 0; }
+            16% { opacity: 1; }
+            38% { transform: translate(-104%, -150%) scale(.94) rotate(-86deg); }
+            58% { transform: translate(-68%, -88%) scale(1.02) rotate(18deg); }
+            76% { transform: translate(-39%, -48%) scale(1) rotate(96deg); }
+            88% { transform: translate(-55%, -36%) scale(.98) rotate(138deg); }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(156deg); opacity: 1; }
+        }
+
+        .gacha-dock {
+            position: relative;
+            display: grid;
+            place-items: center;
+            min-height: 150px;
+            border: 1px solid rgba(127,184,63,.18);
+            border-radius: 8px;
+            background:
+                linear-gradient(180deg, #fff 0%, #fbfcf8 100%);
+            box-shadow: 0 6px 16px rgba(42,47,41,.05);
+        }
+
+        .gacha-dock::before {
+            content: "";
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            width: 92px;
+            height: 30px;
+            border: 1px solid rgba(127,184,63,.22);
+            border-bottom: 0;
+            border-radius: 10px 10px 0 0;
+            background: linear-gradient(180deg, #fff 0%, #fbfcf8 100%);
+            transform: translateX(-50%);
+        }
+
+        .gacha-dock::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: -34px;
+            width: 42px;
+            height: 34px;
+            border-left: 1px solid rgba(127,184,63,.2);
+            border-right: 1px solid rgba(127,184,63,.2);
+            background: rgba(255,255,255,.72);
+            transform: translateX(-50%);
+        }
+
+        .gacha-lever {
+            position: absolute;
+            right: max(22px, calc(50% - 352px));
+            top: 43%;
+            z-index: 5;
+            display: grid;
+            justify-items: center;
+            gap: 8px;
+            width: 86px;
+            border: 0;
+            background: transparent;
+            color: var(--accent-dark);
+            font-weight: 900;
+        }
+
+        .lever-arm {
+            position: relative;
+            width: 14px;
+            height: 88px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, #dfe5d9 0%, #9ea99a 100%);
+            transform-origin: 50% 88%;
+            transition: transform .18s ease;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.6), 0 6px 12px rgba(42,47,41,.14);
+        }
+
+        .lever-arm::before {
+            content: "뽑기";
+            position: absolute;
+            left: 50%;
+            top: -27px;
+            display: grid;
+            place-items: center;
+            width: 52px;
+            height: 52px;
+            border: 1px solid rgba(127,184,63,.28);
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 32% 24%, rgba(255,255,255,.98) 0 18%, transparent 19%),
+                linear-gradient(150deg, #ffffff 0%, #eef7e4 100%);
+            transform: translateX(-50%);
+            box-shadow: 0 7px 14px rgba(42,47,41,.13);
+            color: var(--accent-dark);
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 0;
+        }
+
+        .lever-base {
+            width: 62px;
+            height: 34px;
+            border: 1px solid rgba(127,184,63,.22);
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 5px 13px rgba(42,47,41,.08);
+        }
+
+        .gacha-lever.pulling .lever-arm {
+            animation: lever-pull .9s ease both;
+        }
+
+        .gacha-lever:disabled {
+            cursor: not-allowed;
+            opacity: .62;
+        }
+
+        @keyframes lever-pull {
+            0% { transform: rotate(0deg); }
+            36% { transform: rotate(54deg); }
+            58% { transform: rotate(46deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .gacha-result {
+            display: grid;
+            justify-items: center;
+            align-content: center;
+            min-height: 360px;
+            padding: 22px;
+            border: 1px solid rgba(127,184,63,.2);
+            border-radius: 12px;
+            background: linear-gradient(180deg, #fff 0%, #fbfcf8 100%);
+        }
+
+        .gacha-result .gacha-ball {
+            position: relative;
+            left: auto;
+            top: auto;
+            width: 128px;
+            height: 128px;
+            margin-bottom: 14px;
+            transform: none;
+        }
+
+        .gacha-result .gacha-ball img {
+            width: 92px;
+            height: 92px;
+        }
+
+        .pinball-stage {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 220px;
+            gap: 0;
+            align-items: stretch;
+            min-height: calc(100vh - 250px);
+            padding: 0;
+            border: 1px solid rgba(127,184,63,.24);
+            border-radius: 14px;
+            background:
+                radial-gradient(circle at 58% 48%, rgba(127,184,63,.14) 0 16%, transparent 40%),
+                linear-gradient(180deg, #10140e 0%, #070907 100%);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), 0 16px 36px rgba(42,47,41,.14);
+            overflow: hidden;
+        }
+
+        .pinball-stage::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+            background-size: 34px 34px;
+            mask-image: radial-gradient(circle at 50% 46%, black 0 48%, transparent 76%);
+            pointer-events: none;
+        }
+
+        .pinball-stage::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            box-shadow: inset 0 0 80px rgba(0,0,0,.72);
+            pointer-events: none;
+        }
+
+        .pinball-machine {
+            position: relative;
+            display: grid;
+            place-items: center;
+            min-height: 520px;
+            padding: 20px;
+            background: transparent;
+            overflow: visible;
+            z-index: 1;
+        }
+
+        .pinball-machine::before {
+            content: "";
+            position: absolute;
+            left: 16px;
+            top: 16px;
+            width: 180px;
+            height: 112px;
+            border: 1px solid rgba(127,184,63,.42);
+            border-radius: 8px;
+            background:
+                linear-gradient(180deg, rgba(127,184,63,.18), rgba(255,255,255,.04)),
+                #272d25;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 10px 24px rgba(0,0,0,.26);
+            opacity: .95;
+        }
+
+        .pinball-machine::after {
+            content: "MAP";
+            position: absolute;
+            left: 26px;
+            top: 24px;
+            color: rgba(238,247,228,.82);
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: .08em;
+            pointer-events: none;
+        }
+
+        .pinball-canvas-wrap {
+            position: relative;
+            width: min(720px, 100%);
+            aspect-ratio: 1.25 / .82;
+            min-height: 430px;
+            border: 1px solid rgba(127,184,63,.26);
+            border-radius: 10px;
+            background:
+                radial-gradient(circle at 50% 45%, rgba(127,184,63,.1), transparent 52%),
+                #111611;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,.045), 0 18px 34px rgba(0,0,0,.28);
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .pinball-canvas-wrap::before {
+            content: "";
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            top: 16px;
+            height: 1px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.28);
+            box-shadow: 0 24px 0 rgba(255,255,255,.08);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        #pinball-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .pinball-deco {
+            position: absolute;
+            z-index: 3;
+            display: grid;
+            place-items: center;
+            width: 68px;
+            height: 68px;
+            border: 1px solid rgba(127,184,63,.36);
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 32% 24%, rgba(255,255,255,.96) 0 18%, transparent 19%),
+                linear-gradient(150deg, #ffffff 0%, #eef7e4 100%);
+            box-shadow: 0 0 22px rgba(127,184,63,.22), 0 12px 22px rgba(0,0,0,.28);
+            pointer-events: none;
+        }
+
+        .pinball-deco img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .pinball-deco.one {
+            left: 42px;
+            bottom: 36px;
+            transform: rotate(-8deg);
+        }
+
+        .pinball-deco.two {
+            right: 250px;
+            top: 42px;
+            width: 58px;
+            height: 58px;
+            opacity: .92;
+            transform: rotate(9deg);
+        }
+
+        .pinball-deco.two img {
+            width: 42px;
+            height: 42px;
+        }
+
+        .pinball-deco.three {
+            left: 224px;
+            top: 42px;
+            width: 48px;
+            height: 48px;
+            opacity: .72;
+            transform: rotate(-16deg);
+        }
+
+        .pinball-deco.three img {
+            width: 35px;
+            height: 35px;
+        }
+
+        .pinball-entry-panel {
+            position: absolute;
+            left: 18px;
+            bottom: 18px;
+            z-index: 5;
+            display: grid;
+            gap: 6px;
+            width: 250px;
+            padding: 10px;
+            border: 1px solid rgba(127,184,63,.34);
+            border-radius: 8px;
+            background: rgba(238,247,228,.82);
+            box-shadow: 0 12px 24px rgba(0,0,0,.22);
+        }
+
+        .pinball-entry-panel label {
+            color: #4f7f25;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .pinball-entry-panel textarea {
+            min-height: 76px;
+            padding: 8px;
+            border: 1px solid rgba(42,47,41,.16);
+            border-radius: 6px;
+            background: rgba(255,255,255,.92);
+            color: var(--ink);
+            font-size: 13px;
+            line-height: 1.42;
+            resize: none;
+        }
+
+        .pinball-mini-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .pinball-mini-actions button,
+        .pinball-rank-control button {
+            min-height: 30px;
+            border: 1px solid rgba(127,184,63,.28);
+            border-radius: 6px;
+            background: #fff;
+            color: #4f7f25;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .pinball-rank-control {
+            display: grid;
+            gap: 7px;
+            width: 100%;
+            margin-top: 4px;
+            padding: 9px;
+            border: 1px solid rgba(127,184,63,.22);
+            border-radius: 8px;
+            background: rgba(255,255,255,.06);
+        }
+
+        .pinball-rank-control span {
+            color: #eef7e4;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .pinball-rank-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .pinball-rank-list {
+            display: grid;
+            gap: 4px;
+            width: 100%;
+            margin-top: 8px;
+            color: rgba(238,247,228,.92);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .pinball-rank-list div {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 6px;
+            align-items: center;
+            min-width: 0;
+        }
+
+        .pinball-rank-list b {
+            color: var(--accent);
+        }
+
+        .pinball-rank-list span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .marble-roulette-frame {
+            position: relative;
+            min-height: calc(100vh - 205px);
+            border: 1px solid rgba(127,184,63,.24);
+            border-radius: 14px;
+            background: #070907;
+            box-shadow: 0 16px 36px rgba(42,47,41,.14);
+            overflow: hidden;
+        }
+
+        .marble-roulette-frame iframe {
+            display: block;
+            width: 100%;
+            height: calc(100vh - 205px);
+            min-height: 620px;
+            border: 0;
+            background: #070907;
+        }
+
+        .pinball-result {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            justify-items: start;
+            align-content: start;
+            gap: 8px;
+            min-height: auto;
+            padding: 22px 18px;
+            border-left: 1px solid rgba(127,184,63,.18);
+            background: linear-gradient(180deg, rgba(10,13,9,.74) 0%, rgba(10,13,9,.46) 100%);
+        }
+
+        .pinball-marble {
+            display: grid;
+            place-items: center;
+            width: 76px;
+            height: 76px;
+            margin-bottom: 6px;
+            border: 1px solid rgba(127,184,63,.24);
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 32% 24%, rgba(255,255,255,.98) 0 18%, transparent 19%),
+                linear-gradient(150deg, #ffffff 0%, #eef7e4 100%);
+            box-shadow: 0 10px 20px rgba(0,0,0,.3);
+        }
+
+        .pinball-marble img {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+        }
+
+        .pinball-result .winner-label {
+            margin-top: 2px;
+            color: var(--accent);
+        }
+
+        .pinball-result .winner-name {
+            color: #fff;
+            font-size: 30px;
+            text-align: left;
+        }
+
+        .pinball-result .history {
+            justify-content: flex-start;
+        }
+
+        .pinball-result .chip {
+            background: rgba(255,255,255,.08);
+            color: #eef7e4;
+            border-color: rgba(127,184,63,.28);
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: rgba(30, 34, 29, .34);
+            backdrop-filter: blur(6px);
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal {
+            width: min(720px, 100%);
+            max-height: min(760px, calc(100vh - 36px));
+            overflow-y: auto;
+            border-radius: 18px;
+            background: #fff;
+            box-shadow: 0 24px 70px rgba(30,34,29,.28);
+        }
+
+        .modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .modal-title {
+            font-size: 19px;
+            font-weight: 900;
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            padding: 18px 20px 20px;
+        }
+
+        .field {
+            min-width: 0;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4b5347;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 230px;
+            resize: vertical;
+            padding: 12px;
+            border: 1px solid rgba(42,47,41,.13);
+            border-radius: 10px;
+            outline: none;
+            color: var(--ink);
+            background: #fff;
+            line-height: 1.55;
+        }
+
+        textarea:focus {
+            border-color: rgba(127,184,63,.62);
+            box-shadow: 0 0 0 3px rgba(127,184,63,.14);
+        }
+
+        .modal-foot {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            padding: 0 20px 20px;
+        }
+
+        .result-list {
+            display: grid;
+            gap: 8px;
+            padding: 18px 20px 20px;
+        }
+
+        .result-item {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 10px;
+            align-items: center;
+            min-height: 42px;
+            padding: 9px 12px;
+            border-radius: 12px;
+            background: var(--accent-soft);
+            color: #4d5549;
+            font-weight: 900;
+        }
+
+        .result-item span,
+        .result-item b {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .result-item b {
+            color: var(--accent-dark);
+            text-align: right;
+        }
+
+        @media (max-width: 980px) {
+            .page { padding: 16px 12px 24px; }
+            .top,
+            .stage-toolbar,
+            .roulette-stage,
+            .gacha-stage,
+            .pinball-stage {
+                grid-template-columns: 1fr;
+            }
+
+            .stage-toolbar {
+                justify-items: center;
+            }
+
+            .toolbar-actions {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .play-stage {
+                min-height: calc(100vh - 150px);
+                padding: 20px 14px;
+                border-radius: 20px;
+            }
+
+            .slot-row,
+            .ladder-canvas-wrap {
+                padding-left: 12px;
+                padding-right: 12px;
+                gap: 12px;
+            }
+
+            .avatar {
+                width: 58px;
+                height: 58px;
+            }
+
+            .slot-card {
+                min-height: 42px;
+                font-size: 14px;
+            }
+
+            .gacha-machine,
+            .wheel-area,
+            .pinball-machine {
+                min-height: 430px;
+            }
+
+            .gacha-machine {
+                padding: 22px 18px 18px;
+            }
+
+            .pinball-machine {
+                padding: 20px 14px 18px;
+            }
+
+            .pinball-canvas-wrap {
+                min-height: 380px;
+            }
+
+            .pinball-deco.one {
+                left: 22px;
+                bottom: 28px;
+            }
+
+            .pinball-deco.two {
+                right: 24px;
+                top: 52px;
+            }
+
+            .pinball-deco.three {
+                display: none;
+            }
+
+            .gacha-lever {
+                right: 12px;
+                top: 46%;
+                width: 72px;
+            }
+
+            .lever-arm {
+                height: 70px;
+            }
+
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 560px) {
+            h1 { font-size: 28px; }
+
+            .mode-tabs,
+            .toolbar-actions {
+                width: 100%;
+            }
+
+            .mode-btn,
+            .action-btn {
+                flex: 1;
+            }
+
+            .counter {
+                gap: 18px;
+            }
+
+            .slot-row {
+                grid-template-columns: repeat(var(--cols), minmax(62px, 1fr));
+                gap: 8px;
+            }
+
+            .avatar {
+                width: 46px;
+                height: 46px;
+            }
+
+            .slot-card {
+                width: 100%;
+                padding: 0 6px;
+                font-size: 12px;
+            }
+
+            .gacha-ball {
+                width: 66px;
+                height: 66px;
+            }
+
+            .gacha-ball img {
+                width: 48px;
+                height: 48px;
+            }
+
+            .gacha-machine {
+                padding: 18px 12px 16px;
+            }
+
+            .pinball-canvas-wrap {
+                min-height: 330px;
+            }
+
+            .pinball-deco {
+                width: 48px;
+                height: 48px;
+            }
+
+            .pinball-deco img {
+                width: 34px;
+                height: 34px;
+            }
+
+            .gacha-lever {
+                position: relative;
+                right: auto;
+                top: auto;
+                justify-self: center;
+                margin: -6px auto 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <header class="top">
+            <div>
+                <div class="eyebrow">BEADYO PLAY</div>
+                <h1>GAME</h1>
+            </div>
+            <nav class="mode-tabs" aria-label="게임 선택">
+                <button class="mode-btn active" type="button" data-mode="ladder" onclick="switchMode('ladder')">
+                    <svg viewBox="0 0 24 24"><path d="M7 3v18M17 3v18M7 8h10M7 14h10"/></svg>
+                    사다리
+                </button>
+                <button class="mode-btn" type="button" data-mode="roulette" onclick="switchMode('roulette')">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M6 6l12 12M18 6 6 18"/></svg>
+                    룰렛
+                </button>
+                <button class="mode-btn" type="button" data-mode="gacha" onclick="switchMode('gacha')">
+                    <svg viewBox="0 0 24 24"><path d="M7 8a5 5 0 0 1 10 0"/><rect x="5" y="8" width="14" height="12" rx="3"/><path d="M8 14h8M12 11v6"/></svg>
+                    뽑기
+                </button>
+                <button class="mode-btn" type="button" data-mode="pinball" onclick="switchMode('pinball')">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M6 9h12M7 9l2 12M17 9l-2 12M9 15h6M8 21h8"/></svg>
+                    핀볼
+                </button>
+            </nav>
+        </header>
+
+        <section class="game-panel active" id="ladder-panel">
+            <div class="play-stage">
+                <div class="stage-toolbar">
+                    <div></div>
+                    <div class="counter" aria-label="참가자 수">
+                        <button class="icon-btn" type="button" onclick="changeCount(-1)" aria-label="참가자 줄이기">
+                            <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+                        </button>
+                        <span class="count-num" id="ladder-count">참가자 4명</span>
+                        <button class="icon-btn" type="button" onclick="changeCount(1)" aria-label="참가자 늘리기">
+                            <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                        </button>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="action-btn green" type="button" onclick="runLadder(0)">
+                            <svg viewBox="0 0 24 24"><path d="m5 3 14 9-14 9V3z"/></svg>
+                            START
+                        </button>
+                        <button class="action-btn" type="button" onclick="showLadderResults()">
+                            <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/></svg>
+                            결과보기
+                        </button>
+                        <button class="action-btn reset" type="button" onclick="resetLadder()">
+                            초기화
+                        </button>
+                    </div>
+                </div>
+
+                <div class="ladder-board" id="ladder-board">
+                    <div class="slot-row top" id="ladder-top"></div>
+                    <div class="ladder-canvas-wrap" id="ladder-wrap">
+                        <canvas id="ladder-canvas"></canvas>
+                        <img class="ladder-token" id="ladder-token" src="game-assets/gobookticon/gobook-01.png" alt="" hidden>
+                    </div>
+                    <div class="slot-row bottom" id="ladder-bottom"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-panel" id="roulette-panel">
+            <div class="play-stage">
+                <div class="stage-toolbar">
+                    <div></div>
+                    <div class="counter" aria-label="후보 수">
+                        <button class="icon-btn" type="button" onclick="changeRouletteCount(-1)" aria-label="후보 줄이기">
+                            <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+                        </button>
+                        <span class="count-num" id="roulette-count">후보 4명</span>
+                        <button class="icon-btn" type="button" onclick="changeRouletteCount(1)" aria-label="후보 늘리기">
+                            <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                        </button>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="action-btn" type="button" onclick="openSettings('roulette')">
+                            <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                            후보 설정
+                        </button>
+                        <button class="action-btn green" type="button" id="spin-btn" onclick="spinRoulette()">
+                            <svg viewBox="0 0 24 24"><path d="m5 3 14 9-14 9V3z"/></svg>
+                            START
+                        </button>
+                        <button class="action-btn reset" type="button" onclick="resetRoulette()">
+                            초기화
+                        </button>
+                    </div>
+                </div>
+
+                <div class="roulette-stage">
+                    <div class="wheel-area">
+                        <div class="wheel-pointer"></div>
+                        <canvas id="roulette-canvas" width="760" height="760"></canvas>
+                        <div class="wheel-center"><img id="wheel-center-img" src="game-assets/gobookticon/gobook-02.png" alt=""></div>
+                    </div>
+                    <aside class="winner-box">
+                        <img id="winner-img" src="game-assets/gobookticon/gobook-03.png" alt="">
+                        <div class="winner-label">WINNER</div>
+                        <div class="winner-name" id="winner-name">대기 중</div>
+                        <div class="history" id="history"></div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-panel" id="gacha-panel">
+            <div class="play-stage">
+                <div class="stage-toolbar">
+                    <div></div>
+                    <div class="counter" aria-label="후보 수">
+                        <button class="icon-btn" type="button" onclick="changeGachaCount(-1)" aria-label="후보 줄이기">
+                            <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+                        </button>
+                        <span class="count-num" id="gacha-count">후보 8명</span>
+                        <button class="icon-btn" type="button" onclick="changeGachaCount(1)" aria-label="후보 늘리기">
+                            <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                        </button>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="action-btn" type="button" onclick="openSettings('gacha')">
+                            <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                            후보 설정
+                        </button>
+                        <button class="action-btn reset" type="button" onclick="resetGacha()">
+                            초기화
+                        </button>
+                    </div>
+                </div>
+
+                <div class="gacha-stage">
+                    <div class="gacha-machine">
+                        <div class="gacha-bowl" id="gacha-bowl"></div>
+                        <button class="gacha-lever" id="gacha-btn" type="button" onclick="pullGachaLever()" aria-label="뽑기">
+                            <span class="lever-arm"></span>
+                            <span class="lever-base"></span>
+                        </button>
+                        <div class="gacha-dock" id="gacha-dock">
+                            <span class="winner-label">나오는곳</span>
+                        </div>
+                    </div>
+                    <aside class="gacha-result">
+                        <div class="gacha-ball"><img id="gacha-result-img" src="game-assets/gobookticon/gobook-04.png" alt=""></div>
+                        <div class="winner-label">PICK</div>
+                        <div class="winner-name" id="gacha-winner">대기 중</div>
+                        <div class="history" id="gacha-history"></div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-panel" id="pinball-panel">
+            <div class="play-stage">
+                <div class="marble-roulette-frame">
+                    <iframe src="marble-roulette/index.html" title="Marble Roulette"></iframe>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal-backdrop" id="settings-modal" onclick="modalBackdropClick(event)">
+        <section class="modal" role="dialog" aria-modal="true" aria-label="게임 설정">
+            <div class="modal-head">
+                <div class="modal-title" id="settings-title">후보 설정</div>
+                <button class="icon-btn" type="button" onclick="closeModal()" aria-label="닫기">
+                    <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="field">
+                    <label for="name-input">참가자 / 후보</label>
+                    <textarea id="name-input" spellcheck="false"></textarea>
+                </div>
+                <div class="field" id="prize-field">
+                    <label for="prize-input">사다리 결과</label>
+                    <textarea id="prize-input" spellcheck="false"></textarea>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="action-btn" type="button" onclick="closeModal()">취소</button>
+                <button class="action-btn green" type="button" onclick="applySettings()">적용</button>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal-backdrop" id="results-modal" onclick="modalBackdropClick(event)">
+        <section class="modal" role="dialog" aria-modal="true" aria-label="사다리 결과">
+            <div class="modal-head">
+                <div class="modal-title">사다리 결과</div>
+                <button class="icon-btn" type="button" onclick="closeModal()" aria-label="닫기">
+                    <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="result-list" id="result-list"></div>
+        </section>
+    </div>
+
+    <script>
+        const ASSETS = Array.from({ length: 19 }, (_, i) => `game-assets/gobookticon/gobook-${String(i + 1).padStart(2, '0')}.png`);
+        const colors = ['#7fb83f', '#5b8fc7', '#c69c3a', '#54a99f', '#9a7bc2', '#8ea65d', '#6f776b', '#9aa26f'];
+        const defaultNames = ['구북이', '떼구르르', '비즈', '요정', '방울', '반짝', '하모니', '마블'];
+        const defaultPrizes = ['당첨', '한 번 더', '꽝', '선물', '추천곡', '다시뽑기', '행운', '축하'];
+        const ladder = { count: 4, names: [...defaultNames], prizes: [...defaultPrizes], rungs: [], mapping: [], paths: [], running: false };
+        const roulette = { count: 4, names: [...defaultNames], rotation: 0, history: [], spinning: false };
+        const gacha = { count: 8, names: [...defaultNames], history: [], drawing: false };
+        const pinball = {
+            count: 6,
+            names: [...defaultNames],
+            history: [],
+            running: false,
+            racers: [],
+            ranking: [],
+            selectedRank: 1,
+            winnerIndex: null,
+        };
+        let settingsMode = 'ladder';
+
+        function $(id) {
+            return document.getElementById(id);
+        }
+
+        function cleanLines(value) {
+            return String(value || '').split(/\n+/).map(v => v.trim()).filter(Boolean).slice(0, 16);
+        }
+
+        function cleanTokens(value) {
+            return String(value || '')
+                .split(/[,\n]+/)
+                .map(v => v.trim())
+                .filter(Boolean)
+                .slice(0, 48);
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function shuffle(list) {
+            const next = [...list];
+            for (let i = next.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [next[i], next[j]] = [next[j], next[i]];
+            }
+            return next;
+        }
+
+        function switchMode(mode) {
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
+            document.querySelectorAll('.game-panel').forEach(panel => panel.classList.toggle('active', panel.id === `${mode}-panel`));
+            requestAnimationFrame(() => {
+                if (mode === 'ladder') drawLadder();
+                if (mode === 'roulette') drawRoulette();
+                if (mode === 'gacha') renderGacha();
+            });
+        }
+
+        function visibleNames() {
+            ensureListSize(ladder.names, defaultNames);
+            return ladder.names.slice(0, ladder.count);
+        }
+
+        function visiblePrizes() {
+            ensureListSize(ladder.prizes, defaultPrizes);
+            return ladder.prizes.slice(0, ladder.count);
+        }
+
+        function ensureListSize(list, fallback) {
+            for (let i = list.length; i < ladder.count; i++) {
+                list[i] = fallback[i % fallback.length] || `${i + 1}`;
+            }
+        }
+
+        function updateLadderSlots() {
+            $('ladder-count').textContent = `참가자 ${ladder.count}명`;
+            $('ladder-board').style.setProperty('--cols', ladder.count);
+            const names = visibleNames();
+            const prizes = visiblePrizes();
+            $('ladder-top').innerHTML = names.map((name, i) => `
+                <div class="slot" onclick="runLadder(${i})" title="출발">
+                    <img class="avatar" src="${ASSETS[i % ASSETS.length]}" alt="">
+                    <div class="slot-card" contenteditable="true" data-kind="name" data-index="${i}" data-placeholder="참가자" onclick="event.stopPropagation()">${escapeHtml(name)}</div>
+                    <div class="arrow"></div>
+                </div>
+            `).join('');
+            $('ladder-bottom').innerHTML = prizes.map((prize, i) => `
+                <div class="slot">
+                    <div class="slot-card" contenteditable="true" data-kind="prize" data-index="${i}" data-placeholder="결과">${escapeHtml(prize)}</div>
+                </div>
+            `).join('');
+            bindEditableSlots();
+        }
+
+        function bindEditableSlots() {
+            document.querySelectorAll('.slot-card[contenteditable="true"]').forEach(card => {
+                card.addEventListener('input', handleSlotEdit);
+                card.addEventListener('blur', handleSlotBlur);
+                card.addEventListener('keydown', handleSlotKeydown);
+            });
+        }
+
+        function handleSlotEdit(event) {
+            const target = event.currentTarget;
+            const index = Number(target.dataset.index);
+            const value = target.textContent.trim();
+            if (target.dataset.kind === 'name') ladder.names[index] = value || defaultNames[index % defaultNames.length];
+            if (target.dataset.kind === 'prize') ladder.prizes[index] = value || defaultPrizes[index % defaultPrizes.length];
+        }
+
+        function handleSlotBlur(event) {
+            const target = event.currentTarget;
+            const index = Number(target.dataset.index);
+            const fallback = target.dataset.kind === 'name' ? defaultNames[index % defaultNames.length] : defaultPrizes[index % defaultPrizes.length];
+            const value = target.textContent.trim() || fallback;
+            target.textContent = value;
+            if (target.dataset.kind === 'name') ladder.names[index] = value;
+            if (target.dataset.kind === 'prize') ladder.prizes[index] = value;
+            drawLadder();
+        }
+
+        function handleSlotKeydown(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                event.currentTarget.blur();
+            }
+        }
+
+        function changeCount(delta) {
+            if (ladder.running) return;
+            ladder.count = Math.max(2, Math.min(8, ladder.count + delta));
+            resetLadder();
+        }
+
+        function makeRungs() {
+            const rows = Math.max(11, ladder.count * 3);
+            const rungs = [];
+            for (let row = 0; row < rows; row++) {
+                const used = new Set();
+                for (let col = 0; col < ladder.count - 1; col++) {
+                    if (used.has(col) || used.has(col - 1)) continue;
+                    if (Math.random() < .46) {
+                        rungs.push({ row, col });
+                        used.add(col);
+                        used.add(col + 1);
+                    }
+                }
+            }
+            if (!rungs.length) rungs.push({ row: Math.floor(rows / 2), col: 0 });
+            return { rows, rungs };
+        }
+
+        function computeLadder(rows, rungs) {
+            const byRow = new Map();
+            rungs.forEach(r => {
+                if (!byRow.has(r.row)) byRow.set(r.row, []);
+                byRow.get(r.row).push(r.col);
+            });
+            ladder.mapping = [];
+            ladder.paths = [];
+            for (let start = 0; start < ladder.count; start++) {
+                let col = start;
+                const path = [{ row: -1, col }];
+                for (let row = 0; row < rows; row++) {
+                    const rowRungs = byRow.get(row) || [];
+                    if (rowRungs.includes(col)) col += 1;
+                    else if (rowRungs.includes(col - 1)) col -= 1;
+                    path.push({ row, col });
+                }
+                ladder.mapping[start] = col;
+                ladder.paths[start] = path;
+            }
+        }
+
+        function resetLadder() {
+            const made = makeRungs();
+            ladder.rows = made.rows;
+            ladder.rungs = made.rungs;
+            computeLadder(ladder.rows, ladder.rungs);
+            updateLadderSlots();
+            $('ladder-token').hidden = true;
+            drawLadder();
+        }
+
+        function fitCanvas(canvas, wrap) {
+            const wrapRect = wrap.getBoundingClientRect();
+            const canvasRect = canvas.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            const width = Math.max(320, canvasRect.width);
+            const height = Math.max(360, wrapRect.height);
+            canvas.width = Math.floor(width * dpr);
+            canvas.height = Math.floor(height * dpr);
+            canvas.style.height = `${height}px`;
+            const ctx = canvas.getContext('2d');
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            return { ctx, width, height };
+        }
+
+        function ladderMetrics(width, height) {
+            const canvasRect = $('ladder-canvas').getBoundingClientRect();
+            const slots = Array.from(document.querySelectorAll('#ladder-top .slot'));
+            const xs = slots.slice(0, ladder.count).map(slot => {
+                const rect = slot.getBoundingClientRect();
+                return rect.left + rect.width / 2 - canvasRect.left;
+            });
+            const top = 24;
+            const bottom = height - 24;
+            const left = xs[0] ?? 28;
+            const right = xs[xs.length - 1] ?? (width - 28);
+            const gapX = ladder.count > 1 ? (right - left) / (ladder.count - 1) : 0;
+            const gapY = ladder.rows > 0 ? (bottom - top) / ladder.rows : 0;
+            return { top, bottom, left, right, gapX, gapY, xs };
+        }
+
+        function ladderX(metrics, col) {
+            return metrics.xs[col] ?? (metrics.left + col * metrics.gapX);
+        }
+
+        function drawLadder(path = null) {
+            const canvas = $('ladder-canvas');
+            const wrap = $('ladder-wrap');
+            const { ctx, width, height } = fitCanvas(canvas, wrap);
+            const m = ladderMetrics(width, height);
+            ctx.clearRect(0, 0, width, height);
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#6f776b';
+            ctx.lineWidth = 4.5;
+
+            for (let col = 0; col < ladder.count; col++) {
+                const x = ladderX(m, col);
+                ctx.beginPath();
+                ctx.moveTo(x, m.top);
+                ctx.lineTo(x, m.bottom);
+                ctx.stroke();
+            }
+
+            ladder.rungs.forEach(r => {
+                const y = m.top + (r.row + .5) * m.gapY;
+                const x1 = ladderX(m, r.col);
+                const x2 = ladderX(m, r.col + 1);
+                ctx.beginPath();
+                ctx.moveTo(x1, y);
+                ctx.lineTo(x2, y);
+                ctx.stroke();
+            });
+
+            if (!path) return;
+            ctx.strokeStyle = '#7fb83f';
+            ctx.lineWidth = 8;
+            ctx.beginPath();
+            pathToPoints(path, width, height).forEach((p, i) => {
+                if (i === 0) ctx.moveTo(p.x, p.y);
+                else ctx.lineTo(p.x, p.y);
+            });
+            ctx.stroke();
+        }
+
+        function pathToPoints(path, width, height) {
+            const m = ladderMetrics(width, height);
+            const points = [];
+            path.forEach((p, i) => {
+                if (i === 0) points.push({ x: ladderX(m, p.col), y: m.top });
+                const prev = path[i - 1];
+                const y = i === path.length - 1 ? m.bottom : m.top + (p.row + .5) * m.gapY;
+                if (prev) {
+                    points.push({ x: ladderX(m, prev.col), y });
+                    if (prev.col !== p.col) points.push({ x: ladderX(m, p.col), y });
+                }
+            });
+            return points;
+        }
+
+        async function runLadder(index = 0) {
+            if (ladder.running || !ladder.paths[index]) return;
+            ladder.running = true;
+            const path = ladder.paths[index];
+            drawLadder(path);
+            const token = $('ladder-token');
+            token.src = ASSETS[index % ASSETS.length];
+            token.hidden = false;
+            const wrapRect = $('ladder-wrap').getBoundingClientRect();
+            const canvasRect = $('ladder-canvas').getBoundingClientRect();
+            const points = pathToPoints(path, canvasRect.width, canvasRect.height)
+                .map(p => ({
+                    x: canvasRect.left - wrapRect.left + p.x,
+                    y: canvasRect.top - wrapRect.top + p.y,
+                }));
+            await moveLadderToken(token, points);
+            ladder.running = false;
+            showLadderResults();
+        }
+
+        function moveLadderToken(token, points) {
+            if (!points.length) return Promise.resolve();
+            token.style.left = `${points[0].x}px`;
+            token.style.top = `${points[0].y}px`;
+            if (points.length === 1) {
+                return new Promise(resolve => setTimeout(resolve, 120));
+            }
+
+            const segments = [];
+            let total = 0;
+            for (let i = 1; i < points.length; i++) {
+                const from = points[i - 1];
+                const to = points[i];
+                const length = Math.hypot(to.x - from.x, to.y - from.y);
+                if (length < 1) continue;
+                total += length;
+                segments.push({ from, to, length, end: total });
+            }
+            if (!segments.length) return Promise.resolve();
+
+            const duration = Math.max(900, Math.min(5200, total * .78));
+            const start = performance.now();
+
+            return new Promise(resolve => {
+                function step(now) {
+                    const t = Math.min(1, (now - start) / duration);
+                    const eased = t < .08
+                        ? t * (1 / .08) * t * (1 / .08) * .08
+                        : t > .92
+                            ? 1 - Math.pow((1 - t) * (1 / .08), 2) * .08
+                            : t;
+                    const target = total * eased;
+                    const segment = segments.find(s => target <= s.end) || segments[segments.length - 1];
+                    const startLength = segment.end - segment.length;
+                    const local = segment.length ? (target - startLength) / segment.length : 1;
+                    token.style.left = `${segment.from.x + (segment.to.x - segment.from.x) * local}px`;
+                    token.style.top = `${segment.from.y + (segment.to.y - segment.from.y) * local}px`;
+                    if (t < 1) requestAnimationFrame(step);
+                    else resolve();
+                }
+                requestAnimationFrame(step);
+            });
+        }
+
+        function showLadderResults() {
+            const names = visibleNames();
+            const prizes = visiblePrizes();
+            $('result-list').innerHTML = names.map((name, i) => {
+                const prize = prizes[ladder.mapping[i]] || '';
+                return `<div class="result-item"><span>${escapeHtml(name)}</span><em>→</em><b>${escapeHtml(prize)}</b></div>`;
+            }).join('');
+            $('results-modal').classList.add('open');
+        }
+
+        function updateRoulette() {
+            $('roulette-count').textContent = `후보 ${roulette.count}명`;
+            drawRoulette();
+        }
+
+        function changeRouletteCount(delta) {
+            if (roulette.spinning) return;
+            roulette.count = Math.max(2, Math.min(12, roulette.count + delta));
+            updateRoulette();
+        }
+
+        function visibleRouletteNames() {
+            return roulette.names.slice(0, roulette.count);
+        }
+
+        function drawRoulette() {
+            const canvas = $('roulette-canvas');
+            const ctx = canvas.getContext('2d');
+            const names = visibleRouletteNames();
+            const size = canvas.width;
+            const center = size / 2;
+            const radius = size * .45;
+            const slice = Math.PI * 2 / names.length;
+            ctx.clearRect(0, 0, size, size);
+
+            names.forEach((name, i) => {
+                const start = -Math.PI / 2 + i * slice;
+                const end = start + slice;
+                ctx.beginPath();
+                ctx.moveTo(center, center);
+                ctx.arc(center, center, radius, start, end);
+                ctx.closePath();
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(255,255,255,.78)';
+                ctx.lineWidth = 6;
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate(center, center);
+                ctx.rotate(start + slice / 2);
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = '#fff';
+                ctx.font = names.length > 8 ? '800 26px Noto Sans KR, sans-serif' : '900 32px Noto Sans KR, sans-serif';
+                ctx.shadowColor = 'rgba(0,0,0,.22)';
+                ctx.shadowBlur = 3;
+                const label = name.length > 8 ? name.slice(0, 7) + '…' : name;
+                ctx.fillText(label, radius - 30, 0);
+                ctx.restore();
+            });
+
+            ctx.beginPath();
+            ctx.arc(center, center, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(42,47,41,.16)';
+            ctx.lineWidth = 12;
+            ctx.stroke();
+        }
+
+        function spinRoulette() {
+            if (roulette.spinning) return;
+            const names = visibleRouletteNames();
+            if (names.length < 2) return;
+            roulette.spinning = true;
+            $('spin-btn').disabled = true;
+            const winnerIndex = Math.floor(Math.random() * names.length);
+            const sliceDeg = 360 / names.length;
+            const target = winnerIndex * sliceDeg + sliceDeg / 2;
+            const turns = 5 + Math.floor(Math.random() * 3);
+            roulette.rotation += turns * 360 + (360 - target) + (Math.random() - .5) * Math.min(10, sliceDeg * .45);
+            $('roulette-canvas').style.transform = `rotate(${roulette.rotation}deg)`;
+            $('wheel-center-img').src = ASSETS[(winnerIndex + 2) % ASSETS.length];
+            setTimeout(() => {
+                const winner = names[winnerIndex];
+                $('winner-name').textContent = winner;
+                $('winner-img').src = ASSETS[winnerIndex % ASSETS.length];
+                roulette.history.unshift(winner);
+                roulette.history = roulette.history.slice(0, 8);
+                $('history').innerHTML = roulette.history.map(name => `<span class="chip">${escapeHtml(name)}</span>`).join('');
+                roulette.spinning = false;
+                $('spin-btn').disabled = false;
+            }, 4100);
+        }
+
+        function resetRoulette() {
+            roulette.rotation = 0;
+            roulette.history = [];
+            $('roulette-canvas').style.transitionDuration = '0s';
+            $('roulette-canvas').style.transform = 'rotate(0deg)';
+            requestAnimationFrame(() => { $('roulette-canvas').style.transitionDuration = ''; });
+            $('winner-name').textContent = '대기 중';
+            $('winner-img').src = ASSETS[2];
+            $('history').innerHTML = '';
+            drawRoulette();
+        }
+
+        function visibleGachaNames() {
+            for (let i = gacha.names.length; i < gacha.count; i++) {
+                gacha.names[i] = defaultNames[i % defaultNames.length];
+            }
+            return gacha.names.slice(0, gacha.count);
+        }
+
+        function updateGacha() {
+            $('gacha-count').textContent = `후보 ${gacha.count}명`;
+            renderGacha();
+        }
+
+        function changeGachaCount(delta) {
+            if (gacha.drawing) return;
+            gacha.count = Math.max(2, Math.min(16, gacha.count + delta));
+            updateGacha();
+        }
+
+        function renderGacha() {
+            const bowl = $('gacha-bowl');
+            if (!bowl) return;
+            const names = visibleGachaNames();
+            $('gacha-count').textContent = `후보 ${gacha.count}명`;
+            bowl.innerHTML = names.map((name, i) => {
+                const left = 10 + ((i * 17) % 72);
+                const top = 18 + ((i * 29) % 58);
+                const rotate = ((i * 37) % 28) - 14;
+                return `<div class="gacha-ball" title="${escapeHtml(name)}" style="left:${left}%;top:${top}%;transform:rotate(${rotate}deg)">
+                    <img src="${ASSETS[i % ASSETS.length]}" alt="">
+                </div>`;
+            }).join('');
+        }
+
+        function pullGachaLever() {
+            if (gacha.drawing) return;
+            const names = visibleGachaNames();
+            if (names.length < 2) return;
+            gacha.drawing = true;
+            const lever = $('gacha-btn');
+            lever.disabled = true;
+            lever.classList.remove('pulling');
+            void lever.offsetWidth;
+            lever.classList.add('pulling');
+            setTimeout(drawGacha, 520);
+        }
+
+        function drawGacha() {
+            const names = visibleGachaNames();
+            const winnerIndex = Math.floor(Math.random() * names.length);
+            const winner = names[winnerIndex];
+            const asset = ASSETS[winnerIndex % ASSETS.length];
+            const dock = $('gacha-dock');
+            dock.innerHTML = `<div class="gacha-ball pick"><img src="${asset}" alt=""></div>`;
+            setTimeout(() => {
+                $('gacha-result-img').src = asset;
+                $('gacha-winner').textContent = winner;
+                gacha.history.unshift(winner);
+                gacha.history = gacha.history.slice(0, 8);
+                $('gacha-history').innerHTML = gacha.history.map(name => `<span class="chip">${escapeHtml(name)}</span>`).join('');
+                gacha.drawing = false;
+                $('gacha-btn').disabled = false;
+                $('gacha-btn').classList.remove('pulling');
+            }, 1180);
+        }
+
+        function resetGacha() {
+            gacha.history = [];
+            $('gacha-winner').textContent = '대기 중';
+            $('gacha-result-img').src = ASSETS[3];
+            $('gacha-history').innerHTML = '';
+            $('gacha-dock').innerHTML = '<span class="winner-label">나오는곳</span>';
+            renderGacha();
+        }
+
+        function parsePinballEntries(value) {
+            const entries = [];
+            cleanTokens(value).forEach(token => {
+                const match = token.match(/^(.*?)\s*\*\s*(\d+)$/);
+                const name = (match ? match[1] : token).trim();
+                const amount = match ? Math.max(1, Math.min(20, Number(match[2]) || 1)) : 1;
+                if (!name) return;
+                for (let i = 0; i < amount; i++) entries.push(name);
+            });
+            return entries.slice(0, 36);
+        }
+
+        function pinballInputValue() {
+            const input = $('pinball-entry-input');
+            return input ? input.value : pinball.names.join(', ');
+        }
+
+        function visiblePinballNames() {
+            const entries = parsePinballEntries(pinballInputValue());
+            if (entries.length >= 2) {
+                pinball.names = entries;
+            }
+            for (let i = pinball.names.length; i < 2; i++) {
+                pinball.names[i] = defaultNames[i % defaultNames.length];
+            }
+            return pinball.names.slice(0, 36);
+        }
+
+        function uniquePinballNames(names = visiblePinballNames()) {
+            return [...new Set(names)].slice(0, 12);
+        }
+
+        function updatePinballRankLabel() {
+            const total = visiblePinballNames().length;
+            pinball.selectedRank = Math.max(1, Math.min(total, pinball.selectedRank));
+            const label = pinball.selectedRank === total ? '마지막' : `${pinball.selectedRank}번째`;
+            $('pinball-rank-label').textContent = `당첨 순위: ${label}`;
+        }
+
+        function syncPinballWinnerFromRank() {
+            if (pinball.running || !pinball.ranking.length) return;
+            const names = visiblePinballNames();
+            const unique = uniquePinballNames(names);
+            const winner = pinball.ranking[pinball.selectedRank - 1] || pinball.ranking[0];
+            const winnerIndex = names.indexOf(winner);
+            pinball.winnerIndex = Math.max(0, unique.indexOf(winner));
+            $('pinball-winner').textContent = winner;
+            $('pinball-result-img').src = ASSETS[Math.max(0, winnerIndex) % ASSETS.length];
+            $('pinball-history').innerHTML = pinball.history.map(name => `<span class="chip">${escapeHtml(name)}</span>`).join('');
+            drawPinball();
+        }
+
+        function updatePinball() {
+            const names = visiblePinballNames();
+            pinball.count = names.length;
+            $('pinball-count').textContent = `구슬 ${pinball.count}개`;
+            updatePinballRankLabel();
+            drawPinball();
+        }
+
+        function changePinballCount(delta) {
+            if (pinball.running) return;
+            const unique = uniquePinballNames();
+            const next = Math.max(2, Math.min(12, unique.length + delta));
+            pinball.names = defaultNames.slice(0, next);
+            if ($('pinball-entry-input')) $('pinball-entry-input').value = pinball.names.join(', ');
+            pinball.ranking = [];
+            updatePinball();
+        }
+
+        function applyPinballInput() {
+            if (pinball.running) return;
+            const names = parsePinballEntries(pinballInputValue());
+            if (names.length >= 2) {
+                pinball.names = names;
+                pinball.ranking = [];
+                updatePinball();
+            }
+        }
+
+        function shufflePinballInput() {
+            if (pinball.running) return;
+            const names = shuffle(visiblePinballNames());
+            pinball.names = names;
+            $('pinball-entry-input').value = names.join(', ');
+            pinball.ranking = [];
+            updatePinball();
+        }
+
+        function setPinballRank(rank) {
+            const names = visiblePinballNames();
+            pinball.selectedRank = rank === 'last' ? names.length : 1;
+            updatePinballRankLabel();
+            syncPinballWinnerFromRank();
+        }
+
+        function changePinballRank(delta) {
+            if (pinball.running) return;
+            const total = visiblePinballNames().length;
+            pinball.selectedRank = Math.max(1, Math.min(total, pinball.selectedRank + delta));
+            updatePinballRankLabel();
+            syncPinballWinnerFromRank();
+        }
+
+        function fitPinballCanvas() {
+            const canvas = $('pinball-canvas');
+            const rect = canvas.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            const width = Math.max(320, rect.width);
+            const height = Math.max(390, rect.height);
+            canvas.width = Math.floor(width * dpr);
+            canvas.height = Math.floor(height * dpr);
+            const ctx = canvas.getContext('2d');
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            return { canvas, ctx, width, height };
+        }
+
+        function drawRoundRect(ctx, x, y, width, height, radius) {
+            const r = Math.min(radius, width / 2, height / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + width, y, x + width, y + height, r);
+            ctx.arcTo(x + width, y + height, x, y + height, r);
+            ctx.arcTo(x, y + height, x, y, r);
+            ctx.arcTo(x, y, x + width, y, r);
+            ctx.closePath();
+        }
+
+        function pinballSlots(width, height) {
+            const names = uniquePinballNames();
+            const side = Math.max(28, width * .08);
+            const gap = Math.max(5, width * .01);
+            const slotY = height - Math.max(74, height * .14);
+            const slotH = Math.max(54, height * .1);
+            const slotW = (width - side * 2 - gap * (names.length - 1)) / names.length;
+            return names.map((name, i) => ({
+                name,
+                x: side + i * (slotW + gap),
+                y: slotY,
+                w: slotW,
+                h: slotH,
+                cx: side + i * (slotW + gap) + slotW / 2,
+            }));
+        }
+
+        function pinballPegs(width, height) {
+            const pegs = [];
+            const rows = 8;
+            const top = Math.max(96, height * .2);
+            const bottom = height - Math.max(132, height * .3);
+            for (let row = 0; row < rows; row++) {
+                const count = row % 2 ? 7 : 6;
+                const y = top + (bottom - top) * (row / Math.max(1, rows - 1));
+                const inset = width * (row % 2 ? .12 : .18);
+                for (let col = 0; col < count; col++) {
+                    pegs.push({
+                        x: inset + (width - inset * 2) * (col / Math.max(1, count - 1)),
+                        y,
+                    });
+                }
+            }
+            return pegs;
+        }
+
+        function drawPinball() {
+            const { ctx, width, height } = fitPinballCanvas();
+            const names = visiblePinballNames();
+            const slots = pinballSlots(width, height);
+            const pegs = pinballPegs(width, height);
+            ctx.clearRect(0, 0, width, height);
+
+            const bg = ctx.createRadialGradient(width * .5, height * .46, 30, width * .5, height * .46, width * .68);
+            bg.addColorStop(0, '#1c2419');
+            bg.addColorStop(.58, '#0d110c');
+            bg.addColorStop(1, '#050705');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.strokeStyle = 'rgba(127,184,63,.18)';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < width; x += 34) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < height; y += 34) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+
+            ctx.fillStyle = 'rgba(238,247,228,.04)';
+            drawRoundRect(ctx, width * .21, height * .06, width * .58, height * .78, 22);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(127,184,63,.34)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.fillStyle = '#eef7e4';
+            ctx.strokeStyle = '#7fb83f';
+            ctx.lineWidth = 2;
+            drawRoundRect(ctx, width * .43, height * .02, width * .14, height * .09, 8);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = '#4f7f25';
+            ctx.font = '900 12px Noto Sans KR, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('DROP', width / 2, height * .065);
+
+            ctx.strokeStyle = 'rgba(238,247,228,.48)';
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(width * .5, height * .11);
+            ctx.lineTo(width * .5, height * .19);
+            ctx.moveTo(width * .3, height * .18);
+            ctx.lineTo(width * .2, height * .34);
+            ctx.lineTo(width * .26, height * .45);
+            ctx.lineTo(width * .18, height * .62);
+            ctx.lineTo(width * .24, height * .76);
+            ctx.moveTo(width * .7, height * .18);
+            ctx.lineTo(width * .8, height * .34);
+            ctx.lineTo(width * .74, height * .45);
+            ctx.lineTo(width * .82, height * .62);
+            ctx.lineTo(width * .76, height * .76);
+            ctx.stroke();
+
+            ctx.strokeStyle = 'rgba(127,184,63,.5)';
+            ctx.lineWidth = 2.5;
+            ctx.setLineDash([5, 8]);
+            ctx.beginPath();
+            ctx.moveTo(width * .32, height * .24);
+            ctx.lineTo(width * .42, height * .24);
+            ctx.lineTo(width * .42, height * .32);
+            ctx.lineTo(width * .55, height * .32);
+            ctx.lineTo(width * .55, height * .42);
+            ctx.moveTo(width * .68, height * .25);
+            ctx.lineTo(width * .58, height * .25);
+            ctx.lineTo(width * .58, height * .36);
+            ctx.lineTo(width * .45, height * .36);
+            ctx.lineTo(width * .45, height * .49);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = '#fff';
+            ctx.strokeStyle = 'rgba(238,247,228,.34)';
+            ctx.lineWidth = 2;
+            pegs.forEach((peg, i) => {
+                ctx.shadowColor = colors[i % colors.length];
+                ctx.shadowBlur = 7;
+                ctx.shadowOffsetY = 0;
+                ctx.beginPath();
+                ctx.arc(peg.x, peg.y, 8.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+                ctx.shadowColor = 'transparent';
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.beginPath();
+                ctx.arc(peg.x, peg.y, 3.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fff';
+            });
+
+            ctx.strokeStyle = 'rgba(238,247,228,.32)';
+            ctx.lineWidth = 2;
+            slots.forEach((slot, i) => {
+                if (i === 0) return;
+                const x = slot.x - Math.max(3, width * .006);
+                ctx.beginPath();
+                ctx.moveTo(x, slot.y - height * .09);
+                ctx.lineTo(x, slot.y + slot.h * .94);
+                ctx.stroke();
+            });
+
+            slots.forEach((slot, i) => {
+                const active = pinball.winnerIndex === i && !pinball.running;
+                ctx.fillStyle = active ? 'rgba(127,184,63,.9)' : 'rgba(238,247,228,.92)';
+                ctx.strokeStyle = active ? '#eef7e4' : 'rgba(255,255,255,.18)';
+                ctx.lineWidth = active ? 3 : 2;
+                drawRoundRect(ctx, slot.x, slot.y, slot.w, slot.h, 8);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = active ? '#fff' : '#30352e';
+                ctx.font = `${slot.w < 62 ? 12 : 14}px Noto Sans KR, sans-serif`;
+                ctx.font = `900 ${slot.w < 62 ? 12 : 14}px Noto Sans KR, sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                const label = slot.name.length > 5 ? slot.name.slice(0, 4) + '…' : slot.name;
+                ctx.fillText(label, slot.cx, slot.y + slot.h / 2);
+            });
+
+            pinball.racers.forEach((ball, racerIndex) => {
+                ctx.save();
+                ctx.translate(ball.x, ball.y);
+                ctx.rotate(ball.rotate || 0);
+                const marble = ctx.createRadialGradient(-10, -12, 4, 0, 0, 30);
+                marble.addColorStop(0, '#ffffff');
+                marble.addColorStop(.42, '#eef7e4');
+                marble.addColorStop(1, '#d6ebc1');
+                ctx.fillStyle = marble;
+                ctx.strokeStyle = ball.finished ? '#7fb83f' : colors[racerIndex % colors.length];
+                ctx.lineWidth = 2;
+                ctx.shadowColor = colors[racerIndex % colors.length];
+                ctx.shadowBlur = ball.finished ? 5 : 13;
+                ctx.shadowOffsetY = 0;
+                ctx.beginPath();
+                ctx.arc(0, 0, ball.size || 18, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+                ctx.shadowColor = 'transparent';
+                const img = ball.img;
+                const icon = (ball.size || 18) * 1.36;
+                if (img?.complete) ctx.drawImage(img, -icon / 2, -icon / 2, icon, icon);
+                ctx.restore();
+            });
+        }
+
+        function renderPinballRanking() {
+            $('pinball-rank-list').innerHTML = pinball.ranking.slice(0, 8).map((name, i) => `
+                <div><b>#${i + 1}</b><span>${escapeHtml(name)}</span></div>
+            `).join('');
+        }
+
+        function pinballSegments(width, height) {
+            return [
+                { a: { x: width * .5, y: height * .11 }, b: { x: width * .5, y: height * .19 }, bounce: .45 },
+                { a: { x: width * .3, y: height * .18 }, b: { x: width * .2, y: height * .34 }, bounce: .5 },
+                { a: { x: width * .2, y: height * .34 }, b: { x: width * .26, y: height * .45 }, bounce: .5 },
+                { a: { x: width * .26, y: height * .45 }, b: { x: width * .18, y: height * .62 }, bounce: .5 },
+                { a: { x: width * .18, y: height * .62 }, b: { x: width * .24, y: height * .76 }, bounce: .5 },
+                { a: { x: width * .7, y: height * .18 }, b: { x: width * .8, y: height * .34 }, bounce: .5 },
+                { a: { x: width * .8, y: height * .34 }, b: { x: width * .74, y: height * .45 }, bounce: .5 },
+                { a: { x: width * .74, y: height * .45 }, b: { x: width * .82, y: height * .62 }, bounce: .5 },
+                { a: { x: width * .82, y: height * .62 }, b: { x: width * .76, y: height * .76 }, bounce: .5 },
+                { a: { x: width * .055, y: height * .08 }, b: { x: width * .055, y: height * .9 }, bounce: .42 },
+                { a: { x: width * .945, y: height * .08 }, b: { x: width * .945, y: height * .9 }, bounce: .42 },
+            ];
+        }
+
+        function resolveCircleSegment(ball, segment) {
+            const ax = segment.a.x;
+            const ay = segment.a.y;
+            const bx = segment.b.x;
+            const by = segment.b.y;
+            const abx = bx - ax;
+            const aby = by - ay;
+            const t = Math.max(0, Math.min(1, ((ball.x - ax) * abx + (ball.y - ay) * aby) / (abx * abx + aby * aby || 1)));
+            const px = ax + abx * t;
+            const py = ay + aby * t;
+            let dx = ball.x - px;
+            let dy = ball.y - py;
+            let dist = Math.hypot(dx, dy);
+            if (dist >= ball.size || !Number.isFinite(dist)) return;
+            if (dist < .001) {
+                dx = -aby;
+                dy = abx;
+                dist = Math.hypot(dx, dy) || 1;
+            }
+            const nx = dx / dist;
+            const ny = dy / dist;
+            ball.x += nx * (ball.size - dist);
+            ball.y += ny * (ball.size - dist);
+            const vn = ball.vx * nx + ball.vy * ny;
+            if (vn < 0) {
+                ball.vx -= (1 + segment.bounce) * vn * nx;
+                ball.vy -= (1 + segment.bounce) * vn * ny;
+            }
+        }
+
+        function resolveCirclePeg(ball, peg) {
+            let dx = ball.x - peg.x;
+            let dy = ball.y - peg.y;
+            let dist = Math.hypot(dx, dy);
+            const minDist = ball.size + 9;
+            if (dist >= minDist || !Number.isFinite(dist)) return;
+            if (dist < .001) {
+                dx = Math.random() - .5;
+                dy = Math.random() - .5;
+                dist = Math.hypot(dx, dy) || 1;
+            }
+            const nx = dx / dist;
+            const ny = dy / dist;
+            ball.x += nx * (minDist - dist);
+            ball.y += ny * (minDist - dist);
+            const vn = ball.vx * nx + ball.vy * ny;
+            if (vn < 0) {
+                ball.vx -= 1.62 * vn * nx;
+                ball.vy -= 1.62 * vn * ny;
+            }
+            ball.vx += (Math.random() - .5) * 18;
+        }
+
+        function resolveMarblePair(a, b) {
+            if (a.finished || b.finished) return;
+            let dx = b.x - a.x;
+            let dy = b.y - a.y;
+            let dist = Math.hypot(dx, dy);
+            const minDist = a.size + b.size;
+            if (dist >= minDist || !Number.isFinite(dist)) return;
+            if (dist < .001) {
+                dx = Math.random() - .5;
+                dy = Math.random() - .5;
+                dist = Math.hypot(dx, dy) || 1;
+            }
+            const nx = dx / dist;
+            const ny = dy / dist;
+            const overlap = (minDist - dist) / 2;
+            a.x -= nx * overlap;
+            a.y -= ny * overlap;
+            b.x += nx * overlap;
+            b.y += ny * overlap;
+            const rvx = b.vx - a.vx;
+            const rvy = b.vy - a.vy;
+            const vn = rvx * nx + rvy * ny;
+            if (vn > 0) return;
+            const impulse = -1.18 * vn / 2;
+            a.vx -= impulse * nx;
+            a.vy -= impulse * ny;
+            b.vx += impulse * nx;
+            b.vy += impulse * ny;
+        }
+
+        function stepPinballPhysics(width, height, dt) {
+            const pegs = pinballPegs(width, height);
+            const segments = pinballSegments(width, height);
+            const goalY = height - Math.max(70, height * .13);
+            const gravity = height * 1.35;
+            const friction = Math.pow(.992, dt * 60);
+            pinball.racers.forEach(ball => {
+                if (ball.finished) return;
+                if (ball.delay > 0) {
+                    ball.delay -= dt * 1000;
+                    return;
+                }
+                ball.vy += gravity * dt;
+                ball.vx *= friction;
+                ball.vy *= friction;
+                if (Math.hypot(ball.vx, ball.vy) < height * .045 && ball.y > height * .18) {
+                    ball.vx += (Math.random() - .5) * height * .18;
+                    ball.vy += height * .16;
+                }
+                ball.x += ball.vx * dt;
+                ball.y += ball.vy * dt;
+                ball.rotate += ball.vx * dt * .035;
+                segments.forEach(segment => resolveCircleSegment(ball, segment));
+                pegs.forEach(peg => resolveCirclePeg(ball, peg));
+                if (ball.x < ball.size) {
+                    ball.x = ball.size;
+                    ball.vx = Math.abs(ball.vx) * .55;
+                }
+                if (ball.x > width - ball.size) {
+                    ball.x = width - ball.size;
+                    ball.vx = -Math.abs(ball.vx) * .55;
+                }
+                if (ball.y > goalY) {
+                    ball.finished = true;
+                    ball.y = goalY + (pinball.ranking.length % 3) * 4;
+                    ball.vx = 0;
+                    ball.vy = 0;
+                    pinball.ranking.push(ball.name);
+                    renderPinballRanking();
+                    if (pinball.ranking.length === pinball.selectedRank) {
+                        $('pinball-winner').textContent = ball.name;
+                        $('pinball-result-img').src = ball.asset;
+                    }
+                }
+            });
+            for (let i = 0; i < pinball.racers.length; i++) {
+                for (let j = i + 1; j < pinball.racers.length; j++) {
+                    resolveMarblePair(pinball.racers[i], pinball.racers[j]);
+                }
+            }
+        }
+
+        function startPinball() {
+            if (pinball.running) return;
+            const names = visiblePinballNames();
+            if (names.length < 2) return;
+            const { width, height } = fitPinballCanvas();
+            const unique = uniquePinballNames(names);
+            const raceOrder = shuffle(names.map((name, i) => ({ name, originalIndex: i })));
+            pinball.running = true;
+            pinball.winnerIndex = null;
+            pinball.ranking = [];
+            $('pinball-btn').disabled = true;
+            $('pinball-winner').textContent = '진행 중';
+            $('pinball-history').innerHTML = '';
+            renderPinballRanking();
+
+            pinball.racers = raceOrder.map((entry, i) => {
+                const img = new Image();
+                const asset = ASSETS[entry.originalIndex % ASSETS.length];
+                img.src = asset;
+                const cols = Math.min(10, names.length);
+                const row = Math.floor(i / cols);
+                const col = i % cols;
+                const spread = Math.min(width * .34, cols * 26);
+                return {
+                    ...entry,
+                    img,
+                    asset,
+                    size: Math.max(12, Math.min(18, 22 - names.length * .22)),
+                    delay: Math.random() * 360,
+                    x: width / 2 - spread / 2 + (col + .5) * (spread / cols) + (Math.random() - .5) * 8,
+                    y: height * .07 - row * 24,
+                    vx: (Math.random() - .5) * 70,
+                    vy: 0,
+                    rotate: Math.random() * Math.PI,
+                    finished: false,
+                };
+            });
+
+            let last = performance.now();
+            const started = last;
+            function animate(now) {
+                const dt = Math.min(.032, Math.max(.001, (now - last) / 1000));
+                last = now;
+                for (let i = 0; i < 3; i++) stepPinballPhysics(width, height, dt / 3);
+                drawPinball();
+                const allFinished = pinball.ranking.length >= names.length;
+                const timedOut = now - started > 12500;
+                if (!allFinished && !timedOut) {
+                    requestAnimationFrame(animate);
+                    return;
+                }
+                pinball.racers.filter(r => !r.finished).sort((a, b) => b.y - a.y).forEach(r => {
+                    r.finished = true;
+                    pinball.ranking.push(r.name);
+                });
+                renderPinballRanking();
+                const winner = pinball.ranking[pinball.selectedRank - 1] || pinball.ranking[0] || names[0];
+                const winnerIndex = names.indexOf(winner);
+                pinball.running = false;
+                pinball.winnerIndex = Math.max(0, unique.indexOf(winner));
+                pinball.history.unshift(winner);
+                pinball.history = pinball.history.slice(0, 8);
+                $('pinball-winner').textContent = winner;
+                $('pinball-result-img').src = ASSETS[Math.max(0, winnerIndex) % ASSETS.length];
+                $('pinball-history').innerHTML = pinball.history.map(name => `<span class="chip">${escapeHtml(name)}</span>`).join('');
+                $('pinball-btn').disabled = false;
+                drawPinball();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function resetPinball() {
+            pinball.history = [];
+            pinball.racers = [];
+            pinball.ranking = [];
+            pinball.winnerIndex = null;
+            pinball.running = false;
+            $('pinball-btn').disabled = false;
+            $('pinball-winner').textContent = '대기 중';
+            $('pinball-result-img').src = ASSETS[4];
+            $('pinball-history').innerHTML = '';
+            renderPinballRanking();
+            drawPinball();
+        }
+
+        function openSettings(mode) {
+            settingsMode = mode;
+            $('settings-title').textContent = mode === 'gacha' ? '뽑기 후보 설정' : (mode === 'pinball' ? '핀볼 후보 설정' : (mode === 'ladder' ? '사다리 설정' : '룰렛 설정'));
+            $('name-input').value = (mode === 'gacha' ? gacha.names : (mode === 'pinball' ? pinball.names : (mode === 'ladder' ? ladder.names : roulette.names))).join('\n');
+            $('prize-field').style.display = mode === 'ladder' ? '' : 'none';
+            $('prize-input').value = ladder.prizes.join('\n');
+            $('settings-modal').classList.add('open');
+        }
+
+        function applySettings() {
+            const names = cleanLines($('name-input').value);
+            if (settingsMode === 'ladder') {
+                const prizes = cleanLines($('prize-input').value);
+                if (names.length >= 2) ladder.names = names;
+                if (prizes.length >= 2) ladder.prizes = prizes;
+                ladder.count = Math.max(2, Math.min(8, Math.min(ladder.names.length, ladder.prizes.length)));
+                resetLadder();
+            } else {
+                if (settingsMode === 'gacha') {
+                    if (names.length >= 2) gacha.names = names;
+                    gacha.count = Math.max(2, Math.min(16, gacha.names.length));
+                    updateGacha();
+                } else if (settingsMode === 'pinball') {
+                    const pinballNames = parsePinballEntries($('name-input').value);
+                    if (pinballNames.length >= 2) pinball.names = pinballNames;
+                    pinball.count = Math.max(2, Math.min(12, pinball.names.length));
+                    if ($('pinball-entry-input')) $('pinball-entry-input').value = pinball.names.join(', ');
+                    updatePinball();
+                } else {
+                    if (names.length >= 2) roulette.names = names;
+                    roulette.count = Math.max(2, Math.min(12, roulette.names.length));
+                    updateRoulette();
+                }
+            }
+            closeModal();
+        }
+
+        function modalBackdropClick(event) {
+            if (event.target.classList.contains('modal-backdrop')) closeModal();
+        }
+
+        function closeModal() {
+            document.querySelectorAll('.modal-backdrop.open').forEach(modal => modal.classList.remove('open'));
+        }
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') closeModal();
+            if (event.key === 'Enter' && document.querySelector('#ladder-panel.active') && !document.querySelector('.modal-backdrop.open')) runLadder(0);
+        });
+
+        resetLadder();
+        updateRoulette();
+        updateGacha();
+        window.addEventListener('resize', () => {
+            drawLadder();
+            drawRoulette();
+            renderGacha();
+        });
+    </script>
+</body>
+</html>
