@@ -1266,7 +1266,7 @@ async function saveBroadcastInfo() {
         .filter(row => row.url)
         .map(row => ({ ...row, url: normalizeOptionalUrl(row.url) }));
     if (vodRows.some(row => !row.url)) {
-        showToast('다시보기 URL은 http 또는 https 주소로 입력해주세요');
+        showToast('링크 URL은 http 또는 https 주소로 입력해주세요');
         return;
     }
     const vodUrls = vodRows.map(row => row.url).join('\n');
@@ -1346,7 +1346,10 @@ function dayEventCardHtml(ev, dateStr) {
             ${dateRange ? `<div class="day-event-meta">${dateRange}</div>` : ''}
             ${links.length ? `<div class="day-link-row">${links.join('')}</div>` : ''}
         </div>
-        ${state.isEditor ? `<button class="day-edit-btn" onclick="openEditModal('${esc(ev.id)}')">수정</button>` : ''}
+        ${state.isEditor ? `<div class="day-event-actions">
+            <button class="day-edit-btn" onclick="openEditModal('${esc(ev.id)}')">수정</button>
+            <button class="day-delete-btn" onclick="event.stopPropagation();deleteEvent('${esc(ev.id)}')">삭제</button>
+        </div>` : ''}
     </div>`;
 }
 
@@ -1966,7 +1969,7 @@ async function saveEvent() {
     if (!date)  { showToast('날짜를 선택해주세요'); return; }
     const vodUrlInput = document.getElementById('editVodUrl').value.trim();
     const vodUrl = normalizeOptionalUrl(vodUrlInput);
-    if (vodUrlInput && !vodUrl) { showToast('다시보기 URL은 http 또는 https 주소로 입력해주세요'); return; }
+    if (vodUrlInput && !vodUrl) { showToast('링크 URL은 http 또는 https 주소로 입력해주세요'); return; }
 
     const payload = {
         date,
