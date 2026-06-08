@@ -247,6 +247,24 @@
             background: var(--accent);
             color: #fff;
         }
+        .paint-launcher {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            min-width: 34px;
+            height: 31px;
+            padding: 0 !important;
+        }
+        .paint-launcher svg {
+            width: 17px;
+            height: 17px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.1;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
         #mobileTodayBtn { display: none; }
         .cal-area.week-mode .cal-grid {
             grid-template-rows: 1fr;
@@ -1607,6 +1625,118 @@
         .btn-danger   { background: #ff5252; color: #fff; }
         .btn-secondary{ background: #f0f0f0; color: var(--text); }
 
+        /* ── 그림판 모달 ── */
+        #paintModal .modal {
+            max-width: min(1180px, 96vw);
+            padding: 18px;
+            overflow: hidden;
+        }
+        .paint-modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding-right: 36px;
+        }
+        .paint-modal-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--text);
+        }
+        .paint-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 10px;
+            border: 1px solid rgba(139,195,74,0.22);
+            border-radius: 16px;
+            background: #f8fcf1;
+            margin-bottom: 12px;
+        }
+        .paint-tool-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding-right: 8px;
+            border-right: 1px solid rgba(139,195,74,0.22);
+        }
+        .paint-tool-group:last-child { border-right: 0; padding-right: 0; }
+        .paint-tool-btn,
+        .paint-icon-btn {
+            width: 36px;
+            height: 36px;
+            border: 1.5px solid rgba(139,195,74,0.28);
+            border-radius: 10px;
+            background: #fff;
+            color: var(--accent-dark);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 7px rgba(0,0,0,0.05);
+        }
+        .paint-tool-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .paint-tool-btn svg,
+        .paint-icon-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.1;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .paint-swatch {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08);
+            cursor: pointer;
+        }
+        .paint-swatch.active {
+            box-shadow: 0 0 0 3px rgba(139,195,74,0.34), 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .paint-size {
+            width: 120px;
+            accent-color: var(--accent);
+        }
+        .paint-canvas-wrap {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(139,195,74,0.26);
+            background: repeating-conic-gradient(#f6f6f6 0 25%, #fff 0 50%) 0 / 24px 24px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.72), 0 10px 32px rgba(0,0,0,0.12);
+        }
+        #paintCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: #fff;
+            touch-action: none;
+            cursor: crosshair;
+        }
+        @media (max-width: 640px) {
+            #paintModal .modal {
+                max-width: 100vw;
+                height: 100dvh;
+                max-height: 100dvh;
+                border-radius: 0;
+                padding: 14px;
+            }
+            .paint-toolbar { gap: 6px; padding: 8px; }
+            .paint-tool-group { border-right: 0; padding-right: 0; }
+            .paint-size { width: 90px; }
+        }
+
         /* ── 편집자 관리 ── */
         .editor-list {
             border: 1px solid #ebebeb;
@@ -1966,6 +2096,9 @@
             <button type="button" id="monthModeBtn" onclick="setViewMode('month')">월간</button>
             <button type="button" id="mobileTodayBtn" onclick="goToday()">Today</button>
             <button type="button" onclick="openUpModal()"><img src="stickers/s8.png" alt="" style="width:14px;height:14px;vertical-align:middle;margin-right:3px;">UP</button>
+            <button type="button" class="paint-launcher" onclick="openPaintModal()" title="그림판" aria-label="그림판 열기">
+                <svg viewBox="0 0 24 24"><path d="M4 16.5V20h3.5L18.2 9.3l-3.5-3.5L4 16.5Z"/><path d="m13.5 7 3.5 3.5"/><path d="M5 21h14"/></svg>
+            </button>
         </div>
     </div>
 </div>
@@ -2182,6 +2315,53 @@
 
 <div class="toast" id="toast"></div>
 <div class="memo-tooltip" id="memoTooltip"></div>
+
+<div class="modal-overlay" id="paintModal" onmousedown="if(event.target===this)closePaintModal()">
+    <div class="modal">
+        <button class="modal-close" onclick="closePaintModal()">×</button>
+        <div class="paint-modal-head">
+            <div class="paint-modal-title">그림판</div>
+        </div>
+        <div class="paint-toolbar" aria-label="그림판 도구">
+            <div class="paint-tool-group">
+                <button type="button" class="paint-tool-btn active" id="paintPenBtn" onclick="setPaintTool('pen')" title="펜" aria-label="펜">
+                    <svg viewBox="0 0 24 24"><path d="M4 16.5V20h3.5L18.2 9.3l-3.5-3.5L4 16.5Z"/><path d="m13.5 7 3.5 3.5"/></svg>
+                </button>
+                <button type="button" class="paint-tool-btn" id="paintEraserBtn" onclick="setPaintTool('eraser')" title="지우개" aria-label="지우개">
+                    <svg viewBox="0 0 24 24"><path d="m7 21-4-4L14 6a2.8 2.8 0 0 1 4 0l2 2a2.8 2.8 0 0 1 0 4l-9 9H7Z"/><path d="m12 8 6 6"/><path d="M7 21h13"/></svg>
+                </button>
+            </div>
+            <div class="paint-tool-group" id="paintSwatches">
+                <button type="button" class="paint-swatch active" data-color="#2a2f29" style="background:#2a2f29" onclick="setPaintColor('#2a2f29')" title="잉크"></button>
+                <button type="button" class="paint-swatch" data-color="#7fb83f" style="background:#7fb83f" onclick="setPaintColor('#7fb83f')" title="연두"></button>
+                <button type="button" class="paint-swatch" data-color="#f4d06f" style="background:#f4d06f" onclick="setPaintColor('#f4d06f')" title="노랑"></button>
+                <button type="button" class="paint-swatch" data-color="#ff7f6e" style="background:#ff7f6e" onclick="setPaintColor('#ff7f6e')" title="코랄"></button>
+                <button type="button" class="paint-swatch" data-color="#62b6e7" style="background:#62b6e7" onclick="setPaintColor('#62b6e7')" title="하늘"></button>
+                <button type="button" class="paint-swatch" data-color="#ffffff" style="background:#ffffff" onclick="setPaintColor('#ffffff')" title="흰색"></button>
+            </div>
+            <div class="paint-tool-group">
+                <input type="range" class="paint-size" id="paintSize" min="2" max="36" value="8" oninput="setPaintSize(this.value)" aria-label="굵기">
+            </div>
+            <div class="paint-tool-group">
+                <button type="button" class="paint-icon-btn" onclick="undoPaint()" title="되돌리기" aria-label="되돌리기">
+                    <svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-2"/></svg>
+                </button>
+                <button type="button" class="paint-icon-btn" onclick="redoPaint()" title="다시하기" aria-label="다시하기">
+                    <svg viewBox="0 0 24 24"><path d="m15 14 5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h2"/></svg>
+                </button>
+                <button type="button" class="paint-icon-btn" onclick="clearPaintCanvas()" title="전체 삭제" aria-label="전체 삭제">
+                    <svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 16h10l1-16"/></svg>
+                </button>
+                <button type="button" class="paint-icon-btn" onclick="downloadPaintCanvas()" title="저장" aria-label="저장">
+                    <svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+                </button>
+            </div>
+        </div>
+        <div class="paint-canvas-wrap">
+            <canvas id="paintCanvas" width="1280" height="720"></canvas>
+        </div>
+    </div>
+</div>
 
 <div class="modal-overlay" id="ytLinkModal" onmousedown="if(event.target===this)closeYtModal()">
     <div class="modal">

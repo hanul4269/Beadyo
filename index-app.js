@@ -12,6 +12,7 @@ const TABS = [
 ];
 
 const GAME_TAB_INDEX = 5;
+const TAB_ROUTES = ['calendar', 'schedule', 'songbook', 'live', 'music', 'games'];
 const gamePreviewEnabled = (() => {
     const params = new URLSearchParams(window.location.search);
     return params.get('preview') === 'games' ||
@@ -20,6 +21,32 @@ const gamePreviewEnabled = (() => {
         window.location.hash === '#games' ||
         window.location.hash === '#game-preview';
 })();
+
+function routeToTabIndex() {
+    const params = new URLSearchParams(window.location.search);
+    const queryTab = (params.get('tab') || '').toLowerCase();
+    if (queryTab === 'game') return gamePreviewEnabled ? GAME_TAB_INDEX : 0;
+    if (queryTab === 'songs') return 4;
+    const queryIndex = TAB_ROUTES.indexOf(queryTab);
+    if (queryIndex >= 0) return queryIndex === GAME_TAB_INDEX && !gamePreviewEnabled ? 0 : queryIndex;
+
+    const hash = window.location.hash.replace(/^#/, '').toLowerCase();
+    if (hash === 'game-preview') return gamePreviewEnabled ? GAME_TAB_INDEX : 0;
+    if (hash === 'songs') return 4;
+    const hashIndex = TAB_ROUTES.indexOf(hash);
+    if (hashIndex >= 0) return hashIndex === GAME_TAB_INDEX && !gamePreviewEnabled ? 0 : hashIndex;
+
+    return null;
+}
+
+function syncTabUrl(index, replace = false) {
+    const route = TAB_ROUTES[index];
+    if (!route) return;
+    const nextUrl = `${window.location.pathname}${window.location.search}#${route}`;
+    if (window.location.href.endsWith(`#${route}`)) return;
+    const method = replace ? 'replaceState' : 'pushState';
+    history[method]({ tab: index }, document.title, nextUrl);
+}
 
 function applyGamePreviewVisibility() {
     if (!gamePreviewEnabled) return;
@@ -181,13 +208,15 @@ async function updateAuthUI() {
     badge.classList.add('show');
 }
 
-function switchTab(index) {
+function switchTab(index, options = {}) {
+    const { updateUrl = true, replaceUrl = false } = options;
     if (index === GAME_TAB_INDEX && !gamePreviewEnabled) index = 0;
     document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
     document.querySelectorAll('.sheet-frame').forEach((f, i) => f.classList.toggle('active', i === index));
 
     updateMobileFab(index);
     try { localStorage.setItem('activeTab', index); } catch {}
+    if (updateUrl) syncTabUrl(index, replaceUrl);
 
     const frame = document.getElementById(`frame-${index}`);
 
@@ -209,15 +238,9 @@ function switchTab(index) {
 try {
     applyGamePreviewVisibility();
     let initialTab = 0;
-    if (gamePreviewEnabled && (
-        window.location.hash === '#games' ||
-        window.location.hash === '#game-preview' ||
-        new URLSearchParams(window.location.search).get('tab') === 'game'
-    )) {
-        if (window.location.hash === '#games' || window.location.hash === '#game-preview') {
-            history.replaceState({}, document.title, window.location.pathname + window.location.search);
-        }
-        initialTab = GAME_TAB_INDEX;
+    const routeTab = routeToTabIndex();
+    if (routeTab !== null) {
+        initialTab = routeTab;
     } else if (window.location.hash === '#songbook') {
         history.replaceState({}, document.title, window.location.pathname);
         initialTab = 2;
@@ -227,10 +250,15 @@ try {
             initialTab = saved;
         }
     }
-    switchTab(initialTab);
+    switchTab(initialTab, { replaceUrl: true });
 } catch {
-    switchTab(0);
+    switchTab(0, { replaceUrl: true });
 }
+
+window.addEventListener('hashchange', () => {
+    const routeTab = routeToTabIndex();
+    if (routeTab !== null) switchTab(routeTab, { updateUrl: false });
+});
 
 // ── 라이브 상태 체크 ──
 const PROXY = 'https://clever-rhino-36.hanul4269.deno.net';

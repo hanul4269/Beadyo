@@ -415,6 +415,173 @@ function showToast(msg) {
     toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
+// ─── 그림판 ───
+const paintState = {
+    canvas: null,
+    ctx: null,
+    tool: 'pen',
+    color: '#2a2f29',
+    size: 8,
+    drawing: false,
+    last: null,
+    undoStack: [],
+    redoStack: [],
+    initialized: false,
+};
+
+function initPaintCanvas() {
+    if (paintState.initialized) return;
+    const canvas = document.getElementById('paintCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    paintState.canvas = canvas;
+    paintState.ctx = ctx;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    resetPaintCanvas(false);
+
+    canvas.addEventListener('pointerdown', startPaintStroke);
+    canvas.addEventListener('pointermove', movePaintStroke);
+    canvas.addEventListener('pointerup', endPaintStroke);
+    canvas.addEventListener('pointerleave', endPaintStroke);
+    canvas.addEventListener('pointercancel', endPaintStroke);
+    canvas.addEventListener('touchstart', e => e.stopPropagation(), { passive: false });
+    canvas.addEventListener('touchend', e => e.stopPropagation(), { passive: false });
+    paintState.initialized = true;
+}
+
+function openPaintModal() {
+    document.getElementById('paintModal').classList.add('open');
+    initPaintCanvas();
+}
+
+function closePaintModal() {
+    document.getElementById('paintModal').classList.remove('open');
+    endPaintStroke();
+}
+
+function resetPaintCanvas(saveHistory = true) {
+    const { canvas, ctx } = paintState;
+    if (!canvas || !ctx) return;
+    if (saveHistory) pushPaintHistory();
+    ctx.save();
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+}
+
+function setPaintTool(tool) {
+    paintState.tool = tool === 'eraser' ? 'eraser' : 'pen';
+    document.getElementById('paintPenBtn')?.classList.toggle('active', paintState.tool === 'pen');
+    document.getElementById('paintEraserBtn')?.classList.toggle('active', paintState.tool === 'eraser');
+}
+
+function setPaintColor(color) {
+    paintState.color = color;
+    setPaintTool('pen');
+    document.querySelectorAll('#paintSwatches .paint-swatch').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.color === color);
+    });
+}
+
+function setPaintSize(size) {
+    paintState.size = Math.max(2, Math.min(36, Number(size) || 8));
+}
+
+function paintPoint(event) {
+    const rect = paintState.canvas.getBoundingClientRect();
+    return {
+        x: (event.clientX - rect.left) * (paintState.canvas.width / rect.width),
+        y: (event.clientY - rect.top) * (paintState.canvas.height / rect.height),
+    };
+}
+
+function startPaintStroke(event) {
+    if (!paintState.canvas || !paintState.ctx) return;
+    event.preventDefault();
+    event.stopPropagation();
+    pushPaintHistory();
+    paintState.redoStack = [];
+    paintState.drawing = true;
+    paintState.last = paintPoint(event);
+    try {
+        paintState.canvas.setPointerCapture?.(event.pointerId);
+    } catch (err) {
+        // Synthetic pointer events used in local checks may not have a capture target.
+    }
+    drawPaintSegment(paintState.last, paintState.last);
+}
+
+function movePaintStroke(event) {
+    if (!paintState.drawing) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const next = paintPoint(event);
+    drawPaintSegment(paintState.last, next);
+    paintState.last = next;
+}
+
+function endPaintStroke() {
+    paintState.drawing = false;
+    paintState.last = null;
+}
+
+function drawPaintSegment(from, to) {
+    const { ctx } = paintState;
+    ctx.save();
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.strokeStyle = paintState.tool === 'eraser' ? '#ffffff' : paintState.color;
+    ctx.lineWidth = paintState.size;
+    ctx.beginPath();
+    ctx.moveTo(from.x, from.y);
+    ctx.lineTo(to.x, to.y);
+    ctx.stroke();
+    ctx.restore();
+}
+
+function pushPaintHistory() {
+    const { canvas, ctx } = paintState;
+    if (!canvas || !ctx) return;
+    try {
+        paintState.undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        if (paintState.undoStack.length > 25) paintState.undoStack.shift();
+    } catch (err) {
+        console.warn('paint history failed:', err);
+    }
+}
+
+function undoPaint() {
+    const { canvas, ctx } = paintState;
+    if (!canvas || !ctx || paintState.undoStack.length === 0) return;
+    paintState.redoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    const image = paintState.undoStack.pop();
+    ctx.putImageData(image, 0, 0);
+}
+
+function redoPaint() {
+    const { canvas, ctx } = paintState;
+    if (!canvas || !ctx || paintState.redoStack.length === 0) return;
+    paintState.undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    const image = paintState.redoStack.pop();
+    ctx.putImageData(image, 0, 0);
+}
+
+function clearPaintCanvas() {
+    resetPaintCanvas(true);
+    paintState.redoStack = [];
+}
+
+function downloadPaintCanvas() {
+    const { canvas } = paintState;
+    if (!canvas) return;
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = `beadyo-canvas-${dateToStr(new Date())}.png`;
+    a.click();
+    a.remove();
+}
+
 // ─── 드래그앤드랍 순서 ───
 let dragState = { id: null, dateStr: null };
 let _dragged = false;
