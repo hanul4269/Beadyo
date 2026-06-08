@@ -943,14 +943,22 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        .memo-card-del {
+        .memo-card-actions {
             position: absolute;
-            top: 5px; right: 6px;
+            top: 5px;
+            right: 6px;
+            display: inline-flex;
+            gap: 4px;
+        }
+        .memo-card-edit,
+        .memo-card-del {
+            position: static;
             background: none; border: none;
             color: #ccc; font-size: 13px;
             cursor: pointer; padding: 0 2px;
             line-height: 1;
         }
+        .memo-card-edit:hover { color: #6ba72e; }
         .memo-card-del:hover { color: #e53935; }
         .memo-drag-handle {
             display: block;

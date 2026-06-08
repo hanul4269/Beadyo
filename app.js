@@ -1116,6 +1116,35 @@ function renderCalendar() {
 }
 
 // ─── 메모카드 ───
+let _memoEditingId = null;
+
+function _memoFormHtml(source) {
+    return `<div class="memo-add-form">
+        <textarea id="memoNewContent-${source}" placeholder="메모 내용을 입력하세요" rows="3"></textarea>
+        <input type="url" id="memoNewUrl-${source}" placeholder="링크 URL (선택)">
+        <button id="memoSaveBtn-${source}" onclick="addMemoCard('${source}')">추가</button>
+        <button id="memoCancelBtn-${source}" type="button" onclick="cancelMemoEdit('${source}')" style="display:none;background:#f0f0f0;color:#555;">취소</button>
+    </div>`;
+}
+
+function _memoFormEls(source = 'sidebar') {
+    return {
+        content: document.getElementById(`memoNewContent-${source}`),
+        url: document.getElementById(`memoNewUrl-${source}`),
+        save: document.getElementById(`memoSaveBtn-${source}`),
+        cancel: document.getElementById(`memoCancelBtn-${source}`),
+    };
+}
+
+function _resetMemoForm(source = 'sidebar') {
+    const els = _memoFormEls(source);
+    if (els.content) els.content.value = '';
+    if (els.url) els.url.value = '';
+    if (els.save) els.save.textContent = '추가';
+    if (els.cancel) els.cancel.style.display = 'none';
+    _memoEditingId = null;
+}
+
 async function loadMemoCards() {
     const ym = `${state.year}-${String(state.month + 1).padStart(2, '0')}`;
     try {
@@ -1140,11 +1169,7 @@ function renderMemoSidebar() {
     // 입력 폼: 아직 없을 때만 렌더 (입력 중인 텍스트 보호)
     if (state.isEditor && !el.querySelector('.memo-add-form')) {
         const form = document.createElement('div');
-        form.className = 'memo-add-form';
-        form.innerHTML = `
-            <textarea id="memoNewContent" placeholder="메모 내용을 입력하세요" rows="3"></textarea>
-            <input type="url" id="memoNewUrl" placeholder="링크 URL (선택)">
-            <button onclick="addMemoCard()">추가</button>`;
+        form.innerHTML = _memoFormHtml('sidebar');
         el.prepend(form);
     }
 
@@ -1161,8 +1186,11 @@ function renderMemoSidebar() {
 
 function _memoCardHtml(card, sidebar) {
     const isLink = !!card.url;
-    const delBtn = state.isEditor
-        ? `<button class="memo-card-del" onclick="event.stopPropagation();deleteMemoCard('${esc(card.id)}')" title="삭제">✕</button>`
+    const actions = state.isEditor
+        ? `<div class="memo-card-actions">
+            <button class="memo-card-edit" onclick="event.stopPropagation();editMemoCard('${esc(card.id)}','${sidebar ? 'sidebar' : 'modal'}')" title="수정">✎</button>
+            <button class="memo-card-del" onclick="event.stopPropagation();deleteMemoCard('${esc(card.id)}')" title="삭제">✕</button>
+        </div>`
         : '';
     const dragAttrs = state.isEditor && sidebar
         ? `draggable="true"
@@ -1177,18 +1205,36 @@ function _memoCardHtml(card, sidebar) {
     const handle = state.isEditor && sidebar
         ? `<span class="memo-drag-handle">• • •</span>` : '';
     return `<div class="memo-card${isLink ? ' is-link' : ''}" ${clickAttr} ${dragAttrs}>
-        ${delBtn}
+        ${actions}
         <div class="memo-card-text">${esc(card.content)}</div>
         ${handle}
     </div>`;
 }
 
-async function addMemoCard() {
-    const content = (document.getElementById('memoNewContent')?.value || '').trim();
-    const url     = (document.getElementById('memoNewUrl')?.value || '').trim();
+async function addMemoCard(source = 'sidebar') {
+    const els = _memoFormEls(source);
+    const content = (els.content?.value || '').trim();
+    const url     = (els.url?.value || '').trim();
     if (!content) { showToast('내용을 입력해 주세요'); return; }
     const normalizedUrl = normalizeOptionalUrl(url);
     if (url && !normalizedUrl) { showToast('올바른 URL을 입력해 주세요'); return; }
+
+    if (_memoEditingId) {
+        await _ensureDb();
+        const { data, error } = await db.from('memo_cards')
+            .update({ content, url: normalizedUrl || null })
+            .eq('id', _memoEditingId)
+            .select();
+        if (error) { showToast('수정 실패: ' + error.message); return; }
+        const updated = data?.[0];
+        state.memoCards = state.memoCards.map(card => card.id === _memoEditingId ? { ...card, ...(updated || { content, url: normalizedUrl || null }) } : card);
+        _resetMemoForm(source);
+        renderMemoSidebar();
+        renderMemoModalList();
+        showToast('메모를 수정했어요');
+        return;
+    }
+
     const ym = `${state.year}-${String(state.month + 1).padStart(2, '0')}`;
     const maxOrder = state.memoCards.reduce((m, c) => Math.max(m, c.sort_order ?? 0), -1);
     await _ensureDb();
@@ -1197,12 +1243,27 @@ async function addMemoCard() {
         .select();
     if (error) { showToast('저장 실패: ' + error.message); return; }
     state.memoCards.push(data[0]);
-    const contentEl = document.getElementById('memoNewContent');
-    const urlEl = document.getElementById('memoNewUrl');
-    if (contentEl) contentEl.value = '';
-    if (urlEl) urlEl.value = '';
+    _resetMemoForm(source);
     renderMemoSidebar();
     renderMemoModalList();
+}
+
+function editMemoCard(id, source = 'sidebar') {
+    const card = state.memoCards.find(c => c.id === id);
+    if (!card) return;
+    _memoEditingId = id;
+    const els = _memoFormEls(source);
+    if (els.content) {
+        els.content.value = card.content || '';
+        els.content.focus();
+    }
+    if (els.url) els.url.value = card.url || '';
+    if (els.save) els.save.textContent = '수정 저장';
+    if (els.cancel) els.cancel.style.display = '';
+}
+
+function cancelMemoEdit(source = 'sidebar') {
+    _resetMemoForm(source);
 }
 
 async function deleteMemoCard(id) {
@@ -1272,11 +1333,14 @@ function renderMemoModalList() {
     }
     el.innerHTML = state.memoCards.map(card => {
         const isLink = !!card.url;
-        const delBtn = state.isEditor
-            ? `<button class="memo-card-del" onclick="event.stopPropagation();deleteMemoCard('${esc(card.id)}')" title="삭제">✕</button>` : '';
+        const actions = state.isEditor
+            ? `<div class="memo-card-actions">
+                <button class="memo-card-edit" onclick="event.stopPropagation();editMemoCard('${esc(card.id)}','modal')" title="수정">✎</button>
+                <button class="memo-card-del" onclick="event.stopPropagation();deleteMemoCard('${esc(card.id)}')" title="삭제">✕</button>
+            </div>` : '';
         const clickAttr = isLink ? `onclick="openMemoCard('${esc(card.url)}')"` : '';
         return `<div class="memo-modal-card${isLink ? ' is-link' : ''}" ${clickAttr}>
-            ${delBtn}
+            ${actions}
             <div style="white-space:pre-wrap">${esc(card.content)}</div>
         </div>`;
     }).join('');
@@ -1284,11 +1348,7 @@ function renderMemoModalList() {
 function renderMemoModalForm() {
     const el = document.getElementById('memoModalForm');
     if (!el || !state.isEditor) { if (el) el.innerHTML = ''; return; }
-    el.innerHTML = `<div class="memo-add-form">
-        <textarea id="memoNewContent" placeholder="메모 내용을 입력하세요" rows="3"></textarea>
-        <input type="url" id="memoNewUrl" placeholder="링크 URL (선택)">
-        <button onclick="addMemoCard()">추가</button>
-    </div>`;
+    el.innerHTML = _memoFormHtml('modal');
 }
 
 // ─── YouTube 링크 모달 ───
