@@ -235,6 +235,24 @@
             min-height: calc(100vh - 248px);
         }
 
+        #ladder-panel .play-stage {
+            display: grid;
+            grid-template-rows: auto minmax(0, 1fr);
+            height: calc(100vh - 134px);
+            min-height: 0;
+        }
+
+        #ladder-panel .stage-toolbar {
+            margin-bottom: 14px;
+        }
+
+        #ladder-panel .ladder-board {
+            grid-template-rows: auto minmax(240px, 1fr) auto;
+            height: 100%;
+            min-height: 0;
+            gap: 10px;
+        }
+
         .slot-row {
             display: grid;
             grid-template-columns: repeat(var(--cols), minmax(92px, 1fr));
@@ -314,6 +332,10 @@
             position: relative;
             min-height: 420px;
             padding: 0 46px;
+        }
+
+        #ladder-panel .ladder-canvas-wrap {
+            min-height: 240px;
         }
 
         canvas {
@@ -483,9 +505,12 @@
         .gacha-stage {
             position: relative;
             display: grid;
-            grid-template-columns: 270px minmax(520px, 1fr);
+            grid-template-columns: 270px minmax(820px, 1120px);
             gap: 24px;
             align-items: stretch;
+            justify-content: center;
+            max-width: 1410px;
+            margin: 0 auto;
             min-height: calc(100vh - 250px);
             padding: 12px 8px 0;
         }
@@ -591,6 +616,9 @@
             display: grid;
             grid-template-rows: auto auto minmax(360px, 1fr) 170px;
             gap: 12px;
+            width: 100%;
+            max-width: 1120px;
+            justify-self: center;
             min-height: 620px;
             padding: 28px 34px 24px;
             border: 1px solid rgba(127,184,63,.22);
@@ -666,7 +694,7 @@
 
         .gacha-bowl {
             position: relative;
-            width: min(720px, 100%);
+            width: min(920px, 100%);
             aspect-ratio: 1.45 / .78;
             min-height: 390px;
             justify-self: center;
@@ -1140,6 +1168,19 @@
                 min-height: calc(100vh - 150px);
                 padding: 20px 14px;
                 border-radius: 20px;
+            }
+
+            #ladder-panel .play-stage {
+                height: calc(100vh - 116px);
+                min-height: 0;
+            }
+
+            #ladder-panel .ladder-board {
+                grid-template-rows: auto minmax(200px, 1fr) auto;
+            }
+
+            #ladder-panel .ladder-canvas-wrap {
+                min-height: 200px;
             }
 
             .slot-row,
@@ -1688,11 +1729,12 @@
         }
 
         function fitCanvas(canvas, wrap) {
+            canvas.style.height = '';
             const wrapRect = wrap.getBoundingClientRect();
             const canvasRect = canvas.getBoundingClientRect();
             const dpr = window.devicePixelRatio || 1;
             const width = Math.max(320, canvasRect.width);
-            const height = Math.max(360, wrapRect.height);
+            const height = Math.max(220, wrapRect.height);
             canvas.width = Math.floor(width * dpr);
             canvas.height = Math.floor(height * dpr);
             canvas.style.height = `${height}px`;

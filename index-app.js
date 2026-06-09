@@ -8,7 +8,7 @@ const TABS = [
     { type: 'songbook', src: 'songbook.html?view=songbook&v=design-20260604', directUrl: 'songbook.html?view=songbook' },
     { type: 'songbook', src: 'songbook.html?view=live&v=design-20260604', directUrl: 'songbook.html?view=live' },
     { type: 'songs', src: 'songs.html?v=design-20260604', directUrl: 'songs.html' },
-    { type: 'games', src: 'games.html?v=games-official-20260609', directUrl: 'games.html' },
+    { type: 'games', src: 'games.html?v=gacha-width-20260609', directUrl: 'games.html' },
 ];
 
 const GAME_TAB_INDEX = 5;
