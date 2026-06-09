@@ -8,33 +8,25 @@ const TABS = [
     { type: 'songbook', src: 'songbook.html?view=songbook&v=design-20260604', directUrl: 'songbook.html?view=songbook' },
     { type: 'songbook', src: 'songbook.html?view=live&v=design-20260604', directUrl: 'songbook.html?view=live' },
     { type: 'songs', src: 'songs.html?v=design-20260604', directUrl: 'songs.html' },
-    { type: 'games', src: 'games.html?v=games-preview-hidefix-20260606', directUrl: 'games.html' },
+    { type: 'games', src: 'games.html?v=games-official-20260609', directUrl: 'games.html' },
 ];
 
 const GAME_TAB_INDEX = 5;
 const TAB_ROUTES = ['calendar', 'schedule', 'songbook', 'live', 'music', 'games'];
-const gamePreviewEnabled = (() => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('preview') === 'games' ||
-        params.get('tab') === 'game' ||
-        params.has('gamePreview') ||
-        window.location.hash === '#games' ||
-        window.location.hash === '#game-preview';
-})();
 
 function routeToTabIndex() {
     const params = new URLSearchParams(window.location.search);
     const queryTab = (params.get('tab') || '').toLowerCase();
-    if (queryTab === 'game') return gamePreviewEnabled ? GAME_TAB_INDEX : 0;
+    if (queryTab === 'game') return GAME_TAB_INDEX;
     if (queryTab === 'songs') return 4;
     const queryIndex = TAB_ROUTES.indexOf(queryTab);
-    if (queryIndex >= 0) return queryIndex === GAME_TAB_INDEX && !gamePreviewEnabled ? 0 : queryIndex;
+    if (queryIndex >= 0) return queryIndex;
 
     const hash = window.location.hash.replace(/^#/, '').toLowerCase();
-    if (hash === 'game-preview') return gamePreviewEnabled ? GAME_TAB_INDEX : 0;
+    if (hash === 'game-preview') return GAME_TAB_INDEX;
     if (hash === 'songs') return 4;
     const hashIndex = TAB_ROUTES.indexOf(hash);
-    if (hashIndex >= 0) return hashIndex === GAME_TAB_INDEX && !gamePreviewEnabled ? 0 : hashIndex;
+    if (hashIndex >= 0) return hashIndex;
 
     return null;
 }
@@ -46,13 +38,6 @@ function syncTabUrl(index, replace = false) {
     if (window.location.href.endsWith(`#${route}`)) return;
     const method = replace ? 'replaceState' : 'pushState';
     history[method]({ tab: index }, document.title, nextUrl);
-}
-
-function applyGamePreviewVisibility() {
-    if (!gamePreviewEnabled) return;
-    document.querySelectorAll('[data-game-preview]').forEach(el => {
-        el.hidden = false;
-    });
 }
 
 const readOnlyUrl = s =>
@@ -210,7 +195,6 @@ async function updateAuthUI() {
 
 function switchTab(index, options = {}) {
     const { updateUrl = true, replaceUrl = false } = options;
-    if (index === GAME_TAB_INDEX && !gamePreviewEnabled) index = 0;
     document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
     document.querySelectorAll('.sheet-frame').forEach((f, i) => f.classList.toggle('active', i === index));
 
@@ -236,7 +220,6 @@ function switchTab(index, options = {}) {
 
 // 첫 탭 초기 로드
 try {
-    applyGamePreviewVisibility();
     let initialTab = 0;
     const routeTab = routeToTabIndex();
     if (routeTab !== null) {
@@ -246,7 +229,7 @@ try {
         initialTab = 2;
     } else {
         const saved = parseInt(localStorage.getItem('activeTab'));
-        if (Number.isFinite(saved) && saved >= 0 && saved < TABS.length && (saved !== GAME_TAB_INDEX || gamePreviewEnabled)) {
+        if (Number.isFinite(saved) && saved >= 0 && saved < TABS.length) {
             initialTab = saved;
         }
     }
