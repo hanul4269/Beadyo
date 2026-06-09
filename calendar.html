@@ -1634,8 +1634,15 @@
         .btn-secondary{ background: #f0f0f0; color: var(--text); }
 
         /* ── 그림판 모달 ── */
+        #paintModal {
+            align-items: flex-start;
+            overflow-y: auto;
+            padding: 8px;
+        }
         #paintModal .modal {
-            max-width: min(1180px, 96vw);
+            width: min(1760px, calc(100vw - 16px));
+            max-width: none;
+            max-height: none;
             padding: 18px;
             overflow: hidden;
         }
@@ -1715,6 +1722,17 @@
             width: 120px;
             accent-color: var(--accent);
         }
+        .paint-bg-select {
+            height: 36px;
+            padding: 0 32px 0 12px;
+            border: 1.5px solid rgba(139,195,74,0.28);
+            border-radius: 10px;
+            background: #fff;
+            color: var(--text);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 800;
+        }
         .paint-canvas-wrap {
             width: 100%;
             aspect-ratio: 16 / 9;
@@ -1743,6 +1761,7 @@
             .paint-toolbar { gap: 6px; padding: 8px; }
             .paint-tool-group { border-right: 0; padding-right: 0; }
             .paint-size { width: 90px; }
+            .paint-bg-select { max-width: 120px; }
         }
 
         /* ── 편집자 관리 ── */
@@ -2338,6 +2357,23 @@
                 <button type="button" class="paint-tool-btn" id="paintEraserBtn" onclick="setPaintTool('eraser')" title="지우개" aria-label="지우개">
                     <svg viewBox="0 0 24 24"><path d="m7 21-4-4L14 6a2.8 2.8 0 0 1 4 0l2 2a2.8 2.8 0 0 1 0 4l-9 9H7Z"/><path d="m12 8 6 6"/><path d="M7 21h13"/></svg>
                 </button>
+                <button type="button" class="paint-tool-btn" id="paintTextBtn" onclick="setPaintTool('text')" title="텍스트" aria-label="텍스트">
+                    <svg viewBox="0 0 24 24"><path d="M5 5h14"/><path d="M12 5v14"/><path d="M8 19h8"/></svg>
+                </button>
+            </div>
+            <div class="paint-tool-group">
+                <button type="button" class="paint-tool-btn" id="paintLineBtn" onclick="setPaintTool('line')" title="직선" aria-label="직선">
+                    <svg viewBox="0 0 24 24"><path d="M5 19 19 5"/></svg>
+                </button>
+                <button type="button" class="paint-tool-btn" id="paintArrowBtn" onclick="setPaintTool('arrow')" title="화살표" aria-label="화살표">
+                    <svg viewBox="0 0 24 24"><path d="M5 19 19 5"/><path d="M11 5h8v8"/></svg>
+                </button>
+                <button type="button" class="paint-tool-btn" id="paintRectBtn" onclick="setPaintTool('rect')" title="사각형" aria-label="사각형">
+                    <svg viewBox="0 0 24 24"><rect x="5" y="6" width="14" height="12" rx="1"/></svg>
+                </button>
+                <button type="button" class="paint-tool-btn" id="paintCircleBtn" onclick="setPaintTool('circle')" title="원" aria-label="원">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/></svg>
+                </button>
             </div>
             <div class="paint-tool-group" id="paintSwatches">
                 <button type="button" class="paint-swatch active" data-color="#2a2f29" style="background:#2a2f29" onclick="setPaintColor('#2a2f29')" title="잉크"></button>
@@ -2349,6 +2385,14 @@
             </div>
             <div class="paint-tool-group">
                 <input type="range" class="paint-size" id="paintSize" min="2" max="36" value="8" oninput="setPaintSize(this.value)" aria-label="굵기">
+            </div>
+            <div class="paint-tool-group">
+                <select class="paint-bg-select" id="paintBackground" onchange="setPaintBackground(this.value)" aria-label="배경">
+                    <option value="#ffffff">흰색</option>
+                    <option value="#f4f8ef">연두</option>
+                    <option value="#fff8e6">메모지</option>
+                    <option value="transparent">투명</option>
+                </select>
             </div>
             <div class="paint-tool-group">
                 <button type="button" class="paint-icon-btn" onclick="undoPaint()" title="되돌리기" aria-label="되돌리기">

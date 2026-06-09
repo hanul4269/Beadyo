@@ -2606,6 +2606,14 @@ function showToast(msg) {
     _toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
+function songbookSaveErrorMessage(error) {
+    const message = error?.message || '';
+    if (/row-level security|RLS/i.test(message)) {
+        return '저장 실패: 노래책 쓰기 권한 정책을 확인해주세요';
+    }
+    return '저장 실패: ' + message;
+}
+
 // ── 초기화 ───────────────────────────────────────
 async function init() {
     await loadSongbook();
@@ -2781,7 +2789,7 @@ async function saveBulk() {
     const { error } = await db.from('songbook').insert(records);
     btn.disabled = false; btn.textContent = '추가';
 
-    if (error) { showToast('저장 실패: ' + error.message); return; }
+    if (error) { showToast(songbookSaveErrorMessage(error)); return; }
     showToast(`${records.length}곡 추가 완료 ✓`);
     closeBulkModal();
     S.songbookData = null;
@@ -2864,7 +2872,7 @@ async function saveSong() {
         : await db.from('songbook').insert(payload);
 
     btn.disabled = false; btn.textContent = '저장';
-    if (error) { showToast('저장 실패: ' + error.message); return; }
+    if (error) { showToast(songbookSaveErrorMessage(error)); return; }
     showToast(id ? '수정 완료 ✓' : '추가 완료 ✓');
     closeSongModal();
     S.songbookData = null;
@@ -2979,7 +2987,7 @@ async function saveLiveBulk() {
     const { error } = await db.from('live_songs').insert(records);
     btn.disabled = false; btn.textContent = '추가';
 
-    if (error) { showToast('저장 실패: ' + error.message); return; }
+    if (error) { showToast(songbookSaveErrorMessage(error)); return; }
     showToast(`${records.length}곡 추가 완료 ✓`);
     closeLiveBulkModal();
     S.liveCache = {};
@@ -3045,7 +3053,7 @@ async function saveLiveRecord() {
         : await db.from('live_songs').insert(payload);
 
     btn.disabled = false; btn.textContent = '저장';
-    if (error) { showToast('저장 실패: ' + error.message); return; }
+    if (error) { showToast(songbookSaveErrorMessage(error)); return; }
     showToast(id ? '수정 완료 ✓' : '추가 완료 ✓');
     closeLiveModal();
     delete S.liveCache[year]; delete S.liveCache['all'];

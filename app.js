@@ -421,8 +421,10 @@ const paintState = {
     ctx: null,
     tool: 'pen',
     color: '#2a2f29',
+    background: '#ffffff',
     size: 8,
     drawing: false,
+    start: null,
     last: null,
     undoStack: [],
     redoStack: [],
@@ -466,15 +468,24 @@ function resetPaintCanvas(saveHistory = true) {
     if (saveHistory) pushPaintHistory();
     ctx.save();
     ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (paintState.background === 'transparent') {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.style.background = 'transparent';
+    } else {
+        ctx.fillStyle = paintState.background;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        canvas.style.background = paintState.background;
+    }
     ctx.restore();
 }
 
 function setPaintTool(tool) {
-    paintState.tool = tool === 'eraser' ? 'eraser' : 'pen';
-    document.getElementById('paintPenBtn')?.classList.toggle('active', paintState.tool === 'pen');
-    document.getElementById('paintEraserBtn')?.classList.toggle('active', paintState.tool === 'eraser');
+    const tools = ['pen', 'eraser', 'text', 'line', 'arrow', 'rect', 'circle'];
+    paintState.tool = tools.includes(tool) ? tool : 'pen';
+    tools.forEach(name => {
+        const id = `paint${name.charAt(0).toUpperCase()}${name.slice(1)}Btn`;
+        document.getElementById(id)?.classList.toggle('active', paintState.tool === name);
+    });
 }
 
 function setPaintColor(color) {
@@ -489,6 +500,17 @@ function setPaintSize(size) {
     paintState.size = Math.max(2, Math.min(36, Number(size) || 8));
 }
 
+function setPaintBackground(background) {
+    paintState.background = background === 'transparent' ? 'transparent' : background;
+    pushPaintHistory();
+    paintState.redoStack = [];
+    resetPaintCanvas(false);
+}
+
+function isPaintShapeTool() {
+    return ['line', 'arrow', 'rect', 'circle'].includes(paintState.tool);
+}
+
 function paintPoint(event) {
     const rect = paintState.canvas.getBoundingClientRect();
     return {
@@ -501,16 +523,26 @@ function startPaintStroke(event) {
     if (!paintState.canvas || !paintState.ctx) return;
     event.preventDefault();
     event.stopPropagation();
+    const point = paintPoint(event);
+    if (paintState.tool === 'text') {
+        const text = prompt('삽입할 텍스트');
+        if (!text) return;
+        pushPaintHistory();
+        paintState.redoStack = [];
+        drawPaintText(point, text);
+        return;
+    }
     pushPaintHistory();
     paintState.redoStack = [];
     paintState.drawing = true;
-    paintState.last = paintPoint(event);
+    paintState.start = point;
+    paintState.last = point;
     try {
         paintState.canvas.setPointerCapture?.(event.pointerId);
     } catch (err) {
         // Synthetic pointer events used in local checks may not have a capture target.
     }
-    drawPaintSegment(paintState.last, paintState.last);
+    if (!isPaintShapeTool()) drawPaintSegment(paintState.last, paintState.last);
 }
 
 function movePaintStroke(event) {
@@ -518,12 +550,22 @@ function movePaintStroke(event) {
     event.preventDefault();
     event.stopPropagation();
     const next = paintPoint(event);
-    drawPaintSegment(paintState.last, next);
+    if (isPaintShapeTool()) {
+        restorePaintPreviewBase();
+        drawPaintShape(paintState.start, next);
+    } else {
+        drawPaintSegment(paintState.last, next);
+    }
     paintState.last = next;
 }
 
 function endPaintStroke() {
+    if (paintState.drawing && isPaintShapeTool() && paintState.start && paintState.last) {
+        restorePaintPreviewBase();
+        drawPaintShape(paintState.start, paintState.last);
+    }
     paintState.drawing = false;
+    paintState.start = null;
     paintState.last = null;
 }
 
@@ -531,12 +573,81 @@ function drawPaintSegment(from, to) {
     const { ctx } = paintState;
     ctx.save();
     ctx.globalCompositeOperation = 'source-over';
-    ctx.strokeStyle = paintState.tool === 'eraser' ? '#ffffff' : paintState.color;
+    ctx.strokeStyle = paintState.tool === 'eraser'
+        ? (paintState.background === 'transparent' ? paintState.color : paintState.background)
+        : paintState.color;
+    if (paintState.tool === 'eraser' && paintState.background === 'transparent') {
+        ctx.globalCompositeOperation = 'destination-out';
+    }
     ctx.lineWidth = paintState.size;
     ctx.beginPath();
     ctx.moveTo(from.x, from.y);
     ctx.lineTo(to.x, to.y);
     ctx.stroke();
+    ctx.restore();
+}
+
+function restorePaintPreviewBase() {
+    const { ctx } = paintState;
+    const image = paintState.undoStack[paintState.undoStack.length - 1];
+    if (image) ctx.putImageData(image, 0, 0);
+}
+
+function drawPaintShape(from, to) {
+    const { ctx } = paintState;
+    const x = Math.min(from.x, to.x);
+    const y = Math.min(from.y, to.y);
+    const w = Math.abs(to.x - from.x);
+    const h = Math.abs(to.y - from.y);
+    ctx.save();
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.strokeStyle = paintState.color;
+    ctx.lineWidth = paintState.size;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    if (paintState.tool === 'line' || paintState.tool === 'arrow') {
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(to.x, to.y);
+        ctx.stroke();
+        if (paintState.tool === 'arrow') drawPaintArrowHead(from, to);
+    } else if (paintState.tool === 'rect') {
+        ctx.strokeRect(x, y, w, h);
+    } else if (paintState.tool === 'circle') {
+        ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+    ctx.restore();
+}
+
+function drawPaintArrowHead(from, to) {
+    const { ctx } = paintState;
+    const angle = Math.atan2(to.y - from.y, to.x - from.x);
+    const length = Math.max(16, paintState.size * 3);
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(to.x, to.y);
+    ctx.lineTo(to.x - length * Math.cos(angle - Math.PI / 7), to.y - length * Math.sin(angle - Math.PI / 7));
+    ctx.moveTo(to.x, to.y);
+    ctx.lineTo(to.x - length * Math.cos(angle + Math.PI / 7), to.y - length * Math.sin(angle + Math.PI / 7));
+    ctx.strokeStyle = paintState.color;
+    ctx.lineWidth = paintState.size;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+    ctx.restore();
+}
+
+function drawPaintText(point, text) {
+    const { ctx } = paintState;
+    const fontSize = Math.max(18, Math.min(72, paintState.size * 2.6));
+    ctx.save();
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = paintState.color;
+    ctx.font = `900 ${fontSize}px "Noto Sans KR", sans-serif`;
+    ctx.textBaseline = 'top';
+    String(text).split('\n').slice(0, 6).forEach((line, i) => {
+        ctx.fillText(line, point.x, point.y + i * fontSize * 1.28);
+    });
     ctx.restore();
 }
 
