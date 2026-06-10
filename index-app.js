@@ -1,14 +1,33 @@
 const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL = 'riosniper12@gmail.com';
+const FALLBACK_ASSET_VERSION = 'ladder-start-reveal-only-20260610';
+const IS_LOCAL_HOST = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
+const APP_ASSET_VERSION = (() => {
+    try {
+        const scriptUrl = document.currentScript?.src || '';
+        return new URL(scriptUrl, window.location.href).searchParams.get('v') || FALLBACK_ASSET_VERSION;
+    } catch {
+        return FALLBACK_ASSET_VERSION;
+    }
+})();
+const FRAME_ASSET_VERSION = IS_LOCAL_HOST ? `dev-${Date.now()}` : APP_ASSET_VERSION;
+
+function withFrameAssetVersion(src, assetVersion = APP_ASSET_VERSION) {
+    if (!src || /^https?:\/\//i.test(src)) return src;
+    const url = new URL(src, window.location.href);
+    if (url.origin !== window.location.origin) return src;
+    url.searchParams.set('v', IS_LOCAL_HOST ? FRAME_ASSET_VERSION : assetVersion);
+    return `${url.pathname.replace(/^\//, '')}${url.search}${url.hash}`;
+}
 
 const TABS = [
     { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
-    { type: 'songbook', src: 'songbook.html?view=songbook&v=design-20260604', directUrl: 'songbook.html?view=songbook' },
-    { type: 'songbook', src: 'songbook.html?view=live&v=design-20260604', directUrl: 'songbook.html?view=live' },
-    { type: 'songs', src: 'songs.html?v=design-20260604', directUrl: 'songs.html' },
-    { type: 'games', src: 'games.html?v=gacha-width-20260609', directUrl: 'games.html' },
+    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'design-20260604' },
+    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'design-20260604' },
+    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'design-20260604' },
+    { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'ladder-start-reveal-only-20260610' },
 ];
 
 const GAME_TAB_INDEX = 5;
@@ -77,7 +96,9 @@ const isMobile = window.matchMedia('(max-width: 640px)').matches;
 
 function getFrameUrl(index) {
     const tab = TABS[index];
-    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'games') return tab.src;
+    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'games') {
+        return withFrameAssetVersion(tab.src, tab.assetVersion);
+    }
     if (tab.type === 'schedule') return scheduleUrl(tab);
     if (tab.alwaysEdit) return editUrl(tab);
     return readOnlyUrl(tab);
@@ -312,7 +333,7 @@ function handleLoginOverlayClick(e) {
 function openGuideModal() {
     const overlay = document.getElementById('guide-overlay');
     const frame = document.getElementById('guide-frame');
-    if (frame && !frame.src) frame.src = 'guide.html?v=games-preview-hidefix-20260606';
+    if (frame && !frame.src) frame.src = withFrameAssetVersion('guide.html');
     if (!overlay) return;
     overlay.classList.add('open');
     closeQuickMenu();

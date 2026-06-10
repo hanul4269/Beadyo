@@ -268,10 +268,6 @@
             min-width: 0;
         }
 
-        .top .slot {
-            cursor: pointer;
-        }
-
         .avatar {
             width: 78px;
             height: 78px;
@@ -284,6 +280,16 @@
             object-fit: contain;
             box-shadow: 0 7px 16px rgba(42,47,41,.11);
             filter: drop-shadow(0 4px 7px rgba(42,47,41,.12));
+        }
+
+        .ladder-start {
+            cursor: pointer;
+            transition: transform .16s ease, box-shadow .16s ease;
+        }
+
+        .ladder-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 9px 20px rgba(42,47,41,.13), 0 0 0 3px rgba(127,184,63,.14);
         }
 
         .slot-card {
@@ -403,8 +409,8 @@
             max-width: 100%;
             aspect-ratio: 1;
             border-radius: 50%;
-            background: #fff;
-            box-shadow: inset 0 0 0 12px rgba(255,255,255,.75), 0 18px 40px rgba(42,47,41,.14);
+            background: #fffdf7;
+            box-shadow: inset 0 0 0 12px rgba(255,255,255,.86), 0 18px 40px rgba(127,184,63,.16);
             transition: transform 4s cubic-bezier(.12,.68,.11,1);
         }
 
@@ -417,12 +423,14 @@
             width: 92px;
             height: 92px;
             padding: 0;
-            border: 7px solid var(--accent-soft);
+            border: 7px solid rgba(255,255,255,.88);
             border-radius: 50%;
-            background: #fff;
+            background:
+                radial-gradient(circle at 34% 24%, rgba(255,255,255,.96) 0 18%, transparent 19%),
+                linear-gradient(145deg, #ffffff 0%, #eef8e4 100%);
             transform: translate(-50%, -50%);
             z-index: 3;
-            box-shadow: 0 9px 20px rgba(42,47,41,.16);
+            box-shadow: 0 9px 20px rgba(42,47,41,.14), 0 0 0 1px rgba(127,184,63,.2);
             cursor: pointer;
             transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
         }
@@ -438,9 +446,14 @@
         }
 
         .wheel-center img {
-            width: 68px;
-            height: 68px;
-            object-fit: contain;
+            width: 76px;
+            height: 76px;
+            padding: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,.72);
+            object-fit: cover;
+            clip-path: circle(50%);
+            filter: drop-shadow(0 5px 8px rgba(42,47,41,.12));
         }
 
         .winner-box {
@@ -742,6 +755,14 @@
             place-items: center;
             width: 106px;
             height: 106px;
+            --rest-rotate: 0deg;
+            --mix-x1: 80px;
+            --mix-y1: -70px;
+            --mix-x2: -110px;
+            --mix-y2: 90px;
+            --mix-x3: 130px;
+            --mix-y3: 40px;
+            --mix-rotate: 180deg;
             border: 1px solid rgba(255,255,255,.58);
             border-radius: 50%;
             background:
@@ -751,6 +772,12 @@
             overflow: hidden;
             opacity: .93;
             z-index: 1;
+            transform: rotate(var(--rest-rotate));
+            transform-origin: 50% 50%;
+        }
+
+        .gacha-bowl.shuffling .gacha-ball {
+            will-change: transform;
         }
 
         .gacha-ball::before {
@@ -1146,6 +1173,32 @@
             text-align: right;
         }
 
+        .game-toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            z-index: 80;
+            max-width: min(420px, calc(100vw - 32px));
+            padding: 12px 18px;
+            border-radius: 999px;
+            background: rgba(42,47,41,.92);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 900;
+            line-height: 1.35;
+            text-align: center;
+            box-shadow: 0 14px 32px rgba(42,47,41,.2);
+            opacity: 0;
+            pointer-events: none;
+            transform: translate(-50%, 16px);
+            transition: opacity .18s ease, transform .18s ease;
+        }
+
+        .game-toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
         @media (max-width: 980px) {
             .page { padding: 16px 12px 24px; }
             .top,
@@ -1375,7 +1428,7 @@
                         </button>
                     </div>
                     <div class="toolbar-actions">
-                        <button class="action-btn green" type="button" onclick="runLadder(0)">
+                        <button class="action-btn green" type="button" onclick="revealLadder()">
                             <svg viewBox="0 0 24 24"><path d="m5 3 14 9-14 9V3z"/></svg>
                             START
                         </button>
@@ -1383,7 +1436,7 @@
                             <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/></svg>
                             결과보기
                         </button>
-                        <button class="action-btn reset" type="button" onclick="resetLadder()">
+                        <button class="action-btn reset" type="button" onclick="shuffleLadder()">
                             사다리 섞기
                         </button>
                     </div>
@@ -1549,6 +1602,8 @@
         </section>
     </div>
 
+    <div class="game-toast" id="game-toast" role="status" aria-live="polite"></div>
+
     <div class="modal-backdrop" id="results-modal" onclick="modalBackdropClick(event)">
         <section class="modal" role="dialog" aria-modal="true" aria-label="사다리 결과">
             <div class="modal-head">
@@ -1564,9 +1619,10 @@
     <script>
         const ASSETS = Array.from({ length: 19 }, (_, i) => `game-assets/gobookticon/gobook-${String(i + 1).padStart(2, '0')}.png`);
         const colors = ['#7fb83f', '#5b8fc7', '#c69c3a', '#54a99f', '#9a7bc2', '#8ea65d', '#6f776b', '#9aa26f'];
+        const rouletteColors = ['#a9d96b', '#8cc7ee', '#f4ce73', '#8fdbc9', '#c9a7e8', '#f2a58f', '#b9dc86', '#95d0a8'];
         const defaultNames = ['구북이', '떼구르르', '비즈', '요정', '방울', '반짝', '하모니', '마블'];
-        const defaultPrizes = ['당첨', '한 번 더', '꽝', '선물', '추천곡', '다시뽑기', '행운', '축하'];
-        const ladder = { count: 4, names: [...defaultNames], prizes: [...defaultPrizes], rungs: [], mapping: [], paths: [], running: false };
+        const defaultPrizes = Array(8).fill('');
+        const ladder = { count: 4, names: [...defaultNames], prizes: [...defaultPrizes], rungs: [], mapping: [], paths: [], running: false, rungsVisible: false };
         const roulette = { count: 4, names: [...defaultNames], rotation: 0, history: [], spinning: false };
         const gacha = { count: 8, names: [...defaultNames], history: [], drawing: false };
         let settingsMode = 'ladder';
@@ -1577,6 +1633,10 @@
 
         function cleanLines(value) {
             return String(value || '').split(/\n+/).map(v => v.trim()).filter(Boolean).slice(0, 16);
+        }
+
+        function cleanPrizeLines(value) {
+            return String(value || '').split(/\n/).map(v => v.trim()).slice(0, 8);
         }
 
         function escapeHtml(value) {
@@ -1614,7 +1674,7 @@
 
         function ensureListSize(list, fallback) {
             for (let i = list.length; i < ladder.count; i++) {
-                list[i] = fallback[i % fallback.length] || `${i + 1}`;
+                list[i] = fallback[i % fallback.length] ?? `${i + 1}`;
             }
         }
 
@@ -1624,10 +1684,10 @@
             const names = visibleNames();
             const prizes = visiblePrizes();
             $('ladder-top').innerHTML = names.map((name, i) => `
-                <div class="slot" onclick="runLadder(${i})" title="출발">
-                    <img class="avatar" src="${ASSETS[i % ASSETS.length]}" alt="">
+                <div class="slot">
+                    <img class="avatar ladder-start" src="${ASSETS[i % ASSETS.length]}" alt="" title="출발" onclick="runLadder(${i})">
                     <div class="slot-card" contenteditable="true" data-kind="name" data-index="${i}" data-placeholder="참가자" onclick="event.stopPropagation()">${escapeHtml(name)}</div>
-                    <div class="arrow"></div>
+                    <div class="arrow" onclick="event.stopPropagation()" aria-hidden="true"></div>
                 </div>
             `).join('');
             $('ladder-bottom').innerHTML = prizes.map((prize, i) => `
@@ -1651,17 +1711,18 @@
             const index = Number(target.dataset.index);
             const value = target.textContent.trim();
             if (target.dataset.kind === 'name') ladder.names[index] = value || defaultNames[index % defaultNames.length];
-            if (target.dataset.kind === 'prize') ladder.prizes[index] = value || defaultPrizes[index % defaultPrizes.length];
+            if (target.dataset.kind === 'prize') ladder.prizes[index] = value;
         }
 
         function handleSlotBlur(event) {
             const target = event.currentTarget;
             const index = Number(target.dataset.index);
-            const fallback = target.dataset.kind === 'name' ? defaultNames[index % defaultNames.length] : defaultPrizes[index % defaultPrizes.length];
+            const isName = target.dataset.kind === 'name';
+            const fallback = isName ? defaultNames[index % defaultNames.length] : '';
             const value = target.textContent.trim() || fallback;
             target.textContent = value;
-            if (target.dataset.kind === 'name') ladder.names[index] = value;
-            if (target.dataset.kind === 'prize') ladder.prizes[index] = value;
+            if (isName) ladder.names[index] = value;
+            else ladder.prizes[index] = value;
             drawLadder();
         }
 
@@ -1672,28 +1733,83 @@
             }
         }
 
+        function clearLadderResults() {
+            $('result-list').innerHTML = '';
+            $('results-modal').classList.remove('open');
+            const token = $('ladder-token');
+            token.hidden = true;
+            token.style.left = '';
+            token.style.top = '';
+        }
+
         function changeCount(delta) {
             if (ladder.running) return;
             ladder.count = Math.max(2, Math.min(8, ladder.count + delta));
+            clearLadderResults();
             resetLadder();
         }
 
         function makeRungs() {
-            const rows = Math.max(11, ladder.count * 3);
+            const rows = Math.max(12, ladder.count * 3);
+            const laneCount = ladder.count - 1;
             const rungs = [];
-            for (let row = 0; row < rows; row++) {
+            const laneCounts = Array(laneCount).fill(0);
+            const laneIndexes = Array.from({ length: laneCount }, (_, index) => index);
+            const rowIndexes = Array.from({ length: rows }, (_, index) => index)
+                .sort(() => Math.random() - .5);
+
+            for (const row of rowIndexes) {
                 const used = new Set();
-                for (let col = 0; col < ladder.count - 1; col++) {
-                    if (used.has(col) || used.has(col - 1)) continue;
-                    if (Math.random() < .46) {
+                const rowLanes = [...laneIndexes]
+                    .sort(() => Math.random() - .5)
+                    .sort((a, b) => laneCounts[a] - laneCounts[b]);
+                const leastUsed = Math.min(...laneCounts);
+
+                for (const col of rowLanes) {
+                    if (used.has(col) || used.has(col + 1)) continue;
+                    if (!canPlaceRung(rungs, row, col)) continue;
+                    const chance = laneCounts[col] <= leastUsed ? .48 : .34;
+                    if (Math.random() < chance) {
                         rungs.push({ row, col });
+                        laneCounts[col] += 1;
                         used.add(col);
                         used.add(col + 1);
                     }
                 }
             }
-            if (!rungs.length) rungs.push({ row: Math.floor(rows / 2), col: 0 });
+
+            const minimumPerLane = ladder.count <= 4 ? 2 : 1;
+            for (let col = 0; col < laneCount; col++) {
+                while (laneCounts[col] < minimumPerLane && addMissingLaneRung(rungs, laneCounts, rows, col)) {
+                    // Keep adding until every adjacent pair has enough visual crossings.
+                }
+            }
+
+            if (!rungs.length) {
+                rungs.push({ row: Math.floor(rows / 2), col: 0 });
+            }
+            rungs.sort((a, b) => a.row - b.row || a.col - b.col);
             return { rows, rungs };
+        }
+
+        function addMissingLaneRung(rungs, laneCounts, rows, col) {
+            const rowIndexes = Array.from({ length: rows }, (_, index) => index)
+                .sort(() => Math.random() - .5);
+            for (const row of rowIndexes) {
+                if (!canPlaceRung(rungs, row, col)) continue;
+                rungs.push({ row, col });
+                laneCounts[col] += 1;
+                return true;
+            }
+            return false;
+        }
+
+        function canPlaceRung(rungs, row, col) {
+            return !rungs.some(rung => {
+                const sameRowTouches = rung.row === row && Math.abs(rung.col - col) <= 1;
+                const sameLaneStacked = rung.col === col && Math.abs(rung.row - row) <= 1;
+                return sameRowTouches || sameLaneStacked;
+            });
         }
 
         function computeLadder(rows, rungs) {
@@ -1709,22 +1825,42 @@
                 const path = [{ row: -1, col }];
                 for (let row = 0; row < rows; row++) {
                     const rowRungs = byRow.get(row) || [];
-                    if (rowRungs.includes(col)) col += 1;
-                    else if (rowRungs.includes(col - 1)) col -= 1;
                     path.push({ row, col });
+                    if (rowRungs.includes(col)) {
+                        col += 1;
+                        path.push({ row, col });
+                    } else if (rowRungs.includes(col - 1)) {
+                        col -= 1;
+                        path.push({ row, col });
+                    }
                 }
+                path.push({ row: rows, col });
                 ladder.mapping[start] = col;
                 ladder.paths[start] = path;
             }
         }
 
-        function resetLadder() {
+        function resetLadder({ reveal = false } = {}) {
+            clearLadderResults();
             const made = makeRungs();
             ladder.rows = made.rows;
             ladder.rungs = made.rungs;
+            ladder.rungsVisible = reveal;
             computeLadder(ladder.rows, ladder.rungs);
             updateLadderSlots();
-            $('ladder-token').hidden = true;
+            drawLadder();
+        }
+
+        function shuffleLadder() {
+            if (ladder.running) return;
+            resetLadder({ reveal: true });
+        }
+
+        function revealLadder() {
+            if (ladder.running) return;
+            if (!validateLadderPrizes()) return;
+            ladder.rungsVisible = true;
+            clearLadderResults();
             drawLadder();
         }
 
@@ -1781,15 +1917,17 @@
                 ctx.stroke();
             }
 
-            ladder.rungs.forEach(r => {
-                const y = m.top + (r.row + .5) * m.gapY;
-                const x1 = ladderX(m, r.col);
-                const x2 = ladderX(m, r.col + 1);
-                ctx.beginPath();
-                ctx.moveTo(x1, y);
-                ctx.lineTo(x2, y);
-                ctx.stroke();
-            });
+            if (ladder.rungsVisible || path) {
+                ladder.rungs.forEach(r => {
+                    const y = m.top + (r.row + .5) * m.gapY;
+                    const x1 = ladderX(m, r.col);
+                    const x2 = ladderX(m, r.col + 1);
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y);
+                    ctx.lineTo(x2, y);
+                    ctx.stroke();
+                });
+            }
 
             if (!path) return;
             ctx.strokeStyle = '#7fb83f';
@@ -1804,21 +1942,41 @@
 
         function pathToPoints(path, width, height) {
             const m = ladderMetrics(width, height);
-            const points = [];
-            path.forEach((p, i) => {
-                if (i === 0) points.push({ x: ladderX(m, p.col), y: m.top });
-                const prev = path[i - 1];
-                const y = i === path.length - 1 ? m.bottom : m.top + (p.row + .5) * m.gapY;
-                if (prev) {
-                    points.push({ x: ladderX(m, prev.col), y });
-                    if (prev.col !== p.col) points.push({ x: ladderX(m, p.col), y });
-                }
+            return path.map(p => {
+                let y = m.top;
+                if (p.row >= ladder.rows) y = m.bottom;
+                else if (p.row >= 0) y = m.top + (p.row + .5) * m.gapY;
+                return { x: ladderX(m, p.col), y };
             });
-            return points;
+        }
+
+        let toastTimer = null;
+        function showGameToast(message) {
+            const toast = $('game-toast');
+            if (!toast) return;
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+
+        function validateLadderPrizes() {
+            const prizes = visiblePrizes();
+            const blankIndex = prizes.findIndex(prize => !String(prize || '').trim());
+            if (blankIndex === -1) return true;
+            showGameToast('하단 결과칸을 모두 입력해주세요');
+            const blankCard = document.querySelector(`#ladder-bottom .slot-card[data-index="${blankIndex}"]`);
+            if (blankCard) {
+                blankCard.focus();
+                requestAnimationFrame(() => blankCard.scrollIntoView({ block: 'nearest', inline: 'center' }));
+            }
+            return false;
         }
 
         async function runLadder(index = 0) {
             if (ladder.running || !ladder.paths[index]) return;
+            if (!validateLadderPrizes()) return;
+            if (!ladder.rungsVisible) ladder.rungsVisible = true;
             ladder.running = true;
             const path = ladder.paths[index];
             drawLadder(path);
@@ -1831,10 +1989,9 @@
                 .map(p => ({
                     x: canvasRect.left - wrapRect.left + p.x,
                     y: canvasRect.top - wrapRect.top + p.y,
-                }));
+            }));
             await moveLadderToken(token, points);
             ladder.running = false;
-            showLadderResults();
         }
 
         function moveLadderToken(token, points) {
@@ -1899,7 +2056,20 @@
         function changeRouletteCount(delta) {
             if (roulette.spinning) return;
             roulette.count = Math.max(2, Math.min(12, roulette.count + delta));
+            clearRouletteResults();
             updateRoulette();
+        }
+
+        function clearRouletteResults() {
+            roulette.rotation = 0;
+            roulette.history = [];
+            $('roulette-canvas').style.transitionDuration = '0s';
+            $('roulette-canvas').style.transform = 'rotate(0deg)';
+            requestAnimationFrame(() => { $('roulette-canvas').style.transitionDuration = ''; });
+            $('winner-name').textContent = '대기 중';
+            $('winner-img').src = ASSETS[2];
+            $('history').innerHTML = '';
+            $('wheel-center-img').src = ASSETS[1];
         }
 
         function visibleRouletteNames() {
@@ -1923,9 +2093,9 @@
                 ctx.moveTo(center, center);
                 ctx.arc(center, center, radius, start, end);
                 ctx.closePath();
-                ctx.fillStyle = colors[i % colors.length];
+                ctx.fillStyle = rouletteColors[i % rouletteColors.length];
                 ctx.fill();
-                ctx.strokeStyle = 'rgba(255,255,255,.78)';
+                ctx.strokeStyle = 'rgba(255,255,255,.9)';
                 ctx.lineWidth = 6;
                 ctx.stroke();
 
@@ -1936,8 +2106,8 @@
                 ctx.textBaseline = 'middle';
                 ctx.fillStyle = '#fff';
                 ctx.font = names.length > 8 ? '800 26px Noto Sans KR, sans-serif' : '900 32px Noto Sans KR, sans-serif';
-                ctx.shadowColor = 'rgba(0,0,0,.22)';
-                ctx.shadowBlur = 3;
+                ctx.shadowColor = 'rgba(46,65,34,.2)';
+                ctx.shadowBlur = 2;
                 const label = name.length > 8 ? name.slice(0, 7) + '…' : name;
                 ctx.fillText(label, radius - 30, 0);
                 ctx.restore();
@@ -1945,9 +2115,13 @@
 
             ctx.beginPath();
             ctx.arc(center, center, radius, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(42,47,41,.16)';
+            ctx.strokeStyle = 'rgba(127,184,63,.26)';
             ctx.lineWidth = 12;
             ctx.stroke();
+        }
+
+        function normalizeDegrees(deg) {
+            return ((deg % 360) + 360) % 360;
         }
 
         function spinRoulette() {
@@ -1961,7 +2135,15 @@
             const sliceDeg = 360 / names.length;
             const target = winnerIndex * sliceDeg + sliceDeg / 2;
             const turns = 5 + Math.floor(Math.random() * 3);
-            roulette.rotation += turns * 360 + (360 - target) + (Math.random() - .5) * Math.min(10, sliceDeg * .45);
+            const nearEdge = Math.random() < .42;
+            const maxJitter = sliceDeg * (nearEdge ? .43 : .28);
+            const minJitter = nearEdge ? sliceDeg * .26 : 0;
+            const jitterDirection = Math.random() < .5 ? -1 : 1;
+            const jitter = jitterDirection * (minJitter + Math.random() * (maxJitter - minJitter));
+            const targetRotation = normalizeDegrees(360 - target + jitter);
+            const currentRotation = normalizeDegrees(roulette.rotation);
+            const delta = normalizeDegrees(targetRotation - currentRotation);
+            roulette.rotation += turns * 360 + delta;
             $('roulette-canvas').style.transform = `rotate(${roulette.rotation}deg)`;
             $('wheel-center-img').src = ASSETS[(winnerIndex + 2) % ASSETS.length];
             setTimeout(() => {
@@ -1978,15 +2160,8 @@
         }
 
         function resetRoulette() {
-            roulette.rotation = 0;
-            roulette.history = [];
-            $('roulette-canvas').style.transitionDuration = '0s';
-            $('roulette-canvas').style.transform = 'rotate(0deg)';
-            requestAnimationFrame(() => { $('roulette-canvas').style.transitionDuration = ''; });
+            clearRouletteResults();
             document.querySelector('.wheel-center').disabled = false;
-            $('winner-name').textContent = '대기 중';
-            $('winner-img').src = ASSETS[2];
-            $('history').innerHTML = '';
             drawRoulette();
         }
 
@@ -2007,7 +2182,43 @@
         function changeGachaCount(delta) {
             if (gacha.drawing) return;
             gacha.count = Math.max(2, Math.min(16, gacha.count + delta));
+            clearGachaResults();
             updateGacha();
+        }
+
+        function randomBetween(min, max) {
+            return min + Math.random() * (max - min);
+        }
+
+        function makeGachaCapsuleLayout(count) {
+            const placed = [];
+            const compactPile = count <= 4;
+            for (let i = 0; i < count; i++) {
+                const layer = Math.floor(i / 4);
+                let left = 50;
+                let top = 60;
+                for (let attempt = 0; attempt < 24; attempt++) {
+                    const lowerPile = Math.random() < (compactPile ? .92 : .72);
+                    const layerTop = lowerPile
+                        ? randomBetween(compactPile ? 52 : 54, 70) - layer * randomBetween(4, 7)
+                        : randomBetween(compactPile ? 42 : 30, 56) - layer * randomBetween(2, 4);
+                    left = randomBetween(10, 78);
+                    top = Math.max(14, Math.min(70, layerTop + randomBetween(-4, 4)));
+                    const tooClose = placed.some(item => {
+                        const dx = item.left - left;
+                        const dy = item.top - top;
+                        return Math.hypot(dx, dy) < 12;
+                    });
+                    if (!tooClose || attempt > 16) break;
+                }
+                placed.push({
+                    left,
+                    top,
+                    rotate: randomBetween(-24, 24),
+                    direction: Math.random() < .5 ? -1 : 1,
+                });
+            }
+            return placed.sort((a, b) => a.top - b.top);
         }
 
         function renderGacha() {
@@ -2027,29 +2238,168 @@
                 'rgba(221,128,70,.72)',
                 'rgba(190,93,183,.72)'
             ];
+            const layout = makeGachaCapsuleLayout(names.length);
             bowl.innerHTML = names.map((name, i) => {
-                const left = 8 + ((i * 16) % 74);
-                const top = 12 + ((i * 27) % 58);
-                const rotate = ((i * 41) % 42) - 21;
+                const spot = layout[i];
+                const direction = spot.direction;
+                const mixX1 = direction * randomBetween(74, 154);
+                const mixY1 = -randomBetween(54, 132);
+                const mixX2 = direction * -randomBetween(88, 176);
+                const mixY2 = randomBetween(46, 116);
+                const mixX3 = direction * randomBetween(96, 190);
+                const mixY3 = randomBetween(-82, 82);
+                const mixRotate = randomBetween(220, 430);
+                const delay = randomBetween(0, .22);
                 const color = capsuleColors[i % capsuleColors.length];
-                return `<div class="gacha-ball" title="${escapeHtml(name)}" style="left:${left}%;top:${top}%;--cap:${color};transform:rotate(${rotate}deg)">
+                return `<div class="gacha-ball" title="${escapeHtml(name)}" style="left:${spot.left.toFixed(1)}%;top:${spot.top.toFixed(1)}%;--cap:${color};--rest-rotate:${spot.rotate.toFixed(1)}deg;--mix-x1:${mixX1.toFixed(1)}px;--mix-y1:${mixY1.toFixed(1)}px;--mix-x2:${mixX2.toFixed(1)}px;--mix-y2:${mixY2.toFixed(1)}px;--mix-x3:${mixX3.toFixed(1)}px;--mix-y3:${mixY3.toFixed(1)}px;--mix-rotate:${mixRotate.toFixed(1)}deg;--shake-delay:${delay.toFixed(2)}s">
                     <img src="${ASSETS[i % ASSETS.length]}" alt="">
                 </div>`;
             }).join('');
         }
 
-        function pullGachaLever() {
+        function makeGachaBounceMotion(ball, bowl, index, total) {
+            const leftMin = 8;
+            const leftMax = 78;
+            const topMin = 14;
+            const topMax = 70;
+            const bowlRect = bowl.getBoundingClientRect();
+            const startLeft = Number.parseFloat(ball.style.left) || randomBetween(12, 76);
+            const startTop = Number.parseFloat(ball.style.top) || randomBetween(52, 70);
+            let left = startLeft;
+            let top = startTop;
+            let rotate = Number.parseFloat(ball.style.getPropertyValue('--rest-rotate')) || 0;
+            let vx = (Math.random() < .5 ? -1 : 1) * randomBetween(22, 42);
+            let vy = -randomBetween(28, 48);
+            const frames = [];
+            const steps = 38;
+            const gravity = randomBetween(9, 13);
+
+            for (let step = 0; step < steps; step++) {
+                if (step > 0) {
+                    left += vx * .16;
+                    top += vy * .16;
+                    vy += gravity * .16;
+                    rotate += vx * .8 + vy * .28;
+
+                    if (left < leftMin || left > leftMax) {
+                        left = Math.max(leftMin, Math.min(leftMax, left));
+                        vx *= -randomBetween(.68, .84);
+                        rotate += vx * 1.6;
+                    }
+                    if (top < topMin) {
+                        top = topMin;
+                        vy = Math.abs(vy) * randomBetween(.62, .78);
+                    }
+                    if (top > topMax) {
+                        top = topMax;
+                        vy = -Math.abs(vy) * randomBetween(.48, .66);
+                        vx *= randomBetween(.82, .94);
+                    }
+                }
+
+                const offset = (step / (steps - 1)) * .78;
+                const x = (left - startLeft) * bowlRect.width / 100;
+                const y = (top - startTop) * bowlRect.height / 100;
+                frames.push({
+                    transform: `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${rotate.toFixed(1)}deg)`,
+                    offset,
+                    easing: 'linear'
+                });
+            }
+
+            let finalLeft;
+            let finalTop;
+            const settleStyle = Math.random();
+            if (settleStyle < .48) {
+                const spreadSlots = [randomBetween(leftMin, 28), randomBetween(30, 56), randomBetween(58, leftMax)];
+                finalLeft = spreadSlots[index % spreadSlots.length] + randomBetween(-6, 6);
+            } else if (settleStyle < .78) {
+                finalLeft = Math.random() < .5 ? randomBetween(leftMin, 24) : randomBetween(62, leftMax);
+            } else {
+                finalLeft = randomBetween(18, 68);
+            }
+            if (total <= 4 && settleStyle < .58) {
+                finalLeft = randomBetween(leftMin, leftMax);
+            }
+            const pileLiftChance = Math.random();
+            const pileLift = pileLiftChance < .78
+                ? randomBetween(0, 5)
+                : randomBetween(5, total > 9 ? 11 : 8);
+            finalTop = randomBetween(66, topMax) - pileLift;
+            finalLeft = Math.max(leftMin, Math.min(leftMax, finalLeft + randomBetween(-4, 4)));
+            finalTop = Math.max(58, Math.min(topMax, finalTop + randomBetween(-2.5, 2.5)));
+            const finalRotate = rotate + randomBetween(-28, 28);
+            const settleStartLeft = left;
+            const settleStartTop = top;
+            const settleStartRotate = rotate;
+            const settlePoints = [
+                { offset: .84, ease: 'linear', mix: .38, lift: -3 },
+                { offset: .9, ease: 'linear', mix: .66, lift: 1.5 },
+                { offset: .96, ease: 'linear', mix: .9, lift: -1 },
+                { offset: 1, ease: 'linear', mix: 1, lift: 0 }
+            ];
+            settlePoints.forEach(point => {
+                const settledLeft = settleStartLeft + (finalLeft - settleStartLeft) * point.mix;
+                const settledTop = settleStartTop + (finalTop - settleStartTop) * point.mix + point.lift;
+                const settledRotate = settleStartRotate + (finalRotate - settleStartRotate) * point.mix;
+                const x = (settledLeft - startLeft) * bowlRect.width / 100;
+                const y = (settledTop - startTop) * bowlRect.height / 100;
+                frames.push({
+                    transform: `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${settledRotate.toFixed(1)}deg)`,
+                    offset: point.offset,
+                    easing: point.ease
+                });
+            });
+            return {
+                frames,
+                finalLeft: `${finalLeft.toFixed(1)}%`,
+                finalTop: `${finalTop.toFixed(1)}%`,
+                finalRotate: `${finalRotate.toFixed(1)}deg`
+            };
+        }
+
+        function animateGachaCapsules(bowl) {
+            const balls = Array.from(bowl?.querySelectorAll('.gacha-ball') || []);
+            if (!balls.length) return Promise.resolve();
+            bowl.classList.add('shuffling');
+            const animations = balls.map((ball, index) => {
+                const motion = makeGachaBounceMotion(ball, bowl, index, balls.length);
+                const animation = ball.animate(motion.frames, {
+                    duration: randomBetween(1900, 2350),
+                    delay: randomBetween(0, 130),
+                    easing: 'linear',
+                    fill: 'forwards'
+                });
+                return animation.finished
+                    .catch(() => {})
+                    .then(() => {
+                        ball.style.left = motion.finalLeft;
+                        ball.style.top = motion.finalTop;
+                        ball.style.setProperty('--rest-rotate', motion.finalRotate);
+                        ball.style.transform = '';
+                        animation.cancel();
+                    });
+            });
+            return Promise.all(animations).finally(() => {
+                bowl.classList.remove('shuffling');
+            });
+        }
+
+        async function pullGachaLever() {
             if (gacha.drawing) return;
             const names = visibleGachaNames();
             if (names.length < 2) return;
             closeGachaPrize();
             gacha.drawing = true;
             const lever = $('gacha-btn');
+            const bowl = $('gacha-bowl');
             lever.disabled = true;
             lever.classList.remove('pulling');
             void lever.offsetWidth;
             lever.classList.add('pulling');
-            setTimeout(drawGacha, 520);
+            await animateGachaCapsules(bowl);
+            await new Promise(resolve => setTimeout(resolve, 520));
+            drawGacha();
         }
 
         function drawGacha() {
@@ -2069,6 +2419,7 @@
                 'rgba(190,93,183,.72)'
             ];
             const color = capsuleColors[winnerIndex % capsuleColors.length];
+            $('gacha-bowl')?.classList.remove('shuffling');
             dock.innerHTML = `<div class="gacha-ball pick" style="--cap:${color}"><img src="${asset}" alt=""></div>`;
             setTimeout(() => {
                 $('gacha-result-img').src = asset;
@@ -2092,7 +2443,7 @@
             if (modal) modal.hidden = true;
         }
 
-        function resetGacha() {
+        function clearGachaResults() {
             gacha.history = [];
             $('gacha-winner').textContent = '대기 중';
             $('gacha-result-img').src = ASSETS[3];
@@ -2101,6 +2452,11 @@
             const statusLast = $('gacha-status-last');
             if (statusLast) statusLast.textContent = '-';
             $('gacha-dock').innerHTML = '<span class="winner-label">나오는곳</span>';
+            $('gacha-bowl')?.classList.remove('shuffling');
+        }
+
+        function resetGacha() {
+            clearGachaResults();
             renderGacha();
         }
 
@@ -2109,26 +2465,29 @@
             $('settings-title').textContent = mode === 'gacha' ? '뽑기 후보 설정' : (mode === 'ladder' ? '사다리 설정' : '룰렛 설정');
             $('name-input').value = (mode === 'gacha' ? gacha.names : (mode === 'ladder' ? ladder.names : roulette.names)).join('\n');
             $('prize-field').style.display = mode === 'ladder' ? '' : 'none';
-            $('prize-input').value = ladder.prizes.join('\n');
+            $('prize-input').value = visiblePrizes().join('\n');
             $('settings-modal').classList.add('open');
         }
 
         function applySettings() {
             const names = cleanLines($('name-input').value);
             if (settingsMode === 'ladder') {
-                const prizes = cleanLines($('prize-input').value);
+                const prizes = cleanPrizeLines($('prize-input').value);
                 if (names.length >= 2) ladder.names = names;
-                if (prizes.length >= 2) ladder.prizes = prizes;
-                ladder.count = Math.max(2, Math.min(8, Math.min(ladder.names.length, ladder.prizes.length)));
+                const nextCount = Math.max(2, Math.min(8, ladder.names.length));
+                ladder.prizes = Array.from({ length: nextCount }, (_, i) => prizes[i] ?? ladder.prizes[i] ?? '');
+                ladder.count = nextCount;
                 resetLadder();
             } else {
                 if (settingsMode === 'gacha') {
                     if (names.length >= 2) gacha.names = names;
                     gacha.count = Math.max(2, Math.min(16, gacha.names.length));
+                    clearGachaResults();
                     updateGacha();
                 } else {
                     if (names.length >= 2) roulette.names = names;
                     roulette.count = Math.max(2, Math.min(12, roulette.names.length));
+                    clearRouletteResults();
                     updateRoulette();
                 }
             }
@@ -2145,7 +2504,7 @@
 
         document.addEventListener('keydown', event => {
             if (event.key === 'Escape') closeModal();
-            if (event.key === 'Enter' && document.querySelector('#ladder-panel.active') && !document.querySelector('.modal-backdrop.open')) runLadder(0);
+            if (event.key === 'Enter' && document.querySelector('#ladder-panel.active') && !document.querySelector('.modal-backdrop.open')) revealLadder();
         });
 
         resetLadder();

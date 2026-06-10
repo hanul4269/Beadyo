@@ -1685,7 +1685,7 @@ function dayEventCardHtml(ev, dateStr) {
             ${links.length ? `<div class="day-link-row">${links.join('')}</div>` : ''}
         </div>
         ${state.isEditor ? `<div class="day-event-actions">
-            <button class="day-edit-btn" onclick="openEditModal('${esc(ev.id)}')">수정</button>
+            <button class="day-edit-btn" onclick="openEditModal('${esc(ev.id)}', { type: 'day', date: '${esc(dateStr)}' })">수정</button>
             <button class="day-delete-btn" onclick="event.stopPropagation();deleteEvent('${esc(ev.id)}')">삭제</button>
         </div>` : ''}
     </div>`;
@@ -2211,7 +2211,10 @@ function openAddModalWithType(typeKey) {
     openAddModal(toDateStr(today.getFullYear(), today.getMonth(), today.getDate()), typeKey);
 }
 
+let _editReturnContext = null;
+
 function openAddModal(dateStr, type = 'chat') {
+    _editReturnContext = null;
     populateTypeSelect();
     document.getElementById('editModalTitle').textContent = '일정 추가';
     document.getElementById('editId').value        = '';
@@ -2229,12 +2232,27 @@ function openAddModal(dateStr, type = 'chat') {
     document.getElementById('editModal').classList.add('open');
 }
 
-function openEditModal(id) {
+function openEditModal(id, returnContext = null) {
+    _editReturnContext = returnContext || { type: 'event', id };
     closeViewModal();
     const ev = state.events.find(e => e.id === id);
-    if (!ev) return;
+    if (!ev) {
+        _editReturnContext = null;
+        return;
+    }
     fillEditForm(ev, '일정 수정', ev.id);
     document.getElementById('editModal').classList.add('open');
+}
+
+function reopenEditReturnContext(context) {
+    if (!context) return;
+    if (context.type === 'day' && context.date) {
+        openDayViewModal(context.date);
+        return;
+    }
+    if (context.type === 'event' && context.id && state.events.some(e => e.id === context.id)) {
+        openViewModal(context.id);
+    }
 }
 
 function fillEditForm(ev, title, id = '') {
@@ -2253,7 +2271,13 @@ function fillEditForm(ev, title, id = '') {
     document.getElementById('editMemo').value      = ev.memo ?? '';
     document.getElementById('editIsRest').checked  = ev.is_rest ?? false;
 }
-function closeEditModal() { document.getElementById('editModal').classList.remove('open'); }
+function closeEditModal(options = {}) {
+    const { reopenView = true } = options;
+    document.getElementById('editModal').classList.remove('open');
+    const returnContext = _editReturnContext;
+    _editReturnContext = null;
+    if (reopenView) reopenEditReturnContext(returnContext);
+}
 
 function copyEvent(id) {
     const ev = state.events.find(e => e.id === id);
@@ -2331,8 +2355,10 @@ async function saveEvent() {
 
     if (error) { showToast('저장 실패: ' + error.message); return; }
     showToast(id ? '수정되었습니다' : '추가되었습니다');
-    closeEditModal();
+    const returnContext = id ? _editReturnContext : null;
+    closeEditModal({ reopenView: false });
     await loadEvents();
+    reopenEditReturnContext(returnContext);
 }
 
 async function deleteEvent(id) {

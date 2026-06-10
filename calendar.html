@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
-    <link rel="preload" href="app.js" as="script">
-    <script defer src="app.js"></script>
+    <link rel="preload" href="app.js?v=calendar-day-return-20260610" as="script">
+    <script defer src="app.js?v=calendar-day-return-20260610"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet"></noscript>
     <style>
@@ -1635,36 +1635,26 @@
 
         /* ── 그림판 모달 ── */
         #paintModal {
-            align-items: flex-start;
-            overflow-y: auto;
+            align-items: center;
+            overflow: hidden;
             padding: 8px;
         }
         #paintModal .modal {
             width: min(1760px, calc(100vw - 16px));
             max-width: none;
-            max-height: none;
+            height: calc(100dvh - 16px);
+            max-height: calc(100dvh - 16px);
+            display: grid;
+            grid-template-rows: auto minmax(0, 1fr);
             padding: 18px;
             overflow: hidden;
-        }
-        .paint-modal-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 12px;
-            padding-right: 36px;
-        }
-        .paint-modal-title {
-            font-size: 20px;
-            font-weight: 900;
-            color: var(--text);
         }
         .paint-toolbar {
             display: flex;
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
-            padding: 10px;
+            padding: 10px 44px 10px 10px;
             border: 1px solid rgba(139,195,74,0.22);
             border-radius: 16px;
             background: #f8fcf1;
@@ -1734,8 +1724,11 @@
             font-weight: 800;
         }
         .paint-canvas-wrap {
-            width: 100%;
+            width: auto;
+            height: 100%;
+            max-width: 100%;
             aspect-ratio: 16 / 9;
+            justify-self: center;
             border-radius: 18px;
             overflow: hidden;
             border: 1px solid rgba(139,195,74,0.26);
@@ -2346,9 +2339,6 @@
 <div class="modal-overlay" id="paintModal" onmousedown="if(event.target===this)closePaintModal()">
     <div class="modal">
         <button class="modal-close" onclick="closePaintModal()">×</button>
-        <div class="paint-modal-head">
-            <div class="paint-modal-title">그림판</div>
-        </div>
         <div class="paint-toolbar" aria-label="그림판 도구">
             <div class="paint-tool-group">
                 <button type="button" class="paint-tool-btn active" id="paintPenBtn" onclick="setPaintTool('pen')" title="펜" aria-label="펜">
