@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL = 'riosniper12@gmail.com';
-const FALLBACK_ASSET_VERSION = 'ladder-start-reveal-only-20260610';
+const FALLBACK_ASSET_VERSION = 'perf-audit-20260611';
 const IS_LOCAL_HOST = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
 const APP_ASSET_VERSION = (() => {
     try {
@@ -24,10 +24,10 @@ function withFrameAssetVersion(src, assetVersion = APP_ASSET_VERSION) {
 const TABS = [
     { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
-    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'design-20260604' },
-    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'design-20260604' },
-    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'design-20260604' },
-    { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'ladder-start-reveal-only-20260610' },
+    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'perf-audit-20260611' },
+    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'perf-audit-20260611' },
+    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'perf-audit-20260611' },
+    { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'perf-audit-20260611' },
 ];
 
 const GAME_TAB_INDEX = 5;
@@ -280,7 +280,11 @@ async function fetchWithTimeout(url, ms) {
     }
 }
 
-async function checkLiveStatus() {
+let _lastLiveStatusCheckAt = 0;
+async function checkLiveStatus(force = false) {
+    const now = Date.now();
+    if (!force && now - _lastLiveStatusCheckAt < 20000) return;
+    _lastLiveStatusCheckAt = now;
     const badge = document.getElementById('live-badge');
 
     // 1) 실시간: SOOP chapi API 직접 호출 (Deno 프록시 경유)
@@ -309,11 +313,11 @@ async function checkLiveStatus() {
     }
 }
 
-checkLiveStatus();
+checkLiveStatus(true);
 setTimeout(checkLiveStatus, 3000);
 setInterval(checkLiveStatus, 10 * 60 * 1000);
 document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') checkLiveStatus();
+    if (document.visibilityState === 'visible') checkLiveStatus(true);
 });
 
 // ── 로그인 모달 ──

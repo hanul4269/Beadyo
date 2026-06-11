@@ -293,10 +293,11 @@
         }
 
         .slot-card {
-            display: grid;
-            place-items: center;
+            --slot-card-height: 48px;
+            display: block;
+            box-sizing: border-box;
             width: min(132px, 100%);
-            min-height: 48px;
+            height: var(--slot-card-height);
             padding: 0 12px;
             border: 1px solid rgba(34,39,32,.1);
             border-radius: 8px;
@@ -304,6 +305,8 @@
             color: #5b5f58;
             font-size: 18px;
             font-weight: 900;
+            line-height: calc(var(--slot-card-height) - 2px);
+            text-align: center;
             box-shadow: 0 4px 12px rgba(42,47,41,.06);
             overflow: hidden;
             text-overflow: ellipsis;
@@ -369,7 +372,6 @@
         }
 
         .bottom .slot-card {
-            min-height: 48px;
             color: var(--accent-dark);
         }
 
@@ -1249,7 +1251,7 @@
             }
 
             .slot-card {
-                min-height: 42px;
+                --slot-card-height: 42px;
                 font-size: 14px;
             }
 
@@ -1571,7 +1573,7 @@
         <section class="game-panel" id="pinball-panel">
             <div class="play-stage">
                 <div class="marble-roulette-frame">
-                    <iframe src="marble-roulette/index.html" title="Marble Roulette"></iframe>
+                    <iframe data-src="marble-roulette/index.html" title="Marble Roulette" loading="lazy"></iframe>
                 </div>
             </div>
         </section>
@@ -1621,8 +1623,9 @@
         const colors = ['#7fb83f', '#5b8fc7', '#c69c3a', '#54a99f', '#9a7bc2', '#8ea65d', '#6f776b', '#9aa26f'];
         const rouletteColors = ['#a9d96b', '#8cc7ee', '#f4ce73', '#8fdbc9', '#c9a7e8', '#f2a58f', '#b9dc86', '#95d0a8'];
         const defaultNames = ['구북이', '떼구르르', '비즈', '요정', '방울', '반짝', '하모니', '마블'];
+        const defaultLadderNames = Array(8).fill('');
         const defaultPrizes = Array(8).fill('');
-        const ladder = { count: 4, names: [...defaultNames], prizes: [...defaultPrizes], rungs: [], mapping: [], paths: [], running: false, rungsVisible: false };
+        const ladder = { count: 4, names: [...defaultLadderNames], prizes: [...defaultPrizes], rungs: [], mapping: [], paths: [], running: false, rungsVisible: false };
         const roulette = { count: 4, names: [...defaultNames], rotation: 0, history: [], spinning: false };
         const gacha = { count: 8, names: [...defaultNames], history: [], drawing: false };
         let settingsMode = 'ladder';
@@ -1655,6 +1658,7 @@
         function switchMode(mode) {
             document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
             document.querySelectorAll('.game-panel').forEach(panel => panel.classList.toggle('active', panel.id === `${mode}-panel`));
+            if (mode === 'pinball') loadPinballFrame();
             requestAnimationFrame(() => {
                 if (mode === 'ladder') drawLadder();
                 if (mode === 'roulette') drawRoulette();
@@ -1662,8 +1666,15 @@
             });
         }
 
+        function loadPinballFrame() {
+            const frame = document.querySelector('#pinball-panel iframe[data-src]');
+            if (!frame) return;
+            frame.src = frame.dataset.src;
+            frame.removeAttribute('data-src');
+        }
+
         function visibleNames() {
-            ensureListSize(ladder.names, defaultNames);
+            ensureListSize(ladder.names, defaultLadderNames);
             return ladder.names.slice(0, ladder.count);
         }
 
@@ -1710,7 +1721,7 @@
             const target = event.currentTarget;
             const index = Number(target.dataset.index);
             const value = target.textContent.trim();
-            if (target.dataset.kind === 'name') ladder.names[index] = value || defaultNames[index % defaultNames.length];
+            if (target.dataset.kind === 'name') ladder.names[index] = value;
             if (target.dataset.kind === 'prize') ladder.prizes[index] = value;
         }
 
@@ -1718,8 +1729,7 @@
             const target = event.currentTarget;
             const index = Number(target.dataset.index);
             const isName = target.dataset.kind === 'name';
-            const fallback = isName ? defaultNames[index % defaultNames.length] : '';
-            const value = target.textContent.trim() || fallback;
+            const value = target.textContent.trim();
             target.textContent = value;
             if (isName) ladder.names[index] = value;
             else ladder.prizes[index] = value;
@@ -1858,6 +1868,7 @@
 
         function revealLadder() {
             if (ladder.running) return;
+            if (!validateLadderNames()) return;
             if (!validateLadderPrizes()) return;
             ladder.rungsVisible = true;
             clearLadderResults();
@@ -1973,8 +1984,22 @@
             return false;
         }
 
+        function validateLadderNames() {
+            const names = visibleNames();
+            const blankIndex = names.findIndex(name => !String(name || '').trim());
+            if (blankIndex === -1) return true;
+            showGameToast('참가자 이름을 모두 입력해주세요');
+            const blankCard = document.querySelector(`#ladder-top .slot-card[data-index="${blankIndex}"]`);
+            if (blankCard) {
+                blankCard.focus();
+                requestAnimationFrame(() => blankCard.scrollIntoView({ block: 'nearest', inline: 'center' }));
+            }
+            return false;
+        }
+
         async function runLadder(index = 0) {
             if (ladder.running || !ladder.paths[index]) return;
+            if (!validateLadderNames()) return;
             if (!validateLadderPrizes()) return;
             if (!ladder.rungsVisible) ladder.rungsVisible = true;
             ladder.running = true;
@@ -2039,6 +2064,8 @@
         }
 
         function showLadderResults() {
+            if (!validateLadderNames()) return;
+            if (!validateLadderPrizes()) return;
             const names = visibleNames();
             const prizes = visiblePrizes();
             $('result-list').innerHTML = names.map((name, i) => {
@@ -2463,7 +2490,7 @@
         function openSettings(mode) {
             settingsMode = mode;
             $('settings-title').textContent = mode === 'gacha' ? '뽑기 후보 설정' : (mode === 'ladder' ? '사다리 설정' : '룰렛 설정');
-            $('name-input').value = (mode === 'gacha' ? gacha.names : (mode === 'ladder' ? ladder.names : roulette.names)).join('\n');
+            $('name-input').value = (mode === 'gacha' ? visibleGachaNames() : (mode === 'ladder' ? visibleNames() : visibleRouletteNames())).join('\n');
             $('prize-field').style.display = mode === 'ladder' ? '' : 'none';
             $('prize-input').value = visiblePrizes().join('\n');
             $('settings-modal').classList.add('open');
@@ -2473,10 +2500,14 @@
             const names = cleanLines($('name-input').value);
             if (settingsMode === 'ladder') {
                 const prizes = cleanPrizeLines($('prize-input').value);
-                if (names.length >= 2) ladder.names = names;
-                const nextCount = Math.max(2, Math.min(8, ladder.names.length));
+                if (names.length >= 2) {
+                    ladder.names = names;
+                    ladder.count = Math.max(2, Math.min(8, ladder.names.length));
+                } else {
+                    ensureListSize(ladder.names, defaultLadderNames);
+                }
+                const nextCount = ladder.count;
                 ladder.prizes = Array.from({ length: nextCount }, (_, i) => prizes[i] ?? ladder.prizes[i] ?? '');
-                ladder.count = nextCount;
                 resetLadder();
             } else {
                 if (settingsMode === 'gacha') {

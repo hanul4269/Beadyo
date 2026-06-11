@@ -1788,6 +1788,7 @@ function closeViewModal() { document.getElementById('viewModal').classList.remov
 
 async function openUpModal(options = {}) {
     const startupOnly = options.startupOnly === true;
+    const preloadedEvents = Array.isArray(options.sbEvents) ? options.sbEvents : null;
     _upModalIsAutoPrompt = options.auto === true;
     document.getElementById('upModal').classList.add('open');
     document.getElementById('upModalContent').innerHTML = '<div class="up-empty">불러오는 중...</div>';
@@ -1807,11 +1808,15 @@ async function openUpModal(options = {}) {
 
     // Supabase에서 현재 활성 이벤트 목록 직접 조회
     let sbEvents = [];
-    try {
-        await _ensureDb();
-        const { data } = await db.from('up_events').select('*').eq('is_active', true).order('sort_order');
-        sbEvents = (data || []).filter(e => !startupOnly || isUpStartupEvent(e));
-    } catch {}
+    if (preloadedEvents) {
+        sbEvents = preloadedEvents.filter(e => !startupOnly || isUpStartupEvent(e));
+    } else {
+        try {
+            await _ensureDb();
+            const { data } = await db.from('up_events').select('*').eq('is_active', true).order('sort_order');
+            sbEvents = (data || []).filter(e => !startupOnly || isUpStartupEvent(e));
+        } catch {}
+    }
 
     // Supabase 목록 기준으로 up.json 캐시 랭킹 병합
     const cachedMap = {};
@@ -1852,8 +1857,9 @@ async function maybeOpenUpModalOnStart() {
         await _ensureDb();
         const { data, error } = await db.from('up_events').select('*').eq('is_active', true).order('sort_order');
         if (error) return;
-        if ((data || []).some(isUpStartupEvent)) {
-            openUpModal({ auto: true, startupOnly: true });
+        const events = data || [];
+        if (events.some(isUpStartupEvent)) {
+            openUpModal({ auto: true, startupOnly: true, sbEvents: events });
         }
     } catch {}
 }

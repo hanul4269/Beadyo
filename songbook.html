@@ -1256,7 +1256,7 @@
     <!-- 검색창 (항상 표시) -->
     <div class="sb-search-row" id="sb-search-row" style="display:none">
         <div class="search-wrap">
-            <button id="random-btn" onclick="pickRandom()" title="랜덤 뽑기"><img src="random-mustache-2.png" alt="랜덤"></button>
+            <button id="random-btn" onclick="pickRandom()" title="랜덤 뽑기"><img src="random-mustache-small.png" alt="랜덤" width="72" height="72" decoding="async"></button>
             <button id="live-filter-btn" class="live-filter-btn" onclick="toggleLiveFilter()" style="display:none">상세검색</button>
             <div class="search-input-wrap">
                 <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -1775,7 +1775,7 @@ function renderWelcomeCard() {
     <div class="wc-card">
         <div class="wc-hero">
             <div class="wc-photo-panel">
-                <img src="songbook-char.png" alt="구슬요" class="wc-img">
+                <img src="songbook-char.png" alt="구슬요" class="wc-img" width="796" height="708" decoding="async">
             </div>
             <div class="wc-main">
                 <h1 class="wc-title">
@@ -1804,7 +1804,7 @@ function renderWelcomeCard() {
                             <textPath href="#randomSongArc" startOffset="50%" text-anchor="middle">RANDOM SONG</textPath>
                         </text>
                     </svg>
-                    <img src="random-mustache-2.png" alt="" class="wc-random-face">
+                    <img src="random-mustache-small.png" alt="" class="wc-random-face" width="142" height="142" decoding="async">
                 </button>
             </div>
         </div>
@@ -2616,9 +2616,22 @@ function songbookSaveErrorMessage(error) {
 
 // ── 초기화 ───────────────────────────────────────
 async function init() {
+    if (S.mainTab === 'live') {
+        applyInitialView();
+        deferWarmup(() => loadSongbook());
+        return;
+    }
     await loadSongbook();
-    loadLive(2026);
     applyInitialView();
+    deferWarmup(() => loadLive(2026));
+}
+
+function deferWarmup(task) {
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(task, { timeout: 3000 });
+    } else {
+        setTimeout(task, 1200);
+    }
 }
 
 function updateFab() {
