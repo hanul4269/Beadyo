@@ -979,7 +979,7 @@ function renderLegend() {
                 <span class="legend-add">+</span>
             </div>
         `).join('') +
-        `<div class="legend-sticker"><img src="stickers/s15.png" alt="대기 중"></div>`;
+        `<div class="legend-sticker"><img src="stickers/legend-thanks-hanul.png" alt="고마워요"></div>`;
 }
 
 function eventsForDate(dateStr) {
@@ -1086,6 +1086,15 @@ function renderCalendar() {
         const totalCells = Math.ceil((firstWd + daysInM) / 7) * 7;
         for (let d = 1; cells.length < totalCells; d++)
             cells.push({ day: d, dateStr: toDateStr(state.year, state.month + 1, d), other: true });
+    }
+
+    let otherMonthStickerDate = null;
+    if (state.viewMode === 'month') {
+        const firstCurrentIndex = cells.findIndex(cell => !cell.other);
+        const lastCurrentIndex = cells.reduce((last, cell, index) => cell.other ? last : index, -1);
+        const nextMonthFirst = cells.find((cell, index) => cell.other && index > lastCurrentIndex && cell.day === 1);
+        const prevMonthLast = cells[firstCurrentIndex - 1];
+        otherMonthStickerDate = nextMonthFirst?.dateStr || (prevMonthLast?.other ? prevMonthLast.dateStr : null);
     }
 
     document.getElementById('calGrid').innerHTML = cells.map(({ day, dateStr, other }, idx) => {
@@ -1209,6 +1218,9 @@ function renderCalendar() {
 
         const chipsClass = `chips-area${isSingle ? ' single' : ''}${isStableList ? ' stable-list' : ''}${isPacked ? ' packed' : ''}${isCompact ? ' compact' : ''}${isStableList ? ` count-${events.length}` : ''}`;
         const body = `<div class="${chipsClass}">${chipsHtml}</div>`;
+        const otherMonthSticker = other && dateStr === otherMonthStickerDate
+            ? `<div class="other-month-sticker"><img src="stickers/legend-thanks-hanul.png" alt="고마워요"></div>`
+            : '';
 
         const cellDropAttrs = !other && state.isEditor
             ? `ondragover="cellDragOver(event,'${dateStr}')" ondragleave="cellDragLeave(event)" ondrop="cellDrop(event,'${dateStr}')"` : '';
@@ -1221,6 +1233,7 @@ function renderCalendar() {
             ${holHtml}
             ${topRight}
             ${body}
+            ${otherMonthSticker}
         </div>`;
     }).join('');
     renderSecondaryViews();
