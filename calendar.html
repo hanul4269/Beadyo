@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
-    <link rel="preload" href="app.js?v=calendar-sooplive-com-20260611" as="script">
-    <script defer src="app.js?v=calendar-sooplive-com-20260611"></script>
+    <link rel="preload" href="app.js?v=up-highlight-popup-20260611" as="script">
+    <script defer src="app.js?v=up-highlight-popup-20260611"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet"></noscript>
     <style>
@@ -1178,6 +1178,13 @@
             flex: 1;
             min-width: 0;
         }
+        .up-event-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
         .up-goto-btn {
             display: inline-flex;
             align-items: center;
@@ -1192,6 +1199,11 @@
             white-space: nowrap;
             font-family: 'Noto Sans KR', sans-serif;
             flex-shrink: 0;
+        }
+        .up-goto-btn.secondary {
+            background: #fff;
+            color: var(--accent-dark);
+            border: 1.5px solid rgba(139,195,74,0.28);
         }
         .up-goto-btn:hover { opacity: 0.85; }
         .up-ranking-list {
@@ -1218,6 +1230,11 @@
             background: #fdf3e3;
             border-color: var(--accent);
         }
+        .up-rank-item.is-highlight {
+            background: #f6fbef;
+            border-color: rgba(139,195,74,0.72);
+            box-shadow: 0 8px 22px rgba(139,195,74,0.14);
+        }
         .up-rank-num {
             font-size: 16px;
             font-weight: 900;
@@ -1237,7 +1254,26 @@
             background: var(--border);
         }
         .up-rank-info { flex: 1; min-width: 0; }
-        .up-rank-name { font-size: 13px; font-weight: 700; color: var(--text); }
+        .up-rank-name {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            flex-wrap: wrap;
+        }
+        .up-rank-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 7px;
+            border-radius: 999px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 900;
+            line-height: 1.3;
+        }
         .up-rank-handle { font-size: 11px; color: var(--muted); }
         .up-rank-time { font-size: 11px; color: var(--muted); margin-top: 1px; }
         .up-rank-count {
@@ -1255,11 +1291,59 @@
             text-align: right;
             margin-top: 8px;
         }
+        .up-popup-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 7px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+        .up-popup-actions button {
+            border: 1.5px solid rgba(139,195,74,0.24);
+            background: #fff;
+            color: var(--accent-dark);
+            border-radius: 999px;
+            padding: 7px 12px;
+            font: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .up-popup-actions button:hover { background: var(--accent-light); }
         .up-empty {
             text-align: center;
             padding: 36px 0;
             color: var(--muted);
             font-size: 14px;
+        }
+        .up-startup-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--accent-dark);
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+        .up-startup-toggle input {
+            width: 15px;
+            height: 15px;
+            accent-color: var(--accent);
+        }
+        .up-form-check {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent-dark);
+            font-size: 13px;
+            font-weight: 800;
+        }
+        .up-form-check input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--accent);
         }
         /* ── 어드민 탭 ── */
         .admin-tabs {
@@ -1808,6 +1892,93 @@
         }
         .editor-add-row button:hover { background: var(--accent-dark); }
 
+        .up-event-row {
+            align-items: stretch;
+            gap: 12px;
+        }
+        .up-event-main {
+            flex: 1;
+            min-width: 0;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 8px;
+        }
+        .up-event-row-title {
+            font-weight: 900;
+            color: var(--text);
+            white-space: nowrap;
+        }
+        .up-event-row-subtitle {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--muted);
+            font-size: 12px;
+        }
+        .up-event-row-state {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+        .up-event-row-state.active { color: var(--accent); }
+        .up-event-admin-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 9px;
+            flex-shrink: 0;
+        }
+        .field .up-startup-toggle,
+        .up-startup-toggle,
+        .field .up-form-check,
+        .up-form-check {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin: 0;
+            color: var(--accent-dark);
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+        .field .up-form-check {
+            align-self: flex-start;
+            margin: 2px 0 4px;
+            font-size: 13px;
+        }
+        .field .up-startup-toggle input,
+        .up-startup-toggle input,
+        .field .up-form-check input,
+        .up-form-check input {
+            width: 16px;
+            min-width: 16px;
+            height: 16px;
+            margin: 0;
+            padding: 0;
+            border-radius: 4px;
+            accent-color: var(--accent);
+            flex: 0 0 auto;
+        }
+        @media (max-width: 620px) {
+            .up-event-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .up-event-main {
+                grid-template-columns: 1fr auto;
+            }
+            .up-event-row-subtitle {
+                grid-column: 1 / -1;
+            }
+            .up-event-admin-actions {
+                justify-content: space-between;
+            }
+        }
+
         /* ── 토스트 ── */
         .toast {
             position: fixed;
@@ -2312,7 +2483,11 @@
                 <div style="display:flex;flex-direction:column;gap:7px;margin-top:6px;">
                     <input type="text" id="newUpTab" placeholder="탭 이름 (예: 종겜동 운동회)">
                     <input type="text" id="newUpTitle" placeholder="제목 (예: [종겜동 운동회2] 참가 모집)">
-                    <input type="url" id="newUpUrl" placeholder="SOOP 게시글 URL">
+                    <input type="url" id="newUpUrl" placeholder="SOOP 게시글 또는 하이라이트 댓글 URL">
+                    <label class="up-form-check">
+                        <input type="checkbox" id="newUpStartup">
+                        사이트 접속 시 먼저 띄우기
+                    </label>
                     <div style="display:flex;gap:8px;align-items:center;">
                         <input type="number" id="newUpOrder" placeholder="순서 (기본 0)" style="width:130px;">
                         <button onclick="addUpEvent()" style="flex:1;">추가</button>
