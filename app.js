@@ -1795,9 +1795,15 @@ async function openUpModal(options = {}) {
     // up.json 캐시 로드
     let cachedData = { updated: null, events: [] };
     try {
-        const res = await fetch('up.json?t=' + Date.now());
+        const res = await fetch(upJsonCacheUrl());
         if (res.ok) cachedData = await res.json();
     } catch {}
+
+    const cachedEvents = startupOnly ? [] : (cachedData.events || []).map(upEventFromRow);
+    if (cachedEvents.length) {
+        _upCurrentData = { updated: cachedData.updated, events: cachedEvents };
+        renderUpModal(_upCurrentData, false);
+    }
 
     // Supabase에서 현재 활성 이벤트 목록 직접 조회
     let sbEvents = [];
@@ -1858,7 +1864,51 @@ function parseSoopUrl(url) {
     return m ? [m[1], m[2]] : [null, null];
 }
 
-async function fetchSoopRankingLive(bjId, postNo) {
+function upJsonCacheUrl() {
+    return `up.json?v=${Math.floor(Date.now() / 60000)}`;
+}
+
+const UP_LIVE_CACHE_TTL_MS = 2 * 60 * 1000;
+const _upLiveFetchPromises = new Map();
+
+function upLiveCacheKey(bjId, postNo) {
+    return `beadyo_up_live_${bjId}_${postNo}`;
+}
+
+function readCachedUpRanking(bjId, postNo) {
+    try {
+        const cached = JSON.parse(sessionStorage.getItem(upLiveCacheKey(bjId, postNo)) || 'null');
+        if (!cached || !Array.isArray(cached.ranking)) return null;
+        if (Date.now() - Number(cached.savedAt || 0) > UP_LIVE_CACHE_TTL_MS) return null;
+        return cached.ranking;
+    } catch {}
+    return null;
+}
+
+function writeCachedUpRanking(bjId, postNo, ranking) {
+    try {
+        sessionStorage.setItem(upLiveCacheKey(bjId, postNo), JSON.stringify({
+            savedAt: Date.now(),
+            ranking,
+        }));
+    } catch {}
+}
+
+async function fetchSoopRankingLive(bjId, postNo, options = {}) {
+    const cacheKey = `${bjId}:${postNo}`;
+    if (!options.force) {
+        const cached = readCachedUpRanking(bjId, postNo);
+        if (cached) return cached;
+        if (_upLiveFetchPromises.has(cacheKey)) return _upLiveFetchPromises.get(cacheKey);
+    }
+    const promise = fetchSoopRankingLiveFresh(bjId, postNo).finally(() => {
+        _upLiveFetchPromises.delete(cacheKey);
+    });
+    _upLiveFetchPromises.set(cacheKey, promise);
+    return promise;
+}
+
+async function fetchSoopRankingLiveFresh(bjId, postNo) {
     const PROXY = 'https://clever-rhino-36.hanul4269.deno.net';
     const allItems = [];
     let page = 1, lastPage = 1;
@@ -1893,6 +1943,7 @@ async function fetchSoopRankingLive(bjId, postNo) {
     if (!allItems.length) return null;
     allItems.sort((a, b) => b.up_count - a.up_count);
     allItems.forEach((r, i) => r.rank = i + 1);
+    writeCachedUpRanking(bjId, postNo, allItems);
     return allItems;
 }
 
@@ -1959,18 +2010,37 @@ function renderUpModal(data, fetchLive = false) {
                 </div>` : ''}`;
     }
 
-    renderUpTab = (idx) => renderTab(idx);
+    const liveRequested = new Set();
+    async function refreshLiveRanking(idx) {
+        if (!fetchLive || liveRequested.has(idx)) return;
+        const ev = events[idx];
+        if (!ev) return;
+        liveRequested.add(idx);
+        const [bjId, postNo] = parseSoopUrl(ev.soop_url);
+        if (!bjId || !postNo) {
+            liveRequested.delete(idx);
+            return;
+        }
+        const ranking = await fetchSoopRankingLive(bjId, postNo);
+        if (ranking !== null) {
+            ev.ranking = ranking;
+            if (currentIdx === idx) renderTab(idx);
+        } else {
+            liveRequested.delete(idx);
+        }
+    }
+
+    renderUpTab = (idx) => {
+        renderTab(idx);
+        refreshLiveRanking(idx);
+    };
     renderTab(0);
 
     if (fetchLive) {
-        events.forEach(async (ev, idx) => {
-            const [bjId, postNo] = parseSoopUrl(ev.soop_url);
-            if (!bjId) return;
-            const ranking = await fetchSoopRankingLive(bjId, postNo);
-            if (ranking !== null) {
-                ev.ranking = ranking;
-                if (currentIdx === idx) renderTab(idx);
-            }
+        refreshLiveRanking(0);
+        events.forEach((_, idx) => {
+            if (idx === 0) return;
+            setTimeout(() => { refreshLiveRanking(idx); }, 350 + idx * 250);
         });
     }
 }
