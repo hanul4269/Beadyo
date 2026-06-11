@@ -2480,8 +2480,12 @@ async function addUpEvent() {
     const sortOrder = parseInt(document.getElementById('newUpOrder').value) || 0;
     if (!tabName || !title || !soopUrl) { showToast('탭 이름, 제목, URL을 모두 입력해주세요'); return; }
     const normalizedSoopUrl = normalizeOptionalUrl(soopUrl);
-    if (!normalizedSoopUrl || !isAllowedHostUrl(normalizedSoopUrl, ['sooplive.co.kr', 'afreecatv.com'])) {
+    if (!normalizedSoopUrl || !isAllowedHostUrl(normalizedSoopUrl, ['sooplive.com', 'sooplive.co.kr', 'afreecatv.com'])) {
         showToast('올바른 SOOP URL을 입력해주세요'); return;
+    }
+    const [bjId, postNo] = parseSoopUrl(normalizedSoopUrl);
+    if (!bjId || !postNo) {
+        showToast('올바른 SOOP 게시글 URL을 입력해주세요'); return;
     }
     const { error } = await db.from('up_events').insert({
         tab_name: tabName, title, soop_url: normalizedSoopUrl, sort_order: sortOrder, is_active: true,
