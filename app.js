@@ -1880,18 +1880,22 @@ function readCachedUpRanking(bjId, postNo) {
         const cached = JSON.parse(sessionStorage.getItem(upLiveCacheKey(bjId, postNo)) || 'null');
         if (!cached || !Array.isArray(cached.ranking)) return null;
         if (Date.now() - Number(cached.savedAt || 0) > UP_LIVE_CACHE_TTL_MS) return null;
-        return cached.ranking;
+        return { ranking: cached.ranking, updatedAt: cached.updatedAt || cached.savedAt };
     } catch {}
     return null;
 }
 
 function writeCachedUpRanking(bjId, postNo, ranking) {
     try {
+        const updatedAt = new Date().toISOString();
         sessionStorage.setItem(upLiveCacheKey(bjId, postNo), JSON.stringify({
             savedAt: Date.now(),
+            updatedAt,
             ranking,
         }));
+        return updatedAt;
     } catch {}
+    return new Date().toISOString();
 }
 
 async function fetchSoopRankingLive(bjId, postNo, options = {}) {
@@ -1911,6 +1915,7 @@ async function fetchSoopRankingLive(bjId, postNo, options = {}) {
 async function fetchSoopRankingLiveFresh(bjId, postNo) {
     const PROXY = 'https://clever-rhino-36.hanul4269.deno.net';
     const allItems = [];
+    let liveUpdatedAt = null;
     let page = 1, lastPage = 1;
     do {
         const target = `https://api-channel.sooplive.com/v1.1/channel/${bjId}/post/${postNo}/comment?page=${page}&orderBy=reg_date&cCommentNo=0&perPage=100`;
@@ -1918,6 +1923,7 @@ async function fetchSoopRankingLiveFresh(bjId, postNo) {
         try {
             const resp = await fetch(url, { signal: AbortSignal.timeout(10000) });
             if (!resp.ok) break;
+            liveUpdatedAt = liveUpdatedAt || new Date().toISOString();
             const d = await resp.json();
             const items = d.data || [];
             for (const it of items) {
@@ -1943,8 +1949,8 @@ async function fetchSoopRankingLiveFresh(bjId, postNo) {
     if (!allItems.length) return null;
     allItems.sort((a, b) => b.up_count - a.up_count);
     allItems.forEach((r, i) => r.rank = i + 1);
-    writeCachedUpRanking(bjId, postNo, allItems);
-    return allItems;
+    const updatedAt = writeCachedUpRanking(bjId, postNo, allItems) || liveUpdatedAt;
+    return { ranking: allItems, updatedAt };
 }
 
 function renderUpModal(data, fetchLive = false) {
@@ -1954,14 +1960,14 @@ function renderUpModal(data, fetchLive = false) {
             '<div class="up-empty">진행 중인 UP 이벤트가 없습니다</div>';
         return;
     }
-    const updatedStr = data.updated
-        ? new Date(data.updated).toLocaleString('ko-KR') : '-';
-
     let currentIdx = 0;
 
     function renderTab(idx) {
         currentIdx = idx;
         const ev = events[idx];
+        const updateLabel = ev.live_updated_at
+            ? `실시간 업데이트: ${new Date(ev.live_updated_at).toLocaleString('ko-KR')}`
+            : (fetchLive ? '실시간 업데이트 확인 중...' : `캐시 업데이트: ${data.updated ? new Date(data.updated).toLocaleString('ko-KR') : '-'}`);
         const tabs = events.map((e, i) =>
             `<button class="up-tab-btn${i===idx?' active':''}" onclick="renderUpTab(${i})">${esc(e.tab)}</button>`
         ).join('');
@@ -2002,7 +2008,7 @@ function renderUpModal(data, fetchLive = false) {
                 <div class="up-event-actions">${eventActions}</div>
             </div>
             <div class="up-ranking-list">${items}</div>
-            <div class="up-updated">업데이트: ${updatedStr}</div>
+            <div class="up-updated">${esc(updateLabel)}</div>
             ${_upModalIsAutoPrompt ? `
                 <div class="up-popup-actions">
                     <button type="button" onclick="dismissUpAutoPopup('today')">오늘 하루 보지 않기</button>
@@ -2021,9 +2027,10 @@ function renderUpModal(data, fetchLive = false) {
             liveRequested.delete(idx);
             return;
         }
-        const ranking = await fetchSoopRankingLive(bjId, postNo);
-        if (ranking !== null) {
-            ev.ranking = ranking;
+        const result = await fetchSoopRankingLive(bjId, postNo);
+        if (result !== null) {
+            ev.ranking = result.ranking;
+            ev.live_updated_at = result.updatedAt;
             if (currentIdx === idx) renderTab(idx);
         } else {
             liveRequested.delete(idx);
