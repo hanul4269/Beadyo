@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BEADYO Games</title>
     <link rel="icon" href="logo-icon.webp">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet"></noscript>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
     <style>
         * { box-sizing: border-box; }
 
@@ -37,7 +36,7 @@
                 linear-gradient(180deg, rgba(211,225,203,.96) 0%, rgba(216,224,210,0) 260px),
                 var(--bg);
             color: var(--ink);
-            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         button,
@@ -2132,7 +2131,7 @@
                 ctx.textAlign = 'right';
                 ctx.textBaseline = 'middle';
                 ctx.fillStyle = '#fff';
-                ctx.font = names.length > 8 ? '800 26px Noto Sans KR, sans-serif' : '900 32px Noto Sans KR, sans-serif';
+                ctx.font = names.length > 8 ? '800 26px Pretendard, sans-serif' : '900 32px Pretendard, sans-serif';
                 ctx.shadowColor = 'rgba(46,65,34,.2)';
                 ctx.shadowBlur = 2;
                 const label = name.length > 8 ? name.slice(0, 7) + '…' : name;

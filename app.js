@@ -340,7 +340,7 @@ function hideMemoTooltip() {
 }
 
 function chipSubtitleFontSize(subtitle, isSingle, isCompact) {
-    if (isCompact) return 'clamp(7px, 0.68vw, 9px)';
+    if (isCompact) return 'clamp(9px, 0.72vw, 10px)';
     const len = subtitle.length;
     if (isSingle) {
         if (len <= 8)  return 'clamp(11px, 1.1vw, 15px)';
@@ -352,47 +352,68 @@ function chipSubtitleFontSize(subtitle, isSingle, isCompact) {
     }
 }
 
-function chipFontSize(title, isSingle, isCompact, eventCount = 0) {
+function softenChipFontSize(value) {
+    return value.replace(/clamp\(([\d.]+)px,\s*([\d.]+)vw,\s*([\d.]+)px\)/, (_, min, preferred, max) => {
+        const minPx = Number(min);
+        const preferredVw = Number(preferred);
+        const maxPx = Number(max);
+        const minStep = minPx >= 18 ? 2 : 1;
+        const maxStep = maxPx >= 22 ? 2 : 1;
+        const vwStep = preferredVw >= 2 ? 0.16 : preferredVw >= 1.4 ? 0.1 : 0.06;
+        const fmt = (num) => Number(num.toFixed(2)).toString();
+        return `clamp(${fmt(Math.max(9, minPx - minStep))}px, ${fmt(Math.max(0.72, preferredVw - vwStep))}vw, ${fmt(Math.max(10, maxPx - maxStep))}px)`;
+    });
+}
+
+function chipFontSize(title, isSingle, isCompact, eventCount = 0, detailCount = 3) {
+    return softenChipFontSize(chipFontSizeRaw(title, isSingle, isCompact, eventCount, detailCount));
+}
+
+function chipFontSizeRaw(title, isSingle, isCompact, eventCount = 0, detailCount = 3) {
     const len = title.length;
+    const room = Math.max(0, 2 - detailCount);
     if (isCompact) {
+        if (room >= 2 && len <= 4) return 'clamp(15px, 1.45vw, 18px)';
+        if (room >= 2 && len <= 8) return 'clamp(13px, 1.22vw, 16px)';
         if (len <= 4)  return 'clamp(13px, 1.3vw, 16px)';
         if (len <= 6)  return 'clamp(12px, 1.2vw, 15px)';
-        if (len <= 10) return 'clamp(10px, 1.02vw, 13px)';
-        if (len <= 16) return 'clamp(8px,  0.82vw, 11px)';
-        return                'clamp(8px,  0.75vw, 10px)';
+        if (len <= 10) return room >= 2 ? 'clamp(12px, 1.08vw, 14px)' : 'clamp(11px, 1.05vw, 13px)';
+        if (len <= 16) return room >= 2 ? 'clamp(10px, 0.9vw, 12px)' : 'clamp(9px,  0.86vw, 12px)';
+        return                'clamp(9px,  0.78vw, 11px)';
     }
     if (isSingle) {
-        if (len <= 5)  return 'clamp(16px, 2.2vw, 28px)';
-        if (len <= 9)  return 'clamp(14px, 2.0vw, 24px)';
-        if (len <= 14) return 'clamp(13px, 1.7vw, 20px)';
-        if (len <= 20) return 'clamp(12px, 1.4vw, 17px)';
+        if (len <= 3)  return room >= 2 ? 'clamp(23px, 2.8vw, 34px)' : room >= 1 ? 'clamp(19px, 2.4vw, 30px)' : 'clamp(16px, 2.2vw, 28px)';
+        if (len <= 5)  return room >= 2 ? 'clamp(20px, 2.5vw, 31px)' : room >= 1 ? 'clamp(17px, 2.25vw, 28px)' : 'clamp(16px, 2.2vw, 28px)';
+        if (len <= 9)  return room >= 2 ? 'clamp(17px, 2.2vw, 27px)' : room >= 1 ? 'clamp(15px, 2.05vw, 25px)' : 'clamp(14px, 2.0vw, 24px)';
+        if (len <= 14) return room >= 2 ? 'clamp(15px, 1.9vw, 23px)' : room >= 1 ? 'clamp(14px, 1.75vw, 21px)' : 'clamp(13px, 1.7vw, 20px)';
+        if (len <= 20) return room >= 2 ? 'clamp(13px, 1.55vw, 19px)' : 'clamp(12px, 1.4vw, 17px)';
         return                'clamp(11px, 1.2vw, 14px)';
     } else {
         if (eventCount === 2) {
-            if (len <= 2)  return 'clamp(22px, 2.5vw, 30px)';
-            if (len <= 3)  return 'clamp(20px, 2.25vw, 28px)';
-            if (len <= 5)  return 'clamp(18px, 2.05vw, 25px)';
-            if (len <= 9)  return 'clamp(16px, 1.75vw, 21px)';
-            if (len <= 14) return 'clamp(12px, 1.25vw, 16px)';
-            return                'clamp(10px, 1.0vw, 13px)';
+            if (len <= 2)  return room >= 2 ? 'clamp(24px, 2.7vw, 32px)' : room >= 1 ? 'clamp(22px, 2.5vw, 30px)' : 'clamp(20px, 2.25vw, 27px)';
+            if (len <= 3)  return room >= 2 ? 'clamp(22px, 2.45vw, 30px)' : room >= 1 ? 'clamp(20px, 2.25vw, 28px)' : 'clamp(18px, 2.05vw, 25px)';
+            if (len <= 5)  return room >= 2 ? 'clamp(20px, 2.25vw, 27px)' : room >= 1 ? 'clamp(18px, 2.05vw, 25px)' : 'clamp(16px, 1.82vw, 22px)';
+            if (len <= 9)  return room >= 2 ? 'clamp(17px, 1.9vw, 23px)' : room >= 1 ? 'clamp(16px, 1.78vw, 22px)' : 'clamp(15px, 1.68vw, 20px)';
+            if (len <= 14) return room >= 2 ? 'clamp(14px, 1.45vw, 18px)' : room >= 1 ? 'clamp(13px, 1.32vw, 17px)' : 'clamp(12px, 1.25vw, 16px)';
+            return                room >= 2 ? 'clamp(11px, 1.1vw, 14px)' : 'clamp(10px, 1.0vw, 13px)';
         }
         if (eventCount === 3) {
-            if (len <= 2)  return 'clamp(20px, 2.2vw, 27px)';
-            if (len <= 3)  return 'clamp(18px, 2.0vw, 24px)';
-            if (len <= 5)  return 'clamp(16px, 1.8vw, 21px)';
-            if (len <= 7)  return 'clamp(15px, 1.65vw, 19px)';
-            if (len <= 9)  return 'clamp(13px, 1.4vw, 17px)';
-            if (len <= 14) return 'clamp(10px, 1.08vw, 14px)';
-            return                'clamp(9px,  0.9vw, 12px)';
+            if (len <= 2)  return room >= 2 ? 'clamp(22px, 2.35vw, 28px)' : room >= 1 ? 'clamp(20px, 2.2vw, 27px)' : 'clamp(18px, 2.0vw, 24px)';
+            if (len <= 3)  return room >= 2 ? 'clamp(20px, 2.15vw, 26px)' : room >= 1 ? 'clamp(18px, 2.0vw, 24px)' : 'clamp(16px, 1.8vw, 22px)';
+            if (len <= 5)  return room >= 2 ? 'clamp(18px, 1.95vw, 23px)' : room >= 1 ? 'clamp(16px, 1.8vw, 21px)' : 'clamp(14px, 1.55vw, 18px)';
+            if (len <= 7)  return room >= 2 ? 'clamp(16px, 1.75vw, 21px)' : room >= 1 ? 'clamp(15px, 1.65vw, 19px)' : 'clamp(14px, 1.52vw, 18px)';
+            if (len <= 9)  return room >= 2 ? 'clamp(14px, 1.5vw, 18px)' : room >= 1 ? 'clamp(13px, 1.42vw, 17px)' : 'clamp(13px, 1.4vw, 17px)';
+            if (len <= 14) return room >= 2 ? 'clamp(12px, 1.18vw, 15px)' : 'clamp(11px, 1.08vw, 14px)';
+            return                'clamp(10px, 0.92vw, 12px)';
         }
         if (eventCount === 4) {
-            if (len <= 2)  return 'clamp(17px, 1.75vw, 22px)';
-            if (len <= 3)  return 'clamp(15px, 1.55vw, 19px)';
-            if (len <= 5)  return 'clamp(14px, 1.42vw, 17px)';
-            if (len <= 7)  return 'clamp(12px, 1.2vw, 15px)';
-            if (len <= 9)  return 'clamp(11px, 1.08vw, 14px)';
-            if (len <= 14) return 'clamp(9px,  0.9vw, 12px)';
-            return                'clamp(8px,  0.78vw, 10px)';
+            if (len <= 2)  return room >= 2 ? 'clamp(19px, 1.95vw, 24px)' : room >= 1 ? 'clamp(17px, 1.75vw, 22px)' : 'clamp(15px, 1.55vw, 19px)';
+            if (len <= 3)  return room >= 2 ? 'clamp(17px, 1.72vw, 21px)' : room >= 1 ? 'clamp(15px, 1.55vw, 19px)' : 'clamp(13px, 1.32vw, 17px)';
+            if (len <= 5)  return room >= 2 ? 'clamp(15px, 1.5vw, 18px)' : room >= 1 ? 'clamp(14px, 1.42vw, 17px)' : 'clamp(13px, 1.32vw, 16px)';
+            if (len <= 7)  return room >= 2 ? 'clamp(13px, 1.28vw, 16px)' : room >= 1 ? 'clamp(12px, 1.2vw, 15px)' : 'clamp(11px, 1.08vw, 14px)';
+            if (len <= 9)  return room >= 2 ? 'clamp(12px, 1.14vw, 15px)' : 'clamp(11px, 1.08vw, 14px)';
+            if (len <= 14) return 'clamp(10px, 0.92vw, 12px)';
+            return                'clamp(9px,  0.82vw, 11px)';
         }
         if (len <= 8)  return 'clamp(13px, 1.5vw, 18px)';
         if (len <= 14) return 'clamp(12px, 1.3vw, 16px)';
@@ -643,7 +664,7 @@ function drawPaintText(point, text) {
     ctx.save();
     ctx.globalCompositeOperation = 'source-over';
     ctx.fillStyle = paintState.color;
-    ctx.font = `900 ${fontSize}px "Noto Sans KR", sans-serif`;
+    ctx.font = `900 ${fontSize}px "Pretendard", sans-serif`;
     ctx.textBaseline = 'top';
     String(text).split('\n').slice(0, 6).forEach((line, i) => {
         ctx.fillText(line, point.x, point.y + i * fontSize * 1.28);
@@ -1152,7 +1173,13 @@ function renderCalendar() {
             const newlineStyle = hasNewline
                 ? 'white-space:pre-line;'
                 : '';
-            const bodyStyle = `${!isStart ? 'opacity:0.55;' : ''}font-size:${chipFontSize(ev.title, isSingle, isCompact, events.length)};${newlineStyle}`;
+            const visibleDetailParts = isStart
+                ? [!!ev.subtitle, !!ev.collab]
+                : [true, true];
+            const visibleDetailCount = visibleDetailParts.filter(Boolean).length;
+            const detailName = ['none', 'one', 'two'][visibleDetailCount] || 'two';
+            const detailClass = ` detail-${detailName}${ev.subtitle ? ' has-subtitle-detail' : ' no-subtitle-detail'}${ev.collab ? ' has-collab-detail' : ' no-collab-detail'}${ev.memo ? ' has-memo-detail' : ' no-memo-detail'}`;
+            const bodyStyle = `${!isStart ? 'opacity:0.55;' : ''}--chip-title-size:${chipFontSize(ev.title, isSingle, isCompact, events.length, visibleDetailCount)};${newlineStyle}`;
             const titleSizeClass = String(ev.title ?? '').length <= 5 ? 'short-title' : 'long-title';
             const subtitleClass = !isStart ? ''
                 : ev.subtitle ? ' has-subtitle'
@@ -1166,9 +1193,9 @@ function renderCalendar() {
                 ? `onmouseenter="showMemoTooltip(event)" onmouseleave="hideMemoTooltip()"` : '';
 
             const subtitleHtml = isStart && ev.subtitle
-                ? `<div class="chip-subtitle" style="font-size:${chipSubtitleFontSize(ev.subtitle, isSingle, isCompact)};">${esc(ev.subtitle)}</div>` : '';
+                ? `<div class="chip-subtitle" style="--chip-subtitle-size:${chipSubtitleFontSize(ev.subtitle, isSingle, isCompact)};">${esc(ev.subtitle)}</div>` : '';
             const collabHtml = isStart && ev.collab
-                ? `<div class="chip-collab">w. ${esc(ev.collab)}</div>` : '';
+                ? `<div class="chip-collab" style="--chip-detail-size:${chipSubtitleFontSize(ev.collab, isSingle, isCompact)};">w. ${esc(ev.collab)}</div>` : '';
 
             const dragAttrs = state.isEditor && isStart
                 ? `draggable="true"
@@ -1180,7 +1207,7 @@ function renderCalendar() {
 
             const timeClass = isStart && ev.start_time ? ' has-time' : '';
 
-            return `<button class="event-chip ${titleSizeClass}${subtitleClass}${timeClass}${newlineClass}${restClass}"
+            return `<button class="event-chip ${titleSizeClass}${subtitleClass}${timeClass}${newlineClass}${restClass}${detailClass}"
                 style="${typeStyle(t)}border-radius:${br};"
                 onclick="if(!_dragged)openDayViewModal('${dateStr}')"
                 ${memoAttr} ${memoEvents} ${dragAttrs}
