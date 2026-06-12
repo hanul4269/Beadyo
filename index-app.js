@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL = 'riosniper12@gmail.com';
-const FALLBACK_ASSET_VERSION = 'month-gap-sticker-fill-20260611';
+const FALLBACK_ASSET_VERSION = 'auth-redirect-fix-20260612';
 const IS_LOCAL_HOST = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
 const APP_ASSET_VERSION = (() => {
     try {
@@ -78,7 +78,10 @@ function scheduleUrl(tab) {
 
 const loaded = new Set();
 const authDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: { detectSessionInUrl: false }
+    auth: {
+        detectSessionInUrl: false,
+        flowType: 'pkce',
+    }
 });
 let authUser = null;
 
@@ -415,6 +418,14 @@ async function initAuth() {
 
     // PKCE flow: ?code= 쿼리 처리
     const currentUrl = new URL(window.location.href);
+    const authError = currentUrl.searchParams.get('error_description') || currentUrl.searchParams.get('error');
+    if (authError) {
+        currentUrl.searchParams.delete('error');
+        currentUrl.searchParams.delete('error_code');
+        currentUrl.searchParams.delete('error_description');
+        history.replaceState({}, document.title, currentUrl.pathname + currentUrl.search);
+        alert('로그인 실패: ' + authError);
+    }
     const authCode = currentUrl.searchParams.get('code');
     if (authCode) {
         currentUrl.searchParams.delete('code');
@@ -437,17 +448,28 @@ async function initAuth() {
     syncCalendarAuth();
 }
 
+function authRedirectTo() {
+    const localHosts = new Set(['localhost', '127.0.0.1', '::1', '[::1]']);
+    if (localHosts.has(location.hostname)) return `${location.protocol}//${location.host}/`;
+    return 'https://beadyo.com/';
+}
+
 async function signIn() {
     if (location.protocol === 'file:') {
         alert('파일로 직접 열면 로그인이 안 돼요.\n터미널에서 아래 명령어로 로컬 서버를 실행해주세요:\n\npython3 -m http.server 3000\n\n그 다음 http://localhost:3000 에서 접속하면 로그인 가능해요.');
         return;
     }
-    const redirectTo = `${location.protocol}//${location.host}/`;
-    const { error } = await authDb.auth.signInWithOAuth({
+    const { data, error } = await authDb.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo },
+        options: {
+            redirectTo: authRedirectTo(),
+            skipBrowserRedirect: true,
+            queryParams: { prompt: 'select_account' },
+        },
     });
     if (error) alert('로그인 실패: ' + error.message);
+    else if (data?.url) window.location.assign(data.url);
+    else alert('로그인 주소를 만들지 못했어요. 새로고침 후 다시 시도해주세요.');
 }
 
 async function signOut() {
