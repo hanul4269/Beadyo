@@ -1301,10 +1301,6 @@ function renderCalendar() {
         const otherMonthSticker = other && dateStr === otherMonthStickerDate
             ? `<div class="other-month-sticker"><img src="stickers/legend-thanks-hanul.png" alt="고마워요"></div>`
             : '';
-        const emptyCellSticker = isEmpty
-            ? `<div class="cal-cell-sticker">${stickerImg(MOOD_STICKERS.rest, 'cal-cell-sticker-img')}</div>`
-            : '';
-
         const cellDropAttrs = !other && state.isEditor
             ? `ondragover="cellDragOver(event,'${dateStr}')" ondragleave="cellDragLeave(event)" ondrop="cellDrop(event,'${dateStr}')"` : '';
 
@@ -1316,7 +1312,6 @@ function renderCalendar() {
             ${holHtml}
             ${topRight}
             ${body}
-            ${emptyCellSticker}
             ${otherMonthSticker}
         </div>`;
     }).join('');

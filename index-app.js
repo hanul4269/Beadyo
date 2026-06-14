@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL = 'riosniper12@gmail.com';
-const FALLBACK_ASSET_VERSION = 'rest-fan-all-views-20260614';
+const FALLBACK_ASSET_VERSION = 'no-empty-date-stickers-20260614';
 const IS_LOCAL_HOST = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
 const APP_ASSET_VERSION = (() => {
     try {
@@ -24,10 +24,10 @@ function withFrameAssetVersion(src, assetVersion = APP_ASSET_VERSION) {
 const TABS = [
     { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
-    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'rest-fan-all-views-20260614' },
-    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'rest-fan-all-views-20260614' },
-    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'rest-fan-all-views-20260614' },
-    { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'rest-fan-all-views-20260614' },
+    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'no-empty-date-stickers-20260614' },
+    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'no-empty-date-stickers-20260614' },
+    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'no-empty-date-stickers-20260614' },
+    { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'no-empty-date-stickers-20260614' },
 ];
 
 const GAME_TAB_INDEX = 5;
