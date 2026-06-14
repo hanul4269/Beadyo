@@ -6,8 +6,8 @@
     <title>구슬요 일정표</title>
     <link rel="icon" href="logo-icon.webp">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
-    <link rel="preload" href="app.js?v=calendar-font-cases-20260613" as="script">
-    <script defer src="app.js?v=calendar-font-cases-20260613"></script>
+    <link rel="preload" href="app.js?v=rest-fan-all-views-20260614" as="script">
+    <script defer src="app.js?v=rest-fan-all-views-20260614"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
@@ -295,6 +295,11 @@
             font-size: var(--chip-subtitle-size, clamp(10px, 0.85vw, 12px)) !important;
             line-height: 1.25;
         }
+        .cal-area.week-mode .event-chip-sticker {
+            width: min(82%, 128px);
+            height: min(82%, 128px);
+            opacity: 0.26;
+        }
         .week-chip {
             display: flex;
             align-items: center;
@@ -576,6 +581,23 @@
             height: 100%;
             object-fit: contain;
             filter: drop-shadow(0 3px 8px rgba(0,0,0,0.10));
+        }
+        .cal-cell-sticker {
+            position: absolute;
+            left: 50%;
+            top: 52%;
+            width: min(58%, 92px);
+            aspect-ratio: 1 / 0.86;
+            opacity: 0.36;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .cal-cell-sticker-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: grayscale(.08) drop-shadow(0 5px 10px rgba(42,47,41,.08));
         }
         .chips-area.single .event-chip {
             flex: 1;
@@ -884,13 +906,35 @@
             text-align: center;
             box-shadow: inset 0 -1px 0 rgba(255,255,255,0.62), 0 2px 5px rgba(0,0,0,0.06);
             transition: filter 0.15s, transform 0.1s, outline 0.1s;
+            position: relative;
         }
         .event-chip:hover { filter: brightness(0.92); transform: scale(1.01); }
         .is-editor .event-chip { cursor: grab; }
         .event-chip.dragging { opacity: 0.35; cursor: grabbing; }
         .event-chip.drag-over { outline: 2px dashed var(--accent); transform: translateY(-2px); }
         .cal-cell.cell-drop-target { background: rgba(139,195,74,0.10) !important; outline: 2px dashed var(--accent); outline-offset: -2px; }
-
+        .event-chip-sticker {
+            position: absolute;
+            left: 50%;
+            top: 54%;
+            width: min(72%, 118px);
+            height: min(72%, 118px);
+            object-fit: contain;
+            opacity: 0.28;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            filter: drop-shadow(0 2px 4px rgba(255,255,255,.48));
+            z-index: 0;
+        }
+        .chips-area.single .event-chip-sticker {
+            width: min(90%, 168px);
+            height: min(90%, 168px);
+            opacity: 0.3;
+        }
+        .chips-area.packed .event-chip-sticker,
+        .chips-area.compact .event-chip-sticker {
+            display: none;
+        }
         .chip-time-badge {
             display: inline-block;
             background: rgba(255,255,255,0.55);
@@ -913,6 +957,8 @@
             -webkit-box-orient: vertical;
             text-align: center;
             width: 100%;
+            position: relative;
+            z-index: 1;
         }
         .chip-subtitle {
             font-size: var(--chip-subtitle-size, clamp(10px, 0.9vw, 13px));
@@ -926,6 +972,8 @@
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
             line-height: 1.25;
+            position: relative;
+            z-index: 1;
         }
         .chip-collab {
             font-size: var(--chip-detail-size, clamp(9px, 0.82vw, 12px));
@@ -938,6 +986,8 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             line-height: 1.2;
+            position: relative;
+            z-index: 1;
         }
 
         .vod-dot {
@@ -1319,6 +1369,7 @@
             color: inherit;
             cursor: pointer;
             transition: background 0.15s, border-color 0.15s;
+            position: relative;
         }
         .up-rank-item:hover {
             background: #fdf3e3;
@@ -1379,6 +1430,14 @@
             color: var(--accent);
             white-space: nowrap;
         }
+        .up-rank-sticker {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+            flex: 0 0 auto;
+            opacity: .9;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,.08));
+        }
         .up-updated {
             font-size: 11px;
             color: var(--muted);
@@ -1411,6 +1470,18 @@
             padding: 36px 0;
             color: var(--muted);
             font-size: 14px;
+        }
+        .up-empty.with-sticker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .up-empty-sticker {
+            width: 72px;
+            height: 62px;
+            object-fit: contain;
+            opacity: .86;
         }
         .up-startup-toggle {
             display: inline-flex;
@@ -1494,8 +1565,22 @@
             border: 1.5px solid;
             border-radius: 14px;
             padding: 10px 11px;
+            position: relative;
+            overflow: hidden;
         }
-        .day-event-main { min-width: 0; flex: 1; }
+        .day-event-main { min-width: 0; flex: 1; position: relative; z-index: 1; }
+        .day-event-sticker {
+            position: absolute;
+            left: 50%;
+            top: 54%;
+            width: 146px;
+            height: 146px;
+            object-fit: contain;
+            opacity: .18;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
         .day-event-head {
             display: flex;
             align-items: center;
@@ -1585,6 +1670,18 @@
             font-size: 13px;
             padding: 14px;
             text-align: center;
+        }
+        .day-empty.with-sticker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .day-empty-sticker {
+            width: 58px;
+            height: 50px;
+            object-fit: contain;
+            opacity: .82;
         }
 
         .type-badge {
@@ -2081,13 +2178,28 @@
             transform: translateX(-50%) translateY(80px);
             background: #333;
             color: #fff;
-            padding: 10px 22px;
+            padding: 8px 18px 8px 12px;
             border-radius: 20px;
             font-size: 14px;
             z-index: 9999;
             transition: transform 0.25s;
             white-space: nowrap;
             pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: min(92vw, 520px);
+        }
+        .toast span {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .toast-sticker {
+            width: 30px;
+            height: 26px;
+            object-fit: contain;
+            flex-shrink: 0;
         }
         .toast.show { transform: translateX(-50%) translateY(0); }
 
@@ -2252,6 +2364,8 @@
                 gap: 8px;
             }
             .mobile-event-pill {
+                position: relative;
+                overflow: hidden;
                 min-height: clamp(36px, 6vh, 44px);
                 width: 100%;
                 border-radius: 16px;
@@ -2265,7 +2379,21 @@
                 cursor: pointer;
                 box-shadow: inset 0 -1px 0 rgba(255,255,255,0.62);
             }
+            .mobile-event-sticker {
+                position: absolute;
+                left: 50%;
+                top: 54%;
+                width: 72px;
+                height: 72px;
+                object-fit: contain;
+                opacity: .22;
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+                z-index: 0;
+            }
             .mobile-event-time {
+                position: relative;
+                z-index: 1;
                 background: #fffefa;
                 border-radius: 10px;
                 padding: 5px 8px;
@@ -2276,6 +2404,8 @@
                 text-align: center;
             }
             .mobile-event-title {
+                position: relative;
+                z-index: 1;
                 color: inherit;
                 font-size: 16px;
                 font-weight: 900;
@@ -2285,14 +2415,26 @@
                 white-space: nowrap;
             }
             .mobile-event-icon {
+                position: relative;
+                z-index: 1;
                 font-size: 14px;
                 opacity: 0.72;
             }
             .mobile-empty-note {
+                display: flex;
+                align-items: center;
+                gap: 8px;
                 color: #b8b8b8;
                 font-size: 14px;
                 font-weight: 700;
                 padding-top: 8px;
+            }
+            .mobile-empty-sticker {
+                width: 34px;
+                height: 30px;
+                object-fit: contain;
+                opacity: .72;
+                flex-shrink: 0;
             }
             .mobile-add-fab {
                 position: fixed;

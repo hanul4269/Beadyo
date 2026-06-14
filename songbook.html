@@ -581,9 +581,18 @@
             padding: 14px;
             box-shadow: 0 1px 0 rgba(255,255,255,0.65);
         }
-        .stats-top-row { display: flex; gap: 40px; align-items: flex-start; margin-bottom: 28px; justify-content: center; flex-wrap: wrap; }
-        .stats-top-left { flex: 0 0 580px; width: 580px; }
-        .stats-top-right { flex: 0 0 640px; width: 640px; min-width: 0; }
+        .stats-top-row {
+            display: grid;
+            grid-template-columns: minmax(0, .92fr) minmax(0, 1fr);
+            gap: 28px;
+            align-items: flex-start;
+            margin-bottom: 28px;
+        }
+        .stats-top-left,
+        .stats-top-right {
+            width: 100%;
+            min-width: 0;
+        }
         .stats-sec-title {
             font-size: 13px; font-weight: 700; color: var(--muted);
             letter-spacing: .04em; margin-bottom: 10px;
@@ -778,6 +787,14 @@
             padding: 80px 20px;
             color: var(--muted);
         }
+        .empty-state-img {
+            width: 64px;
+            height: 56px;
+            object-fit: contain;
+            opacity: .82;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 5px 10px rgba(63,74,55,.1));
+        }
         .empty-state svg { width: 40px; height: 40px; opacity: .2; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto; }
         .empty-state p { font-size: 14px; }
 
@@ -849,10 +866,19 @@
             position: fixed; bottom: 24px; left: 50%;
             transform: translateX(-50%) translateY(20px);
             background: rgba(30,30,30,.92); color: #fff;
-            padding: 10px 20px; border-radius: 24px;
+            padding: 8px 18px 8px 12px; border-radius: 24px;
             font-size: 13px; opacity: 0; pointer-events: none;
             transition: opacity .25s, transform .25s;
             z-index: 9999; white-space: nowrap;
+            display: flex; align-items: center; gap: 8px;
+            max-width: min(92vw, 520px);
+        }
+        .toast span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+        .toast-sticker {
+            width: 30px;
+            height: 26px;
+            object-fit: contain;
+            flex: 0 0 auto;
         }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -2373,9 +2399,7 @@ function renderSkeleton(id) {
 
 function emptyHtml(msg) {
     return `<div class="empty-state">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
-        </svg>
+        <img class="empty-state-img" src="game-assets/gobookticon/gobook-10.png" alt="">
         <p>${msg}</p>
     </div>`;
 }
@@ -2599,7 +2623,7 @@ function closeRandom() {
 let _toastTimer;
 function showToast(msg) {
     const el = document.getElementById('toast');
-    el.textContent = msg;
+    el.innerHTML = `<img class="toast-sticker" src="game-assets/gobookticon/gobook-01.png" alt=""><span>${esc(msg)}</span>`;
     el.classList.add('show');
     clearTimeout(_toastTimer);
     _toastTimer = setTimeout(() => el.classList.remove('show'), 2500);

@@ -361,6 +361,14 @@
             padding: 80px 20px;
             color: var(--muted);
         }
+        .empty-state-img {
+            width: 68px;
+            height: 58px;
+            object-fit: contain;
+            opacity: .82;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 5px 10px rgba(63,74,55,.1));
+        }
         .empty-state svg { width: 48px; height: 48px; opacity: 0.25; margin-bottom: 12px; }
         .empty-state p { font-size: 14px; }
 
@@ -486,7 +494,7 @@
             transform: translateX(-50%) translateY(20px);
             background: rgba(30,30,30,0.92);
             color: #fff;
-            padding: 10px 20px;
+            padding: 8px 18px 8px 12px;
             border-radius: 24px;
             font-size: 13px;
             opacity: 0;
@@ -494,6 +502,17 @@
             transition: opacity 0.25s, transform 0.25s;
             z-index: 9999;
             white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: min(92vw, 520px);
+        }
+        .toast span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+        .toast-sticker {
+            width: 30px;
+            height: 26px;
+            object-fit: contain;
+            flex: 0 0 auto;
         }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -722,7 +741,7 @@
                     : state.filter === 'cover' ? '커버 곡이 없어요'
                     : '라이브 영상이 없어요';
                 grid.innerHTML = `<div class="empty-state">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                    <img class="empty-state-img" src="game-assets/gobookticon/gobook-10.png" alt="">
                     <p>${label}</p>
                 </div>`;
                 return;
@@ -918,7 +937,7 @@
         let _toastTimer = null;
         function showToast(msg) {
             const el = document.getElementById('toast');
-            el.textContent = msg;
+            el.innerHTML = `<img class="toast-sticker" src="game-assets/gobookticon/gobook-01.png" alt=""><span>${esc(msg)}</span>`;
             el.classList.add('show');
             clearTimeout(_toastTimer);
             _toastTimer = setTimeout(() => el.classList.remove('show'), 2500);

@@ -227,6 +227,13 @@
 
         .ladder-board {
             --cols: 4;
+            --slot-min: 92px;
+            --slot-gap: 22px;
+            --slot-pad: 46px;
+            --avatar-size: 78px;
+            --slot-font: 18px;
+            --slot-card-height: 48px;
+            --slot-card-pad: 12px;
             position: relative;
             display: grid;
             grid-template-rows: auto minmax(420px, 1fr) auto;
@@ -254,10 +261,10 @@
 
         .slot-row {
             display: grid;
-            grid-template-columns: repeat(var(--cols), minmax(92px, 1fr));
-            gap: 22px;
+            grid-template-columns: repeat(var(--cols), minmax(var(--slot-min), 1fr));
+            gap: var(--slot-gap);
             align-items: end;
-            padding: 0 46px;
+            padding: 0 var(--slot-pad);
         }
 
         .slot {
@@ -268,8 +275,8 @@
         }
 
         .avatar {
-            width: 78px;
-            height: 78px;
+            width: var(--avatar-size);
+            height: var(--avatar-size);
             padding: 8px;
             border: 1px solid rgba(127,184,63,.24);
             border-radius: 50%;
@@ -292,17 +299,16 @@
         }
 
         .slot-card {
-            --slot-card-height: 48px;
             display: block;
             box-sizing: border-box;
             width: min(132px, 100%);
             height: var(--slot-card-height);
-            padding: 0 12px;
+            padding: 0 var(--slot-card-pad);
             border: 1px solid rgba(34,39,32,.1);
             border-radius: 8px;
             background: #fff;
             color: #5b5f58;
-            font-size: 18px;
+            font-size: var(--slot-font);
             font-weight: 900;
             line-height: calc(var(--slot-card-height) - 2px);
             text-align: center;
@@ -754,8 +760,8 @@
             position: absolute;
             display: grid;
             place-items: center;
-            width: 106px;
-            height: 106px;
+            width: var(--gacha-ball-size, 106px);
+            height: var(--gacha-ball-size, 106px);
             --rest-rotate: 0deg;
             --mix-x1: 80px;
             --mix-y1: -70px;
@@ -791,18 +797,18 @@
         .gacha-ball::after {
             content: "";
             position: absolute;
-            left: 6px;
-            right: 6px;
+            left: max(3px, calc(var(--gacha-ball-size, 106px) * .057));
+            right: max(3px, calc(var(--gacha-ball-size, 106px) * .057));
             top: 47%;
-            height: 5px;
+            height: max(3px, calc(var(--gacha-ball-size, 106px) * .047));
             border-radius: 999px;
             background: rgba(255,255,255,.74);
             box-shadow: 0 1px 0 rgba(42,47,41,.08);
         }
 
         .gacha-ball img {
-            width: 58px;
-            height: 58px;
+            width: var(--gacha-img-size, 58px);
+            height: var(--gacha-img-size, 58px);
             object-fit: contain;
             pointer-events: none;
             filter: drop-shadow(0 4px 5px rgba(42,47,41,.14));
@@ -1145,7 +1151,25 @@
         .result-list {
             display: grid;
             gap: 8px;
-            padding: 18px 20px 20px;
+            padding: 10px 20px 20px;
+        }
+
+        .result-mascot {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 20px 2px;
+            color: var(--accent-dark);
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .result-mascot img {
+            width: 48px;
+            height: 42px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(42,47,41,.12));
         }
 
         .result-item {
@@ -1193,6 +1217,23 @@
             pointer-events: none;
             transform: translate(-50%, 16px);
             transition: opacity .18s ease, transform .18s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .game-toast-sticker {
+            width: 30px;
+            height: 26px;
+            object-fit: contain;
+            flex: 0 0 auto;
+        }
+
+        .game-toast span {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .game-toast.show {
@@ -1459,13 +1500,7 @@
                 <div class="stage-toolbar">
                     <div></div>
                     <div class="counter" aria-label="후보 수">
-                        <button class="icon-btn" type="button" onclick="changeRouletteCount(-1)" aria-label="후보 줄이기">
-                            <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
-                        </button>
                         <span class="count-num" id="roulette-count">후보 4명</span>
-                        <button class="icon-btn" type="button" onclick="changeRouletteCount(1)" aria-label="후보 늘리기">
-                            <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
-                        </button>
                     </div>
                     <div class="toolbar-actions">
                         <button class="action-btn" type="button" onclick="openSettings('roulette')">
@@ -1505,13 +1540,7 @@
                 <div class="stage-toolbar">
                     <div></div>
                     <div class="counter" aria-label="후보 수">
-                        <button class="icon-btn" type="button" onclick="changeGachaCount(-1)" aria-label="후보 줄이기">
-                            <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
-                        </button>
                         <span class="count-num" id="gacha-count">후보 8명</span>
-                        <button class="icon-btn" type="button" onclick="changeGachaCount(1)" aria-label="후보 늘리기">
-                            <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
-                        </button>
                     </div>
                     <div class="toolbar-actions">
                         <button class="action-btn" type="button" onclick="openSettings('gacha')">
@@ -1613,6 +1642,10 @@
                     <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
                 </button>
             </div>
+            <div class="result-mascot">
+                <img src="game-assets/gobookticon/gobook-13.png" alt="">
+                <span>결과가 나왔어요</span>
+            </div>
             <div class="result-list" id="result-list"></div>
         </section>
     </div>
@@ -1621,9 +1654,10 @@
         const ASSETS = Array.from({ length: 19 }, (_, i) => `game-assets/gobookticon/gobook-${String(i + 1).padStart(2, '0')}.png`);
         const colors = ['#7fb83f', '#5b8fc7', '#c69c3a', '#54a99f', '#9a7bc2', '#8ea65d', '#6f776b', '#9aa26f'];
         const rouletteColors = ['#a9d96b', '#8cc7ee', '#f4ce73', '#8fdbc9', '#c9a7e8', '#f2a58f', '#b9dc86', '#95d0a8'];
+        const LIMITS = { ladder: 12, roulette: 40, gacha: 300 };
         const defaultNames = ['구북이', '떼구르르', '비즈', '요정', '방울', '반짝', '하모니', '마블'];
-        const defaultLadderNames = Array(8).fill('');
-        const defaultPrizes = Array(8).fill('');
+        const defaultLadderNames = Array(LIMITS.ladder).fill('');
+        const defaultPrizes = Array(LIMITS.ladder).fill('');
         const ladder = { count: 4, names: [...defaultLadderNames], prizes: [...defaultPrizes], rungs: [], mapping: [], paths: [], running: false, rungsVisible: false };
         const roulette = { count: 4, names: [...defaultNames], rotation: 0, history: [], spinning: false };
         const gacha = { count: 8, names: [...defaultNames], history: [], drawing: false };
@@ -1633,12 +1667,16 @@
             return document.getElementById(id);
         }
 
-        function cleanLines(value) {
-            return String(value || '').split(/\n+/).map(v => v.trim()).filter(Boolean).slice(0, 16);
+        function cleanLines(value, max = LIMITS.gacha) {
+            return String(value || '').split(/\n+/).map(v => v.trim()).filter(Boolean).slice(0, max);
         }
 
-        function cleanPrizeLines(value) {
-            return String(value || '').split(/\n/).map(v => v.trim()).slice(0, 8);
+        function cleanPrizeLines(value, max = LIMITS.ladder) {
+            return String(value || '').split(/\n/).map(v => v.trim()).slice(0, max);
+        }
+
+        function clampCount(value, mode) {
+            return Math.max(2, Math.min(LIMITS[mode], value));
         }
 
         function escapeHtml(value) {
@@ -1688,9 +1726,28 @@
             }
         }
 
+        function ensureCandidateListSize(list, count) {
+            for (let i = list.length; i < count; i++) {
+                list[i] = defaultNames[i % defaultNames.length];
+            }
+        }
+
         function updateLadderSlots() {
             $('ladder-count').textContent = `참가자 ${ladder.count}명`;
-            $('ladder-board').style.setProperty('--cols', ladder.count);
+            const board = $('ladder-board');
+            board.style.setProperty('--cols', ladder.count);
+            const density = ladder.count > 10
+                ? { min: '54px', gap: '8px', pad: '14px', avatar: '44px', font: '12px', height: '40px', cardPad: '6px' }
+                : ladder.count > 8
+                    ? { min: '64px', gap: '10px', pad: '18px', avatar: '52px', font: '14px', height: '42px', cardPad: '7px' }
+                    : { min: '92px', gap: '22px', pad: '46px', avatar: '78px', font: '18px', height: '48px', cardPad: '12px' };
+            board.style.setProperty('--slot-min', density.min);
+            board.style.setProperty('--slot-gap', density.gap);
+            board.style.setProperty('--slot-pad', density.pad);
+            board.style.setProperty('--avatar-size', density.avatar);
+            board.style.setProperty('--slot-font', density.font);
+            board.style.setProperty('--slot-card-height', density.height);
+            board.style.setProperty('--slot-card-pad', density.cardPad);
             const names = visibleNames();
             const prizes = visiblePrizes();
             $('ladder-top').innerHTML = names.map((name, i) => `
@@ -1753,7 +1810,7 @@
 
         function changeCount(delta) {
             if (ladder.running) return;
-            ladder.count = Math.max(2, Math.min(8, ladder.count + delta));
+            ladder.count = clampCount(ladder.count + delta, 'ladder');
             clearLadderResults();
             resetLadder();
         }
@@ -1964,7 +2021,7 @@
         function showGameToast(message) {
             const toast = $('game-toast');
             if (!toast) return;
-            toast.textContent = message;
+            toast.innerHTML = `<img class="game-toast-sticker" src="${ASSETS[0]}" alt=""><span>${escapeHtml(message)}</span>`;
             toast.classList.add('show');
             clearTimeout(toastTimer);
             toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
@@ -2079,13 +2136,6 @@
             drawRoulette();
         }
 
-        function changeRouletteCount(delta) {
-            if (roulette.spinning) return;
-            roulette.count = Math.max(2, Math.min(12, roulette.count + delta));
-            clearRouletteResults();
-            updateRoulette();
-        }
-
         function clearRouletteResults() {
             roulette.rotation = 0;
             roulette.history = [];
@@ -2099,6 +2149,7 @@
         }
 
         function visibleRouletteNames() {
+            ensureCandidateListSize(roulette.names, roulette.count);
             return roulette.names.slice(0, roulette.count);
         }
 
@@ -2131,11 +2182,13 @@
                 ctx.textAlign = 'right';
                 ctx.textBaseline = 'middle';
                 ctx.fillStyle = '#fff';
-                ctx.font = names.length > 8 ? '800 26px Pretendard, sans-serif' : '900 32px Pretendard, sans-serif';
+                const labelFont = names.length > 30 ? 13 : names.length > 20 ? 16 : names.length > 12 ? 20 : names.length > 8 ? 26 : 32;
+                ctx.font = `${names.length > 8 ? 800 : 900} ${labelFont}px Pretendard, sans-serif`;
                 ctx.shadowColor = 'rgba(46,65,34,.2)';
                 ctx.shadowBlur = 2;
-                const label = name.length > 8 ? name.slice(0, 7) + '…' : name;
-                ctx.fillText(label, radius - 30, 0);
+                const maxLabelLength = names.length > 30 ? 4 : names.length > 20 ? 5 : names.length > 12 ? 6 : 8;
+                const label = name.length > maxLabelLength ? name.slice(0, maxLabelLength - 1) + '…' : name;
+                ctx.fillText(label, radius - (names.length > 24 ? 18 : 30), 0);
                 ctx.restore();
             });
 
@@ -2205,37 +2258,66 @@
             renderGacha();
         }
 
-        function changeGachaCount(delta) {
-            if (gacha.drawing) return;
-            gacha.count = Math.max(2, Math.min(16, gacha.count + delta));
-            clearGachaResults();
-            updateGacha();
-        }
-
         function randomBetween(min, max) {
             return min + Math.random() * (max - min);
         }
 
+        function gachaCapsuleMetrics(count) {
+            if (count > 220) return { ball: 38, img: 20 };
+            if (count > 150) return { ball: 44, img: 24 };
+            if (count > 90)  return { ball: 52, img: 29 };
+            if (count > 50)  return { ball: 62, img: 34 };
+            if (count > 28)  return { ball: 74, img: 40 };
+            if (count > 16)  return { ball: 88, img: 48 };
+            return { ball: 106, img: 58 };
+        }
+
+        function gachaLayoutBounds(count) {
+            return count > 80
+                ? { leftMin: 4, leftMax: 91, topMin: 7, topMax: 78 }
+                : count > 28
+                    ? { leftMin: 6, leftMax: 88, topMin: 10, topMax: 76 }
+                    : { leftMin: 10, leftMax: 78, topMin: 14, topMax: 70 };
+        }
+
         function makeGachaCapsuleLayout(count) {
             const placed = [];
-            const compactPile = count <= 4;
+            const bounds = gachaLayoutBounds(count);
+            const aspect = 1.72;
+            const cols = Math.max(2, Math.ceil(Math.sqrt(count * aspect)));
+            const rows = Math.max(1, Math.ceil(count / cols));
+            const cellW = (bounds.leftMax - bounds.leftMin) / cols;
+            const cellH = (bounds.topMax - bounds.topMin) / rows;
             for (let i = 0; i < count; i++) {
-                const layer = Math.floor(i / 4);
+                const row = Math.floor(i / cols);
+                const col = i % cols;
                 let left = 50;
                 let top = 60;
-                for (let attempt = 0; attempt < 24; attempt++) {
-                    const lowerPile = Math.random() < (compactPile ? .92 : .72);
-                    const layerTop = lowerPile
-                        ? randomBetween(compactPile ? 52 : 54, 70) - layer * randomBetween(4, 7)
-                        : randomBetween(compactPile ? 42 : 30, 56) - layer * randomBetween(2, 4);
-                    left = randomBetween(10, 78);
-                    top = Math.max(14, Math.min(70, layerTop + randomBetween(-4, 4)));
-                    const tooClose = placed.some(item => {
-                        const dx = item.left - left;
-                        const dy = item.top - top;
-                        return Math.hypot(dx, dy) < 12;
-                    });
-                    if (!tooClose || attempt > 16) break;
+                if (count <= 28) {
+                    const compactPile = count <= 4;
+                    const layer = Math.floor(i / 4);
+                    for (let attempt = 0; attempt < 24; attempt++) {
+                        const lowerPile = Math.random() < (compactPile ? .92 : .72);
+                        const layerTop = lowerPile
+                            ? randomBetween(compactPile ? 52 : 54, bounds.topMax) - layer * randomBetween(4, 7)
+                            : randomBetween(compactPile ? 42 : 30, 56) - layer * randomBetween(2, 4);
+                        left = randomBetween(bounds.leftMin, bounds.leftMax);
+                        top = Math.max(bounds.topMin, Math.min(bounds.topMax, layerTop + randomBetween(-4, 4)));
+                        const tooClose = placed.some(item => {
+                            const dx = item.left - left;
+                            const dy = item.top - top;
+                            return Math.hypot(dx, dy) < 12;
+                        });
+                        if (!tooClose || attempt > 16) break;
+                    }
+                } else {
+                    const rowBias = rows <= 1 ? 0 : row / (rows - 1);
+                    const lowerWeight = Math.pow(rowBias, .62);
+                    left = bounds.leftMin + (col + .5) * cellW + randomBetween(-cellW * .34, cellW * .34);
+                    top = bounds.topMin + (row + .5) * cellH + randomBetween(-cellH * .36, cellH * .36);
+                    top += lowerWeight * Math.min(7, cellH * 1.15);
+                    left = Math.max(bounds.leftMin, Math.min(bounds.leftMax, left));
+                    top = Math.max(bounds.topMin, Math.min(bounds.topMax, top));
                 }
                 placed.push({
                     left,
@@ -2254,6 +2336,9 @@
             $('gacha-count').textContent = `후보 ${gacha.count}명`;
             const statusCount = $('gacha-status-count');
             if (statusCount) statusCount.textContent = String(gacha.count);
+            const metrics = gachaCapsuleMetrics(names.length);
+            bowl.style.setProperty('--gacha-ball-size', `${metrics.ball}px`);
+            bowl.style.setProperty('--gacha-img-size', `${metrics.img}px`);
             const capsuleColors = [
                 'rgba(91,143,199,.72)',
                 'rgba(127,184,63,.72)',
@@ -2284,10 +2369,11 @@
         }
 
         function makeGachaBounceMotion(ball, bowl, index, total) {
-            const leftMin = 8;
-            const leftMax = 78;
-            const topMin = 14;
-            const topMax = 70;
+            const bounds = gachaLayoutBounds(total);
+            const leftMin = bounds.leftMin;
+            const leftMax = bounds.leftMax;
+            const topMin = bounds.topMin;
+            const topMax = bounds.topMax;
             const bowlRect = bowl.getBoundingClientRect();
             const startLeft = Number.parseFloat(ball.style.left) || randomBetween(12, 76);
             const startTop = Number.parseFloat(ball.style.top) || randomBetween(52, 70);
@@ -2489,6 +2575,14 @@
         function openSettings(mode) {
             settingsMode = mode;
             $('settings-title').textContent = mode === 'gacha' ? '뽑기 후보 설정' : (mode === 'ladder' ? '사다리 설정' : '룰렛 설정');
+            const nameLabel = document.querySelector('label[for="name-input"]');
+            if (nameLabel) {
+                nameLabel.textContent = mode === 'ladder'
+                    ? `참가자 / 후보 (최대 ${LIMITS.ladder}명)`
+                    : `참가자 / 후보 (최대 ${LIMITS[mode]}명)`;
+            }
+            const prizeLabel = document.querySelector('label[for="prize-input"]');
+            if (prizeLabel) prizeLabel.textContent = `사다리 결과 (최대 ${LIMITS.ladder}개)`;
             $('name-input').value = (mode === 'gacha' ? visibleGachaNames() : (mode === 'ladder' ? visibleNames() : visibleRouletteNames())).join('\n');
             $('prize-field').style.display = mode === 'ladder' ? '' : 'none';
             $('prize-input').value = visiblePrizes().join('\n');
@@ -2496,12 +2590,12 @@
         }
 
         function applySettings() {
-            const names = cleanLines($('name-input').value);
+            const names = cleanLines($('name-input').value, LIMITS[settingsMode]);
             if (settingsMode === 'ladder') {
-                const prizes = cleanPrizeLines($('prize-input').value);
+                const prizes = cleanPrizeLines($('prize-input').value, LIMITS.ladder);
                 if (names.length >= 2) {
                     ladder.names = names;
-                    ladder.count = Math.max(2, Math.min(8, ladder.names.length));
+                    ladder.count = clampCount(ladder.names.length, 'ladder');
                 } else {
                     ensureListSize(ladder.names, defaultLadderNames);
                 }
@@ -2511,12 +2605,12 @@
             } else {
                 if (settingsMode === 'gacha') {
                     if (names.length >= 2) gacha.names = names;
-                    gacha.count = Math.max(2, Math.min(16, gacha.names.length));
+                    gacha.count = clampCount(gacha.names.length, 'gacha');
                     clearGachaResults();
                     updateGacha();
                 } else {
                     if (names.length >= 2) roulette.names = names;
-                    roulette.count = Math.max(2, Math.min(12, roulette.names.length));
+                    roulette.count = clampCount(roulette.names.length, 'roulette');
                     clearRouletteResults();
                     updateRoulette();
                 }

@@ -169,6 +169,52 @@ function _ensureDb() {
 function typeOf(key) {
     return EVENT_TYPES.find(t => t.key === key) ?? EVENT_TYPES.find(t => t.key === 'general');
 }
+
+const GOBOOKTICON_STICKERS = Array.from({ length: 18 }, (_, i) =>
+    `game-assets/gobookticon/gobook-${String(i + 1).padStart(2, '0')}.png`
+);
+const MOOD_STICKERS = {
+    chat: GOBOOKTICON_STICKERS[5],
+    song: GOBOOKTICON_STICKERS[9],
+    solo: GOBOOKTICON_STICKERS[12],
+    collab: GOBOOKTICON_STICKERS[13],
+    watch: GOBOOKTICON_STICKERS[7],
+    game: GOBOOKTICON_STICKERS[1],
+    ad: GOBOOKTICON_STICKERS[4],
+    rest: GOBOOKTICON_STICKERS[16],
+    cover: GOBOOKTICON_STICKERS[10],
+    relay: GOBOOKTICON_STICKERS[17],
+    pre: GOBOOKTICON_STICKERS[3],
+    general: GOBOOKTICON_STICKERS[14],
+    empty: GOBOOKTICON_STICKERS[15],
+    loading: GOBOOKTICON_STICKERS[2],
+    highlight: GOBOOKTICON_STICKERS[11],
+    save: GOBOOKTICON_STICKERS[0],
+    delete: GOBOOKTICON_STICKERS[8],
+    error: GOBOOKTICON_STICKERS[6],
+    fan: 'game-assets/gobookticon/gobook-fan-sd.png',
+};
+
+function stickerImg(src, className, alt = '') {
+    return `<img class="${className}" src="${esc(src)}" alt="${esc(alt)}" loading="lazy" decoding="async">`;
+}
+function stickerForEvent(ev) {
+    if (ev?.is_rest || ev?.type === 'rest') return MOOD_STICKERS.rest;
+    return MOOD_STICKERS[ev?.type] || MOOD_STICKERS.general;
+}
+function dayEmptyHtml(message, mood = 'empty') {
+    return `<div class="day-empty with-sticker">${stickerImg(MOOD_STICKERS[mood] || MOOD_STICKERS.empty, 'day-empty-sticker')}${esc(message)}</div>`;
+}
+function upEmptyHtml(message, mood = 'loading') {
+    return `<div class="up-empty with-sticker">${stickerImg(MOOD_STICKERS[mood] || MOOD_STICKERS.loading, 'up-empty-sticker')}${esc(message)}</div>`;
+}
+function toastStickerForMessage(message) {
+    const text = String(message ?? '');
+    if (/실패|오류|에러/.test(text)) return MOOD_STICKERS.error;
+    if (/삭제/.test(text)) return MOOD_STICKERS.delete;
+    if (/저장|추가|완료|되었습니다|로그인/.test(text)) return MOOD_STICKERS.save;
+    return MOOD_STICKERS.general;
+}
 function ytLinkType(url) {
     const normalized = normalizeOptionalUrl(url);
     if (!normalized) return null;
@@ -430,7 +476,7 @@ function toAmPm(timeStr) {
 let toastTimer;
 function showToast(msg) {
     const el = document.getElementById('toast');
-    el.textContent = msg;
+    el.innerHTML = `${stickerImg(toastStickerForMessage(msg), 'toast-sticker')}<span>${esc(msg)}</span>`;
     el.classList.add('show');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
@@ -1035,13 +1081,17 @@ function renderMobileSchedule() {
             ? events.map(ev => {
                 const t = typeOf(ev.type);
                 const time = ev.start_time ? ev.start_time.slice(0, 5) : '미정';
+                const restSticker = ev.is_rest || ev.type === 'rest'
+                    ? stickerImg(MOOD_STICKERS.fan, 'mobile-event-sticker', '선풍기')
+                    : '';
                 return `<button class="mobile-event-pill" style="${typeStyle(t)}" onclick="openDayViewModal('${dateStr}')">
+                    ${restSticker}
                     <span class="mobile-event-time">${esc(time)}</span>
                     <span class="mobile-event-title">${esc(ev.title)}</span>
                     <span class="mobile-event-icon">${esc(t.icon)}</span>
                 </button>`;
             }).join('')
-            : `<div class="mobile-empty-note">일정이 비어있어요</div>`;
+            : `<div class="mobile-empty-note">${stickerImg(MOOD_STICKERS.rest, 'mobile-empty-sticker')}<span>일정이 비어있어요</span></div>`;
         cards.push(`<section class="mobile-day-card">
             <div class="mobile-day-head">
                 <div class="mobile-date-title${titleCls}">${day}일(${dayNames[dow]})</div>
@@ -1196,6 +1246,9 @@ function renderCalendar() {
                 ? `<div class="chip-subtitle" style="--chip-subtitle-size:${chipSubtitleFontSize(ev.subtitle, isSingle, isCompact)};">${esc(ev.subtitle)}</div>` : '';
             const collabHtml = isStart && ev.collab
                 ? `<div class="chip-collab" style="--chip-detail-size:${chipSubtitleFontSize(ev.collab, isSingle, isCompact)};">w. ${esc(ev.collab)}</div>` : '';
+            const chipSticker = isStart && (ev.is_rest || ev.type === 'rest') && (isSingle || isStableList)
+                ? stickerImg(MOOD_STICKERS.fan, 'event-chip-sticker', '선풍기')
+                : '';
 
             const dragAttrs = state.isEditor && isStart
                 ? `draggable="true"
@@ -1211,7 +1264,7 @@ function renderCalendar() {
                 style="${typeStyle(t)}border-radius:${br};"
                 onclick="if(!_dragged)openDayViewModal('${dateStr}')"
                 ${memoAttr} ${memoEvents} ${dragAttrs}
-                title="${esc(ev.title)}">${timeBadge}<div class="chip-body" style="${bodyStyle}">${vodDot}${esc(ev.title)}</div>${subtitleHtml}${collabHtml}</button>`;
+                title="${esc(ev.title)}">${timeBadge}${chipSticker}<div class="chip-body" style="${bodyStyle}">${vodDot}${esc(ev.title)}</div>${subtitleHtml}${collabHtml}</button>`;
         }).join('');
 
         const holiday   = !other ? (getHoliday(dateStr) || null) : null;
@@ -1248,6 +1301,9 @@ function renderCalendar() {
         const otherMonthSticker = other && dateStr === otherMonthStickerDate
             ? `<div class="other-month-sticker"><img src="stickers/legend-thanks-hanul.png" alt="고마워요"></div>`
             : '';
+        const emptyCellSticker = isEmpty
+            ? `<div class="cal-cell-sticker">${stickerImg(MOOD_STICKERS.rest, 'cal-cell-sticker-img')}</div>`
+            : '';
 
         const cellDropAttrs = !other && state.isEditor
             ? `ondragover="cellDragOver(event,'${dateStr}')" ondragleave="cellDragLeave(event)" ondrop="cellDrop(event,'${dateStr}')"` : '';
@@ -1260,6 +1316,7 @@ function renderCalendar() {
             ${holHtml}
             ${topRight}
             ${body}
+            ${emptyCellSticker}
             ${otherMonthSticker}
         </div>`;
     }).join('');
@@ -1712,7 +1769,12 @@ function dayEventCardHtml(ev, dateStr) {
         });
     }
 
+    const eventSticker = ev.is_rest || ev.type === 'rest'
+        ? stickerImg(MOOD_STICKERS.fan, 'day-event-sticker', '선풍기')
+        : '';
+
     return `<div class="day-event-card" style="border-color:${t.border};background:${t.color};color:${t.text};">
+        ${eventSticker}
         <div class="day-event-main">
             <div class="day-event-head">
                 <span class="day-type-chip">${esc(t.icon)} ${esc(t.label)}</span>
@@ -1743,7 +1805,7 @@ function openDayViewModal(dateStr) {
         <div class="day-section-title">일정</div>
         ${events.length
             ? `<div class="day-event-list">${events.map(ev => dayEventCardHtml(ev, dateStr)).join('')}</div>`
-            : `<div class="day-empty">등록된 일정이 없어요</div>`}
+            : dayEmptyHtml('등록된 일정이 없어요', 'empty')}
     </div>`;
 
     html += `<div class="day-modal-section">
@@ -1754,7 +1816,7 @@ function openDayViewModal(dateStr) {
                 ${info.memo ? `<div class="view-section"><div class="view-label">메모</div><div class="view-value" style="white-space:pre-wrap">${esc(info.memo)}</div></div>` : ''}
                 ${links.length ? `<div class="day-link-row broadcast-links">${links.map(link => `<a class="vod-link" href="${esc(safeUrl(link.url))}" target="_blank" rel="noopener noreferrer">▶ ${esc(link.title)}</a>`).join('')}</div>` : ''}
             </div>`
-            : `<div class="day-empty">아직 방송정보가 등록되지 않았어요</div>`}
+            : dayEmptyHtml('아직 방송정보가 등록되지 않았어요', 'pre')}
         ${ytLinks.length ? `<div class="day-section-title sub">YouTube 링크</div><div class="day-link-row">${ytLinks.map(yl => {
             const type = ytLinkType(yl.url);
             return `<a class="vod-link yt-vod-link" href="${esc(safeUrl(yl.url))}" target="_blank" rel="noopener noreferrer">${type === 'short' ? '▶ YouTube Shorts' : '▶ YouTube'}</a>`;
@@ -1831,7 +1893,7 @@ async function openUpModal(options = {}) {
     const preloadedEvents = Array.isArray(options.sbEvents) ? options.sbEvents : null;
     _upModalIsAutoPrompt = options.auto === true;
     document.getElementById('upModal').classList.add('open');
-    document.getElementById('upModalContent').innerHTML = '<div class="up-empty">불러오는 중...</div>';
+    document.getElementById('upModalContent').innerHTML = upEmptyHtml('불러오는 중...', 'loading');
 
     // up.json 캐시 로드
     let cachedData = { updated: null, events: [] };
@@ -1866,7 +1928,7 @@ async function openUpModal(options = {}) {
 
     if (!mergedEvents.length && (startupOnly || !cachedData.events?.length)) {
         document.getElementById('upModalContent').innerHTML =
-            '<div class="up-empty">진행 중인 UP 이벤트가 없습니다</div>';
+            upEmptyHtml('진행 중인 UP 이벤트가 없습니다', 'empty');
         return;
     }
 
@@ -2003,7 +2065,7 @@ function renderUpModal(data, fetchLive = false) {
     const events = data.events || [];
     if (!events.length) {
         document.getElementById('upModalContent').innerHTML =
-            '<div class="up-empty">진행 중인 UP 이벤트가 없습니다</div>';
+            upEmptyHtml('진행 중인 UP 이벤트가 없습니다', 'empty');
         return;
     }
     let currentIdx = 0;
@@ -2031,6 +2093,11 @@ function renderUpModal(data, fetchLive = false) {
                 const cls = r.rank <= 3 ? ` top${r.rank}` : '';
                 const replyNo = String(r.reply_no || '').replace(/\D/g, '');
                 const href = safeUrl(replyNo ? `${baseUrl}#comment_noti${replyNo}` : ev.soop_url);
+                const rankSticker = r._highlight
+                    ? stickerImg(MOOD_STICKERS.highlight, 'up-rank-sticker', '하이라이트')
+                    : r.rank === 1
+                        ? stickerImg(MOOD_STICKERS.relay, 'up-rank-sticker', '1위')
+                        : '';
                 return `<div class="up-rank-item${r._highlight ? ' is-highlight' : ''}" role="link" tabindex="0" data-href="${esc(href)}"
                     onclick="window.open(this.dataset.href,'_blank','noopener noreferrer')"
                     onkeydown="if(event.key==='Enter')window.open(this.dataset.href,'_blank','noopener noreferrer')">
@@ -2042,10 +2109,11 @@ function renderUpModal(data, fetchLive = false) {
                         <div class="up-rank-handle">@${esc(r.bj_id)}</div>
                         <div class="up-rank-time">${esc(r.timestamp)}</div>
                     </div>
+                    ${rankSticker}
                     <div class="up-rank-count">👍 ${Number(r.up_count).toLocaleString()}</div>
                 </div>`;
             }).join('')
-            : '<div class="up-empty">랭킹 데이터를 불러오는 중입니다...</div>';
+            : upEmptyHtml('랭킹 데이터를 불러오는 중입니다...', 'loading');
 
         document.getElementById('upModalContent').innerHTML = `
             <div class="up-tabs">${tabs}</div>
@@ -2899,6 +2967,10 @@ window.addEventListener('pageshow', () => {
 
 // ── 이스터에그 ──
 const STICKERS = ['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13','s14','s15'];
+const STICKER_RAIN_ASSETS = [
+    ...STICKERS.map(s => `stickers/${s}.png`),
+    ...GOBOOKTICON_STICKERS,
+];
 const CONFETTI_COLORS = ['#ff7eb3','#ffcd3c','#7bc67e','#6eb5ff','#ff8c69','#c77dff','#ff6b6b'];
 
 // ─── 초기화 ───
@@ -2935,7 +3007,7 @@ function launchConfetti(count = 80) {
 }
 
 function launchStickerRain() {
-    const picks = [...STICKERS].sort(() => Math.random() - 0.5).slice(0, 12);
+    const picks = [...STICKER_RAIN_ASSETS].sort(() => Math.random() - 0.5).slice(0, 14);
     picks.forEach((s, i) => {
         setTimeout(() => {
             const el = document.createElement('img');
@@ -2945,7 +3017,7 @@ function launchStickerRain() {
             const dy   = (Math.random() - 0.5) * 120;
             const rot  = (Math.random() - 0.5) * 540;
             const dur  = 1.2 + Math.random() * 0.8;
-            el.src = `stickers/${s}.png`;
+            el.src = s;
             el.style.cssText = `
                 width: ${size}px; height: ${size}px;
                 left: -${size + 10}px; top: ${top}vh;
