@@ -1655,12 +1655,13 @@
         const colors = ['#7fb83f', '#5b8fc7', '#c69c3a', '#54a99f', '#9a7bc2', '#8ea65d', '#6f776b', '#9aa26f'];
         const rouletteColors = ['#a9d96b', '#8cc7ee', '#f4ce73', '#8fdbc9', '#c9a7e8', '#f2a58f', '#b9dc86', '#95d0a8'];
         const LIMITS = { ladder: 12, roulette: 40, gacha: 300 };
-        const defaultNames = ['구북이', '떼구르르', '비즈', '요정', '방울', '반짝', '하모니', '마블'];
+        const defaultRouletteNames = ['구슬요', '엘시', '따린', '냐냐'];
+        const defaultGachaNames = ['구슬요', '엘시', '따린', '냐냐', '키마', '마냥', '난초', '유나기', '시몽'];
         const defaultLadderNames = Array(LIMITS.ladder).fill('');
         const defaultPrizes = Array(LIMITS.ladder).fill('');
         const ladder = { count: 4, names: [...defaultLadderNames], prizes: [...defaultPrizes], rungs: [], mapping: [], paths: [], running: false, rungsVisible: false };
-        const roulette = { count: 4, names: [...defaultNames], rotation: 0, history: [], spinning: false };
-        const gacha = { count: 8, names: [...defaultNames], history: [], drawing: false };
+        const roulette = { count: 4, names: [...defaultRouletteNames], rotation: 0, history: [], spinning: false };
+        const gacha = { count: 9, names: [...defaultGachaNames], history: [], drawing: false };
         let settingsMode = 'ladder';
 
         function $(id) {
@@ -1726,9 +1727,9 @@
             }
         }
 
-        function ensureCandidateListSize(list, count) {
+        function ensureCandidateListSize(list, count, fallback = []) {
             for (let i = list.length; i < count; i++) {
-                list[i] = defaultNames[i % defaultNames.length];
+                list[i] = fallback[i] ?? '';
             }
         }
 
@@ -2149,7 +2150,7 @@
         }
 
         function visibleRouletteNames() {
-            ensureCandidateListSize(roulette.names, roulette.count);
+            ensureCandidateListSize(roulette.names, roulette.count, defaultRouletteNames);
             return roulette.names.slice(0, roulette.count);
         }
 
@@ -2245,9 +2246,7 @@
         }
 
         function visibleGachaNames() {
-            for (let i = gacha.names.length; i < gacha.count; i++) {
-                gacha.names[i] = defaultNames[i % defaultNames.length];
-            }
+            ensureCandidateListSize(gacha.names, gacha.count, defaultGachaNames);
             return gacha.names.slice(0, gacha.count);
         }
 
@@ -2263,21 +2262,25 @@
         }
 
         function gachaCapsuleMetrics(count) {
-            if (count > 220) return { ball: 38, img: 20 };
-            if (count > 150) return { ball: 44, img: 24 };
-            if (count > 90)  return { ball: 52, img: 29 };
-            if (count > 50)  return { ball: 62, img: 34 };
-            if (count > 28)  return { ball: 74, img: 40 };
-            if (count > 16)  return { ball: 88, img: 48 };
-            return { ball: 106, img: 58 };
+            if (count > 42)  return { ball: 120, img: 64 };
+            if (count > 36)  return { ball: 132, img: 70 };
+            if (count > 28)  return { ball: 156, img: 82 };
+            if (count > 20)  return { ball: 164, img: 86 };
+            return { ball: 172, img: 90 };
+        }
+
+        function gachaVisualCapsuleCount(candidateCount) {
+            if (candidateCount <= 0) return 0;
+            const scaled = Math.ceil(28 + Math.min(10, Math.sqrt(candidateCount)));
+            return Math.min(42, Math.max(32, scaled));
         }
 
         function gachaLayoutBounds(count) {
-            return count > 80
-                ? { leftMin: 4, leftMax: 91, topMin: 7, topMax: 78 }
+            return count > 36
+                ? { leftMin: 1, leftMax: 86, topMin: 11, topMax: 64 }
                 : count > 28
-                    ? { leftMin: 6, leftMax: 88, topMin: 10, topMax: 76 }
-                    : { leftMin: 10, leftMax: 78, topMin: 14, topMax: 70 };
+                    ? { leftMin: .75, leftMax: 78, topMin: 6, topMax: 57 }
+                    : { leftMin: 1.5, leftMax: 74, topMin: 7, topMax: 55 };
         }
 
         function makeGachaCapsuleLayout(count) {
@@ -2333,10 +2336,11 @@
             const bowl = $('gacha-bowl');
             if (!bowl) return;
             const names = visibleGachaNames();
+            const visualCount = gachaVisualCapsuleCount(names.length);
             $('gacha-count').textContent = `후보 ${gacha.count}명`;
             const statusCount = $('gacha-status-count');
             if (statusCount) statusCount.textContent = String(gacha.count);
-            const metrics = gachaCapsuleMetrics(names.length);
+            const metrics = gachaCapsuleMetrics(visualCount);
             bowl.style.setProperty('--gacha-ball-size', `${metrics.ball}px`);
             bowl.style.setProperty('--gacha-img-size', `${metrics.img}px`);
             const capsuleColors = [
@@ -2349,8 +2353,9 @@
                 'rgba(221,128,70,.72)',
                 'rgba(190,93,183,.72)'
             ];
-            const layout = makeGachaCapsuleLayout(names.length);
-            bowl.innerHTML = names.map((name, i) => {
+            const layout = makeGachaCapsuleLayout(visualCount);
+            const capsules = Array.from({ length: visualCount }, (_, i) => names[i % names.length] || `캡슐 ${i + 1}`);
+            bowl.innerHTML = capsules.map((name, i) => {
                 const spot = layout[i];
                 const direction = spot.direction;
                 const mixX1 = direction * randomBetween(74, 154);
@@ -2368,132 +2373,127 @@
             }).join('');
         }
 
-        function makeGachaBounceMotion(ball, bowl, index, total) {
+        function makeGachaPhysicsState(ball, bowl, index, total) {
             const bounds = gachaLayoutBounds(total);
             const leftMin = bounds.leftMin;
             const leftMax = bounds.leftMax;
             const topMin = bounds.topMin;
             const topMax = bounds.topMax;
             const bowlRect = bowl.getBoundingClientRect();
-            const startLeft = Number.parseFloat(ball.style.left) || randomBetween(12, 76);
-            const startTop = Number.parseFloat(ball.style.top) || randomBetween(52, 70);
-            let left = startLeft;
-            let top = startTop;
-            let rotate = Number.parseFloat(ball.style.getPropertyValue('--rest-rotate')) || 0;
-            let vx = (Math.random() < .5 ? -1 : 1) * randomBetween(22, 42);
-            let vy = -randomBetween(28, 48);
-            const frames = [];
-            const steps = 38;
-            const gravity = randomBetween(9, 13);
-
-            for (let step = 0; step < steps; step++) {
-                if (step > 0) {
-                    left += vx * .16;
-                    top += vy * .16;
-                    vy += gravity * .16;
-                    rotate += vx * .8 + vy * .28;
-
-                    if (left < leftMin || left > leftMax) {
-                        left = Math.max(leftMin, Math.min(leftMax, left));
-                        vx *= -randomBetween(.68, .84);
-                        rotate += vx * 1.6;
-                    }
-                    if (top < topMin) {
-                        top = topMin;
-                        vy = Math.abs(vy) * randomBetween(.62, .78);
-                    }
-                    if (top > topMax) {
-                        top = topMax;
-                        vy = -Math.abs(vy) * randomBetween(.48, .66);
-                        vx *= randomBetween(.82, .94);
-                    }
-                }
-
-                const offset = (step / (steps - 1)) * .78;
-                const x = (left - startLeft) * bowlRect.width / 100;
-                const y = (top - startTop) * bowlRect.height / 100;
-                frames.push({
-                    transform: `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${rotate.toFixed(1)}deg)`,
-                    offset,
-                    easing: 'linear'
-                });
-            }
-
-            let finalLeft;
-            let finalTop;
-            const settleStyle = Math.random();
-            if (settleStyle < .48) {
-                const spreadSlots = [randomBetween(leftMin, 28), randomBetween(30, 56), randomBetween(58, leftMax)];
-                finalLeft = spreadSlots[index % spreadSlots.length] + randomBetween(-6, 6);
-            } else if (settleStyle < .78) {
-                finalLeft = Math.random() < .5 ? randomBetween(leftMin, 24) : randomBetween(62, leftMax);
-            } else {
-                finalLeft = randomBetween(18, 68);
-            }
-            if (total <= 4 && settleStyle < .58) {
-                finalLeft = randomBetween(leftMin, leftMax);
-            }
-            const pileLiftChance = Math.random();
-            const pileLift = pileLiftChance < .78
-                ? randomBetween(0, 5)
-                : randomBetween(5, total > 9 ? 11 : 8);
-            finalTop = randomBetween(66, topMax) - pileLift;
-            finalLeft = Math.max(leftMin, Math.min(leftMax, finalLeft + randomBetween(-4, 4)));
-            finalTop = Math.max(58, Math.min(topMax, finalTop + randomBetween(-2.5, 2.5)));
-            const finalRotate = rotate + randomBetween(-28, 28);
-            const settleStartLeft = left;
-            const settleStartTop = top;
-            const settleStartRotate = rotate;
-            const settlePoints = [
-                { offset: .84, ease: 'linear', mix: .38, lift: -3 },
-                { offset: .9, ease: 'linear', mix: .66, lift: 1.5 },
-                { offset: .96, ease: 'linear', mix: .9, lift: -1 },
-                { offset: 1, ease: 'linear', mix: 1, lift: 0 }
-            ];
-            settlePoints.forEach(point => {
-                const settledLeft = settleStartLeft + (finalLeft - settleStartLeft) * point.mix;
-                const settledTop = settleStartTop + (finalTop - settleStartTop) * point.mix + point.lift;
-                const settledRotate = settleStartRotate + (finalRotate - settleStartRotate) * point.mix;
-                const x = (settledLeft - startLeft) * bowlRect.width / 100;
-                const y = (settledTop - startTop) * bowlRect.height / 100;
-                frames.push({
-                    transform: `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${settledRotate.toFixed(1)}deg)`,
-                    offset: point.offset,
-                    easing: point.ease
-                });
-            });
+            const ballRect = ball.getBoundingClientRect();
+            const ballPctX = ballRect.width / bowlRect.width * 100;
+            const ballPctY = ballRect.height / bowlRect.height * 100;
+            const edgePadX = total > 36 ? .7 : .65;
+            const edgePadY = .65;
+            const wallLeftMin = Math.max(leftMin, edgePadX);
+            const wallLeftMax = Math.min(leftMax, 100 - ballPctX - edgePadX);
+            const wallTopMin = Math.max(topMin, edgePadY);
+            const baseFloorTop = Math.min(topMax - (total > 36 ? 4.2 : 3.4), 100 - ballPctY - edgePadY);
+            const pileBand = total > 36 ? 8.2 : 9.8;
+            const pileLayer = Math.pow(Math.random(), 1.75) * pileBand;
+            const centerLift = Math.max(0, 1 - Math.abs((index / Math.max(1, total - 1)) - .5) * 2) * randomBetween(0, 2.8);
+            const floorTop = baseFloorTop - Math.min(pileBand, pileLayer + centerLift);
+            const startLeft = Math.max(wallLeftMin, Math.min(wallLeftMax, Number.parseFloat(ball.style.left) || randomBetween(12, 76)));
+            const startTop = Math.max(wallTopMin, Math.min(baseFloorTop, Number.parseFloat(ball.style.top) || randomBetween(52, 70)));
+            const density = total > 36 ? .9 : 1.18;
+            let vx = randomBetween(-168, 168) * density;
+            let vy = randomBetween(-152, 92) * density;
+            if (Math.abs(vx) < 48 * density) vx += (vx < 0 ? -1 : 1) * randomBetween(48, 72) * density;
+            if (Math.abs(vy) < 40 * density) vy += (vy < 0 ? -1 : 1) * randomBetween(40, 62) * density;
             return {
-                frames,
-                finalLeft: `${finalLeft.toFixed(1)}%`,
-                finalTop: `${finalTop.toFixed(1)}%`,
-                finalRotate: `${finalRotate.toFixed(1)}deg`
+                ball,
+                bowlRect,
+                density,
+                floorTop,
+                index,
+                left: startLeft,
+                phase: randomBetween(0, Math.PI * 2),
+                rotate: Number.parseFloat(ball.style.getPropertyValue('--rest-rotate')) || 0,
+                spin: randomBetween(-520, 520) * density,
+                top: startTop,
+                vx,
+                vy,
+                wallLeftMax,
+                wallLeftMin,
+                wallTopMin
             };
+        }
+
+        function stepGachaCapsule(state, elapsed, dt) {
+            const t = elapsed / 1000;
+            const mix = elapsed < 1850 ? 1 : Math.max(0, 1 - (elapsed - 1850) / 560);
+            const settle = 1 - mix;
+            const centerX = 43 + Math.sin(t * 1.55 + state.phase) * 6.2 * mix;
+            const centerY = 43 + Math.cos(t * 1.25 + state.phase * .8) * 5.6 * mix;
+            const dx = state.left - centerX;
+            const dy = state.top - centerY;
+            const swirl = mix * (96 + state.density * 58);
+            const pulse = Math.sin(t * (10.5 + (state.index % 5) * .8) + state.phase);
+            const lift = Math.cos(t * (9.2 + (state.index % 4) * .9) + state.phase * .7);
+            state.vx += ((-dy * 1.18) + pulse * 82) * swirl * dt / 62;
+            state.vy += ((dx * .78) + lift * 72 - 46 * mix) * swirl * dt / 68;
+            state.vy += (110 + settle * 180) * state.density * dt;
+            const drag = mix > 0 ? .992 : Math.max(.68, .9 - settle * .18);
+            state.vx *= drag;
+            state.vy *= drag;
+            state.spin *= mix > 0 ? .986 : Math.max(.45, .86 - settle * .3);
+            state.left += state.vx * dt;
+            state.top += state.vy * dt;
+            state.rotate += state.spin * dt + state.vx * .16;
+
+            if (state.left < state.wallLeftMin || state.left > state.wallLeftMax) {
+                state.left = Math.max(state.wallLeftMin, Math.min(state.wallLeftMax, state.left));
+                state.vx *= -(mix > 0 ? .86 : .42);
+                state.spin += state.vx * 1.7;
+            }
+            if (state.top < state.wallTopMin) {
+                state.top = state.wallTopMin;
+                state.vy = Math.abs(state.vy) * (mix > 0 ? .82 : .32);
+                state.vx += Math.sin(t * 13 + state.phase) * 12 * state.density;
+                state.spin += state.vy * 1.1;
+            }
+            if (state.top > state.floorTop) {
+                state.top = state.floorTop;
+                if (mix > .08) {
+                    state.vy = -Math.abs(state.vy) * .78;
+                } else {
+                    state.vy = 0;
+                    state.vx *= .44;
+                    state.spin *= .34;
+                }
+            }
+
+            state.ball.style.left = `${state.left.toFixed(2)}%`;
+            state.ball.style.top = `${state.top.toFixed(2)}%`;
+            state.ball.style.setProperty('--rest-rotate', `${state.rotate.toFixed(1)}deg`);
         }
 
         function animateGachaCapsules(bowl) {
             const balls = Array.from(bowl?.querySelectorAll('.gacha-ball') || []);
             if (!balls.length) return Promise.resolve();
             bowl.classList.add('shuffling');
-            const animations = balls.map((ball, index) => {
-                const motion = makeGachaBounceMotion(ball, bowl, index, balls.length);
-                const animation = ball.animate(motion.frames, {
-                    duration: randomBetween(1900, 2350),
-                    delay: randomBetween(0, 130),
-                    easing: 'linear',
-                    fill: 'forwards'
-                });
-                return animation.finished
-                    .catch(() => {})
-                    .then(() => {
-                        ball.style.left = motion.finalLeft;
-                        ball.style.top = motion.finalTop;
-                        ball.style.setProperty('--rest-rotate', motion.finalRotate);
-                        ball.style.transform = '';
-                        animation.cancel();
-                    });
-            });
-            return Promise.all(animations).finally(() => {
-                bowl.classList.remove('shuffling');
+            const states = balls.map((ball, index) => makeGachaPhysicsState(ball, bowl, index, balls.length));
+            return new Promise(resolve => {
+                const duration = randomBetween(2300, 2700);
+                let startedAt = 0;
+                let lastAt = 0;
+                function tick(now) {
+                    if (!startedAt) {
+                        startedAt = now;
+                        lastAt = now;
+                    }
+                    const elapsed = now - startedAt;
+                    const dt = Math.min(0.026, (now - lastAt) / 1000 || 0.016);
+                    lastAt = now;
+                    states.forEach(state => stepGachaCapsule(state, elapsed, dt));
+                    if (elapsed < duration) {
+                        requestAnimationFrame(tick);
+                    } else {
+                        bowl.classList.remove('shuffling');
+                        resolve();
+                    }
+                }
+                requestAnimationFrame(tick);
             });
         }
 
@@ -2502,6 +2502,7 @@
             const names = visibleGachaNames();
             if (names.length < 2) return;
             closeGachaPrize();
+            renderGacha();
             gacha.drawing = true;
             const lever = $('gacha-btn');
             const bowl = $('gacha-bowl');
@@ -2510,7 +2511,7 @@
             void lever.offsetWidth;
             lever.classList.add('pulling');
             await animateGachaCapsules(bowl);
-            await new Promise(resolve => setTimeout(resolve, 520));
+            await new Promise(resolve => setTimeout(resolve, 180));
             drawGacha();
         }
 
