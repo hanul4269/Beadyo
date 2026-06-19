@@ -1601,10 +1601,13 @@ async function fetchAll(table, filters = {}, order = []) {
 
 // ── 데이터 로드 ──────────────────────────────────
 async function loadSongbook() {
-    if (S.songbookData) { renderSongbook(); return; }
-    renderSkeleton('songbook-list');
+    if (S.songbookData) {
+        if (S.mainTab === 'songbook') renderSongbook();
+        return;
+    }
+    if (S.mainTab === 'songbook') renderSkeleton('songbook-list');
     S.songbookData = await fetchAll('songbook', {}, [['artist', true], ['title', true]]);
-    renderSongbook();
+    if (S.mainTab === 'songbook') renderSongbook();
 }
 
 async function loadLive(year) {
