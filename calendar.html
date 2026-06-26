@@ -1273,6 +1273,118 @@
             word-break: break-word;
             overflow-wrap: break-word;
         }
+
+        /* ── 공지 팝업 ── */
+        #noticePopup {
+            z-index: 1400;
+            padding: 14px;
+            background: rgba(15, 10, 6, 0.68);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        #noticePopup .notice-modal {
+            display: flex;
+            flex-direction: column;
+            width: min(92vw, 430px);
+            max-height: 92vh;
+            padding: 0;
+            border-radius: 18px;
+            background: #1d0d08;
+            border: 1px solid rgba(255, 217, 138, 0.34);
+            box-shadow: 0 18px 54px rgba(0,0,0,0.36);
+            overflow: hidden;
+        }
+        .notice-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 46px;
+            padding: 0 10px 0 16px;
+            background: linear-gradient(180deg, rgba(63,27,12,.96), rgba(25,10,7,.96));
+            color: #fff3cf;
+            font-size: 15px;
+            font-weight: 900;
+            letter-spacing: 0;
+        }
+        .notice-close {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 50%;
+            background: transparent;
+            color: #fff3cf;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+        }
+        .notice-close:hover {
+            background: rgba(255,255,255,0.12);
+        }
+        .notice-image-wrap {
+            position: relative;
+            overflow-y: auto;
+            background: #120604;
+        }
+        .notice-image {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .notice-link {
+            position: sticky;
+            left: 50%;
+            bottom: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: max-content;
+            min-width: 178px;
+            min-height: 48px;
+            margin: -70px auto 18px;
+            padding: 0 24px;
+            border: 1px solid rgba(255,255,255,0.48);
+            border-radius: 999px;
+            background: linear-gradient(180deg, #fff8e6, #d9a53a);
+            color: #6f280b;
+            font-size: 16px;
+            font-weight: 900;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.28), 0 0 18px rgba(255, 188, 76, 0.38);
+            text-decoration: none;
+            transform: translateX(-50%);
+            transition: filter 0.14s ease;
+        }
+        .notice-link:hover {
+            filter: brightness(1.04);
+        }
+        .notice-link svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        @media (max-width: 480px) {
+            #noticePopup {
+                padding: 10px;
+            }
+            #noticePopup .notice-modal {
+                width: min(94vw, 390px);
+                border-radius: 14px;
+            }
+            .notice-link {
+                min-width: 160px;
+                min-height: 46px;
+                margin-bottom: 14px;
+                padding: 0 20px;
+                font-size: 15px;
+            }
+        }
         /* ── UP 랭킹 모달 ── */
         #upModal .modal { max-width: 520px; }
         .up-tabs {
@@ -2549,6 +2661,22 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
 </button>
 
+<div class="modal-overlay" id="noticePopup" onmousedown="if(event.target===this)closeNoticePopup()">
+    <div class="modal notice-modal" role="dialog" aria-modal="true" aria-label="공지사항">
+        <div class="notice-head">
+            <span>공지사항</span>
+            <button type="button" class="notice-close" onclick="closeNoticePopup()" aria-label="공지 닫기">×</button>
+        </div>
+        <div class="notice-image-wrap">
+            <img class="notice-image" src="notice-bosikham-season2.png" alt="구슬요의 보석함 시즌 2 공지" width="800" height="2114" decoding="async">
+            <a class="notice-link" href="https://www.sooplive.com/station/beadyo97/post/199734125" target="_blank" rel="noopener noreferrer" aria-label="SOOP 공지 보러가기" title="SOOP 공지 보러가기">
+                <svg viewBox="0 0 24 24"><path d="M7 17 17 7"/><path d="M9 7h8v8"/><path d="M7 7H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/></svg>
+                <span>공지 보러가기</span>
+            </a>
+        </div>
+    </div>
+</div>
+
 <div class="modal-overlay" id="memoModal" onmousedown="if(event.target===this)closeMemoModal()">
     <div class="modal">
         <div class="modal-header">
@@ -2824,5 +2952,17 @@
     </div>
 </div>
 
+<script>
+function openNoticePopup() {
+    document.getElementById('noticePopup')?.classList.add('open');
+}
+function closeNoticePopup() {
+    document.getElementById('noticePopup')?.classList.remove('open');
+}
+document.addEventListener('DOMContentLoaded', openNoticePopup);
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeNoticePopup();
+});
+</script>
 </body>
 </html>
