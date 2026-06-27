@@ -19,7 +19,7 @@
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
     <script defer src="supabase.min.js"></script>
-    <script defer src="index-app.js?v=gacha-wall-hit-20260614"></script>
+    <script defer src="index-app.js?v=gembox-subnav-20260628"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         [hidden] { display: none !important; }
@@ -364,6 +364,47 @@
         .tab:hover .tab-icon {
             background: linear-gradient(170deg, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0.13) 100%);
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.42), 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .tab-subnav {
+            display: none;
+            justify-content: center;
+            gap: 6px;
+            padding: 7px 14px 9px;
+            border-top: 1px solid rgba(255,255,255,0.16);
+            background: rgba(65,100,37,0.18);
+        }
+
+        .tab-subnav.open {
+            display: flex;
+        }
+
+        .subtab {
+            min-width: 86px;
+            height: 34px;
+            padding: 0 16px;
+            border: 1px solid rgba(255,255,255,0.26);
+            border-radius: 999px;
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.78);
+            font: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+
+        .subtab:hover {
+            background: rgba(255,255,255,0.17);
+            color: #fff;
+        }
+
+        .subtab.active {
+            background: #fff;
+            color: #4f7f25;
+            border-color: rgba(255,255,255,0.72);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.14);
         }
 
         /* ── 콘텐츠 ── */
@@ -1044,6 +1085,10 @@
             GAME
         </div>
     </div>
+    <div class="tab-subnav" id="music-subnav" aria-label="MUSIC 하위 메뉴">
+        <button class="subtab active" data-music-page="songs" onclick="switchMusicPage('songs')">MUSIC</button>
+        <button class="subtab" data-music-page="gembox" onclick="switchMusicPage('gembox')">보석함</button>
+    </div>
     </div>
 
     <div class="login-overlay" id="login-overlay" onclick="handleLoginOverlayClick(event)">
@@ -1164,7 +1209,7 @@
             <iframe class="sheet-frame" id="frame-1" title="일정표" loading="lazy"></iframe>
             <iframe class="sheet-frame local-frame-host" id="frame-2" title="노래책" loading="lazy"></iframe>
             <iframe class="sheet-frame local-frame-host" id="frame-3" title="라이브 기록" loading="lazy"></iframe>
-            <iframe class="sheet-frame" id="frame-4" title="음악" loading="lazy"></iframe>
+            <iframe class="sheet-frame local-frame-host" id="frame-4" title="음악" loading="lazy"></iframe>
             <iframe class="sheet-frame local-frame-host" id="frame-5" title="게임" loading="lazy"></iframe>
         </div>
         <footer class="site-footer">

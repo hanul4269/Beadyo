@@ -187,37 +187,6 @@
         }
         .add-btn:hover { background: var(--accent-dark); }
         .is-editor .add-btn { display: flex; }
-        .gem-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            height: 32px;
-            padding: 0 13px;
-            border-radius: 999px;
-            border: 1px solid rgba(127,184,63,0.28);
-            background: #fff;
-            color: var(--accent-dark);
-            font-size: 12px;
-            font-weight: 800;
-            text-decoration: none;
-            white-space: nowrap;
-            box-shadow: 0 1px 5px rgba(34,39,32,0.08);
-        }
-        .gem-link:hover {
-            background: var(--accent-light);
-            border-color: rgba(127,184,63,0.48);
-        }
-        .gem-link svg {
-            width: 15px;
-            height: 15px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2.2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
         /* ─── 그리드 ─── */
         .songs-body {
             padding: 18px 18px 44px;
@@ -245,7 +214,6 @@
             .songs-title { font-size: 18px; }
             .filter-tabs { flex: 1 1 100%; order: 2; overflow-x: auto; }
             .filter-tab { min-width: 64px; height: 34px; padding: 0 12px; }
-            .gem-link { order: 3; height: 34px; }
             .search-tools { gap: 8px; }
             .sort-select { width: 112px; flex-shrink: 0; }
             .search-bar { padding: 0 12px 10px; }
@@ -580,10 +548,6 @@
                 <button class="filter-tab" onclick="setFilter('cover')">커버</button>
                 <button class="filter-tab" onclick="setFilter('live')">라이브</button>
             </div>
-            <a class="gem-link" href="bosikham.html" aria-label="구슬요의 보석함 페이지">
-                <svg viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 12L2 9Z"/><path d="M2 9h20"/><path d="m7 3 5 18 5-18"/></svg>
-                보석함
-            </a>
             <button class="add-btn" onclick="openAddModal()">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/></svg>
                 추가

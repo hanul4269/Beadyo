@@ -26,24 +26,40 @@ const TABS = [
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
     { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'gacha-wall-hit-20260614' },
     { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'gacha-wall-hit-20260614' },
-    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'bosikham-link-20260628' },
+    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'gembox-subnav-20260628' },
     { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'gacha-wall-hit-20260614' },
 ];
 
 const GAME_TAB_INDEX = 5;
 const TAB_ROUTES = ['calendar', 'schedule', 'songbook', 'live', 'music', 'games'];
+const MUSIC_TAB_INDEX = 4;
+const MUSIC_PAGES = {
+    songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'gembox-subnav-20260628' },
+    gembox: { src: 'gembox.html', directUrl: 'gembox.html', assetVersion: 'gembox-subnav-20260628' },
+};
+let currentMusicPage = 'songs';
+
+function routeToMusicPage() {
+    const params = new URLSearchParams(window.location.search);
+    const queryTab = (params.get('tab') || '').toLowerCase();
+    const hash = window.location.hash.replace(/^#/, '').toLowerCase();
+    const route = queryTab || hash;
+    if (route === 'gembox' || route === 'jewelbox') return 'gembox';
+    if (route === 'music' || route === 'songs') return 'songs';
+    return null;
+}
 
 function routeToTabIndex() {
     const params = new URLSearchParams(window.location.search);
     const queryTab = (params.get('tab') || '').toLowerCase();
     if (queryTab === 'game') return GAME_TAB_INDEX;
-    if (queryTab === 'songs') return 4;
+    if (queryTab === 'songs' || queryTab === 'music' || queryTab === 'gembox' || queryTab === 'jewelbox') return MUSIC_TAB_INDEX;
     const queryIndex = TAB_ROUTES.indexOf(queryTab);
     if (queryIndex >= 0) return queryIndex;
 
     const hash = window.location.hash.replace(/^#/, '').toLowerCase();
     if (hash === 'game-preview') return GAME_TAB_INDEX;
-    if (hash === 'songs') return 4;
+    if (hash === 'songs' || hash === 'music' || hash === 'gembox' || hash === 'jewelbox') return MUSIC_TAB_INDEX;
     const hashIndex = TAB_ROUTES.indexOf(hash);
     if (hashIndex >= 0) return hashIndex;
 
@@ -51,7 +67,7 @@ function routeToTabIndex() {
 }
 
 function syncTabUrl(index, replace = false) {
-    const route = TAB_ROUTES[index];
+    const route = index === MUSIC_TAB_INDEX && currentMusicPage === 'gembox' ? 'gembox' : TAB_ROUTES[index];
     if (!route) return;
     const nextUrl = `${window.location.pathname}${window.location.search}#${route}`;
     if (window.location.href.endsWith(`#${route}`)) return;
@@ -98,6 +114,10 @@ async function isEditorUser(user) {
 const isMobile = window.matchMedia('(max-width: 640px)').matches;
 
 function getFrameUrl(index) {
+    if (index === MUSIC_TAB_INDEX) {
+        const musicPage = MUSIC_PAGES[currentMusicPage] || MUSIC_PAGES.songs;
+        return withFrameAssetVersion(musicPage.src, musicPage.assetVersion);
+    }
     const tab = TABS[index];
     if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'games') {
         return withFrameAssetVersion(tab.src, tab.assetVersion);
@@ -108,6 +128,9 @@ function getFrameUrl(index) {
 }
 
 function getSheetDirectUrl(index) {
+    if (index === MUSIC_TAB_INDEX) {
+        return (MUSIC_PAGES[currentMusicPage] || MUSIC_PAGES.songs).directUrl;
+    }
     const tab = TABS[index];
     if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'games') return tab.directUrl;
     if (tab.type === 'schedule') return scheduleUrl(tab);
@@ -119,6 +142,24 @@ function hideLoading(index) {
     if (el) el.style.display = 'none';
     const frame = document.getElementById(`frame-${index}`);
     if (frame) requestAnimationFrame(() => frame.classList.add('loaded'));
+}
+
+function resetFrameScroll(index) {
+    try {
+        const frame = document.getElementById(`frame-${index}`);
+        frame?.contentWindow?.scrollTo(0, 0);
+        if (frame?.contentDocument) {
+            frame.contentDocument.documentElement.scrollTop = 0;
+            frame.contentDocument.body.scrollTop = 0;
+        }
+    } catch {}
+}
+
+function resetFrameScrollAfterLoad(index) {
+    resetFrameScroll(index);
+    setTimeout(() => resetFrameScroll(index), 80);
+    setTimeout(() => resetFrameScroll(index), 260);
+    setTimeout(() => resetFrameScroll(index), 700);
 }
 
 function updateMobileFab(index) {
@@ -149,6 +190,15 @@ function syncCalendarAuth() {
         const frame = document.getElementById(id);
         if (frame?.contentWindow) frame.contentWindow.postMessage(msg, origin);
     }
+}
+
+function updateMusicSubnav(activeIndex) {
+    const nav = document.getElementById('music-subnav');
+    if (!nav) return;
+    nav.classList.toggle('open', activeIndex === MUSIC_TAB_INDEX);
+    nav.querySelectorAll('.subtab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.musicPage === currentMusicPage);
+    });
 }
 
 function sendCalendarAction(action) {
@@ -221,6 +271,7 @@ function switchTab(index, options = {}) {
     const { updateUrl = true, replaceUrl = false } = options;
     document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
     document.querySelectorAll('.sheet-frame').forEach((f, i) => f.classList.toggle('active', i === index));
+    updateMusicSubnav(index);
 
     updateMobileFab(index);
     try { localStorage.setItem('activeTab', index); } catch {}
@@ -234,6 +285,7 @@ function switchTab(index, options = {}) {
     } else {
         document.getElementById('loading').style.display = 'flex';
         frame.onload = () => {
+            resetFrameScrollAfterLoad(index);
             hideLoading(index);
             if (index === 0 || index === 2 || index === 3 || index === 4) syncCalendarAuth();
         };
@@ -242,9 +294,37 @@ function switchTab(index, options = {}) {
     }
 }
 
+function switchMusicPage(page) {
+    if (!MUSIC_PAGES[page]) return;
+    currentMusicPage = page;
+    try { localStorage.setItem('musicSubpage', page); } catch {}
+    updateMusicSubnav(MUSIC_TAB_INDEX);
+
+    const frame = document.getElementById(`frame-${MUSIC_TAB_INDEX}`);
+    const isMusicActive = frame?.classList.contains('active');
+    loaded.delete(MUSIC_TAB_INDEX);
+
+    if (!isMusicActive) {
+        switchTab(MUSIC_TAB_INDEX);
+        return;
+    }
+
+    document.getElementById('loading').style.display = 'flex';
+    frame.onload = () => {
+        resetFrameScrollAfterLoad(MUSIC_TAB_INDEX);
+        hideLoading(MUSIC_TAB_INDEX);
+        syncCalendarAuth();
+    };
+    frame.src = getFrameUrl(MUSIC_TAB_INDEX);
+    loaded.add(MUSIC_TAB_INDEX);
+    syncTabUrl(MUSIC_TAB_INDEX);
+}
+
 // 첫 탭 초기 로드
 try {
     let initialTab = 0;
+    currentMusicPage = routeToMusicPage() || localStorage.getItem('musicSubpage') || 'songs';
+    if (!MUSIC_PAGES[currentMusicPage]) currentMusicPage = 'songs';
     const routeTab = routeToTabIndex();
     if (routeTab !== null) {
         initialTab = routeTab;
@@ -263,6 +343,11 @@ try {
 }
 
 window.addEventListener('hashchange', () => {
+    const musicPage = routeToMusicPage();
+    if (musicPage && musicPage !== currentMusicPage) {
+        switchMusicPage(musicPage);
+        return;
+    }
     const routeTab = routeToTabIndex();
     if (routeTab !== null) switchTab(routeTab, { updateUrl: false });
 });

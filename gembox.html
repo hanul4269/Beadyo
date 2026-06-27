@@ -34,39 +34,6 @@
             margin: 0 auto;
             padding: 0 0 48px;
         }
-        .topbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            max-width: 1180px;
-            margin: 0 auto;
-            padding: 14px 18px 10px;
-        }
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            min-height: 36px;
-            padding: 0 13px;
-            border: 1px solid rgba(127,184,63,0.28);
-            border-radius: 999px;
-            background: #fff;
-            color: var(--accent-dark);
-            font-size: 13px;
-            font-weight: 800;
-            text-decoration: none;
-            box-shadow: 0 1px 5px rgba(34,39,32,0.08);
-        }
-        .back-link svg {
-            width: 16px;
-            height: 16px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2.2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
         .hero {
             position: relative;
             min-height: 300px;
@@ -174,6 +141,7 @@
             border: 1px solid rgba(127,184,63,0.24);
             font-size: 14px;
             font-weight: 900;
+            text-decoration: none;
             box-shadow: 0 8px 18px rgba(34,39,32,0.08);
         }
         .dday-chip strong {
@@ -213,7 +181,7 @@
             max-width: 1180px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             gap: 12px;
             margin: 0 auto 14px;
             padding: 0 18px;
@@ -243,23 +211,6 @@
             background: #fff;
             color: var(--accent-dark);
             box-shadow: 0 1px 5px rgba(34,39,32,0.1);
-        }
-        .search {
-            width: min(100%, 320px);
-            height: 40px;
-            padding: 0 13px;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            background: #fff;
-            color: var(--text);
-            font: inherit;
-            font-size: 13px;
-            font-weight: 700;
-            outline: none;
-        }
-        .search:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(127,184,63,0.13);
         }
         .cast-grid {
             max-width: 1180px;
@@ -364,12 +315,6 @@
             font-weight: 900;
             line-height: 1.25;
             word-break: keep-all;
-        }
-        .cast-tone {
-            color: var(--muted);
-            font-size: 12px;
-            font-weight: 800;
-            white-space: nowrap;
         }
         .cast-note {
             color: #4d5549;
@@ -484,20 +429,12 @@
             .season-card strong { font-size: 22px; }
             .controls { align-items: stretch; }
             .season-tabs { width: 100%; overflow-x: auto; }
-            .search { width: 100%; }
             .cast-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <main class="page-shell">
-        <div class="topbar">
-            <a class="back-link" href="songs.html">
-                <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/><path d="M9 12h12"/></svg>
-                MUSIC
-            </a>
-        </div>
-
         <section class="hero">
             <div class="hero-inner">
                 <div class="hero-main">
@@ -508,10 +445,9 @@
                         시즌별 출연진의 개인곡과 방송국 링크를 한곳에 모았습니다.
                     </p>
                     <div class="hero-actions">
-                        <a class="hero-button" href="#castGrid">출연진 보기</a>
                         <a class="hero-button secondary" href="https://vod.sooplive.com/player/132894553" target="_blank" rel="noopener noreferrer">시즌1 다시보기</a>
                         <a class="hero-button secondary" href="https://ch.sooplive.co.kr/beadyo97" target="_blank" rel="noopener noreferrer">SOOP 방송국</a>
-                        <span class="dday-chip" id="season2Dday">Season 2 <strong>D-</strong></span>
+                        <a class="dday-chip" id="season2Dday" href="https://www.sooplive.com/station/beadyo97/post/199734125" target="_blank" rel="noopener noreferrer">Season 2 <strong>D-</strong></a>
                         <span class="hero-meta">2026.06.29 오후 7시</span>
                     </div>
                 </div>
@@ -530,7 +466,6 @@
 
         <section class="controls" aria-label="보석함 필터">
             <div class="season-tabs" id="seasonTabs"></div>
-            <input class="search" id="castSearch" type="search" placeholder="출연진 검색" autocomplete="off">
         </section>
 
         <section class="cast-grid" id="castGrid"></section>
@@ -644,7 +579,7 @@
         ];
 
         const SEASON2_AT = new Date('2026-06-29T19:00:00+09:00');
-        const state = { season: 2, query: '' };
+        const state = { season: 2 };
         const seasons = [2, 1];
 
         function esc(value) {
@@ -707,11 +642,7 @@
 
         function matchesCast(cast) {
             const seasonOk = Number(cast.season) === Number(state.season);
-            if (!seasonOk) return false;
-            const query = state.query.trim().toLowerCase();
-            if (!query) return true;
-            return [cast.name, cast.tone, cast.note]
-                .some(text => String(text || '').toLowerCase().includes(query));
+            return seasonOk;
         }
 
         function renderCast() {
@@ -754,7 +685,6 @@
                                 ${profileUrl ? `<img class="profile-img" src="${esc(profileUrl)}" alt="" loading="lazy" decoding="async">` : `<span class="profile-fallback">${initial}</span>`}
                                 <div class="cast-name">${esc(cast.name || '출연진')}</div>
                             </div>
-                            <div class="cast-tone">${esc(cast.tone || '')}</div>
                         </div>
                         ${cast.note ? `<p class="cast-note">${esc(cast.note)}</p>` : ''}
                         <div class="song-list">${songHtml}</div>
@@ -784,10 +714,6 @@
             el.innerHTML = `Season 2 <strong>${label}</strong>`;
         }
 
-        document.getElementById('castSearch').addEventListener('input', event => {
-            state.query = event.target.value;
-            renderCast();
-        });
         renderDday();
         renderSeasonTabs();
         renderCast();
