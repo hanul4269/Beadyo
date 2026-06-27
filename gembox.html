@@ -36,8 +36,8 @@
         }
         .hero {
             position: relative;
-            min-height: 300px;
-            margin-bottom: 18px;
+            min-height: 190px;
+            margin-bottom: 12px;
             background:
                 linear-gradient(90deg, rgba(244,249,239,0.96) 0%, rgba(244,249,239,0.88) 43%, rgba(244,249,239,0.54) 72%, rgba(244,249,239,0.84) 100%),
                 url("banner.png") center / cover no-repeat;
@@ -57,9 +57,9 @@
             position: relative;
             z-index: 1;
             max-width: 1180px;
-            min-height: 300px;
+            min-height: 190px;
             margin: 0 auto;
-            padding: 34px 18px 28px;
+            padding: 8px 18px 14px;
             display: grid;
             grid-template-columns: minmax(0, 1fr) auto;
             gap: 28px;
@@ -69,18 +69,8 @@
             align-self: center;
             max-width: 720px;
         }
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            margin-bottom: 10px;
-            color: var(--accent-dark);
-            font-size: 12px;
-            font-weight: 900;
-            letter-spacing: 0.08em;
-        }
         h1 {
-            font-size: clamp(42px, 5vw, 68px);
+            font-size: clamp(34px, 4vw, 50px);
             line-height: 1.05;
             letter-spacing: 0;
             color: rgba(20,24,18,0.96);
@@ -88,10 +78,10 @@
         }
         .hero-copy {
             max-width: 680px;
-            margin-top: 12px;
+            margin-top: 5px;
             color: rgba(45,54,39,0.88);
-            font-size: 17px;
-            line-height: 1.64;
+            font-size: 15px;
+            line-height: 1.42;
             font-weight: 800;
             word-break: keep-all;
         }
@@ -100,14 +90,14 @@
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
-            margin-top: 18px;
+            margin-top: 9px;
         }
         .hero-button {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-height: 42px;
-            padding: 0 17px;
+            min-height: 34px;
+            padding: 0 13px;
             border-radius: 8px;
             background: var(--accent);
             color: #fff;
@@ -133,8 +123,8 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            min-height: 42px;
-            padding: 0 15px;
+            min-height: 34px;
+            padding: 0 13px;
             border-radius: 8px;
             background: rgba(255,255,255,0.86);
             color: rgba(20,24,18,0.96);
@@ -155,8 +145,8 @@
             align-self: end;
         }
         .season-card {
-            min-height: 84px;
-            padding: 14px 15px;
+            min-height: 62px;
+            padding: 9px 12px;
             border: 1px solid rgba(255,255,255,0.62);
             border-radius: 8px;
             background: rgba(255,255,255,0.82);
@@ -167,7 +157,7 @@
         .season-card strong {
             display: block;
             color: rgba(20,24,18,0.96);
-            font-size: 26px;
+            font-size: 22px;
             line-height: 1;
             margin-bottom: 7px;
         }
@@ -235,6 +225,57 @@
             aspect-ratio: 16 / 9;
             background: linear-gradient(135deg, #edf4e5, #fff8e6);
             overflow: hidden;
+        }
+        .cast-cover.video-cover {
+            border: 0;
+            padding: 0;
+            width: 100%;
+            cursor: pointer;
+            font: inherit;
+            text-align: left;
+        }
+        .cast-cover.video-cover::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            box-shadow: 0 8px 20px rgba(34,39,32,0.18);
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.15s, transform 0.15s;
+        }
+        .cast-cover.video-cover::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 2;
+            width: 0;
+            height: 0;
+            border-top: 11px solid transparent;
+            border-bottom: 11px solid transparent;
+            border-left: 17px solid var(--accent-dark);
+            transform: translate(-38%, -50%);
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+        .cast-cover.video-cover:hover::after,
+        .cast-cover.video-cover:hover::before,
+        .cast-cover.video-cover:focus-visible::after,
+        .cast-cover.video-cover:focus-visible::before {
+            opacity: 1;
+        }
+        .cast-cover.video-cover:hover::after,
+        .cast-cover.video-cover:focus-visible::after {
+            transform: translate(-50%, -50%) scale(1.04);
+        }
+        .cast-cover.video-cover:focus-visible {
+            outline: 3px solid rgba(127,184,63,0.4);
+            outline-offset: -3px;
         }
         .cast-cover img {
             width: 100%;
@@ -398,6 +439,67 @@
             object-fit: contain;
             opacity: 0.85;
         }
+        .video-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(20,24,18,0.68);
+        }
+        .video-modal.open {
+            display: flex;
+        }
+        .video-dialog {
+            width: min(100%, 920px);
+            border-radius: 8px;
+            background: #10130f;
+            box-shadow: 0 22px 70px rgba(0,0,0,0.42);
+            overflow: hidden;
+        }
+        .video-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            min-height: 48px;
+            padding: 10px 12px 10px 16px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 900;
+        }
+        .video-title {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .video-close {
+            width: 34px;
+            height: 34px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            font-size: 22px;
+            line-height: 1;
+            cursor: pointer;
+        }
+        .video-close:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        .video-frame-wrap {
+            aspect-ratio: 16 / 9;
+            background: #000;
+        }
+        .video-frame-wrap iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+        }
         @media (max-width: 900px) {
             .hero-inner {
                 grid-template-columns: 1fr;
@@ -413,23 +515,25 @@
             .page-shell { padding-bottom: 36px; }
             .topbar { align-items: flex-start; }
             .hero {
-                min-height: 360px;
+                min-height: 266px;
                 background-position: center;
             }
             .hero-inner {
-                min-height: 360px;
-                padding: 26px 12px 24px;
+                min-height: 266px;
+                padding: 10px 12px 16px;
             }
-            h1 { font-size: 38px; }
-            .hero-copy { font-size: 14px; max-width: 92%; }
-            .hero-actions { gap: 8px; }
-            .hero-button, .dday-chip { min-height: 38px; padding: 0 13px; font-size: 13px; }
+            h1 { font-size: 34px; }
+            .hero-copy { font-size: 13px; max-width: 94%; line-height: 1.38; }
+            .hero-actions { gap: 7px; margin-top: 8px; }
+            .hero-button, .dday-chip { min-height: 34px; padding: 0 12px; font-size: 12px; }
             .dday-chip strong { font-size: 16px; }
             .hero-side { grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
             .season-card strong { font-size: 22px; }
             .controls { align-items: stretch; }
             .season-tabs { width: 100%; overflow-x: auto; }
             .cast-grid { grid-template-columns: 1fr; }
+            .video-modal { padding: 12px; }
+            .video-head { min-height: 44px; padding-left: 12px; }
         }
     </style>
 </head>
@@ -438,7 +542,6 @@
         <section class="hero">
             <div class="hero-inner">
                 <div class="hero-main">
-                    <div class="eyebrow">BEADYO GEMBOX</div>
                     <h1>구슬요의 보석함</h1>
                     <p class="hero-copy">
                         구슬요가 좋아하는 목소리를 가진 사람들을 초대해 커버곡을 남기는 음악 콘텐츠입니다.
@@ -470,6 +573,15 @@
 
         <section class="cast-grid" id="castGrid"></section>
     </main>
+    <div class="video-modal" id="videoModal" aria-hidden="true" onclick="handleVideoBackdrop(event)">
+        <div class="video-dialog" role="dialog" aria-modal="true" aria-labelledby="videoTitle">
+            <div class="video-head">
+                <div class="video-title" id="videoTitle"></div>
+                <button class="video-close" type="button" onclick="closeVideoModal()" aria-label="영상 닫기">×</button>
+            </div>
+            <div class="video-frame-wrap" id="videoFrameWrap"></div>
+        </div>
+    </div>
 
     <script>
         const CAST = [
@@ -619,6 +731,11 @@
             return /^[A-Za-z0-9_-]{11}$/.test(id) ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : '';
         }
 
+        function youtubeEmbedUrl(url) {
+            const id = youtubeId(url);
+            return /^[A-Za-z0-9_-]{11}$/.test(id) ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0` : '';
+        }
+
         function soopProfileImage(stationId) {
             const id = String(stationId || '').trim();
             if (!/^[A-Za-z0-9_]+$/.test(id)) return '';
@@ -661,8 +778,10 @@
             grid.innerHTML = items.map(cast => {
                 const stationUrl = safeUrl(cast.stationUrl);
                 const songs = Array.isArray(cast.songs) ? cast.songs : [];
+                const primarySong = songs[0] || null;
+                const videoUrl = youtubeEmbedUrl(primarySong?.url || '');
                 const profileUrl = safeUrl(cast.profileImage) || soopProfileImage(cast.stationId);
-                const imageUrl = safeUrl(cast.image) || youtubeThumb(songs[0]?.url || '') || profileUrl;
+                const imageUrl = safeUrl(cast.image) || youtubeThumb(primarySong?.url || '') || profileUrl;
                 const initial = esc(String(cast.name || '?').trim().slice(0, 1) || '?');
                 const songHtml = songs.length
                     ? songs.map(song => {
@@ -670,15 +789,14 @@
                         if (!href) return '';
                         return `<a class="song-link" href="${esc(href)}" target="_blank" rel="noopener noreferrer">
                             <span>${esc(song.title || '개인곡')}</span>
-                            <small>${esc(song.label || '듣기')}</small>
                         </a>`;
                     }).join('')
                     : `<div class="song-link" aria-disabled="true"><span>개인곡 준비 중</span><small>soon</small></div>`;
                 return `<article class="cast-card">
-                    <div class="cast-cover">
+                    ${videoUrl ? `<button class="cast-cover video-cover" type="button" onclick="openVideoModal('${esc(videoUrl)}', '${esc(primarySong?.title || cast.name || '영상')}')" aria-label="${esc(cast.name || '출연진')} 영상 재생">` : `<div class="cast-cover">`}
                         ${imageUrl ? `<img src="${esc(imageUrl)}" alt="${esc(cast.name || '')}" loading="lazy" decoding="async">` : `<div class="cast-fallback">${initial}</div>`}
                         <div class="season-badge">Season ${esc(cast.season || '')}</div>
-                    </div>
+                    ${videoUrl ? `</button>` : `</div>`}
                     <div class="cast-body">
                         <div class="cast-head">
                             <div class="cast-profile">
@@ -713,6 +831,37 @@
             else label = `D+${Math.abs(dayDiff)}`;
             el.innerHTML = `Season 2 <strong>${label}</strong>`;
         }
+
+        function openVideoModal(src, title) {
+            const modal = document.getElementById('videoModal');
+            const titleEl = document.getElementById('videoTitle');
+            const frameWrap = document.getElementById('videoFrameWrap');
+            const safeSrc = safeUrl(src);
+            if (!modal || !frameWrap || !safeSrc) return;
+            titleEl.textContent = title || '영상';
+            frameWrap.innerHTML = `<iframe src="${esc(safeSrc)}" title="${esc(title || 'YouTube 영상')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const frameWrap = document.getElementById('videoFrameWrap');
+            if (!modal || !frameWrap) return;
+            modal.classList.remove('open');
+            modal.setAttribute('aria-hidden', 'true');
+            frameWrap.innerHTML = '';
+            document.body.style.overflow = '';
+        }
+
+        function handleVideoBackdrop(event) {
+            if (event.target?.id === 'videoModal') closeVideoModal();
+        }
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') closeVideoModal();
+        });
 
         renderDday();
         renderSeasonTabs();
