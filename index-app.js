@@ -35,6 +35,7 @@ const TAB_ROUTES = ['calendar', 'schedule', 'songbook', 'live', 'music', 'games'
 const MUSIC_TAB_INDEX = 4;
 const MUSIC_PAGES = {
     songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'gembox-subnav-20260628' },
+    dance: { src: 'dance.html', directUrl: 'dance.html', assetVersion: 'dance-nav-20260628' },
     gembox: { src: 'gembox.html', directUrl: 'gembox.html', assetVersion: 'gembox-subnav-20260628' },
 };
 let currentMusicPage = 'songs';
@@ -45,6 +46,7 @@ function routeToMusicPage() {
     const hash = window.location.hash.replace(/^#/, '').toLowerCase();
     const route = queryTab || hash;
     if (route === 'gembox' || route === 'jewelbox') return 'gembox';
+    if (route === 'dance' || route === 'dance-video' || route === 'dance-videos') return 'dance';
     if (route === 'music' || route === 'songs') return 'songs';
     return null;
 }
@@ -53,13 +55,13 @@ function routeToTabIndex() {
     const params = new URLSearchParams(window.location.search);
     const queryTab = (params.get('tab') || '').toLowerCase();
     if (queryTab === 'game') return GAME_TAB_INDEX;
-    if (queryTab === 'songs' || queryTab === 'music' || queryTab === 'gembox' || queryTab === 'jewelbox') return MUSIC_TAB_INDEX;
+    if (queryTab === 'songs' || queryTab === 'music' || queryTab === 'gembox' || queryTab === 'jewelbox' || queryTab === 'dance' || queryTab === 'dance-video' || queryTab === 'dance-videos') return MUSIC_TAB_INDEX;
     const queryIndex = TAB_ROUTES.indexOf(queryTab);
     if (queryIndex >= 0) return queryIndex;
 
     const hash = window.location.hash.replace(/^#/, '').toLowerCase();
     if (hash === 'game-preview') return GAME_TAB_INDEX;
-    if (hash === 'songs' || hash === 'music' || hash === 'gembox' || hash === 'jewelbox') return MUSIC_TAB_INDEX;
+    if (hash === 'songs' || hash === 'music' || hash === 'gembox' || hash === 'jewelbox' || hash === 'dance' || hash === 'dance-video' || hash === 'dance-videos') return MUSIC_TAB_INDEX;
     const hashIndex = TAB_ROUTES.indexOf(hash);
     if (hashIndex >= 0) return hashIndex;
 
@@ -67,7 +69,9 @@ function routeToTabIndex() {
 }
 
 function syncTabUrl(index, replace = false) {
-    const route = index === MUSIC_TAB_INDEX && currentMusicPage === 'gembox' ? 'gembox' : TAB_ROUTES[index];
+    const route = index === MUSIC_TAB_INDEX
+        ? (currentMusicPage === 'songs' ? 'music' : currentMusicPage)
+        : TAB_ROUTES[index];
     if (!route) return;
     const nextUrl = `${window.location.pathname}${window.location.search}#${route}`;
     if (window.location.href.endsWith(`#${route}`)) return;
@@ -244,6 +248,11 @@ function openCalendarAdmin() {
     setTimeout(() => sendCalendarAction('open-admin'), 120);
 }
 
+function openDanceReviewPage() {
+    closeAuthMenu();
+    window.location.href = withFrameAssetVersion('dance-archive.html', 'dance-nav-20260628');
+}
+
 async function updateAuthUI() {
     const badge = document.getElementById('auth-badge');
     if (!authUser) {
@@ -260,6 +269,7 @@ async function updateAuthUI() {
         </button>
         <div class="auth-menu" id="auth-menu">
             ${canAdmin ? `<button onclick="openCalendarAdmin()">⚙ 편집 설정</button>` : ''}
+            <button onclick="openDanceReviewPage()">춤영상 검토페이지</button>
             <button class="danger" onclick="signOut()">로그아웃</button>
         </div>
     </div>`;

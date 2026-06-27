@@ -19,7 +19,7 @@
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
     <script defer src="supabase.min.js"></script>
-    <script defer src="index-app.js?v=gembox-subnav-20260628"></script>
+    <script defer src="index-app.js?v=dance-nav-20260628"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         [hidden] { display: none !important; }
@@ -100,7 +100,7 @@
 
         .header-links {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             justify-content: center;
             flex-wrap: wrap;
         }
@@ -131,21 +131,70 @@
         }
 
         .header-link.icon-only {
-            padding: 5px 7px;
+            width: 44px;
+            height: 44px;
+            padding: 0;
             gap: 0;
-            background: rgba(255,255,255,0.18);
+            border: none;
+            background: transparent;
         }
 
         .header-link.icon-only:hover {
-            background: rgba(255,255,255,0.32);
+            background: transparent;
+            transform: translateY(-1px);
         }
 
-        .header-link.icon-only img,
         .header-link.icon-only svg {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
+            width: 24px;
+            height: 24px;
             flex-shrink: 0;
+        }
+
+        .header-link.icon-only svg.soft-link-icon {
+            width: 44px;
+            height: 44px;
+        }
+
+        .header-links > a.header-link:not(.icon-only) {
+            min-height: 44px;
+            padding: 0 16px 0 10px;
+            gap: 7px;
+            border-radius: 23px;
+            font-size: 15px;
+            font-weight: 800;
+            border-color: rgba(255,255,255,0.34);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .header-links > a.header-link:not(.icon-only) svg.soft-link-icon {
+            width: 28px;
+            height: 28px;
+        }
+
+        .soft-link-icon {
+            display: block;
+            color: #506636;
+        }
+
+        .soft-link-icon .icon-bg {
+            fill: rgba(238,247,228,0.54);
+            stroke: rgba(255,255,255,0.76);
+            stroke-width: 1.2;
+        }
+
+        .soft-link-icon .icon-line,
+        .soft-link-icon .icon-fill {
+            stroke: currentColor;
+        }
+
+        .soft-link-icon .icon-line {
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .soft-link-icon .icon-fill {
+            fill: currentColor;
+            stroke: none;
         }
 
         .header-link.edit-active {
@@ -532,6 +581,11 @@
                 justify-content: flex-end;
                 flex-wrap: nowrap;
                 margin-left: auto;
+                padding: 3px 6px;
+                border-radius: 30px;
+                border: 1px solid rgba(255,255,255,0.18);
+                background: rgba(238,247,228,0.10);
+                box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
             }
 
             .tabs {
@@ -560,6 +614,46 @@
                 transform: translateX(-50%);
                 width: 420px;
                 border-radius: 22px 22px 0 0;
+            }
+        }
+
+        @media (min-width: 641px) and (max-width: 1700px) {
+            .header-links {
+                gap: 5px;
+            }
+
+            .header-links > a.header-link:not(.icon-only) {
+                width: 44px;
+                min-height: 44px;
+                padding: 0;
+                gap: 0;
+                justify-content: center;
+                font-size: 0;
+            }
+
+            .header-links > a.header-link:not(.icon-only) svg.soft-link-icon {
+                width: 44px;
+                height: 44px;
+            }
+        }
+
+        @media (min-width: 641px) and (max-width: 1350px) {
+            .header-links {
+                gap: 3px;
+                padding: 2px 4px;
+            }
+
+            .header-link.icon-only,
+            .header-links > a.header-link:not(.icon-only) {
+                width: 40px;
+                height: 40px;
+                min-height: 40px;
+            }
+
+            .header-link.icon-only svg.soft-link-icon,
+            .header-links > a.header-link:not(.icon-only) svg.soft-link-icon {
+                width: 40px;
+                height: 40px;
             }
         }
 
@@ -828,6 +922,11 @@
         }
 
         .qm-item svg { width: 28px; height: 28px; color: var(--accent); }
+        .qm-item svg.soft-link-icon {
+            width: 56px;
+            height: 56px;
+            color: #506636;
+        }
         .qm-item img { width: 28px; height: 28px; border-radius: 7px; }
 
         /* ── 로그인 모달 ── */
@@ -1046,13 +1145,13 @@
                 </div>
             </div>
             <div class="header-links">
-                <a class="header-link desktop-only" href="https://www.youtube.com/@beadyo97" target="_blank" rel="noopener noreferrer"><svg width="13" height="13" viewBox="0 0 24 24" style="border-radius:3px;flex-shrink:0"><path fill="#FF0000" d="M21.8 8s-.2-1.3-.8-1.9c-.6-.7-1.3-.7-1.6-.7C17.2 5.3 12 5.3 12 5.3s-5.2 0-7.4.1c-.3 0-1 0-1.6.7C2.4 6.7 2.2 8 2.2 8S2 9.5 2 11v1.4c0 1.5.2 3 .2 3s.2 1.3.8 1.9c.6.7 1.5.6 1.8.7C6 18.1 12 18.1 12 18.1s5.2 0 7.4-.2c.3 0 1-.1 1.6-.7.6-.6.8-1.9.8-1.9s.2-1.5.2-3V11c0-1.5-.2-3-.2-3zM10 14.6V9.4l5.2 2.6-5.2 2.6z"/></svg> 구튜브</a>
-                <a class="header-link desktop-only" href="https://www.youtube.com/@beadyoo/shorts" target="_blank" rel="noopener noreferrer"><svg width="13" height="13" viewBox="0 0 24 24" style="border-radius:3px;flex-shrink:0"><path fill="#FF0000" d="M21.8 8s-.2-1.3-.8-1.9c-.6-.7-1.3-.7-1.6-.7C17.2 5.3 12 5.3 12 5.3s-5.2 0-7.4.1c-.3 0-1 0-1.6.7C2.4 6.7 2.2 8 2.2 8S2 9.5 2 11v1.4c0 1.5.2 3 .2 3s.2 1.3.8 1.9c.6.7 1.5.6 1.8.7C6 18.1 12 18.1 12 18.1s5.2 0 7.4-.2c.3 0 1-.1 1.6-.7.6-.6.8-1.9.8-1.9s.2-1.5.2-3V11c0-1.5-.2-3-.2-3zM10 14.6V9.4l5.2 2.6-5.2 2.6z"/></svg> 마마마</a>
-                <a class="header-link desktop-only icon-only" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank" rel="noopener noreferrer" title="구슬요"><img src="soop-icon.ico" width="13" height="13" decoding="async"></a>
-                <a class="header-link desktop-only icon-only" href="https://cafe.naver.com/beadyo" target="_blank" rel="noopener noreferrer" title="떼굴떼굴카페"><img src="naver-icon.ico" width="13" height="13" decoding="async"></a>
-                <a class="header-link desktop-only icon-only" href="https://fancim.me/celeb/profile.aspx?url=851033" target="_blank" rel="noopener noreferrer" title="팬심"><img src="fancim-icon.ico" width="13" height="13" decoding="async"></a>
-                <a class="header-link desktop-only icon-only" href="https://www.instagram.com/bead.yo?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" title="인스타그램"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#E1306C"/><rect x="4.5" y="4.5" width="15" height="15" rx="4" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="16.5" cy="7.5" r="1" fill="#fff"/></svg></a>
-                <a class="header-link desktop-only icon-only" href="https://www.tiktok.com/@beadyo97?_r=1&_t=ZS-96UX4UbmWnd" target="_blank" rel="noopener noreferrer" title="틱톡"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#010101"/><path d="M17.5 6.2a4.1 4.1 0 01-2.6-3.2h-2.5v9.8a2.1 2.1 0 11-2.1-2.1c.2 0 .4 0 .6.1V8.2a4.7 4.7 0 00-.6 0 4.6 4.6 0 00-4.6 4.6 4.6 4.6 0 004.6 4.6 4.6 4.6 0 004.6-4.6V8.4a6.5 6.5 0 003.4 1V7a4.1 4.1 0 01-.8-.8z" fill="#fff"/></svg></a>
+                <a class="header-link desktop-only" href="https://www.youtube.com/@beadyo97" target="_blank" rel="noopener noreferrer"><svg class="soft-link-icon" width="16" height="16" viewBox="0 0 28 28" aria-hidden="true" style="flex-shrink:0"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><rect class="icon-line" x="6.5" y="8" width="15" height="12" rx="3" fill="none" stroke-width="2.4" stroke-linejoin="round"/><path class="icon-line" d="M12 11.3l5.2 2.7-5.2 2.7z" fill="none" stroke-width="2" stroke-linejoin="round"/></svg> 구튜브</a>
+                <a class="header-link desktop-only" href="https://www.youtube.com/@beadyoo/shorts" target="_blank" rel="noopener noreferrer"><svg class="soft-link-icon" width="16" height="16" viewBox="0 0 28 28" aria-hidden="true" style="flex-shrink:0"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><rect class="icon-line" x="6.5" y="8" width="15" height="12" rx="3" fill="none" stroke-width="2.4" stroke-linejoin="round"/><path class="icon-line" d="M12 11.3l5.2 2.7-5.2 2.7z" fill="none" stroke-width="2" stroke-linejoin="round"/></svg> 마마마</a>
+                <a class="header-link desktop-only icon-only" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank" rel="noopener noreferrer" title="구슬요"><svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><path class="icon-line" d="M5.8 14c2.1-4.4 5.3-4.4 8.2 0s6.1 4.4 8.2 0c-2.1-4.4-5.3-4.4-8.2 0s-6.1 4.4-8.2 0z" fill="none" stroke-width="3.2"/></svg></a>
+                <a class="header-link desktop-only icon-only" href="https://cafe.naver.com/beadyo" target="_blank" rel="noopener noreferrer" title="떼굴떼굴카페"><svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><path class="icon-fill" d="M9 12h9v5.2a4.5 4.5 0 0 1-4.5 4.5A4.5 4.5 0 0 1 9 17.2V12z"/><path class="icon-line" d="M18 13.5h1.4a2.2 2.2 0 0 1 0 4.4H18" fill="none" stroke-width="2" stroke-linecap="round"/><path class="icon-fill" d="M12 7.5c1.7-1.6 3.9-1.6 6.6-1.4-.6 2.5-2.4 4-5.6 4H12z"/></svg></a>
+                <a class="header-link desktop-only icon-only" href="https://fancim.me/celeb/profile.aspx?url=851033" target="_blank" rel="noopener noreferrer" title="팬심"><svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><path class="icon-fill" d="M9.5 21 12.8 7h9.1l-.8 3.3h-5.2l-.5 2.2h4.7l-.8 3.2h-4.7L13.4 21z"/></svg></a>
+                <a class="header-link desktop-only icon-only" href="https://www.instagram.com/bead.yo?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" title="인스타그램"><svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><rect class="icon-line" x="7.5" y="7.5" width="13" height="13" rx="4" fill="none" stroke-width="2.4"/><circle class="icon-line" cx="14" cy="14" r="3.2" fill="none" stroke-width="2.2"/><circle class="icon-fill" cx="18.1" cy="9.9" r="1.1"/></svg></a>
+                <a class="header-link desktop-only icon-only" href="https://www.tiktok.com/@beadyo97?_r=1&_t=ZS-96UX4UbmWnd" target="_blank" rel="noopener noreferrer" title="틱톡"><svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><path class="icon-line" d="M16.5 7.5v9.2a4 4 0 1 1-4-4" fill="none" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/><path class="icon-line" d="M16.5 8.2c1 2.2 2.4 3.4 4.5 3.7" fill="none" stroke-width="2.4" stroke-linecap="round"/></svg></a>
                 <button class="header-link desktop-only icon-only" onclick="openGuideModal()" title="이용가이드" aria-label="이용가이드 열기"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9" fill="rgba(255,255,255,0.14)"/><path d="M9.5 9a3 3 0 0 1 5.2 2c0 2-2.7 2.2-2.7 4"/><line x1="12" y1="18" x2="12" y2="18"/></svg></button>
                 <span id="auth-badge">✏️ 편집 모드 <button id="signout-btn" onclick="signOut()">로그아웃</button></span>
                 <button class="header-link desktop-only login-btn" onclick="openLoginModal()">로그인</button>
@@ -1087,6 +1186,7 @@
     </div>
     <div class="tab-subnav" id="music-subnav" aria-label="MUSIC 하위 메뉴">
         <button class="subtab active" data-music-page="songs" onclick="switchMusicPage('songs')">MUSIC</button>
+        <button class="subtab" data-music-page="dance" onclick="switchMusicPage('dance')">구슬요 춤영상</button>
         <button class="subtab" data-music-page="gembox" onclick="switchMusicPage('gembox')">보석함</button>
     </div>
     </div>
@@ -1166,31 +1266,31 @@
             <div class="qm-section-card">
                 <div class="qm-grid-3">
                     <a class="qm-item" href="https://www.youtube.com/@beadyo97" target="_blank" rel="noopener noreferrer" onclick="closeQuickMenu()">
-                        <svg viewBox="0 0 24 24" style="border-radius:7px;flex-shrink:0"><path fill="#FF0000" d="M21.8 8s-.2-1.3-.8-1.9c-.6-.7-1.3-.7-1.6-.7C17.2 5.3 12 5.3 12 5.3s-5.2 0-7.4.1c-.3 0-1 0-1.6.7C2.4 6.7 2.2 8 2.2 8S2 9.5 2 11v1.4c0 1.5.2 3 .2 3s.2 1.3.8 1.9c.6.7 1.5.6 1.8.7C6 18.1 12 18.1 12 18.1s5.2 0 7.4-.2c.3 0 1-.1 1.6-.7.6-.6.8-1.9.8-1.9s.2-1.5.2-3V11c0-1.5-.2-3-.2-3zM10 14.6V9.4l5.2 2.6-5.2 2.6z"/></svg>
+                        <svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><rect class="icon-line" x="6.5" y="8" width="15" height="12" rx="3" fill="none" stroke-width="2.4" stroke-linejoin="round"/><path class="icon-line" d="M12 11.3l5.2 2.7-5.2 2.7z" fill="none" stroke-width="2" stroke-linejoin="round"/></svg>
                         구튜브
                     </a>
                     <a class="qm-item" href="https://www.youtube.com/@beadyoo/shorts" target="_blank" rel="noopener noreferrer" onclick="closeQuickMenu()">
-                        <svg viewBox="0 0 24 24" style="border-radius:7px;flex-shrink:0"><path fill="#FF0000" d="M21.8 8s-.2-1.3-.8-1.9c-.6-.7-1.3-.7-1.6-.7C17.2 5.3 12 5.3 12 5.3s-5.2 0-7.4.1c-.3 0-1 0-1.6.7C2.4 6.7 2.2 8 2.2 8S2 9.5 2 11v1.4c0 1.5.2 3 .2 3s.2 1.3.8 1.9c.6.7 1.5.6 1.8.7C6 18.1 12 18.1 12 18.1s5.2 0 7.4-.2c.3 0 1-.1 1.6-.7.6-.6.8-1.9.8-1.9s.2-1.5.2-3V11c0-1.5-.2-3-.2-3zM10 14.6V9.4l5.2 2.6-5.2 2.6z"/></svg>
+                        <svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><rect class="icon-line" x="6.5" y="8" width="15" height="12" rx="3" fill="none" stroke-width="2.4" stroke-linejoin="round"/><path class="icon-line" d="M12 11.3l5.2 2.7-5.2 2.7z" fill="none" stroke-width="2" stroke-linejoin="round"/></svg>
                         마마마
                     </a>
                     <a class="qm-item" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank" rel="noopener noreferrer" onclick="closeQuickMenu()">
-                        <img src="soop-icon.ico" width="24" height="24" loading="lazy" decoding="async">
+                        <svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><path class="icon-line" d="M5.8 14c2.1-4.4 5.3-4.4 8.2 0s6.1 4.4 8.2 0c-2.1-4.4-5.3-4.4-8.2 0s-6.1 4.4-8.2 0z" fill="none" stroke-width="3.2"/></svg>
                         구슬요
                     </a>
                     <a class="qm-item" href="https://cafe.naver.com/beadyo" target="_blank" rel="noopener noreferrer" onclick="closeQuickMenu()">
-                        <img src="naver-icon.ico" width="24" height="24" loading="lazy" decoding="async">
+                        <svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><path class="icon-fill" d="M9 12h9v5.2a4.5 4.5 0 0 1-4.5 4.5A4.5 4.5 0 0 1 9 17.2V12z"/><path class="icon-line" d="M18 13.5h1.4a2.2 2.2 0 0 1 0 4.4H18" fill="none" stroke-width="2" stroke-linecap="round"/><path class="icon-fill" d="M12 7.5c1.7-1.6 3.9-1.6 6.6-1.4-.6 2.5-2.4 4-5.6 4H12z"/></svg>
                         떼굴떼굴카페
                     </a>
                     <a class="qm-item" href="https://fancim.me/celeb/profile.aspx?url=851033" target="_blank" rel="noopener noreferrer" onclick="closeQuickMenu()">
-                        <img src="fancim-icon.ico" width="24" height="24" loading="lazy" decoding="async">
+                        <svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><path class="icon-fill" d="M9.5 21 12.8 7h9.1l-.8 3.3h-5.2l-.5 2.2h4.7l-.8 3.2h-4.7L13.4 21z"/></svg>
                         팬심
                     </a>
                     <a class="qm-item" href="https://www.instagram.com/bead.yo?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" onclick="closeQuickMenu()">
-                        <svg viewBox="0 0 24 24" style="border-radius:7px;flex-shrink:0"><rect width="24" height="24" rx="6" fill="#E1306C"/><rect x="4.5" y="4.5" width="15" height="15" rx="4" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="16.5" cy="7.5" r="1" fill="#fff"/></svg>
+                        <svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><rect class="icon-line" x="7.5" y="7.5" width="13" height="13" rx="4" fill="none" stroke-width="2.4"/><circle class="icon-line" cx="14" cy="14" r="3.2" fill="none" stroke-width="2.2"/><circle class="icon-fill" cx="18.1" cy="9.9" r="1.1"/></svg>
                         인스타그램
                     </a>
                     <a class="qm-item" href="https://www.tiktok.com/@beadyo97?_r=1&_t=ZS-96UX4UbmWnd" target="_blank" rel="noopener noreferrer" onclick="closeQuickMenu()">
-                        <svg viewBox="0 0 24 24" style="border-radius:7px;flex-shrink:0"><rect width="24" height="24" rx="6" fill="#010101"/><path d="M17.5 6.2a4.1 4.1 0 01-2.6-3.2h-2.5v9.8a2.1 2.1 0 11-2.1-2.1c.2 0 .4 0 .6.1V8.2a4.7 4.7 0 00-.6 0 4.6 4.6 0 00-4.6 4.6 4.6 4.6 0 004.6 4.6 4.6 4.6 0 004.6-4.6V8.4a6.5 6.5 0 003.4 1V7a4.1 4.1 0 01-.8-.8z" fill="#fff"/></svg>
+                        <svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><path class="icon-line" d="M16.5 7.5v9.2a4 4 0 1 1-4-4" fill="none" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/><path class="icon-line" d="M16.5 8.2c1 2.2 2.4 3.4 4.5 3.7" fill="none" stroke-width="2.4" stroke-linecap="round"/></svg>
                         틱톡
                     </a>
                 </div>

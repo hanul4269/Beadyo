@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구슬요 춤영상 검토페이지</title>
+    <link rel="icon" href="logo-icon.webp">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
+    <style>
+        * { box-sizing: border-box; }
+
+        :root {
+            --accent: #7fb83f;
+            --accent-dark: #456f24;
+            --accent-soft: #edf7e4;
+            --ink: #222720;
+            --muted: #737b70;
+            --line: rgba(34,39,32,.1);
+            --surface: #ffffff;
+            --surface-2: #f8faf5;
+            --bg: #eef1ea;
+            --soop: #2d8b5f;
+            --clip: #316fd0;
+            --catch: #c67f31;
+            --youtube: #d94135;
+            --gold: #c49a34;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--ink);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,.72) 0 0),
+                url("banner.png") top center / 1600px auto no-repeat,
+                var(--bg);
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .page {
+            min-height: 100vh;
+            padding: 18px 22px 26px;
+        }
+
+        .shell {
+            max-width: 1480px;
+            margin: 0 auto;
+        }
+
+        .topbar {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 16px;
+            align-items: end;
+            padding: 10px 0 14px;
+        }
+
+        .eyebrow {
+            color: var(--accent-dark);
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: .08em;
+        }
+
+        h1 {
+            margin: 4px 0 6px;
+            font-size: clamp(28px, 4vw, 44px);
+            line-height: 1.06;
+            letter-spacing: 0;
+        }
+
+        .top-note {
+            max-width: 720px;
+            color: #4c5549;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .page-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 0 14px;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 900;
+            text-decoration: none;
+            box-shadow: 0 6px 18px rgba(127,184,63,.22);
+        }
+
+        .import-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 0 14px;
+            border: 1px solid rgba(49,111,208,.18);
+            border-radius: 8px;
+            background: #eaf1ff;
+            color: #25549e;
+            font-size: 13px;
+            font-weight: 900;
+            box-shadow: 0 6px 16px rgba(49,111,208,.12);
+        }
+
+        .backup-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 0 12px;
+            border: 1px solid rgba(127,184,63,.28);
+            border-radius: 8px;
+            background: #f4faed;
+            color: var(--deep);
+            font-size: 13px;
+            font-weight: 900;
+            box-shadow: 0 6px 16px rgba(127,184,63,.12);
+        }
+
+        .backup-file {
+            display: none;
+        }
+
+        .import-status {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(104px, 1fr));
+            gap: 8px;
+            min-width: min(510px, 100%);
+        }
+
+        .summary-item {
+            min-height: 66px;
+            padding: 10px 12px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255,255,255,.86);
+            box-shadow: 0 6px 18px rgba(34,39,32,.05);
+        }
+
+        .summary-label {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .summary-value {
+            margin-top: 5px;
+            font-size: 24px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .tools {
+            display: grid;
+            grid-template-columns: minmax(220px, 1fr) auto auto;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 10px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: rgba(255,255,255,.9);
+            box-shadow: 0 8px 22px rgba(34,39,32,.06);
+        }
+
+        .search {
+            position: relative;
+        }
+
+        .search svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 17px;
+            height: 17px;
+            stroke: var(--muted);
+            fill: none;
+            stroke-width: 2.2;
+        }
+
+        .search input {
+            width: 100%;
+            height: 42px;
+            padding: 0 14px 0 38px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--ink);
+            outline: none;
+            font-weight: 800;
+        }
+
+        .search input:focus,
+        select:focus {
+            border-color: rgba(127,184,63,.75);
+            box-shadow: 0 0 0 3px rgba(127,184,63,.16);
+        }
+
+        .source-tabs {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px;
+            border-radius: 8px;
+            background: #eef1e9;
+            border: 1px solid rgba(34,39,32,.06);
+        }
+
+        .source-tab {
+            min-height: 34px;
+            padding: 0 13px;
+            border: 0;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .source-tab.active {
+            background: var(--surface);
+            color: var(--accent-dark);
+            box-shadow: 0 1px 6px rgba(34,39,32,.1);
+        }
+
+        select {
+            height: 42px;
+            min-width: 138px;
+            padding: 0 34px 0 12px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--ink);
+            outline: none;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 360px;
+            gap: 14px;
+            align-items: start;
+        }
+
+        .board {
+            min-width: 0;
+        }
+
+        .queue-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 0 0 8px;
+        }
+
+        .queue-title {
+            font-size: 15px;
+            font-weight: 900;
+        }
+
+        .queue-meta {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+            gap: 10px;
+        }
+
+        .video-card {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface);
+            box-shadow: 0 8px 22px rgba(34,39,32,.06);
+            cursor: pointer;
+        }
+
+        .video-card.active {
+            outline: 3px solid rgba(127,184,63,.34);
+            border-color: rgba(127,184,63,.7);
+        }
+
+        .thumb {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            background:
+                linear-gradient(135deg, rgba(34,39,32,.18), rgba(127,184,63,.16)),
+                #dfe7d8;
+        }
+
+        .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: .88;
+        }
+
+        .source-badge,
+        .status-badge {
+            position: absolute;
+            top: 8px;
+            display: inline-flex;
+            align-items: center;
+            min-height: 24px;
+            padding: 0 8px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.92);
+            font-size: 11px;
+            font-weight: 900;
+            box-shadow: 0 2px 8px rgba(0,0,0,.1);
+        }
+
+        .source-badge {
+            left: 8px;
+        }
+
+        .status-badge {
+            right: 8px;
+            color: var(--accent-dark);
+        }
+
+        .play-mark {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.86);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 22px rgba(0,0,0,.18);
+        }
+
+        .play-mark svg {
+            width: 21px;
+            height: 21px;
+            fill: var(--accent-dark);
+            margin-left: 2px;
+        }
+
+        .card-body {
+            padding: 11px 12px 12px;
+        }
+
+        .card-title {
+            min-height: 42px;
+            font-size: 14px;
+            font-weight: 900;
+            line-height: 1.45;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        .card-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 9px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            min-height: 24px;
+            padding: 0 8px;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent-dark);
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .detail {
+            position: sticky;
+            top: 14px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(255,255,255,.94);
+            box-shadow: 0 10px 28px rgba(34,39,32,.08);
+        }
+
+        .detail-media {
+            aspect-ratio: 16 / 10;
+            background: #dfe7d8;
+            overflow: hidden;
+        }
+
+        .detail-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .detail-body {
+            padding: 14px;
+        }
+
+        .detail-title {
+            font-size: 18px;
+            font-weight: 900;
+            line-height: 1.4;
+        }
+
+        .detail-meta {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .meta-box {
+            padding: 9px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface-2);
+        }
+
+        .meta-label {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .meta-value {
+            margin-top: 4px;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .review-actions {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .action-btn {
+            min-height: 42px;
+            border: 0;
+            border-radius: 8px;
+            font-weight: 900;
+        }
+
+        .action-btn.primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .action-btn.secondary {
+            background: var(--accent-soft);
+            color: var(--accent-dark);
+        }
+
+        .action-btn.warning {
+            background: #fff4df;
+            color: #996313;
+        }
+
+        .action-btn.muted {
+            background: #f0f1ee;
+            color: #687063;
+        }
+
+        .pipeline {
+            margin-top: 14px;
+            padding: 12px;
+            border-top: 1px solid var(--line);
+            background: #fbfcf8;
+        }
+
+        .pipeline-title {
+            font-size: 13px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .pipeline-step {
+            display: grid;
+            grid-template-columns: 22px 1fr;
+            gap: 8px;
+            align-items: start;
+            min-height: 32px;
+            color: #4f584c;
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1.45;
+        }
+
+        .step-dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .empty {
+            min-height: 240px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed rgba(69,111,36,.32);
+            border-radius: 10px;
+            background: rgba(255,255,255,.62);
+            color: var(--muted);
+            font-weight: 900;
+        }
+
+        .video-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 80;
+            display: grid;
+            place-items: center;
+            padding: 18px;
+        }
+
+        .video-modal[hidden] {
+            display: none;
+        }
+
+        .video-modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(18,22,17,.72);
+            backdrop-filter: blur(8px);
+        }
+
+        .video-modal-panel {
+            position: relative;
+            z-index: 1;
+            width: min(980px, 100%);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: 10px;
+            background: #10140f;
+            box-shadow: 0 24px 80px rgba(0,0,0,.34);
+        }
+
+        .video-modal-head {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 14px;
+            color: #fff;
+        }
+
+        .video-modal-title {
+            overflow: hidden;
+            font-size: 14px;
+            font-weight: 900;
+            line-height: 1.4;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .video-modal-close {
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 8px;
+            background: rgba(255,255,255,.12);
+            color: #fff;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .video-frame {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            background: #050605;
+        }
+
+        .video-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+        }
+
+        .video-modal-foot {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px 14px 14px;
+        }
+
+        .video-modal-original {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 36px;
+            padding: 0 12px;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 900;
+            text-decoration: none;
+        }
+
+        @media (max-width: 980px) {
+            .topbar,
+            .layout {
+                grid-template-columns: 1fr;
+            }
+            .summary {
+                min-width: 0;
+            }
+            .detail {
+                position: static;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .page {
+                padding: 14px 12px 20px;
+            }
+            .tools {
+                grid-template-columns: 1fr;
+            }
+            .source-tabs {
+                overflow-x: auto;
+                justify-content: flex-start;
+            }
+            .summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            .video-modal {
+                padding: 10px;
+            }
+            .video-modal-title {
+                white-space: normal;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <div class="shell">
+            <header class="topbar">
+                <div>
+                    <div class="eyebrow">DANCE CLIP WORKSPACE</div>
+                    <h1>구슬요 춤영상 검토페이지</h1>
+                    <div class="top-note">SOOP VOD 클립, 캐치, YouTube Shorts에서 춤영상 후보를 모아 검토하고 정리하는 별도 화면입니다. 가져온 후보는 이 브라우저에 저장되고, 채택된 항목만 공개 페이지에 반영됩니다.</div>
+                    <div class="top-actions">
+                        <button class="import-btn" id="importDataBtn">데이터 가져오기</button>
+                        <button class="backup-btn" id="exportBackupBtn" type="button">백업 내보내기</button>
+                        <button class="backup-btn" id="importBackupBtn" type="button">백업 불러오기</button>
+                        <button class="backup-btn" id="migratePortBtn" type="button" hidden>4000 데이터 가져오기</button>
+                        <input class="backup-file" id="backupFileInput" type="file" accept="application/json,.json">
+                        <a class="page-link" href="index.html#dance">채택 영상 페이지</a>
+                        <span class="import-status" id="importStatus">마지막 가져오기: 없음</span>
+                    </div>
+                </div>
+                <section class="summary" aria-label="요약">
+                    <div class="summary-item">
+                        <div class="summary-label">전체 후보</div>
+                        <div class="summary-value" id="totalCount">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">검토 필요</div>
+                        <div class="summary-value" id="reviewCount">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">채택</div>
+                        <div class="summary-value" id="approvedCount">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">출처</div>
+                        <div class="summary-value" id="sourceCount">0</div>
+                    </div>
+                </section>
+            </header>
+
+            <section class="tools" aria-label="필터">
+                <label class="search">
+                    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+                    <input id="searchInput" type="search" placeholder="제목, 곡명, 태그 검색">
+                </label>
+                <div class="source-tabs" role="group" aria-label="출처">
+                    <button class="source-tab active" data-source="all">전체</button>
+                    <button class="source-tab" data-source="soop">SOOP 클립</button>
+                    <button class="source-tab" data-source="clip">VOD 클립</button>
+                    <button class="source-tab" data-source="catch">캐치</button>
+                    <button class="source-tab" data-source="youtube">Shorts</button>
+                </div>
+                <select id="statusSelect" aria-label="검토 상태">
+                    <option value="all">모든 상태</option>
+                    <option value="review">검토 필요</option>
+                    <option value="approved">채택</option>
+                    <option value="hidden">숨김</option>
+                </select>
+            </section>
+
+            <div class="layout">
+                <section class="board">
+                    <div class="queue-head">
+                        <div class="queue-title">춤영상 후보</div>
+                        <div class="queue-meta" id="resultMeta">0개 표시 중</div>
+                    </div>
+                    <div class="video-grid" id="videoGrid"></div>
+                    <div class="empty" id="emptyState">조건에 맞는 춤영상 후보가 없습니다.</div>
+                </section>
+
+                <aside class="detail" aria-label="선택한 영상">
+                    <div class="detail-media">
+                        <img id="detailImage" src="songbook-char.png" alt="" referrerpolicy="no-referrer">
+                    </div>
+                    <div class="detail-body">
+                        <div class="detail-title" id="detailTitle">춤영상을 선택하세요</div>
+                        <div class="tags" id="detailTags"></div>
+                        <div class="detail-meta">
+                            <div class="meta-box">
+                                <div class="meta-label">출처</div>
+                                <div class="meta-value" id="detailSource">-</div>
+                            </div>
+                            <div class="meta-box">
+                                <div class="meta-label">업로드</div>
+                                <div class="meta-value" id="detailDate">-</div>
+                            </div>
+                            <div class="meta-box">
+                                <div class="meta-label">상태</div>
+                                <div class="meta-value" id="detailStatus">-</div>
+                            </div>
+                            <div class="meta-box">
+                                <div class="meta-label">곡/키워드</div>
+                                <div class="meta-value" id="detailSong">-</div>
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn primary" id="openLinkBtn">원본 열기</button>
+                            <button class="action-btn secondary" id="copyLinkBtn">링크 복사</button>
+                        </div>
+                        <div class="actions review-actions">
+                            <button class="action-btn primary" id="approveBtn">채택</button>
+                            <button class="action-btn warning" id="reviewBtn">검토</button>
+                            <button class="action-btn muted" id="hideBtn">숨김</button>
+                        </div>
+                    </div>
+                    <div class="pipeline">
+                        <div class="pipeline-title">나중에 붙일 수집 흐름</div>
+                        <div class="pipeline-step"><span class="step-dot">1</span><span>SOOP 클립/캐치, YouTube Shorts 후보 수집</span></div>
+                        <div class="pipeline-step"><span class="step-dot">2</span><span>제목, 설명, 태그에서 춤 관련 키워드로 1차 분류</span></div>
+                        <div class="pipeline-step"><span class="step-dot">3</span><span>관리자가 채택/숨김을 확인하고 공개 목록에 반영</span></div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <div class="video-modal" id="videoModal" hidden>
+        <div class="video-modal-backdrop" data-close-video></div>
+        <section class="video-modal-panel" role="dialog" aria-modal="true" aria-labelledby="videoModalTitle">
+            <div class="video-modal-head">
+                <div class="video-modal-title" id="videoModalTitle">영상</div>
+                <button class="video-modal-close" type="button" data-close-video aria-label="닫기">&times;</button>
+            </div>
+            <div class="video-frame">
+                <iframe id="videoModalFrame" title="춤영상 재생" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            </div>
+            <div class="video-modal-foot">
+                <a class="video-modal-original" id="videoModalOriginal" href="#" target="_blank" rel="noopener noreferrer">원본 열기</a>
+            </div>
+        </section>
+    </div>
+
+    <script src="dance-data.js?v=thumbs-20260628"></script>
+    <script src="dance-thumbnail-backfill.js?v=thumbs-20260628"></script>
+    <script>
+        const sourceLabels = {
+            soop: 'SOOP 클립',
+            clip: 'VOD 클립',
+            catch: '캐치',
+            youtube: 'Shorts',
+        };
+
+        const statusLabels = {
+            review: '검토 필요',
+            approved: '채택',
+            hidden: '숨김',
+        };
+
+        const sourceColors = {
+            soop: 'var(--soop)',
+            clip: 'var(--clip)',
+            catch: 'var(--catch)',
+            youtube: 'var(--youtube)',
+        };
+
+        const STORAGE_KEY = 'beadyoDanceVideos';
+        const LAST_IMPORT_KEY = 'beadyoDanceLastImportAt';
+        const PLACEHOLDER_THUMBNAILS = new Set(['', 'banner.png', 'loading-img.png', 'songbook-char.png']);
+        let videos = loadVideos();
+
+        let activeSource = 'all';
+        let selectedId = videos[0]?.id || null;
+
+        const grid = document.getElementById('videoGrid');
+        const emptyState = document.getElementById('emptyState');
+        const searchInput = document.getElementById('searchInput');
+        const statusSelect = document.getElementById('statusSelect');
+        const resultMeta = document.getElementById('resultMeta');
+        const importStatus = document.getElementById('importStatus');
+
+        function getYouTubeId(urlValue) {
+            try {
+                const url = new URL(urlValue);
+                if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
+                    return url.pathname.includes('/shorts/')
+                        ? url.pathname.split('/shorts/')[1]?.split('/')[0]
+                        : url.searchParams.get('v') || url.pathname.split('/').filter(Boolean).pop();
+                }
+            } catch {
+                return '';
+            }
+            return '';
+        }
+
+        function resolveThumbnail(video) {
+            const current = video.thumbnail || '';
+
+            const backfilled = window.danceThumbnailBackfill?.[video.id];
+            if (backfilled) return backfilled;
+
+            const mapped = window.danceThumbnailMap?.[video.url];
+            if (mapped) return mapped;
+
+            if (!PLACEHOLDER_THUMBNAILS.has(current)) return current;
+
+            const youtubeId = getYouTubeId(video.url);
+            if (youtubeId) return `https://img.youtube.com/vi/${encodeURIComponent(youtubeId)}/hqdefault.jpg`;
+
+            return current || 'banner.png';
+        }
+
+        function shouldExcludeVideo(video) {
+            return String(video.title || '').includes('반응');
+        }
+
+        function normalizeVideo(video) {
+            const normalized = {
+                status: 'review',
+                tags: [],
+                thumbnail: 'banner.png',
+                ...video,
+            };
+            normalized.thumbnail = resolveThumbnail(normalized);
+            return normalized;
+        }
+
+        function mergeVideos(base, incoming, options = {}) {
+            const { preserveExistingStatus = false } = options;
+            const byId = new Map(base.map(video => [video.id, normalizeVideo(video)]));
+            incoming.map(normalizeVideo).forEach(video => {
+                const existing = byId.get(video.id);
+                const merged = { ...existing, ...video };
+                if (preserveExistingStatus && existing) merged.status = existing.status;
+                byId.set(video.id, merged);
+            });
+            return Array.from(byId.values()).filter(video => !shouldExcludeVideo(video));
+        }
+
+        function loadVideos() {
+            try {
+                const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                return mergeVideos(window.danceVideos || [], Array.isArray(stored) ? stored : []);
+            } catch {
+                return (window.danceVideos || []).map(normalizeVideo);
+            }
+        }
+
+        function saveVideos() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
+        }
+
+        function exportBackup() {
+            const payload = {
+                type: 'beadyo-dance-archive-backup',
+                version: 1,
+                exportedAt: new Date().toISOString(),
+                videos,
+                lastImportAt: localStorage.getItem(LAST_IMPORT_KEY) || null,
+            };
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            const objectUrl = URL.createObjectURL(blob);
+            link.href = objectUrl;
+            link.download = `beadyo-dance-backup-${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(objectUrl);
+            updateImportStatus(`${videos.length}개 백업 파일을 만들었습니다.`);
+        }
+
+        function normalizeBackupPayload(payload) {
+            if (Array.isArray(payload)) return payload;
+            if (Array.isArray(payload?.videos)) return payload.videos;
+            if (Array.isArray(payload?.items)) return payload.items;
+            return null;
+        }
+
+        function applyBackupPayload(payload) {
+            const backupVideos = normalizeBackupPayload(payload);
+            if (!backupVideos) throw new Error('invalid backup');
+            const beforeCount = videos.length;
+            videos = mergeVideos(videos, backupVideos);
+            saveVideos();
+            if (payload?.lastImportAt) {
+                localStorage.setItem(LAST_IMPORT_KEY, payload.lastImportAt);
+            }
+            selectedId = videos[0]?.id || null;
+            renderSummary();
+            renderGrid();
+            return {
+                added: Math.max(videos.length - beforeCount, 0),
+                total: videos.length,
+            };
+        }
+
+        function importBackupFile(file) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const payload = JSON.parse(String(reader.result || ''));
+                    const result = applyBackupPayload(payload);
+                    updateImportStatus(`${result.added}개 복원 · 현재 ${result.total}개`);
+                } catch {
+                    updateImportStatus('백업 파일을 읽지 못했습니다.');
+                }
+            };
+            reader.onerror = () => updateImportStatus('백업 파일을 읽지 못했습니다.');
+            reader.readAsText(file);
+        }
+
+        function postStorageBackupIfRequested() {
+            const params = new URLSearchParams(location.search);
+            if (params.get('storage-export') !== '1') return false;
+            const payload = {
+                type: 'beadyo-dance-archive-backup',
+                version: 1,
+                exportedAt: new Date().toISOString(),
+                videos,
+                lastImportAt: localStorage.getItem(LAST_IMPORT_KEY) || null,
+            };
+            window.parent?.postMessage({
+                type: 'beadyo-dance-storage-export',
+                payload,
+            }, '*');
+            document.body.innerHTML = '';
+            return true;
+        }
+
+        function migrateFromPort4000() {
+            const button = document.getElementById('migratePortBtn');
+            button.disabled = true;
+            button.textContent = '가져오는 중';
+            updateImportStatus('4000 저장 데이터를 확인하는 중입니다.');
+
+            const iframe = document.createElement('iframe');
+            iframe.src = 'http://localhost:4000/dance-archive.html?storage-export=1';
+            iframe.hidden = true;
+            document.body.appendChild(iframe);
+
+            const cleanup = () => {
+                window.removeEventListener('message', onMessage);
+                iframe.remove();
+                button.disabled = false;
+                button.textContent = '4000 데이터 가져오기';
+                clearTimeout(timer);
+            };
+            const timer = setTimeout(() => {
+                cleanup();
+                updateImportStatus('4000 데이터를 가져오지 못했습니다. 4000 서버가 켜져 있는지 확인해주세요.');
+            }, 5000);
+            const onMessage = event => {
+                if (event.origin !== 'http://localhost:4000') return;
+                if (event.data?.type !== 'beadyo-dance-storage-export') return;
+                try {
+                    const result = applyBackupPayload(event.data.payload);
+                    cleanup();
+                    updateImportStatus(`4000에서 ${result.added}개 이전 · 현재 ${result.total}개`);
+                } catch {
+                    cleanup();
+                    updateImportStatus('4000 데이터를 읽지 못했습니다.');
+                }
+            };
+            window.addEventListener('message', onMessage);
+        }
+
+        function setupPortMigrationButton() {
+            const button = document.getElementById('migratePortBtn');
+            if (!button) return;
+            button.hidden = !(location.hostname === 'localhost' && location.port === '3000');
+        }
+
+        function formatImportTime(value) {
+            if (!value) return '마지막 가져오기: 없음';
+            return `마지막 가져오기: ${new Date(value).toLocaleString('ko-KR', { dateStyle: 'short', timeStyle: 'short' })}`;
+        }
+
+        function updateImportStatus(message) {
+            const lastImportAt = localStorage.getItem(LAST_IMPORT_KEY);
+            importStatus.textContent = message || formatImportTime(lastImportAt);
+        }
+
+        function esc(value) {
+            return String(value ?? '').replace(/[&<>"']/g, ch => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;',
+            }[ch]));
+        }
+
+        function getVideoEmbedUrl(video) {
+            try {
+                const url = new URL(video.url);
+                if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
+                    const id = url.pathname.includes('/shorts/')
+                        ? url.pathname.split('/shorts/')[1]?.split('/')[0]
+                        : url.searchParams.get('v') || url.pathname.split('/').filter(Boolean).pop();
+                    return id ? `https://www.youtube.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0` : video.url;
+                }
+                if (url.hostname.includes('sooplive.com')) {
+                    const id = url.pathname.match(/\/player\/(\d+)/)?.[1];
+                    return id ? `https://vod.sooplive.com/player/${encodeURIComponent(id)}/embed?autoPlay=true&showChat=false&mutePlay=false` : video.url;
+                }
+                return video.url;
+            } catch {
+                return video.url;
+            }
+        }
+
+        function resetVideoFrame() {
+            document.getElementById('videoModalFrame').removeAttribute('style');
+        }
+
+        function openVideoModal(video) {
+            const modal = document.getElementById('videoModal');
+            const frame = document.getElementById('videoModalFrame');
+            document.getElementById('videoModalTitle').textContent = video.title;
+            modal.classList.remove('soop-crop');
+            resetVideoFrame();
+            frame.src = getVideoEmbedUrl(video);
+            document.getElementById('videoModalOriginal').href = video.url;
+            modal.hidden = false;
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            document.getElementById('videoModalFrame').src = '';
+            resetVideoFrame();
+            modal.classList.remove('soop-crop');
+            modal.hidden = true;
+        }
+
+        function filteredVideos() {
+            const query = searchInput.value.trim().toLowerCase();
+            const status = statusSelect.value;
+            return videos.filter(video => {
+                if (activeSource !== 'all' && video.source !== activeSource) return false;
+                if (status !== 'all' && video.status !== status) return false;
+                if (!query) return true;
+                const haystack = [video.title, video.song, sourceLabels[video.source], statusLabels[video.status], ...video.tags].join(' ').toLowerCase();
+                return haystack.includes(query);
+            });
+        }
+
+        function renderSummary() {
+            document.getElementById('totalCount').textContent = videos.length;
+            document.getElementById('reviewCount').textContent = videos.filter(v => v.status === 'review').length;
+            document.getElementById('approvedCount').textContent = videos.filter(v => v.status === 'approved').length;
+            document.getElementById('sourceCount').textContent = new Set(videos.map(v => v.source)).size;
+        }
+
+        function renderGrid() {
+            const items = filteredVideos();
+            resultMeta.textContent = `${items.length}개 표시 중`;
+            emptyState.style.display = items.length ? 'none' : 'flex';
+            grid.innerHTML = items.map(video => `
+                <article class="video-card${video.id === selectedId ? ' active' : ''}" data-id="${esc(video.id)}">
+                    <div class="thumb">
+                        <img src="${esc(video.thumbnail)}" alt="" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='banner.png';">
+                        <span class="source-badge" style="color:${sourceColors[video.source]}">${esc(sourceLabels[video.source])}</span>
+                        <span class="status-badge">${esc(statusLabels[video.status])}</span>
+                        <span class="play-mark"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">${esc(video.title)}</div>
+                        <div class="card-line"><span>${esc(video.date)}</span><span>${esc(video.song)}</span></div>
+                        <div class="tags">${video.tags.map(tag => `<span class="tag">${esc(tag)}</span>`).join('')}</div>
+                    </div>
+                </article>
+            `).join('');
+            grid.querySelectorAll('.video-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    selectedId = card.dataset.id;
+                    renderGrid();
+                    renderDetail();
+                });
+                card.querySelector('.thumb').addEventListener('click', event => {
+                    event.stopPropagation();
+                    const video = videos.find(item => item.id === card.dataset.id);
+                    if (video) openVideoModal(video);
+                });
+            });
+            if (!items.some(v => v.id === selectedId) && items[0]) {
+                selectedId = items[0].id;
+                renderGrid();
+                return;
+            }
+            renderDetail();
+        }
+
+        function selectedVideo() {
+            return videos.find(video => video.id === selectedId) || filteredVideos()[0] || null;
+        }
+
+        function renderDetail() {
+            const video = selectedVideo();
+            const openBtn = document.getElementById('openLinkBtn');
+            const copyBtn = document.getElementById('copyLinkBtn');
+            const approveBtn = document.getElementById('approveBtn');
+            const reviewBtn = document.getElementById('reviewBtn');
+            const hideBtn = document.getElementById('hideBtn');
+            if (!video) {
+                document.getElementById('detailTitle').textContent = '춤영상을 선택하세요';
+                const detailImage = document.getElementById('detailImage');
+                detailImage.onerror = null;
+                detailImage.src = 'songbook-char.png';
+                document.getElementById('detailSource').textContent = '-';
+                document.getElementById('detailDate').textContent = '-';
+                document.getElementById('detailStatus').textContent = '-';
+                document.getElementById('detailSong').textContent = '-';
+                document.getElementById('detailTags').innerHTML = '';
+                openBtn.disabled = true;
+                copyBtn.disabled = true;
+                approveBtn.disabled = true;
+                reviewBtn.disabled = true;
+                hideBtn.disabled = true;
+                return;
+            }
+            document.getElementById('detailTitle').textContent = video.title;
+            const detailImage = document.getElementById('detailImage');
+            detailImage.onerror = () => {
+                detailImage.onerror = null;
+                detailImage.src = 'songbook-char.png';
+            };
+            detailImage.src = video.thumbnail;
+            document.getElementById('detailSource').textContent = sourceLabels[video.source];
+            document.getElementById('detailDate').textContent = video.date;
+            document.getElementById('detailStatus').textContent = statusLabels[video.status];
+            document.getElementById('detailSong').textContent = video.song;
+            document.getElementById('detailTags').innerHTML = video.tags.map(tag => `<span class="tag">${esc(tag)}</span>`).join('');
+            openBtn.disabled = false;
+            copyBtn.disabled = false;
+            approveBtn.disabled = false;
+            reviewBtn.disabled = false;
+            hideBtn.disabled = false;
+            openBtn.onclick = () => window.open(video.url, '_blank', 'noopener,noreferrer');
+            copyBtn.onclick = async () => {
+                try {
+                    await navigator.clipboard.writeText(video.url);
+                    copyBtn.textContent = '복사 완료';
+                    setTimeout(() => { copyBtn.textContent = '링크 복사'; }, 1100);
+                } catch {
+                    copyBtn.textContent = '복사 실패';
+                    setTimeout(() => { copyBtn.textContent = '링크 복사'; }, 1100);
+                }
+            };
+            approveBtn.onclick = () => setVideoStatus(video.id, 'approved');
+            reviewBtn.onclick = () => setVideoStatus(video.id, 'review');
+            hideBtn.onclick = () => setVideoStatus(video.id, 'hidden');
+        }
+
+        function setVideoStatus(id, status) {
+            videos = videos.map(video => video.id === id ? { ...video, status } : video);
+            saveVideos();
+            renderSummary();
+            renderGrid();
+        }
+
+        function loadImportFeed() {
+            return new Promise((resolve, reject) => {
+                delete window.danceImportFeed;
+                delete window.danceImportFeedMeta;
+                const script = document.createElement('script');
+                script.src = `dance-import-feed.js?v=${Date.now()}`;
+                script.onload = () => resolve({
+                    feed: Array.isArray(window.danceImportFeed) ? window.danceImportFeed : [],
+                    meta: window.danceImportFeedMeta || null,
+                });
+                script.onerror = () => reject(new Error('import feed failed'));
+                document.head.appendChild(script);
+            });
+        }
+
+        function formatImportSummary(newCount, updatedCount, skippedReaction, importedAt, meta) {
+            const parts = [`${newCount}개 가져옴`];
+            if (updatedCount) parts.push(`${updatedCount}개 갱신`);
+            if (meta?.candidateCount) {
+                const pageCount = Object.values(meta.meta || {}).reduce((sum, item) => sum + Number(item.totalPages || 0), 0);
+                parts.push(`전체 스캔 후보 ${meta.candidateCount}개`);
+                if (pageCount) parts.push(`${pageCount}페이지 확인`);
+            }
+            const reactionCount = Number(meta?.reactionSkipped ?? skippedReaction);
+            if (reactionCount) parts.push(`반응 ${reactionCount}개 제외`);
+            parts.push(formatImportTime(importedAt));
+            return parts.join(' · ');
+        }
+
+        async function importNewData() {
+            const button = document.getElementById('importDataBtn');
+            button.disabled = true;
+            button.textContent = '가져오는 중';
+            try {
+                const { feed, meta } = await loadImportFeed();
+                const normalizedFeed = feed.map(normalizeVideo);
+                const skippedReaction = normalizedFeed.filter(shouldExcludeVideo).length;
+                const importItems = normalizedFeed.filter(video => !shouldExcludeVideo(video));
+                const beforeById = new Map(videos.map(video => [video.id, video]));
+                const newItems = importItems.filter(video => !beforeById.has(video.id));
+                const updatedCount = importItems.filter(video => {
+                    const existing = beforeById.get(video.id);
+                    if (!existing) return false;
+                    return existing.thumbnail !== video.thumbnail
+                        || existing.title !== video.title
+                        || existing.url !== video.url
+                        || existing.date !== video.date
+                        || existing.source !== video.source
+                        || existing.song !== video.song;
+                }).length;
+                videos = mergeVideos(videos, importItems, { preserveExistingStatus: true });
+                saveVideos();
+                const importedAt = new Date().toISOString();
+                localStorage.setItem(LAST_IMPORT_KEY, importedAt);
+                selectedId = newItems[0]?.id || selectedId;
+                renderSummary();
+                renderGrid();
+                updateImportStatus(formatImportSummary(newItems.length, updatedCount, skippedReaction, importedAt, meta));
+            } catch {
+                updateImportStatus('가져오기에 실패했습니다.');
+            } finally {
+                button.disabled = false;
+                button.textContent = '데이터 가져오기';
+            }
+        }
+
+        if (!postStorageBackupIfRequested()) {
+            document.querySelectorAll('.source-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    activeSource = tab.dataset.source;
+                    document.querySelectorAll('.source-tab').forEach(btn => btn.classList.toggle('active', btn === tab));
+                    renderGrid();
+                });
+            });
+
+            searchInput.addEventListener('input', renderGrid);
+            statusSelect.addEventListener('change', renderGrid);
+            document.getElementById('importDataBtn').addEventListener('click', importNewData);
+            document.getElementById('exportBackupBtn').addEventListener('click', exportBackup);
+            document.getElementById('importBackupBtn').addEventListener('click', () => {
+                document.getElementById('backupFileInput').click();
+            });
+            document.getElementById('migratePortBtn').addEventListener('click', migrateFromPort4000);
+            document.getElementById('backupFileInput').addEventListener('change', event => {
+                importBackupFile(event.target.files?.[0]);
+                event.target.value = '';
+            });
+            document.querySelectorAll('[data-close-video]').forEach(element => {
+                element.addEventListener('click', closeVideoModal);
+            });
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape' && !document.getElementById('videoModal').hidden) {
+                    closeVideoModal();
+                }
+            });
+            setupPortMigrationButton();
+            updateImportStatus();
+            renderSummary();
+            renderGrid();
+        }
+    </script>
+</body>
+</html>
