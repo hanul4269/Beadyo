@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구슬요의 보석함</title>
+    <link rel="icon" href="logo-icon.webp">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --accent: #7fb83f;
+            --accent-dark: #4f7f25;
+            --accent-light: #eef7e4;
+            --bg: #f4f5f1;
+            --surface: #ffffff;
+            --surface-2: #fbfcf8;
+            --border: rgba(34,39,32,0.09);
+            --text: #222720;
+            --muted: #737b70;
+            --gold: #c49a34;
+            --coral: #db7b62;
+        }
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .page-shell {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 0 48px;
+        }
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 14px 18px 10px;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 36px;
+            padding: 0 13px;
+            border: 1px solid rgba(127,184,63,0.28);
+            border-radius: 999px;
+            background: #fff;
+            color: var(--accent-dark);
+            font-size: 13px;
+            font-weight: 800;
+            text-decoration: none;
+            box-shadow: 0 1px 5px rgba(34,39,32,0.08);
+        }
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .hero {
+            position: relative;
+            min-height: 300px;
+            margin-bottom: 18px;
+            background:
+                linear-gradient(90deg, rgba(244,249,239,0.96) 0%, rgba(244,249,239,0.88) 43%, rgba(244,249,239,0.54) 72%, rgba(244,249,239,0.84) 100%),
+                url("banner.png") center / cover no-repeat;
+            border-top: 1px solid rgba(34,39,32,0.04);
+            border-bottom: 1px solid var(--border);
+            box-shadow: inset 0 -1px 0 rgba(255,255,255,0.76);
+            overflow: hidden;
+        }
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.24), rgba(255,255,255,0.62));
+            pointer-events: none;
+        }
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 1180px;
+            min-height: 300px;
+            margin: 0 auto;
+            padding: 34px 18px 28px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 28px;
+            align-items: end;
+        }
+        .hero-main {
+            align-self: center;
+            max-width: 720px;
+        }
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 10px;
+            color: var(--accent-dark);
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+        }
+        h1 {
+            font-size: clamp(42px, 5vw, 68px);
+            line-height: 1.05;
+            letter-spacing: 0;
+            color: rgba(20,24,18,0.96);
+            text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+        }
+        .hero-copy {
+            max-width: 680px;
+            margin-top: 12px;
+            color: rgba(45,54,39,0.88);
+            font-size: 17px;
+            line-height: 1.64;
+            font-weight: 800;
+            word-break: keep-all;
+        }
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+        .hero-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            padding: 0 17px;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 900;
+            text-decoration: none;
+            box-shadow: 0 8px 18px rgba(79,127,37,0.18);
+        }
+        .hero-button.secondary {
+            background: rgba(255,255,255,0.86);
+            color: var(--accent-dark);
+            border: 1px solid rgba(127,184,63,0.3);
+        }
+        .hero-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(45,54,39,0.82);
+            font-size: 13px;
+            font-weight: 900;
+        }
+        .dday-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 42px;
+            padding: 0 15px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.86);
+            color: rgba(20,24,18,0.96);
+            border: 1px solid rgba(127,184,63,0.24);
+            font-size: 14px;
+            font-weight: 900;
+            box-shadow: 0 8px 18px rgba(34,39,32,0.08);
+        }
+        .dday-chip strong {
+            color: var(--accent-dark);
+            font-size: 18px;
+        }
+        .hero-side {
+            display: grid;
+            grid-template-columns: repeat(2, 132px);
+            gap: 10px;
+            align-self: end;
+        }
+        .season-card {
+            min-height: 84px;
+            padding: 14px 15px;
+            border: 1px solid rgba(255,255,255,0.62);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.82);
+            box-shadow: 0 8px 24px rgba(34,39,32,0.08);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .season-card strong {
+            display: block;
+            color: rgba(20,24,18,0.96);
+            font-size: 26px;
+            line-height: 1;
+            margin-bottom: 7px;
+        }
+        .season-card span {
+            color: rgba(45,54,39,0.76);
+            font-size: 13px;
+            line-height: 1.25;
+            font-weight: 900;
+        }
+        .controls {
+            max-width: 1180px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 0 auto 14px;
+            padding: 0 18px;
+            flex-wrap: wrap;
+        }
+        .season-tabs {
+            display: inline-flex;
+            gap: 4px;
+            padding: 4px;
+            border: 1px solid rgba(34,39,32,0.06);
+            border-radius: 999px;
+            background: #edf0e9;
+        }
+        .season-tab {
+            height: 34px;
+            padding: 0 16px;
+            border: 0;
+            border-radius: 999px;
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .season-tab.active {
+            background: #fff;
+            color: var(--accent-dark);
+            box-shadow: 0 1px 5px rgba(34,39,32,0.1);
+        }
+        .search {
+            width: min(100%, 320px);
+            height: 40px;
+            padding: 0 13px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #fff;
+            color: var(--text);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            outline: none;
+        }
+        .search:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(127,184,63,0.13);
+        }
+        .cast-grid {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 0 18px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+        .cast-card {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(34,39,32,0.04);
+        }
+        .cast-cover {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #edf4e5, #fff8e6);
+            overflow: hidden;
+        }
+        .cast-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .cast-fallback {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(79,127,37,0.26);
+            font-size: 54px;
+            font-weight: 900;
+        }
+        .season-badge {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            min-height: 26px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.92);
+            color: var(--accent-dark);
+            font-size: 12px;
+            font-weight: 900;
+            box-shadow: 0 3px 10px rgba(34,39,32,0.12);
+        }
+        .cast-body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 15px;
+            flex: 1;
+        }
+        .cast-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .cast-profile {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            min-width: 0;
+        }
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2px solid #fff;
+            background: var(--accent-light);
+            box-shadow: 0 1px 5px rgba(34,39,32,0.12);
+        }
+        .profile-fallback {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: var(--accent-light);
+            color: var(--accent-dark);
+            font-size: 15px;
+            font-weight: 900;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 5px rgba(34,39,32,0.12);
+        }
+        .cast-name {
+            min-width: 0;
+            font-size: 18px;
+            font-weight: 900;
+            line-height: 1.25;
+            word-break: keep-all;
+        }
+        .cast-tone {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+        .cast-note {
+            color: #4d5549;
+            font-size: 13px;
+            line-height: 1.55;
+            word-break: keep-all;
+        }
+        .song-list {
+            display: grid;
+            gap: 7px;
+            margin-top: auto;
+        }
+        .song-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            min-height: 38px;
+            padding: 8px 10px;
+            border: 1px solid rgba(34,39,32,0.08);
+            border-radius: 8px;
+            background: var(--surface-2);
+            color: var(--text);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+        }
+        .song-link:hover {
+            border-color: rgba(127,184,63,0.38);
+            background: var(--accent-light);
+        }
+        .song-link small {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+        .cast-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding-top: 2px;
+        }
+        .action-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 900;
+            text-decoration: none;
+        }
+        .action-link.secondary {
+            background: #fff;
+            color: var(--accent-dark);
+            border: 1px solid rgba(127,184,63,0.28);
+        }
+        .empty {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 240px;
+            border: 1px dashed rgba(127,184,63,0.34);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.58);
+            color: var(--muted);
+            text-align: center;
+            font-size: 14px;
+            font-weight: 800;
+        }
+        .empty img {
+            width: 84px;
+            height: 84px;
+            object-fit: contain;
+            opacity: 0.85;
+        }
+        @media (max-width: 900px) {
+            .hero-inner {
+                grid-template-columns: 1fr;
+                align-items: start;
+            }
+            .hero-side {
+                grid-template-columns: repeat(2, minmax(120px, 1fr));
+                width: min(100%, 360px);
+            }
+            .cast-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 620px) {
+            .page-shell { padding-bottom: 36px; }
+            .topbar { align-items: flex-start; }
+            .hero {
+                min-height: 360px;
+                background-position: center;
+            }
+            .hero-inner {
+                min-height: 360px;
+                padding: 26px 12px 24px;
+            }
+            h1 { font-size: 38px; }
+            .hero-copy { font-size: 14px; max-width: 92%; }
+            .hero-actions { gap: 8px; }
+            .hero-button, .dday-chip { min-height: 38px; padding: 0 13px; font-size: 13px; }
+            .dday-chip strong { font-size: 16px; }
+            .hero-side { grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+            .season-card strong { font-size: 22px; }
+            .controls { align-items: stretch; }
+            .season-tabs { width: 100%; overflow-x: auto; }
+            .search { width: 100%; }
+            .cast-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <main class="page-shell">
+        <div class="topbar">
+            <a class="back-link" href="songs.html">
+                <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/><path d="M9 12h12"/></svg>
+                MUSIC
+            </a>
+        </div>
+
+        <section class="hero">
+            <div class="hero-inner">
+                <div class="hero-main">
+                    <div class="eyebrow">BEADYO GEMBOX</div>
+                    <h1>구슬요의 보석함</h1>
+                    <p class="hero-copy">
+                        구슬요가 좋아하는 목소리를 가진 사람들을 초대해 커버곡을 남기는 음악 콘텐츠입니다.
+                        시즌별 출연진의 개인곡과 방송국 링크를 한곳에 모았습니다.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="hero-button" href="#castGrid">출연진 보기</a>
+                        <a class="hero-button secondary" href="https://vod.sooplive.com/player/132894553" target="_blank" rel="noopener noreferrer">시즌1 다시보기</a>
+                        <a class="hero-button secondary" href="https://ch.sooplive.co.kr/beadyo97" target="_blank" rel="noopener noreferrer">SOOP 방송국</a>
+                        <span class="dday-chip" id="season2Dday">Season 2 <strong>D-</strong></span>
+                        <span class="hero-meta">2026.06.29 오후 7시</span>
+                    </div>
+                </div>
+                <div class="hero-side">
+                    <div class="season-card">
+                        <strong>1</strong>
+                        <span>2024.08.10<br>Archive</span>
+                    </div>
+                    <div class="season-card">
+                        <strong>2</strong>
+                        <span>2026.06.29<br>PM 7:00</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="controls" aria-label="보석함 필터">
+            <div class="season-tabs" id="seasonTabs"></div>
+            <input class="search" id="castSearch" type="search" placeholder="출연진 검색" autocomplete="off">
+        </section>
+
+        <section class="cast-grid" id="castGrid"></section>
+    </main>
+
+    <script>
+        const CAST = [
+            {
+                season: 1,
+                name: '윤단',
+                tone: 'Season 1',
+                songs: [
+                    { title: '비비 - 우리가 헤어져야 했던 이유 | 윤단 Cover. 구슬요의 보석함', url: 'https://youtu.be/7aZn2GVxLt8?si=eqhXWZtN-kba_tFi', label: 'YouTube' }
+                ]
+            },
+            {
+                season: 1,
+                name: '서시아',
+                tone: 'Season 1',
+                stationId: 'seosia1010',
+                stationUrl: 'https://www.sooplive.com/station/seosia1010',
+                songs: [
+                    { title: '권진아 - silly silly love | 서시아 Cover. 구슬요의 보석함', url: 'https://youtu.be/_zjhfKKXapU?si=OoJREfpNbnEEQ0mx', label: 'YouTube' }
+                ]
+            },
+            {
+                season: 1,
+                name: '하디아',
+                tone: 'Season 1',
+                stationId: 'eldk22',
+                stationUrl: 'https://www.sooplive.com/station/eldk22',
+                songs: [
+                    { title: '10cm - 폰서트 | 하디아 Cover. 구슬요의 보석함', url: 'https://youtu.be/5EjKMmw6mQk?si=biCM4oakypfvt2Ky', label: 'YouTube' }
+                ]
+            },
+            {
+                season: 1,
+                name: '밍턴',
+                tone: 'Season 1',
+                stationId: 'mingturn97',
+                stationUrl: 'https://www.sooplive.com/station/mingturn97',
+                songs: [
+                    { title: '정준일 - 안아줘 | 밍턴 Cover. 구슬요의 보석함', url: 'https://youtu.be/T42AbGYj0Tk?si=RWgE8txhAqg6qJTc', label: 'YouTube' }
+                ]
+            },
+            {
+                season: 1,
+                name: '키마',
+                tone: 'Season 1',
+                stationId: 'kymakyma',
+                stationUrl: 'https://www.sooplive.com/station/kymakyma',
+                songs: [
+                    { title: 'Trey Songz - Neighbors Know My Name | 키마 Cover. 구슬요의 보석함', url: 'https://youtu.be/Q8A5QX1JhJ0?si=U4z_9f6zcYpV6viw', label: 'YouTube' }
+                ]
+            },
+            {
+                season: 1,
+                name: '마냥',
+                tone: 'Season 1',
+                stationId: 'maluckitty',
+                stationUrl: 'https://www.sooplive.com/station/maluckitty',
+                songs: [
+                    { title: 'Charlie Puth (찰리 푸스) - Dangerously | 마냥 Cover. 구슬요의 보석함', url: 'https://youtu.be/-kItThFtTkI?si=GYqZd2RnZxG5UGoK', label: 'YouTube' }
+                ]
+            },
+            {
+                season: 1,
+                name: '이야',
+                tone: 'Season 1',
+                stationId: 'sshh135',
+                stationUrl: 'https://www.sooplive.com/station/sshh135',
+                songs: [
+                    { title: '이문세 - 옛사랑 | 이야 Cover. 구슬요의 보석함', url: 'https://youtu.be/-czIXdWHxxg?si=FwsLpTlH0TH_aW84', label: 'YouTube' }
+                ]
+            },
+            {
+                season: 2,
+                name: '모요',
+                tone: 'Season 2',
+                stationId: 'duvl123',
+                stationUrl: 'https://www.sooplive.com/station/duvl123'
+            },
+            {
+                season: 2,
+                name: '송현',
+                tone: 'Season 2',
+                stationId: 'songhy',
+                stationUrl: 'https://www.sooplive.com/station/songhy'
+            },
+            {
+                season: 2,
+                name: '리리스',
+                tone: 'Season 2',
+                stationId: 'lilith1211',
+                stationUrl: 'https://www.sooplive.com/station/lilith1211'
+            },
+            {
+                season: 2,
+                name: '유나기',
+                tone: 'Season 2',
+                stationId: 'nagi0413',
+                stationUrl: 'https://www.sooplive.com/station/nagi0413'
+            },
+            {
+                season: 2,
+                name: '정와',
+                tone: 'Season 2',
+                stationId: 'jeongwazzang',
+                stationUrl: 'https://www.sooplive.com/station/jeongwazzang'
+            }
+        ];
+
+        const SEASON2_AT = new Date('2026-06-29T19:00:00+09:00');
+        const state = { season: 2, query: '' };
+        const seasons = [2, 1];
+
+        function esc(value) {
+            return String(value ?? '').replace(/[&<>"']/g, ch =>
+                ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])
+            );
+        }
+
+        function safeUrl(value) {
+            const raw = String(value || '').trim();
+            if (!raw) return '';
+            try {
+                const url = new URL(raw, location.href);
+                if (url.protocol === 'http:' || url.protocol === 'https:') return url.toString();
+            } catch {}
+            return '';
+        }
+
+        function youtubeId(url) {
+            const href = safeUrl(url);
+            if (!href) return '';
+            try {
+                const parsed = new URL(href);
+                const host = parsed.hostname.toLowerCase();
+                if (host === 'youtu.be') return parsed.pathname.split('/').filter(Boolean)[0] || '';
+                if (host === 'youtube.com' || host === 'www.youtube.com') {
+                    if (parsed.pathname === '/watch') return parsed.searchParams.get('v') || '';
+                    const parts = parsed.pathname.split('/').filter(Boolean);
+                    if (parts[0] === 'shorts' || parts[0] === 'embed') return parts[1] || '';
+                }
+            } catch {}
+            return '';
+        }
+
+        function youtubeThumb(url) {
+            const id = youtubeId(url);
+            return /^[A-Za-z0-9_-]{11}$/.test(id) ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : '';
+        }
+
+        function soopProfileImage(stationId) {
+            const id = String(stationId || '').trim();
+            if (!/^[A-Za-z0-9_]+$/.test(id)) return '';
+            return `https://stimg.sooplive.co.kr/LOGO/${id.slice(0, 2)}/${id}/${id}.jpg`;
+        }
+
+        function renderSeasonTabs() {
+            const labels = { 1: 'Season 1', 2: 'Season 2' };
+            document.getElementById('seasonTabs').innerHTML = seasons.map(season => `
+                <button class="season-tab ${String(state.season) === String(season) ? 'active' : ''}" onclick="setSeason('${season}')">
+                    ${labels[season]}
+                </button>
+            `).join('');
+        }
+
+        function setSeason(season) {
+            state.season = Number(season);
+            renderSeasonTabs();
+            renderCast();
+        }
+
+        function matchesCast(cast) {
+            const seasonOk = Number(cast.season) === Number(state.season);
+            if (!seasonOk) return false;
+            const query = state.query.trim().toLowerCase();
+            if (!query) return true;
+            return [cast.name, cast.tone, cast.note]
+                .some(text => String(text || '').toLowerCase().includes(query));
+        }
+
+        function renderCast() {
+            const grid = document.getElementById('castGrid');
+            const items = CAST.filter(matchesCast)
+                .sort((a, b) => Number(b.season || 0) - Number(a.season || 0) || String(a.name || '').localeCompare(String(b.name || ''), 'ko-KR'));
+
+            if (!items.length) {
+                grid.innerHTML = `<div class="empty">
+                    <img src="game-assets/gobookticon/gobook-10.png" alt="">
+                    <div>출연진 정보 준비 중</div>
+                </div>`;
+                return;
+            }
+
+            grid.innerHTML = items.map(cast => {
+                const stationUrl = safeUrl(cast.stationUrl);
+                const songs = Array.isArray(cast.songs) ? cast.songs : [];
+                const profileUrl = safeUrl(cast.profileImage) || soopProfileImage(cast.stationId);
+                const imageUrl = safeUrl(cast.image) || youtubeThumb(songs[0]?.url || '') || profileUrl;
+                const initial = esc(String(cast.name || '?').trim().slice(0, 1) || '?');
+                const songHtml = songs.length
+                    ? songs.map(song => {
+                        const href = safeUrl(song.url);
+                        if (!href) return '';
+                        return `<a class="song-link" href="${esc(href)}" target="_blank" rel="noopener noreferrer">
+                            <span>${esc(song.title || '개인곡')}</span>
+                            <small>${esc(song.label || '듣기')}</small>
+                        </a>`;
+                    }).join('')
+                    : `<div class="song-link" aria-disabled="true"><span>개인곡 준비 중</span><small>soon</small></div>`;
+                return `<article class="cast-card">
+                    <div class="cast-cover">
+                        ${imageUrl ? `<img src="${esc(imageUrl)}" alt="${esc(cast.name || '')}" loading="lazy" decoding="async">` : `<div class="cast-fallback">${initial}</div>`}
+                        <div class="season-badge">Season ${esc(cast.season || '')}</div>
+                    </div>
+                    <div class="cast-body">
+                        <div class="cast-head">
+                            <div class="cast-profile">
+                                ${profileUrl ? `<img class="profile-img" src="${esc(profileUrl)}" alt="" loading="lazy" decoding="async">` : `<span class="profile-fallback">${initial}</span>`}
+                                <div class="cast-name">${esc(cast.name || '출연진')}</div>
+                            </div>
+                            <div class="cast-tone">${esc(cast.tone || '')}</div>
+                        </div>
+                        ${cast.note ? `<p class="cast-note">${esc(cast.note)}</p>` : ''}
+                        <div class="song-list">${songHtml}</div>
+                        <div class="cast-actions">
+                            ${stationUrl ? `<a class="action-link" href="${esc(stationUrl)}" target="_blank" rel="noopener noreferrer">방송국</a>` : ''}
+                            ${(cast.links || []).map(link => {
+                                const href = safeUrl(link.url);
+                                return href ? `<a class="action-link secondary" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(link.label || '링크')}</a>` : '';
+                            }).join('')}
+                        </div>
+                    </div>
+                </article>`;
+            }).join('');
+        }
+
+        function renderDday() {
+            const el = document.getElementById('season2Dday');
+            if (!el) return;
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const eventDay = new Date(SEASON2_AT.getFullYear(), SEASON2_AT.getMonth(), SEASON2_AT.getDate());
+            const dayDiff = Math.round((eventDay.getTime() - today.getTime()) / 86400000);
+            let label;
+            if (dayDiff > 0) label = `D-${dayDiff}`;
+            else if (dayDiff === 0) label = 'D-Day';
+            else label = `D+${Math.abs(dayDiff)}`;
+            el.innerHTML = `Season 2 <strong>${label}</strong>`;
+        }
+
+        document.getElementById('castSearch').addEventListener('input', event => {
+            state.query = event.target.value;
+            renderCast();
+        });
+        renderDday();
+        renderSeasonTabs();
+        renderCast();
+    </script>
+</body>
+</html>

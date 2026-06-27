@@ -26,7 +26,7 @@ const TABS = [
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
     { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'gacha-wall-hit-20260614' },
     { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'gacha-wall-hit-20260614' },
-    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'gacha-wall-hit-20260614' },
+    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'bosikham-link-20260628' },
     { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'gacha-wall-hit-20260614' },
 ];
 
