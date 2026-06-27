@@ -146,9 +146,24 @@ const state = {
     isEditor: false,
     isOwner: false,
     editors: [],
+    calendarNotices: [],
     viewMode: 'month',
     weekStart: null,
     mobileStartDate: dateToStr(new Date()),
+};
+
+const DEFAULT_CALENDAR_NOTICE = {
+    id: 'bosikham-season2-20260627',
+    title: '공지사항',
+    image_url: 'notice-bosikham-season2-20260627.png',
+    link_url: 'https://www.sooplive.com/station/beadyo97/post/199734125',
+    link_label: '공지 보러가기',
+    button_bg_color: '#d9a53a',
+    button_text_color: '#6f280b',
+    header_bg_color: '#190a07',
+    header_text_color: '#fff3cf',
+    is_active: true,
+    sort_order: 0,
 };
 
 let db = null;
@@ -2595,15 +2610,17 @@ async function deleteEvent(id) {
 async function openAdminModal() {
     await loadEditors();
     await loadUpEvents();
+    await loadCalendarNotices({ includeInactive: true, fallback: false });
     renderEditorList();
     renderUpEventList();
+    renderCalendarNoticeList();
     document.getElementById('adminModal').classList.add('open');
 }
 function closeAdminModal() { document.getElementById('adminModal').classList.remove('open'); }
 
 function switchAdminTab(tab) {
     document.querySelectorAll('.admin-tab-btn').forEach((b, i) => {
-        const names = ['editors', 'upevents'];
+        const names = ['editors', 'upevents', 'notices'];
         b.classList.toggle('active', names[i] === tab);
     });
     document.querySelectorAll('.admin-section').forEach(s => {
@@ -2648,6 +2665,352 @@ async function removeEditor(id) {
     await loadEditors();
     renderEditorList();
     showToast('삭제되었습니다');
+}
+
+// ─── 캘린더 공지 관리 ───
+let _activeCalendarNotice = null;
+let _calendarNoticeLoadError = null;
+
+function isMissingNoticeTable(error) {
+    const msg = String(error?.message || '');
+    return error?.code === '42P01' || error?.code === '42703' || error?.code === 'PGRST205' || msg.includes('calendar_notices');
+}
+
+function normalizeNoticeImageInput(value) {
+    const raw = String(value ?? '').trim();
+    if (!raw) return null;
+    const absolute = normalizeOptionalUrl(raw);
+    if (absolute) return absolute;
+    if (/^[./\w-]+(?:\/[./\w-]+)*\.(?:png|jpe?g|webp|gif|avif)(?:\?[\w=&.-]+)?$/i.test(raw)) return raw;
+    return null;
+}
+
+function noticeImageSrc(value) {
+    return normalizeNoticeImageInput(value) || DEFAULT_CALENDAR_NOTICE.image_url;
+}
+
+function normalizeNoticeColor(value, fallback) {
+    const raw = String(value ?? '').trim();
+    return /^#[0-9a-f]{6}$/i.test(raw) ? raw : fallback;
+}
+
+function hexToRgb(hex) {
+    const m = String(hex || '').match(/^#([0-9a-f]{6})$/i);
+    if (!m) return null;
+    const n = parseInt(m[1], 16);
+    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+
+function rgbToHex(r, g, b) {
+    return '#' + [r, g, b].map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('');
+}
+
+function mixNoticeColor(hex, amount, target = '#ffffff') {
+    const c = hexToRgb(hex);
+    const t = hexToRgb(target);
+    if (!c || !t) return hex;
+    return rgbToHex(
+        c.r + (t.r - c.r) * amount,
+        c.g + (t.g - c.g) * amount,
+        c.b + (t.b - c.b) * amount
+    );
+}
+
+function noticeReadableTextColor(hex) {
+    const c = hexToRgb(hex);
+    if (!c) return '#fff3cf';
+    const luminance = (0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b) / 255;
+    return luminance > 0.55 ? '#2d1b12' : '#fff3cf';
+}
+
+function normalizeCalendarNotice(row) {
+    return {
+        id: String(row.id || row.slug || row.title || DEFAULT_CALENDAR_NOTICE.id),
+        title: row.title || '공지사항',
+        image_url: noticeImageSrc(row.image_url),
+        link_url: normalizeOptionalUrl(row.link_url || '') || '',
+        link_label: row.link_label || '공지 보러가기',
+        button_bg_color: normalizeNoticeColor(row.button_bg_color, DEFAULT_CALENDAR_NOTICE.button_bg_color),
+        button_text_color: normalizeNoticeColor(row.button_text_color, DEFAULT_CALENDAR_NOTICE.button_text_color),
+        header_bg_color: normalizeNoticeColor(row.header_bg_color, DEFAULT_CALENDAR_NOTICE.header_bg_color),
+        header_text_color: normalizeNoticeColor(row.header_text_color, DEFAULT_CALENDAR_NOTICE.header_text_color),
+        is_active: row.is_active !== false,
+        sort_order: Number(row.sort_order || 0),
+        created_at: row.created_at || null,
+    };
+}
+
+async function loadCalendarNotices(options = {}) {
+    const includeInactive = options.includeInactive === true;
+    const fallback = options.fallback !== false;
+    _calendarNoticeLoadError = null;
+    try {
+        await _ensureDb();
+        let query = db.from('calendar_notices')
+            .select('id,title,image_url,link_url,link_label,button_bg_color,button_text_color,header_bg_color,header_text_color,is_active,sort_order,created_at')
+            .order('sort_order', { ascending: true })
+            .order('created_at', { ascending: true });
+        if (!includeInactive) query = query.eq('is_active', true);
+        const { data, error } = await query;
+        if (error) throw error;
+        state.calendarNotices = (data || []).map(normalizeCalendarNotice);
+    } catch (error) {
+        _calendarNoticeLoadError = error;
+        if (fallback) {
+            state.calendarNotices = [normalizeCalendarNotice(DEFAULT_CALENDAR_NOTICE)];
+        } else {
+            state.calendarNotices = [];
+        }
+    }
+    return state.calendarNotices;
+}
+
+function calendarNoticeHideKey(notice) {
+    return `beadyoNoticeHiddenDate:${notice?.id || DEFAULT_CALENDAR_NOTICE.id}`;
+}
+
+function isCalendarNoticeHiddenToday(notice) {
+    try {
+        return localStorage.getItem(calendarNoticeHideKey(notice)) === dateToStr(new Date());
+    } catch (error) {
+        return false;
+    }
+}
+
+function renderNoticePopup(notice) {
+    const title = document.getElementById('noticeTitle');
+    const img = document.getElementById('noticeImage');
+    const link = document.getElementById('noticeLink');
+    const linkLabel = document.getElementById('noticeLinkLabel');
+    const head = document.querySelector('#noticePopup .notice-head');
+    if (title) title.textContent = notice.title || '공지사항';
+    if (head) {
+        head.style.setProperty('--notice-head-bg', notice.header_bg_color);
+        head.style.setProperty('--notice-head-bg-light', mixNoticeColor(notice.header_bg_color, 0.18));
+        head.style.setProperty('--notice-head-text', notice.header_text_color);
+    }
+    if (img) {
+        img.src = noticeImageSrc(notice.image_url);
+        img.alt = `${notice.title || '공지'} 이미지`;
+    }
+    if (link) {
+        const href = normalizeOptionalUrl(notice.link_url || '');
+        link.hidden = !href;
+        if (href) link.href = href;
+        link.setAttribute('aria-label', notice.link_label || '공지 보러가기');
+        link.title = notice.link_label || '공지 보러가기';
+        link.style.setProperty('--notice-button-bg', notice.button_bg_color);
+        link.style.setProperty('--notice-button-text', notice.button_text_color);
+        link.style.background = `linear-gradient(180deg, color-mix(in srgb, ${notice.button_bg_color} 24%, #ffffff), ${notice.button_bg_color})`;
+        link.style.color = notice.button_text_color;
+        link.style.boxShadow = `0 8px 20px rgba(0,0,0,0.28), 0 0 18px color-mix(in srgb, ${notice.button_bg_color} 42%, transparent)`;
+    }
+    if (linkLabel) linkLabel.textContent = notice.link_label || '공지 보러가기';
+}
+
+function openNoticePopup(notice = _activeCalendarNotice, options = {}) {
+    const normalized = notice ? normalizeCalendarNotice(notice) : null;
+    if (!normalized || (!options.ignoreHiddenToday && isCalendarNoticeHiddenToday(normalized))) return;
+    _activeCalendarNotice = normalized;
+    renderNoticePopup(normalized);
+    document.getElementById('noticePopup')?.classList.add('open');
+}
+
+function closeNoticePopup() {
+    document.getElementById('noticePopup')?.classList.remove('open');
+}
+
+function hideNoticeToday() {
+    const notice = _activeCalendarNotice || normalizeCalendarNotice(DEFAULT_CALENDAR_NOTICE);
+    try {
+        localStorage.setItem(calendarNoticeHideKey(notice), dateToStr(new Date()));
+    } catch (error) {
+        // localStorage can be unavailable in private browsing; closing still works.
+    }
+    closeNoticePopup();
+}
+
+async function maybeOpenCalendarNoticeOnStart() {
+    const notices = await loadCalendarNotices({ includeInactive: false, fallback: true });
+    const notice = notices.find(n => n.is_active);
+    if (notice) openNoticePopup(notice);
+}
+
+function setNoticeColorInputs(colors) {
+    const fields = {
+        newNoticeButtonBg: colors.button_bg_color,
+        newNoticeButtonText: colors.button_text_color,
+        newNoticeHeaderBg: colors.header_bg_color,
+        newNoticeHeaderText: colors.header_text_color,
+    };
+    for (const [id, value] of Object.entries(fields)) {
+        const input = document.getElementById(id);
+        if (input && value) input.value = value;
+    }
+}
+
+function applyNoticeAutoColorsFromHex(hex) {
+    const headerBg = mixNoticeColor(hex, 0.48, '#000000');
+    const buttonBg = mixNoticeColor(hex, 0.12, '#ffffff');
+    setNoticeColorInputs({
+        button_bg_color: buttonBg,
+        button_text_color: noticeReadableTextColor(buttonBg),
+        header_bg_color: headerBg,
+        header_text_color: noticeReadableTextColor(headerBg),
+    });
+}
+
+function sampleNoticeImageColor(imageUrl) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+            try {
+                const size = 64;
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d', { willReadFrequently: true });
+                ctx.drawImage(img, 0, 0, size, size);
+                const data = ctx.getImageData(0, 0, size, size).data;
+                let r = 0, g = 0, b = 0, weightSum = 0;
+                for (let i = 0; i < data.length; i += 16) {
+                    const alpha = data[i + 3] / 255;
+                    if (alpha < 0.35) continue;
+                    const pxR = data[i], pxG = data[i + 1], pxB = data[i + 2];
+                    const max = Math.max(pxR, pxG, pxB);
+                    const min = Math.min(pxR, pxG, pxB);
+                    const saturation = max === 0 ? 0 : (max - min) / max;
+                    const luminance = (0.2126 * pxR + 0.7152 * pxG + 0.0722 * pxB) / 255;
+                    if (luminance < 0.08 || luminance > 0.94) continue;
+                    const weight = alpha * (0.35 + saturation) * (1 - Math.abs(luminance - 0.52) * 0.65);
+                    r += pxR * weight;
+                    g += pxG * weight;
+                    b += pxB * weight;
+                    weightSum += weight;
+                }
+                if (!weightSum) throw new Error('no color');
+                resolve(rgbToHex(r / weightSum, g / weightSum, b / weightSum));
+            } catch (error) {
+                reject(error);
+            }
+        };
+        img.onerror = reject;
+        img.src = imageUrl;
+    });
+}
+
+async function analyzeNoticeImageColorsFromInput() {
+    const input = document.getElementById('newNoticeImageUrl');
+    const imageUrl = normalizeNoticeImageInput(input?.value);
+    if (!imageUrl) { showToast('이미지 URL을 먼저 입력해주세요'); return; }
+    try {
+        const sampled = await sampleNoticeImageColor(imageUrl);
+        applyNoticeAutoColorsFromHex(sampled);
+        showToast('이미지 색을 반영했어요');
+    } catch (error) {
+        showToast('이 이미지에서는 자동 색 추출이 어려워요. 색상 선택으로 맞춰주세요');
+    }
+}
+
+function renderCalendarNoticeList() {
+    const list = document.getElementById('noticeList');
+    if (!list) return;
+    if (_calendarNoticeLoadError && isMissingNoticeTable(_calendarNoticeLoadError)) {
+        list.innerHTML = '<div class="notice-admin-empty">공지 테이블 또는 컬럼이 아직 없습니다. add_calendar_notices.sql을 Supabase SQL Editor에서 먼저 실행해 주세요.</div>';
+        return;
+    }
+    if (!state.calendarNotices.length) {
+        list.innerHTML = '<div class="notice-admin-empty">등록된 공지가 없습니다.</div>';
+        return;
+    }
+    list.innerHTML = state.calendarNotices.map(notice => `
+        <div class="editor-item up-event-row">
+            <img class="notice-admin-preview" src="${esc(noticeImageSrc(notice.image_url))}" alt="">
+            <div class="up-event-main">
+                <div class="up-event-row-title">${esc(notice.title)}</div>
+                <div class="up-event-row-subtitle">${esc(notice.link_url || notice.image_url)}</div>
+                <div class="up-event-row-state ${notice.is_active ? 'active' : ''}">${notice.is_active ? '● 활성' : '● 비활성'}</div>
+            </div>
+            <div class="up-event-admin-actions">
+                <label class="up-startup-toggle">
+                    <input type="checkbox" ${notice.is_active ? 'checked' : ''} onchange="toggleCalendarNoticeActive('${esc(notice.id)}', this.checked)">
+                    <span>활성</span>
+                </label>
+                <button class="editor-remove-btn" onclick="previewCalendarNotice('${esc(notice.id)}')">미리보기</button>
+                <button class="editor-remove-btn" onclick="removeCalendarNotice('${esc(notice.id)}')">삭제</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+async function addCalendarNotice() {
+    await _ensureDb();
+    const title = document.getElementById('newNoticeTitle').value.trim() || '공지사항';
+    const imageUrl = normalizeNoticeImageInput(document.getElementById('newNoticeImageUrl').value);
+    const linkInput = document.getElementById('newNoticeLinkUrl').value.trim();
+    const linkUrl = normalizeOptionalUrl(linkInput);
+    const linkLabel = document.getElementById('newNoticeLinkLabel').value.trim() || '공지 보러가기';
+    const buttonBgColor = normalizeNoticeColor(document.getElementById('newNoticeButtonBg')?.value, DEFAULT_CALENDAR_NOTICE.button_bg_color);
+    const buttonTextColor = normalizeNoticeColor(document.getElementById('newNoticeButtonText')?.value, DEFAULT_CALENDAR_NOTICE.button_text_color);
+    const headerBgColor = normalizeNoticeColor(document.getElementById('newNoticeHeaderBg')?.value, DEFAULT_CALENDAR_NOTICE.header_bg_color);
+    const headerTextColor = normalizeNoticeColor(document.getElementById('newNoticeHeaderText')?.value, DEFAULT_CALENDAR_NOTICE.header_text_color);
+    const isActive = document.getElementById('newNoticeActive')?.checked === true;
+    const sortOrder = parseInt(document.getElementById('newNoticeOrder').value) || 0;
+    if (!imageUrl) { showToast('이미지 URL을 입력해주세요'); return; }
+    if (linkInput && !linkUrl) { showToast('바로가기 URL은 http 또는 https 주소로 입력해주세요'); return; }
+
+    const { error } = await db.from('calendar_notices').insert({
+        title,
+        image_url: imageUrl,
+        link_url: linkUrl || null,
+        link_label: linkLabel,
+        button_bg_color: buttonBgColor,
+        button_text_color: buttonTextColor,
+        header_bg_color: headerBgColor,
+        header_text_color: headerTextColor,
+        is_active: isActive,
+        sort_order: sortOrder,
+        created_by: state.user?.email || null,
+    });
+    if (error) {
+        showToast(isMissingNoticeTable(error) ? 'DB에 calendar_notices 테이블을 먼저 추가해주세요' : '공지 추가 실패: ' + error.message);
+        return;
+    }
+    ['newNoticeImageUrl','newNoticeLinkUrl','newNoticeOrder'].forEach(id => {
+        document.getElementById(id).value = '';
+    });
+    document.getElementById('newNoticeTitle').value = '공지사항';
+    document.getElementById('newNoticeLinkLabel').value = '공지 보러가기';
+    setNoticeColorInputs(DEFAULT_CALENDAR_NOTICE);
+    document.getElementById('newNoticeActive').checked = true;
+    await loadCalendarNotices({ includeInactive: true, fallback: false });
+    renderCalendarNoticeList();
+    showToast('공지 추가됨');
+}
+
+async function toggleCalendarNoticeActive(id, checked) {
+    await _ensureDb();
+    const { error } = await db.from('calendar_notices').update({ is_active: checked }).eq('id', id);
+    if (error) { showToast('공지 상태 저장 실패'); return; }
+    const notice = state.calendarNotices.find(n => n.id === String(id));
+    if (notice) notice.is_active = checked;
+    renderCalendarNoticeList();
+}
+
+function previewCalendarNotice(id) {
+    const notice = state.calendarNotices.find(n => n.id === String(id));
+    if (notice) openNoticePopup(notice, { ignoreHiddenToday: true });
+}
+
+async function removeCalendarNotice(id) {
+    await _ensureDb();
+    if (!confirm('이 공지를 삭제하시겠습니까?')) return;
+    const { error } = await db.from('calendar_notices').delete().eq('id', id);
+    if (error) { showToast('공지 삭제 실패'); return; }
+    state.calendarNotices = state.calendarNotices.filter(n => n.id !== String(id));
+    renderCalendarNoticeList();
+    showToast('공지 삭제됨');
 }
 
 // ─── UP 이벤트 관리 ───
@@ -2712,7 +3075,8 @@ function _refreshUpModalDisplay() {
 
 async function loadUpEvents() {
     await _ensureDb();
-    const { data, error } = await db.from('up_events').select('*').order('sort_order');
+    const { data, error } = await db.from('up_events').select('*')
+        .order('sort_order', { ascending: true });
     if (!error) upEvents = data || [];
 }
 
@@ -2722,7 +3086,7 @@ function renderUpEventList() {
         list.innerHTML = '<div class="editor-item" style="color:var(--muted);">등록된 UP 이벤트가 없습니다.</div>';
         return;
     }
-    list.innerHTML = upEvents.map(e => `
+    list.innerHTML = upEvents.map((e, index) => `
         <div class="editor-item up-event-row">
             <div class="up-event-main">
                 <div class="up-event-row-title">${esc(e.tab_name)}</div>
@@ -2730,6 +3094,10 @@ function renderUpEventList() {
                 <div class="up-event-row-state ${e.is_active ? 'active' : ''}">${e.is_active ? '● 활성' : '● 비활성'}</div>
             </div>
             <div class="up-event-admin-actions">
+                <div class="up-order-actions" aria-label="UP 이벤트 순서 변경">
+                    <button class="up-order-btn" onclick="moveUpEvent('${esc(String(e.id))}', -1)" ${index === 0 ? 'disabled' : ''}>위</button>
+                    <button class="up-order-btn" onclick="moveUpEvent('${esc(String(e.id))}', 1)" ${index === upEvents.length - 1 ? 'disabled' : ''}>아래</button>
+                </div>
                 <label class="up-startup-toggle">
                     <input type="checkbox" ${isUpStartupEvent(e) ? 'checked' : ''} onchange="toggleUpStartup('${esc(String(e.id))}', this.checked)">
                     <span>먼저 띄우기</span>
@@ -2738,6 +3106,42 @@ function renderUpEventList() {
             </div>
         </div>
     `).join('');
+}
+
+function normalizeUpEventOrders() {
+    upEvents.forEach((event, index) => { event.sort_order = index; });
+}
+
+async function saveUpEventOrder() {
+    await _ensureDb();
+    normalizeUpEventOrders();
+    const results = await Promise.all(upEvents.map((event, index) =>
+        db.from('up_events').update({ sort_order: index }).eq('id', event.id)
+    ));
+    const failed = results.find(result => result.error);
+    if (failed) {
+        showToast('순서 저장 실패: ' + failed.error.message);
+        await loadUpEvents();
+        renderUpEventList();
+        return false;
+    }
+    return true;
+}
+
+async function moveUpEvent(id, direction) {
+    const from = upEvents.findIndex(event => String(event.id) === String(id));
+    if (from < 0) return;
+    const to = from + (direction < 0 ? -1 : 1);
+    if (to < 0 || to >= upEvents.length) return;
+    const [moved] = upEvents.splice(from, 1);
+    upEvents.splice(to, 0, moved);
+    normalizeUpEventOrders();
+    renderUpEventList();
+    const ok = await saveUpEventOrder();
+    if (ok) {
+        showToast('UP 이벤트 순서 저장됨');
+        _refreshUpModalDisplay();
+    }
 }
 
 function isMissingUpStartupColumn(error) {
@@ -2978,8 +3382,13 @@ loadEvents().catch(err => {
 });
 loadMemoCards().catch(err => console.error('initial loadMemoCards:', err));
 initAuth();
+maybeOpenCalendarNoticeOnStart();
 setTimeout(() => { maybeOpenUpModalOnStart(); }, 700);
 checkBirthday();
+
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeNoticePopup();
+});
 
 function launchConfetti(count = 80) {
     for (let i = 0; i < count; i++) {

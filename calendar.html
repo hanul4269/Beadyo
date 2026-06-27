@@ -6,8 +6,8 @@
     <title>구슬요 일정표</title>
     <link rel="icon" href="logo-icon.webp">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
-    <link rel="preload" href="app.js?v=no-empty-date-stickers-20260614" as="script">
-    <script defer src="app.js?v=no-empty-date-stickers-20260614"></script>
+    <link rel="preload" href="app.js?v=notice-up-order-20260628" as="script">
+    <script defer src="app.js?v=notice-up-order-20260628"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
@@ -1300,11 +1300,32 @@
             justify-content: space-between;
             min-height: 46px;
             padding: 0 10px 0 16px;
-            background: linear-gradient(180deg, rgba(63,27,12,.96), rgba(25,10,7,.96));
-            color: #fff3cf;
+            background: linear-gradient(180deg, var(--notice-head-bg-light, rgba(63,27,12,.96)), var(--notice-head-bg, rgba(25,10,7,.96)));
+            color: var(--notice-head-text, #fff3cf);
             font-size: 15px;
             font-weight: 900;
             letter-spacing: 0;
+        }
+        .notice-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .notice-hide-today {
+            height: 30px;
+            padding: 0 10px;
+            border: 1px solid rgba(255, 243, 207, 0.28);
+            border-radius: 999px;
+            background: rgba(255,255,255,0.08);
+            color: var(--notice-head-text, #fff3cf);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .notice-hide-today:hover {
+            background: rgba(255,255,255,0.16);
         }
         .notice-close {
             display: inline-flex;
@@ -1315,7 +1336,7 @@
             border: 0;
             border-radius: 50%;
             background: transparent;
-            color: #fff3cf;
+            color: var(--notice-head-text, #fff3cf);
             font-size: 24px;
             line-height: 1;
             cursor: pointer;
@@ -1369,6 +1390,9 @@
             stroke-linecap: round;
             stroke-linejoin: round;
         }
+        .notice-link[hidden] {
+            display: none;
+        }
         @media (max-width: 480px) {
             #noticePopup {
                 padding: 10px;
@@ -1376,6 +1400,18 @@
             #noticePopup .notice-modal {
                 width: min(94vw, 390px);
                 border-radius: 14px;
+            }
+            .notice-head {
+                padding-left: 13px;
+            }
+            .notice-hide-today {
+                height: 28px;
+                padding: 0 8px;
+                font-size: 11px;
+            }
+            .notice-close {
+                width: 32px;
+                height: 32px;
             }
             .notice-link {
                 min-width: 160px;
@@ -1635,6 +1671,71 @@
         .admin-tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
         .admin-section { display: none; }
         .admin-section.active { display: block; }
+        .admin-form-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-top: 6px;
+        }
+        .admin-form-stack input[type="text"],
+        .admin-form-stack input[type="url"],
+        .admin-form-stack input[type="number"] {
+            width: 100%;
+            padding: 9px 11px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            font: inherit;
+            font-size: 13px;
+        }
+        .admin-form-stack input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+        .admin-form-stack button {
+            border: none;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #fff;
+            padding: 10px 14px;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .admin-form-stack button:hover {
+            background: var(--accent-dark);
+        }
+        .notice-color-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .notice-color-field {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+            padding: 8px 10px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .notice-color-field input {
+            width: 32px;
+            min-width: 32px;
+            height: 28px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+        .notice-auto-color-btn {
+            background: #3f2a1f !important;
+        }
+        .notice-auto-color-btn:hover {
+            background: #2c1a13 !important;
+        }
 
         /* ── 보기 모달 ── */
         .view-section { margin-bottom: 12px; }
@@ -2225,6 +2326,32 @@
             gap: 9px;
             flex-shrink: 0;
         }
+        .up-order-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+        .up-order-btn {
+            height: 26px;
+            padding: 0 8px;
+            border: 1px solid rgba(139,195,74,0.34);
+            border-radius: 6px;
+            background: #fff;
+            color: var(--accent-dark);
+            font: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .up-order-btn:hover:not(:disabled) {
+            background: var(--accent-light);
+        }
+        .up-order-btn:disabled {
+            opacity: 0.36;
+            cursor: default;
+        }
         .field .up-startup-toggle,
         .up-startup-toggle,
         .field .up-form-check,
@@ -2256,6 +2383,20 @@
             border-radius: 4px;
             accent-color: var(--accent);
             flex: 0 0 auto;
+        }
+        .notice-admin-preview {
+            width: 42px;
+            height: 56px;
+            border-radius: 6px;
+            object-fit: cover;
+            background: #eee;
+            flex-shrink: 0;
+        }
+        .notice-admin-empty {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.55;
+            padding: 10px 0;
         }
         @media (max-width: 620px) {
             .up-event-row {
@@ -2664,14 +2805,17 @@
 <div class="modal-overlay" id="noticePopup" onmousedown="if(event.target===this)closeNoticePopup()">
     <div class="modal notice-modal" role="dialog" aria-modal="true" aria-label="공지사항">
         <div class="notice-head">
-            <span>공지사항</span>
-            <button type="button" class="notice-close" onclick="closeNoticePopup()" aria-label="공지 닫기">×</button>
+            <span id="noticeTitle">공지사항</span>
+            <div class="notice-actions">
+                <button type="button" class="notice-hide-today" onclick="hideNoticeToday()">오늘 하루 보지 않기</button>
+                <button type="button" class="notice-close" onclick="closeNoticePopup()" aria-label="공지 닫기">×</button>
+            </div>
         </div>
         <div class="notice-image-wrap">
-            <img class="notice-image" src="notice-bosikham-season2-20260627.png" alt="구슬요의 보석함 시즌 2 공지" width="800" height="2114" decoding="async">
-            <a class="notice-link" href="https://www.sooplive.com/station/beadyo97/post/199734125" target="_blank" rel="noopener noreferrer" aria-label="SOOP 공지 보러가기" title="SOOP 공지 보러가기">
+            <img class="notice-image" id="noticeImage" src="notice-bosikham-season2-20260627.png" alt="공지 이미지" width="800" height="2114" decoding="async">
+            <a class="notice-link" id="noticeLink" href="https://www.sooplive.com/station/beadyo97/post/199734125" target="_blank" rel="noopener noreferrer" aria-label="SOOP 공지 보러가기" title="SOOP 공지 보러가기">
                 <svg viewBox="0 0 24 24"><path d="M7 17 17 7"/><path d="M9 7h8v8"/><path d="M7 7H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/></svg>
-                <span>공지 보러가기</span>
+                <span id="noticeLinkLabel">공지 보러가기</span>
             </a>
         </div>
     </div>
@@ -2811,6 +2955,7 @@
         <div class="admin-tabs">
             <button class="admin-tab-btn active" onclick="switchAdminTab('editors')">편집자 관리</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('upevents')">UP 이벤트</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('notices')">공지사항</button>
         </div>
         <!-- 편집자 관리 -->
         <div class="admin-section active" id="adminSectionEditors">
@@ -2846,6 +2991,51 @@
                     <div style="display:flex;gap:8px;align-items:center;">
                         <input type="number" id="newUpOrder" placeholder="순서 (기본 0)" style="width:130px;">
                         <button onclick="addUpEvent()" style="flex:1;">추가</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 공지사항 관리 -->
+        <div class="admin-section" id="adminSectionNotices">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">
+                캘린더 접속 시 띄울 공지 팝업을 등록합니다.
+            </p>
+            <div class="editor-list" id="noticeList"></div>
+            <div class="field" style="margin-top:12px;">
+                <label>공지 추가</label>
+                <div class="admin-form-stack">
+                    <input type="text" id="newNoticeTitle" placeholder="공지 제목" value="공지사항">
+                    <input type="url" id="newNoticeImageUrl" placeholder="이미지 URL" onchange="analyzeNoticeImageColorsFromInput()">
+                    <button type="button" class="notice-auto-color-btn" onclick="analyzeNoticeImageColorsFromInput()">이미지 색 자동 추출</button>
+                    <input type="url" id="newNoticeLinkUrl" placeholder="바로가기 URL (선택)">
+                    <input type="text" id="newNoticeLinkLabel" placeholder="버튼 문구" value="공지 보러가기">
+                    <div class="notice-color-row">
+                        <label class="notice-color-field">
+                            <input type="color" id="newNoticeButtonBg" value="#d9a53a">
+                            버튼 배경
+                        </label>
+                        <label class="notice-color-field">
+                            <input type="color" id="newNoticeButtonText" value="#6f280b">
+                            글자색
+                        </label>
+                    </div>
+                    <div class="notice-color-row">
+                        <label class="notice-color-field">
+                            <input type="color" id="newNoticeHeaderBg" value="#190a07">
+                            상단 배경
+                        </label>
+                        <label class="notice-color-field">
+                            <input type="color" id="newNoticeHeaderText" value="#fff3cf">
+                            상단 글자
+                        </label>
+                    </div>
+                    <label class="up-form-check">
+                        <input type="checkbox" id="newNoticeActive" checked>
+                        바로 활성화
+                    </label>
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <input type="number" id="newNoticeOrder" placeholder="순서 (기본 0)" style="width:130px;">
+                        <button type="button" onclick="addCalendarNotice()" style="flex:1;">추가</button>
                     </div>
                 </div>
             </div>
@@ -2952,17 +3142,5 @@
     </div>
 </div>
 
-<script>
-function openNoticePopup() {
-    document.getElementById('noticePopup')?.classList.add('open');
-}
-function closeNoticePopup() {
-    document.getElementById('noticePopup')?.classList.remove('open');
-}
-document.addEventListener('DOMContentLoaded', openNoticePopup);
-document.addEventListener('keydown', event => {
-    if (event.key === 'Escape') closeNoticePopup();
-});
-</script>
 </body>
 </html>
