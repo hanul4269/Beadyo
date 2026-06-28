@@ -269,7 +269,6 @@ async function updateAuthUI() {
         </button>
         <div class="auth-menu" id="auth-menu">
             ${canAdmin ? `<button onclick="openCalendarAdmin()">⚙ 편집 설정</button>` : ''}
-            <button onclick="openDanceReviewPage()">춤영상 검토페이지</button>
             <button class="danger" onclick="signOut()">로그아웃</button>
         </div>
     </div>`;

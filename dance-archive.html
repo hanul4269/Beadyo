@@ -126,25 +126,6 @@
             box-shadow: 0 6px 16px rgba(49,111,208,.12);
         }
 
-        .backup-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 38px;
-            padding: 0 12px;
-            border: 1px solid rgba(127,184,63,.28);
-            border-radius: 8px;
-            background: #f4faed;
-            color: var(--deep);
-            font-size: 13px;
-            font-weight: 900;
-            box-shadow: 0 6px 16px rgba(127,184,63,.12);
-        }
-
-        .backup-file {
-            display: none;
-        }
-
         .import-status {
             color: var(--muted);
             font-size: 12px;
@@ -715,10 +696,6 @@
                     <div class="top-note">SOOP VOD 클립, 캐치, YouTube Shorts에서 춤영상 후보를 모아 검토하고 정리하는 별도 화면입니다. 가져온 후보는 이 브라우저에 저장되고, 채택된 항목만 공개 페이지에 반영됩니다.</div>
                     <div class="top-actions">
                         <button class="import-btn" id="importDataBtn">데이터 가져오기</button>
-                        <button class="backup-btn" id="exportBackupBtn" type="button">백업 내보내기</button>
-                        <button class="backup-btn" id="importBackupBtn" type="button">백업 불러오기</button>
-                        <button class="backup-btn" id="migratePortBtn" type="button" hidden>4000 데이터 가져오기</button>
-                        <input class="backup-file" id="backupFileInput" type="file" accept="application/json,.json">
                         <a class="page-link" href="index.html#dance">채택 영상 페이지</a>
                         <span class="import-status" id="importStatus">마지막 가져오기: 없음</span>
                     </div>
@@ -942,128 +919,6 @@
 
         function saveVideos() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
-        }
-
-        function exportBackup() {
-            const payload = {
-                type: 'beadyo-dance-archive-backup',
-                version: 1,
-                exportedAt: new Date().toISOString(),
-                videos,
-                lastImportAt: localStorage.getItem(LAST_IMPORT_KEY) || null,
-            };
-            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-            const link = document.createElement('a');
-            const objectUrl = URL.createObjectURL(blob);
-            link.href = objectUrl;
-            link.download = `beadyo-dance-backup-${new Date().toISOString().slice(0, 10)}.json`;
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            URL.revokeObjectURL(objectUrl);
-            updateImportStatus(`${videos.length}개 백업 파일을 만들었습니다.`);
-        }
-
-        function normalizeBackupPayload(payload) {
-            if (Array.isArray(payload)) return payload;
-            if (Array.isArray(payload?.videos)) return payload.videos;
-            if (Array.isArray(payload?.items)) return payload.items;
-            return null;
-        }
-
-        function applyBackupPayload(payload) {
-            const backupVideos = normalizeBackupPayload(payload);
-            if (!backupVideos) throw new Error('invalid backup');
-            const beforeCount = videos.length;
-            videos = mergeVideos(videos, backupVideos);
-            saveVideos();
-            if (payload?.lastImportAt) {
-                localStorage.setItem(LAST_IMPORT_KEY, payload.lastImportAt);
-            }
-            selectedId = videos[0]?.id || null;
-            renderSummary();
-            renderGrid();
-            return {
-                added: Math.max(videos.length - beforeCount, 0),
-                total: videos.length,
-            };
-        }
-
-        function importBackupFile(file) {
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = () => {
-                try {
-                    const payload = JSON.parse(String(reader.result || ''));
-                    const result = applyBackupPayload(payload);
-                    updateImportStatus(`${result.added}개 복원 · 현재 ${result.total}개`);
-                } catch {
-                    updateImportStatus('백업 파일을 읽지 못했습니다.');
-                }
-            };
-            reader.onerror = () => updateImportStatus('백업 파일을 읽지 못했습니다.');
-            reader.readAsText(file);
-        }
-
-        function postStorageBackupIfRequested() {
-            const params = new URLSearchParams(location.search);
-            if (params.get('storage-export') !== '1') return false;
-            const payload = {
-                type: 'beadyo-dance-archive-backup',
-                version: 1,
-                exportedAt: new Date().toISOString(),
-                videos,
-                lastImportAt: localStorage.getItem(LAST_IMPORT_KEY) || null,
-            };
-            window.parent?.postMessage({
-                type: 'beadyo-dance-storage-export',
-                payload,
-            }, '*');
-            document.body.innerHTML = '';
-            return true;
-        }
-
-        function migrateFromPort4000() {
-            const button = document.getElementById('migratePortBtn');
-            button.disabled = true;
-            button.textContent = '가져오는 중';
-            updateImportStatus('4000 저장 데이터를 확인하는 중입니다.');
-
-            const iframe = document.createElement('iframe');
-            iframe.src = 'http://localhost:4000/dance-archive.html?storage-export=1';
-            iframe.hidden = true;
-            document.body.appendChild(iframe);
-
-            const cleanup = () => {
-                window.removeEventListener('message', onMessage);
-                iframe.remove();
-                button.disabled = false;
-                button.textContent = '4000 데이터 가져오기';
-                clearTimeout(timer);
-            };
-            const timer = setTimeout(() => {
-                cleanup();
-                updateImportStatus('4000 데이터를 가져오지 못했습니다. 4000 서버가 켜져 있는지 확인해주세요.');
-            }, 5000);
-            const onMessage = event => {
-                if (event.origin !== 'http://localhost:4000') return;
-                if (event.data?.type !== 'beadyo-dance-storage-export') return;
-                try {
-                    const result = applyBackupPayload(event.data.payload);
-                    cleanup();
-                    updateImportStatus(`4000에서 ${result.added}개 이전 · 현재 ${result.total}개`);
-                } catch {
-                    cleanup();
-                    updateImportStatus('4000 데이터를 읽지 못했습니다.');
-                }
-            };
-            window.addEventListener('message', onMessage);
-        }
-
-        function setupPortMigrationButton() {
-            const button = document.getElementById('migratePortBtn');
-            if (!button) return;
-            button.hidden = !(location.hostname === 'localhost' && location.port === '3000');
         }
 
         function formatImportTime(value) {
@@ -1320,40 +1175,28 @@
             }
         }
 
-        if (!postStorageBackupIfRequested()) {
-            document.querySelectorAll('.source-tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    activeSource = tab.dataset.source;
-                    document.querySelectorAll('.source-tab').forEach(btn => btn.classList.toggle('active', btn === tab));
-                    renderGrid();
-                });
+        document.querySelectorAll('.source-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                activeSource = tab.dataset.source;
+                document.querySelectorAll('.source-tab').forEach(btn => btn.classList.toggle('active', btn === tab));
+                renderGrid();
             });
+        });
 
-            searchInput.addEventListener('input', renderGrid);
-            statusSelect.addEventListener('change', renderGrid);
-            document.getElementById('importDataBtn').addEventListener('click', importNewData);
-            document.getElementById('exportBackupBtn').addEventListener('click', exportBackup);
-            document.getElementById('importBackupBtn').addEventListener('click', () => {
-                document.getElementById('backupFileInput').click();
-            });
-            document.getElementById('migratePortBtn').addEventListener('click', migrateFromPort4000);
-            document.getElementById('backupFileInput').addEventListener('change', event => {
-                importBackupFile(event.target.files?.[0]);
-                event.target.value = '';
-            });
-            document.querySelectorAll('[data-close-video]').forEach(element => {
-                element.addEventListener('click', closeVideoModal);
-            });
-            document.addEventListener('keydown', event => {
-                if (event.key === 'Escape' && !document.getElementById('videoModal').hidden) {
-                    closeVideoModal();
-                }
-            });
-            setupPortMigrationButton();
-            updateImportStatus();
-            renderSummary();
-            renderGrid();
-        }
+        searchInput.addEventListener('input', renderGrid);
+        statusSelect.addEventListener('change', renderGrid);
+        document.getElementById('importDataBtn').addEventListener('click', importNewData);
+        document.querySelectorAll('[data-close-video]').forEach(element => {
+            element.addEventListener('click', closeVideoModal);
+        });
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && !document.getElementById('videoModal').hidden) {
+                closeVideoModal();
+            }
+        });
+        updateImportStatus();
+        renderSummary();
+        renderGrid();
     </script>
 </body>
 </html>
