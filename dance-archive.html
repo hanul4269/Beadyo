@@ -94,6 +94,7 @@
             align-items: center;
             gap: 8px;
             margin-top: 12px;
+            flex-wrap: wrap;
         }
 
         .page-link {
@@ -286,6 +287,52 @@
             font-weight: 800;
         }
 
+        .bulk-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 0 0 10px;
+            padding: 10px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: rgba(255,255,255,.88);
+        }
+
+        .bulk-meta {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .bulk-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            justify-content: flex-end;
+        }
+
+        .bulk-btn {
+            min-height: 32px;
+            padding: 0 10px;
+            border: 0;
+            border-radius: 7px;
+            background: #edf1e8;
+            color: #4d5747;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .bulk-btn.primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .bulk-btn.warning {
+            background: #fff4df;
+            color: #996313;
+        }
+
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
@@ -306,6 +353,11 @@
         .video-card.active {
             outline: 3px solid rgba(127,184,63,.34);
             border-color: rgba(127,184,63,.7);
+        }
+
+        .video-card.selected {
+            border-color: rgba(49,111,208,.72);
+            box-shadow: 0 8px 22px rgba(49,111,208,.13);
         }
 
         .thumb {
@@ -368,6 +420,30 @@
             height: 21px;
             fill: var(--accent-dark);
             margin-left: 2px;
+        }
+
+        .select-video {
+            position: absolute;
+            left: 8px;
+            bottom: 8px;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 28px;
+            padding: 0 8px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.94);
+            color: #2f5c93;
+            font-size: 11px;
+            font-weight: 900;
+            box-shadow: 0 2px 8px rgba(0,0,0,.12);
+        }
+
+        .select-video input {
+            width: 15px;
+            height: 15px;
+            accent-color: var(--accent);
         }
 
         .card-body {
@@ -678,6 +754,13 @@
                 overflow-x: auto;
                 justify-content: flex-start;
             }
+            .bulk-bar {
+                align-items: stretch;
+                flex-direction: column;
+            }
+            .bulk-actions {
+                justify-content: flex-start;
+            }
             .summary {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -704,6 +787,8 @@
                     <div class="top-actions">
                         <button class="import-btn" id="importDataBtn">데이터 가져오기</button>
                         <button class="import-btn secondary" id="exportStatusBtn">상태 내보내기</button>
+                        <button class="import-btn secondary" id="importStatusBtn">상태 가져오기</button>
+                        <input id="statusFileInput" type="file" accept="application/json,.json" hidden>
                         <a class="page-link" href="index.html#dance">채택 영상 페이지</a>
                         <span class="import-status" id="importStatus">마지막 가져오기: 없음</span>
                     </div>
@@ -753,6 +838,16 @@
                     <div class="queue-head">
                         <div class="queue-title">춤영상 후보</div>
                         <div class="queue-meta" id="resultMeta">0개 표시 중</div>
+                    </div>
+                    <div class="bulk-bar" aria-label="다중 선택 작업">
+                        <div class="bulk-meta" id="selectionMeta">선택 0개</div>
+                        <div class="bulk-actions">
+                            <button class="bulk-btn" id="selectVisibleBtn">현재 목록 선택</button>
+                            <button class="bulk-btn" id="clearSelectionBtn">선택 해제</button>
+                            <button class="bulk-btn primary" id="bulkApproveBtn">선택 채택</button>
+                            <button class="bulk-btn warning" id="bulkReviewBtn">선택 검토</button>
+                            <button class="bulk-btn" id="bulkHideBtn">선택 숨김</button>
+                        </div>
                     </div>
                     <div class="video-grid" id="videoGrid"></div>
                     <div class="empty" id="emptyState">조건에 맞는 춤영상 후보가 없습니다.</div>
@@ -846,11 +941,13 @@
         const STORAGE_KEY = 'beadyoDanceVideos';
         const DATA_VERSION = 'status-20260628';
         const LAST_IMPORT_KEY = 'beadyoDanceLastImportAt';
+        const BACKUP_KEY = 'beadyoDanceVideoBackups';
         const PLACEHOLDER_THUMBNAILS = new Set(['', 'banner.png', 'loading-img.png', 'songbook-char.png']);
         let videos = loadVideos();
 
         let activeSource = 'all';
         let selectedId = videos[0]?.id || null;
+        const selectedIds = new Set();
 
         const grid = document.getElementById('videoGrid');
         const emptyState = document.getElementById('emptyState');
@@ -858,6 +955,7 @@
         const statusSelect = document.getElementById('statusSelect');
         const resultMeta = document.getElementById('resultMeta');
         const importStatus = document.getElementById('importStatus');
+        const selectionMeta = document.getElementById('selectionMeta');
 
         function getYouTubeId(urlValue) {
             try {
@@ -928,7 +1026,23 @@
         }
 
         function saveVideos() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: DATA_VERSION, videos }));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: DATA_VERSION, updatedAt: new Date().toISOString(), videos }));
+        }
+
+        function backupVideos(reason) {
+            try {
+                const backups = JSON.parse(localStorage.getItem(BACKUP_KEY) || '[]');
+                backups.unshift({
+                    reason,
+                    version: DATA_VERSION,
+                    savedAt: new Date().toISOString(),
+                    summary: statusSummary(videos),
+                    videos,
+                });
+                localStorage.setItem(BACKUP_KEY, JSON.stringify(backups.slice(0, 8)));
+            } catch {
+                // Backups are best-effort; the primary save path should continue.
+            }
         }
 
         function formatImportTime(value) {
@@ -1014,14 +1128,22 @@
 
         function renderGrid() {
             const items = filteredVideos();
+            const visibleIds = new Set(items.map(video => video.id));
+            for (const id of Array.from(selectedIds)) {
+                if (!videos.some(video => video.id === id)) selectedIds.delete(id);
+            }
             resultMeta.textContent = `${items.length}개 표시 중`;
             emptyState.style.display = items.length ? 'none' : 'flex';
             grid.innerHTML = items.map(video => `
-                <article class="video-card${video.id === selectedId ? ' active' : ''}" data-id="${esc(video.id)}">
+                <article class="video-card${video.id === selectedId ? ' active' : ''}${selectedIds.has(video.id) ? ' selected' : ''}" data-id="${esc(video.id)}">
                     <div class="thumb">
                         <img src="${esc(video.thumbnail)}" alt="" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='banner.png';">
                         <span class="source-badge" style="color:${sourceColors[video.source]}">${esc(sourceLabels[video.source])}</span>
                         <span class="status-badge">${esc(statusLabels[video.status])}</span>
+                        <label class="select-video">
+                            <input type="checkbox" data-select-id="${esc(video.id)}" ${selectedIds.has(video.id) ? 'checked' : ''}>
+                            선택
+                        </label>
                         <span class="play-mark"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
                     </div>
                     <div class="card-body">
@@ -1043,12 +1165,36 @@
                     if (video) openVideoModal(video);
                 });
             });
+            grid.querySelectorAll('input[data-select-id]').forEach(input => {
+                input.addEventListener('click', event => event.stopPropagation());
+                input.addEventListener('change', event => {
+                    event.stopPropagation();
+                    const id = input.dataset.selectId;
+                    if (input.checked) selectedIds.add(id);
+                    else selectedIds.delete(id);
+                    renderGrid();
+                });
+            });
             if (!items.some(v => v.id === selectedId) && items[0]) {
                 selectedId = items[0].id;
                 renderGrid();
                 return;
             }
+            updateSelectionUi(items.length, visibleIds);
             renderDetail();
+        }
+
+        function updateSelectionUi(visibleCount = filteredVideos().length, visibleIds = new Set(filteredVideos().map(video => video.id))) {
+            const selectedCount = selectedIds.size;
+            const visibleSelectedCount = Array.from(selectedIds).filter(id => visibleIds.has(id)).length;
+            selectionMeta.textContent = selectedCount
+                ? `선택 ${selectedCount}개 · 현재 목록 ${visibleSelectedCount}/${visibleCount}개`
+                : `선택 0개 · 현재 목록 ${visibleCount}개`;
+            const hasSelection = selectedCount > 0;
+            document.getElementById('clearSelectionBtn').disabled = !hasSelection;
+            document.getElementById('bulkApproveBtn').disabled = !hasSelection;
+            document.getElementById('bulkReviewBtn').disabled = !hasSelection;
+            document.getElementById('bulkHideBtn').disabled = !hasSelection;
         }
 
         function selectedVideo() {
@@ -1113,10 +1259,23 @@
         }
 
         function setVideoStatus(id, status) {
+            backupVideos(`single-${status}`);
             videos = videos.map(video => video.id === id ? { ...video, status } : video);
             saveVideos();
             renderSummary();
             renderGrid();
+        }
+
+        function setSelectedStatus(status) {
+            if (!selectedIds.size) return;
+            backupVideos(`bulk-${status}`);
+            const ids = new Set(selectedIds);
+            videos = videos.map(video => ids.has(video.id) ? { ...video, status } : video);
+            selectedIds.clear();
+            saveVideos();
+            renderSummary();
+            renderGrid();
+            updateImportStatus(`선택 ${ids.size}개를 ${statusLabels[status]} 처리했습니다.`);
         }
 
         function statusSummary(items) {
@@ -1149,6 +1308,42 @@
             link.remove();
             URL.revokeObjectURL(link.href);
             updateImportStatus(`상태 파일 저장됨 · 전체 ${payload.total}개 · 채택 ${payload.summary.approved || 0}개 · 숨김 ${payload.summary.hidden || 0}개`);
+        }
+
+        function applyStatusPayload(payload) {
+            const statusItems = Array.isArray(payload?.statuses)
+                ? payload.statuses
+                : Array.isArray(payload?.videos)
+                    ? payload.videos.map(video => ({ id: video.id, status: video.status }))
+                    : [];
+            const validStatuses = new Set(Object.keys(statusLabels));
+            const statusById = new Map(statusItems
+                .filter(item => item?.id && validStatuses.has(item.status))
+                .map(item => [item.id, item.status]));
+            if (!statusById.size) throw new Error('empty status file');
+            backupVideos('status-import');
+            let appliedCount = 0;
+            videos = videos.map(video => {
+                const status = statusById.get(video.id);
+                if (!status || status === video.status) return video;
+                appliedCount += 1;
+                return { ...video, status };
+            });
+            selectedIds.clear();
+            saveVideos();
+            renderSummary();
+            renderGrid();
+            updateImportStatus(`상태 가져오기 완료 · ${appliedCount}개 반영 · 채택 ${videos.filter(video => video.status === 'approved').length}개`);
+        }
+
+        async function importStatusFile(file) {
+            if (!file) return;
+            try {
+                const payload = JSON.parse(await file.text());
+                applyStatusPayload(payload);
+            } catch {
+                updateImportStatus('상태 파일을 읽지 못했습니다.');
+            }
         }
 
         function loadImportFeed() {
@@ -1201,14 +1396,15 @@
                         || existing.source !== video.source
                         || existing.song !== video.song;
                 }).length;
-                videos = mergeVideos(videos, importItems);
+                backupVideos('data-import');
+                videos = mergeVideos(videos, importItems, { preserveExistingStatus: true });
                 saveVideos();
                 const importedAt = new Date().toISOString();
                 localStorage.setItem(LAST_IMPORT_KEY, importedAt);
                 selectedId = newItems[0]?.id || selectedId;
                 renderSummary();
                 renderGrid();
-                updateImportStatus(formatImportSummary(newItems.length, updatedCount, skippedReaction, importedAt, meta));
+                updateImportStatus(`${formatImportSummary(newItems.length, updatedCount, skippedReaction, importedAt, meta)} · 기존 상태 보존`);
             } catch {
                 updateImportStatus('가져오기에 실패했습니다.');
             } finally {
@@ -1229,6 +1425,22 @@
         statusSelect.addEventListener('change', renderGrid);
         document.getElementById('importDataBtn').addEventListener('click', importNewData);
         document.getElementById('exportStatusBtn').addEventListener('click', exportStatusData);
+        document.getElementById('importStatusBtn').addEventListener('click', () => document.getElementById('statusFileInput').click());
+        document.getElementById('statusFileInput').addEventListener('change', event => {
+            importStatusFile(event.target.files?.[0]);
+            event.target.value = '';
+        });
+        document.getElementById('selectVisibleBtn').addEventListener('click', () => {
+            filteredVideos().forEach(video => selectedIds.add(video.id));
+            renderGrid();
+        });
+        document.getElementById('clearSelectionBtn').addEventListener('click', () => {
+            selectedIds.clear();
+            renderGrid();
+        });
+        document.getElementById('bulkApproveBtn').addEventListener('click', () => setSelectedStatus('approved'));
+        document.getElementById('bulkReviewBtn').addEventListener('click', () => setSelectedStatus('review'));
+        document.getElementById('bulkHideBtn').addEventListener('click', () => setSelectedStatus('hidden'));
         document.querySelectorAll('[data-close-video]').forEach(element => {
             element.addEventListener('click', closeVideoModal);
         });
