@@ -126,6 +126,13 @@
             box-shadow: 0 6px 16px rgba(49,111,208,.12);
         }
 
+        .import-btn.secondary {
+            border-color: rgba(76,121,45,.22);
+            background: #f0f7e9;
+            color: var(--accent-dark);
+            box-shadow: none;
+        }
+
         .import-status {
             color: var(--muted);
             font-size: 12px;
@@ -696,6 +703,7 @@
                     <div class="top-note">SOOP VOD 클립, 캐치, YouTube Shorts에서 춤영상 후보를 모아 검토하고 정리하는 별도 화면입니다. 가져온 후보는 이 브라우저에 저장되고, 채택된 항목만 공개 페이지에 반영됩니다.</div>
                     <div class="top-actions">
                         <button class="import-btn" id="importDataBtn">데이터 가져오기</button>
+                        <button class="import-btn secondary" id="exportStatusBtn">상태 내보내기</button>
                         <a class="page-link" href="index.html#dance">채택 영상 페이지</a>
                         <span class="import-status" id="importStatus">마지막 가져오기: 없음</span>
                     </div>
@@ -1109,6 +1117,38 @@
             renderGrid();
         }
 
+        function statusSummary(items) {
+            return items.reduce((summary, video) => {
+                const status = video.status || 'review';
+                summary[status] = (summary[status] || 0) + 1;
+                return summary;
+            }, {});
+        }
+
+        function exportStatusData() {
+            const payload = {
+                type: 'beadyo-dance-status',
+                version: 1,
+                exportedAt: new Date().toISOString(),
+                total: videos.length,
+                summary: statusSummary(videos),
+                statuses: videos.map(video => ({
+                    id: video.id,
+                    status: video.status || 'review',
+                })),
+            };
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            const stamp = new Date().toISOString().slice(0, 10);
+            link.href = URL.createObjectURL(blob);
+            link.download = `beadyo-dance-status-${stamp}.json`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(link.href);
+            updateImportStatus(`상태 파일 저장됨 · 전체 ${payload.total}개 · 채택 ${payload.summary.approved || 0}개 · 숨김 ${payload.summary.hidden || 0}개`);
+        }
+
         function loadImportFeed() {
             return new Promise((resolve, reject) => {
                 delete window.danceImportFeed;
@@ -1186,6 +1226,7 @@
         searchInput.addEventListener('input', renderGrid);
         statusSelect.addEventListener('change', renderGrid);
         document.getElementById('importDataBtn').addEventListener('click', importNewData);
+        document.getElementById('exportStatusBtn').addEventListener('click', exportStatusData);
         document.querySelectorAll('[data-close-video]').forEach(element => {
             element.addEventListener('click', closeVideoModal);
         });
