@@ -57,10 +57,6 @@
         }
 
         .hero {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) auto;
-            gap: 18px;
-            align-items: end;
             padding: 10px 0 18px;
         }
 
@@ -84,28 +80,6 @@
             font-size: 14px;
             font-weight: 700;
             line-height: 1.55;
-        }
-
-        .hero-card {
-            min-width: 220px;
-            padding: 16px;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            background: rgba(255,255,255,.88);
-            box-shadow: 0 8px 24px rgba(34,39,32,.06);
-        }
-
-        .hero-label {
-            color: var(--muted);
-            font-size: 12px;
-            font-weight: 900;
-        }
-
-        .hero-value {
-            margin-top: 7px;
-            font-size: 34px;
-            font-weight: 900;
-            line-height: 1;
         }
 
         .tools {
@@ -445,12 +419,8 @@
         }
 
         @media (max-width: 860px) {
-            .hero,
             .tools {
                 grid-template-columns: 1fr;
-            }
-            .hero-card {
-                min-width: 0;
             }
         }
 
@@ -482,10 +452,6 @@
                     <div class="eyebrow">DANCE CLIP COLLECTION</div>
                     <h1>구슬요 춤영상</h1>
                 </div>
-                <section class="hero-card" aria-label="채택 영상 수">
-                    <div class="hero-label">채택 영상</div>
-                    <div class="hero-value" id="approvedCount">0</div>
-                </section>
             </header>
 
             <section class="tools" aria-label="필터">
@@ -688,7 +654,6 @@
 
         function renderGrid() {
             const items = filteredVideos();
-            document.getElementById('approvedCount').textContent = approvedVideos.length;
             resultMeta.textContent = `${items.length}개 표시 중`;
             emptyState.style.display = items.length ? 'none' : 'flex';
             grid.innerHTML = items.map(video => `
