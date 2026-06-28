@@ -2095,8 +2095,8 @@ function renderUpModal(data, fetchLive = false) {
         const eventHref = safeUrl(ev.soop_url);
         const baseHref = safeUrl(baseUrl || ev.soop_url);
         const eventActions = highlightReplyNo
-            ? `<a class="up-goto-btn secondary" href="${esc(baseHref)}" target="_blank" rel="noopener noreferrer">원문 보기</a>
-               <a class="up-goto-btn" href="${esc(eventHref)}" target="_blank" rel="noopener noreferrer">UP하러 가기</a>`
+            ? `<a class="up-goto-btn primary" href="${esc(eventHref)}" target="_blank" rel="noopener noreferrer">UP하러 가기</a>
+               <a class="up-goto-btn secondary" href="${esc(baseHref)}" target="_blank" rel="noopener noreferrer">원문 보기</a>`
             : `<a class="up-goto-btn" href="${esc(baseHref)}" target="_blank" rel="noopener noreferrer">UP 바로가기</a>`;
         const items = ranking.length
             ? ranking.map(r => {
