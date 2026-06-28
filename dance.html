@@ -529,7 +529,7 @@
         </section>
     </div>
 
-    <script src="dance-data.js?v=thumbs-20260628"></script>
+    <script src="dance-data.js?v=status-20260628"></script>
     <script src="dance-thumbnail-backfill.js?v=thumbs-20260628"></script>
     <script>
         const sourceLabels = {
@@ -547,6 +547,7 @@
         };
 
         const STORAGE_KEY = 'beadyoDanceVideos';
+        const DATA_VERSION = 'status-20260628';
         const PLACEHOLDER_THUMBNAILS = new Set(['', 'banner.png', 'loading-img.png', 'songbook-char.png']);
 
         function getYouTubeId(urlValue) {
@@ -605,8 +606,9 @@
 
         function loadVideos() {
             try {
-                const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-                return mergeVideos(window.danceVideos || [], Array.isArray(stored) ? stored : []);
+                const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+                const storedVideos = stored?.version === DATA_VERSION && Array.isArray(stored.videos) ? stored.videos : [];
+                return mergeVideos(window.danceVideos || [], storedVideos);
             } catch {
                 return (window.danceVideos || []).map(normalizeVideo);
             }

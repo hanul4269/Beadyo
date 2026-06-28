@@ -820,7 +820,7 @@
         </section>
     </div>
 
-    <script src="dance-data.js?v=thumbs-20260628"></script>
+    <script src="dance-data.js?v=status-20260628"></script>
     <script src="dance-thumbnail-backfill.js?v=thumbs-20260628"></script>
     <script>
         const sourceLabels = {
@@ -844,6 +844,7 @@
         };
 
         const STORAGE_KEY = 'beadyoDanceVideos';
+        const DATA_VERSION = 'status-20260628';
         const LAST_IMPORT_KEY = 'beadyoDanceLastImportAt';
         const PLACEHOLDER_THUMBNAILS = new Set(['', 'banner.png', 'loading-img.png', 'songbook-char.png']);
         let videos = loadVideos();
@@ -918,15 +919,16 @@
 
         function loadVideos() {
             try {
-                const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-                return mergeVideos(window.danceVideos || [], Array.isArray(stored) ? stored : []);
+                const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+                const storedVideos = stored?.version === DATA_VERSION && Array.isArray(stored.videos) ? stored.videos : [];
+                return mergeVideos(window.danceVideos || [], storedVideos);
             } catch {
                 return (window.danceVideos || []).map(normalizeVideo);
             }
         }
 
         function saveVideos() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: DATA_VERSION, videos }));
         }
 
         function formatImportTime(value) {
@@ -1199,7 +1201,7 @@
                         || existing.source !== video.source
                         || existing.song !== video.song;
                 }).length;
-                videos = mergeVideos(videos, importItems, { preserveExistingStatus: true });
+                videos = mergeVideos(videos, importItems);
                 saveVideos();
                 const importedAt = new Date().toISOString();
                 localStorage.setItem(LAST_IMPORT_KEY, importedAt);

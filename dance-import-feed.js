@@ -47,7 +47,7 @@ window.danceImportFeed = [
     {
         "id": "catch-198942827",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]🔮: 내가 어렸을 때 춤을 안 좋아했으면 큰일 났었겠다.",
         "creator": "봇꾸부기",
         "song": "춤 키워드",
@@ -61,7 +61,7 @@ window.danceImportFeed = [
     {
         "id": "catch-195902461",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🎞️케이춤 구슬요",
         "creator": "컷곰",
         "song": "케이춤",
@@ -75,7 +75,7 @@ window.danceImportFeed = [
     {
         "id": "catch-195702427",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]과즙세연 춤 보고 빠져든 구슬요 ㅋㅋㅋㅋㅋ",
         "creator": "펭공",
         "song": "리액션",
@@ -89,7 +89,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194722547",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 케이춤",
         "creator": "찌닝♬",
         "song": "케이춤",
@@ -103,7 +103,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194722089",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 - 나루토춤[하이디라오]",
         "creator": "노래풀트유동",
         "song": "나루토춤",
@@ -117,7 +117,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194719913",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 봉산탈춤요",
         "creator": "찌닝♬",
         "song": "봉산탈춤",
@@ -131,7 +131,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186874085",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]뱅뱅뱅~ 다같이 춤",
         "creator": "덩그러늬",
         "song": "뱅뱅뱅",
@@ -145,7 +145,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180835169",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요/춤] Special ~누구보다 반짝일 너를 위해~",
         "creator": "지아^",
         "song": "Special",
@@ -159,7 +159,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180834857",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요/춤] 포켓몬",
         "creator": "지아^",
         "song": "포켓몬",
@@ -173,7 +173,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180834767",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요/춤] 체온",
         "creator": "지아^",
         "song": "체온",
@@ -187,7 +187,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180834679",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요/춤] BAAM",
         "creator": "지아^",
         "song": "BAAM",
@@ -201,7 +201,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180834373",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요/춤] SPAGHETTI",
         "creator": "지아^",
         "song": "SPAGHETTI",
@@ -215,7 +215,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180834213",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요/춤] Magnetic",
         "creator": "지아^",
         "song": "Magnetic",
@@ -229,7 +229,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180787237",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요/춤] 너와 나의 별자리",
         "creator": "지아^",
         "song": "너와 나의 별자리",
@@ -262,7 +262,7 @@ window.danceImportFeed = [
     {
         "id": "youtube-2OGgCVaPj2A",
         "source": "youtube",
-        "status": "review",
+        "status": "hidden",
         "title": "#윤이제 #구슬요 #바기너불 #듀엣챌린지 #바람에기대어너를불러본다",
         "creator": "바기너불",
         "song": "바기너불",
@@ -280,7 +280,7 @@ window.danceImportFeed = [
     {
         "id": "youtube-fj5__1eCABw",
         "source": "youtube",
-        "status": "review",
+        "status": "hidden",
         "title": "#스위데 #구슬요 #바기너불 #듀엣챌린지 #바람에기대어너를불러본다",
         "creator": "바기너불",
         "song": "바기너불",
@@ -298,7 +298,7 @@ window.danceImportFeed = [
     {
         "id": "youtube-LtoKoOlK5CA",
         "source": "youtube",
-        "status": "review",
+        "status": "hidden",
         "title": "#냐냐 #구슬요 #바기너불 #듀엣챌린지 #바람에기대어너를불러본다",
         "creator": "바기너불",
         "song": "바기너불",
@@ -316,7 +316,7 @@ window.danceImportFeed = [
     {
         "id": "youtube-yI5ObNZnq2I",
         "source": "youtube",
-        "status": "review",
+        "status": "hidden",
         "title": "#난초 #구슬요 #바람에기대어너를불러본다 #바기너불 #듀엣챌린지",
         "creator": "바기너불",
         "song": "바기너불",
@@ -334,7 +334,7 @@ window.danceImportFeed = [
     {
         "id": "youtube-r8xmfS7BeJg",
         "source": "youtube",
-        "status": "review",
+        "status": "hidden",
         "title": "#바람에기대어너를불러본다 #따린 #구슬요 #듀엣챌린지 #바기너불",
         "creator": "바기너불",
         "song": "바기너불",
@@ -352,7 +352,7 @@ window.danceImportFeed = [
     {
         "id": "youtube-O7Vi7jV5uTU",
         "source": "youtube",
-        "status": "review",
+        "status": "hidden",
         "title": "#바람에기대어너를불러본다 #엘시 #구슬요 #듀엣챌린지 #바기너불",
         "creator": "바기너불",
         "song": "바기너불",
@@ -370,7 +370,7 @@ window.danceImportFeed = [
     {
         "id": "clip-194729141",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]구슬요가 추고 싶었던 춤",
         "creator": "OㅇO",
         "song": "춤 키워드",
@@ -384,7 +384,7 @@ window.danceImportFeed = [
     {
         "id": "clip-180835001",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요/춤] SHAKE IT",
         "creator": "지아^",
         "song": "SHAKE IT",
@@ -398,7 +398,7 @@ window.danceImportFeed = [
     {
         "id": "clip-168424857",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]태(닝)슬요의 위아래 위위아래 춤",
         "creator": "첫편지",
         "song": "위아래",
@@ -412,7 +412,7 @@ window.danceImportFeed = [
     {
         "id": "clip-168424165",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]태(닝)슬요의 위플래쉬 춤",
         "creator": "첫편지",
         "song": "Whiplash",
@@ -426,7 +426,7 @@ window.danceImportFeed = [
     {
         "id": "clip-163308309",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]구슬요X최또 좋밥춤(나루토춤)",
         "creator": "최또야잘썼어",
         "song": "나루토춤",
@@ -440,7 +440,7 @@ window.danceImportFeed = [
     {
         "id": "clip-163308215",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]최또 x 구슬요 시그 댄스 / 앵콜곡! 좋밥춤 (HOOD NARUTO)",
         "creator": "똥묻곡쥐",
         "song": "HOOD NARUTO",
@@ -454,7 +454,7 @@ window.danceImportFeed = [
     {
         "id": "clip-160576421",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "【구슬요】 이세돌 - ELEVATE 1.25배속으로 하는 게 춤따기 좋다는 말에 췄다가 죽어가는 구슬요",
         "creator": "고려_",
         "song": "ELEVATE",
@@ -468,7 +468,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194722957",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요]케이춤",
         "creator": "흐름이",
         "song": "케이춤",
@@ -482,7 +482,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194722787",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 [케이춤]",
         "creator": "OㅇO",
         "song": "구슬요 [케이춤]",
@@ -496,7 +496,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194722605",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요 케이춤",
         "creator": "화이트★",
         "song": "구슬요 케이춤",
@@ -510,7 +510,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194722599",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 - 케이춤",
         "creator": "노래풀트유동",
         "song": "구슬요",
@@ -524,7 +524,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194722591",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요]케이춤",
         "creator": "흐름이",
         "song": "케이춤",
@@ -538,7 +538,7 @@ window.danceImportFeed = [
     {
         "id": "catch-187167453",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]해리 언니 춤을 좀 연습했단 구슬요",
         "creator": "고래새우.",
         "song": "해리 언니 춤을 좀 연습했단 구슬요",
@@ -552,7 +552,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184288087",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]봉산탈춤",
         "creator": "공대구슬",
         "song": "봉산탈춤",
@@ -566,7 +566,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184285351",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 슬요가 추는 춤 안보고 오른쪽 하단 이쁜분 봐서 질투하는 구슬요ㅋㅋㅋㅋㅋ",
         "creator": "찌닝♬",
         "song": "🍀 슬요가 추는 춤 안보고 오른쪽 하단 이쁜분 봐서 질투",
@@ -580,7 +580,7 @@ window.danceImportFeed = [
     {
         "id": "catch-183679453",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]🔒봄세이 춤 클립 찾아보고 웃는🔮구슬요",
         "creator": "봇꾸부기",
         "song": "🔒봄세이 춤 클립 찾아보고 웃는🔮구슬요",
@@ -594,7 +594,7 @@ window.danceImportFeed = [
     {
         "id": "catch-183679141",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]🔮: 내가 춤 보고 웃는 사람 두 명 있거든?",
         "creator": "봇꾸부기",
         "song": "🔮",
@@ -608,7 +608,7 @@ window.danceImportFeed = [
     {
         "id": "catch-183424525",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]노가리중, 갑자기 숭한 춤 추는 슬요 / 속옷 아니고 속바지고요",
         "creator": "하이라잇세구",
         "song": "노가리중, 갑자기 숭한 춤 추는 슬요",
@@ -622,7 +622,7 @@ window.danceImportFeed = [
     {
         "id": "catch-182740737",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]너만을 유혹하는 춤",
         "creator": "심심한마왕",
         "song": "너만을 유혹하는 춤",
@@ -636,7 +636,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180834621",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요/춤] 호영레이블",
         "creator": "지아^",
         "song": "호영레이블",
@@ -650,7 +650,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180834521",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요/춤] 터미널",
         "creator": "지아^",
         "song": "터미널",
@@ -664,7 +664,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180787123",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요]케이춤",
         "creator": "흐름이",
         "song": "케이춤",
@@ -678,7 +678,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180786843",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 케이춤",
         "creator": "찌닝♬",
         "song": "🍀 구슬요의 케이춤",
@@ -692,7 +692,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180786845",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요 케이춤",
         "creator": "화이트★",
         "song": "구슬요 케이춤",
@@ -706,7 +706,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180786833",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요/춤] 케이춤",
         "creator": "지아^",
         "song": "케이춤",
@@ -720,7 +720,7 @@ window.danceImportFeed = [
     {
         "id": "catch-178916493",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]오랜만에 풀트 섹시 춤 방송",
         "creator": "공대구슬",
         "song": "오랜만에 풀트 섹시 춤 방송",
@@ -734,7 +734,7 @@ window.danceImportFeed = [
     {
         "id": "catch-176470189",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요]케이춤",
         "creator": "흐름이",
         "song": "케이춤",
@@ -748,7 +748,7 @@ window.danceImportFeed = [
     {
         "id": "catch-175453051",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]춤 추다가 머리 커지는 구슬요",
         "creator": "달화숭",
         "song": "춤 추다가 머리 커지는 구슬요",
@@ -762,7 +762,7 @@ window.danceImportFeed = [
     {
         "id": "catch-175451963",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]대두 상태로 춤 추는 구슬요",
         "creator": "달화숭",
         "song": "대두 상태로 춤 추는 구슬요",
@@ -776,7 +776,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173340759",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]춤을 추고나서 14년전 노래라는 말을 듣고 시무룩한 슬요🔮",
         "creator": "돚꾸부기",
         "song": "춤을 추고나서 14년전 노래라는 말을 듣고 시무룩한 슬요\ud83d",
@@ -3176,7 +3176,7 @@ window.danceImportFeed = [
     {
         "id": "clip-184282311",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 빙밍이 춤 출때 삐죽입 공명하는 구슬요ㅋㅋㅋㅋ",
         "creator": "찌닝♬",
         "song": "🍀 빙밍이 춤 출때 삐죽입 공명하는 구슬요ㅋㅋㅋㅋ",
@@ -3190,7 +3190,7 @@ window.danceImportFeed = [
     {
         "id": "clip-180781245",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]와루도 춤 세팅",
         "creator": "공대구슬",
         "song": "와루도 춤 세팅",
@@ -3204,7 +3204,7 @@ window.danceImportFeed = [
     {
         "id": "clip-174328339",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립][25.09.29] 기타 버스킹 / 3만 구독자 달성 / 3만 공약 춤뱅☘️",
         "creator": "완두_",
         "song": "기타 버스킹",
@@ -6484,7 +6484,7 @@ window.danceImportFeed = [
     {
         "id": "clip-199477077",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]구이망 - Dance Monkey / 0623 구슬요 이야 망개 싱크룸",
         "creator": "주륵주륵르르",
         "song": "주륵주륵르르",
@@ -6498,7 +6498,7 @@ window.danceImportFeed = [
     {
         "id": "catch-198941851",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]풀트 굿바이",
         "creator": "새결",
         "song": "새결",
@@ -6512,7 +6512,7 @@ window.danceImportFeed = [
     {
         "id": "catch-197965677",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요 덴파 챌린지",
         "creator": "건전풀트만봄",
         "song": "건전풀트만봄",
@@ -6526,7 +6526,7 @@ window.danceImportFeed = [
     {
         "id": "catch-197965665",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요 Not the One 챌린지",
         "creator": "건전풀트만봄",
         "song": "건전풀트만봄",
@@ -6540,7 +6540,7 @@ window.danceImportFeed = [
     {
         "id": "catch-197937485",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 풀트 : 캐치캐치_트로트_오이데",
         "creator": "심심한마왕",
         "song": "심심한마왕",
@@ -6554,7 +6554,7 @@ window.danceImportFeed = [
     {
         "id": "catch-197935865",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 풀트 : 캐치캐치_트로트_오이데",
         "creator": "심심한마왕",
         "song": "심심한마왕",
@@ -6568,7 +6568,7 @@ window.danceImportFeed = [
     {
         "id": "catch-197920271",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 풀트 : 캐치캐치_트로트_오이데",
         "creator": "심심한마왕",
         "song": "심심한마왕",
@@ -6582,7 +6582,7 @@ window.danceImportFeed = [
     {
         "id": "clip-197919425",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]구슬요 풀트 : 캐치캐치_트로트",
         "creator": "심심한마왕",
         "song": "심심한마왕",
@@ -6596,7 +6596,7 @@ window.danceImportFeed = [
     {
         "id": "clip-197919195",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]구슬요 캐치캐치 댄스(트로트 버전)",
         "creator": "빙듁",
         "song": "빙듁",
@@ -6610,7 +6610,7 @@ window.danceImportFeed = [
     {
         "id": "catch-197917977",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 SPAGHETTI(LE SSERAFIM)댄스",
         "creator": "빙듁",
         "song": "빙듁",
@@ -6624,7 +6624,7 @@ window.danceImportFeed = [
     {
         "id": "catch-197917563",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 모시모시 댄스",
         "creator": "빙듁",
         "song": "빙듁",
@@ -6638,7 +6638,7 @@ window.danceImportFeed = [
     {
         "id": "catch-197917323",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 - REDRED(CORTIS) 댄스",
         "creator": "빙듁",
         "song": "빙듁",
@@ -6652,7 +6652,7 @@ window.danceImportFeed = [
     {
         "id": "catch-197915101",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 [붐팔라 챌린지]",
         "creator": "OㅇO",
         "song": "OㅇO",
@@ -6666,7 +6666,7 @@ window.danceImportFeed = [
     {
         "id": "clip-197234913",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]구슬요 - Dance on you (원곡: 백예린)",
         "creator": "달화숭",
         "song": "달화숭",
@@ -6680,7 +6680,7 @@ window.danceImportFeed = [
     {
         "id": "catch-197015535",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]7시) 서른즈 마리오 골프 풀트 합방!(w.난초 밍턴)",
         "creator": "브루니[초]",
         "song": "브루니[초]",
@@ -6694,7 +6694,7 @@ window.danceImportFeed = [
     {
         "id": "clip-196112885",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 아홉번째 지구에서 마크 원블럭 챌린지 마무리~",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6708,7 +6708,7 @@ window.danceImportFeed = [
     {
         "id": "catch-196084771",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 마크 원블럭 챌린지 시작하는 구야의 인사",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6722,7 +6722,7 @@ window.danceImportFeed = [
     {
         "id": "catch-196082649",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]구슬요: 아니 머독님이 풀트도 봤다고 해가지고...",
         "creator": "진수곡괭이",
         "song": "진수곡괭이",
@@ -6736,7 +6736,7 @@ window.danceImportFeed = [
     {
         "id": "catch-195392521",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]7시풀트로 )kpop 레전드 월드컵 w. 힌콕",
         "creator": "라안서카리스",
         "song": "라안서카리스",
@@ -6750,7 +6750,7 @@ window.danceImportFeed = [
     {
         "id": "clip-194748081",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]슬요 풀트 시켜서 빵댕이 만져야 한다고 말했던 엘시 썰",
         "creator": "지니ˇ",
         "song": "지니ˇ",
@@ -6764,7 +6764,7 @@ window.danceImportFeed = [
     {
         "id": "clip-194729117",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 아브라카다브라 / 청바지옷",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6778,7 +6778,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194728853",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 - 포켓몬댄스",
         "creator": "노래풀트유동",
         "song": "노래풀트유동",
@@ -6792,7 +6792,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194728821",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 포켓몬댄스 / 청바지옷 2명버전",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6806,7 +6806,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194728541",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 콩나물 / 청바지옷 4명버전",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6820,7 +6820,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194727949",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 콩나물 / 청바지옷",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6834,7 +6834,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194727503",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 말 끊기용 뱅뱅 / 청바지옷",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6848,7 +6848,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194727313",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 슈퍼 구슬요 / 청바지옷",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6862,7 +6862,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194727193",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 포켓몬댄스 / 청바지옷",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6876,7 +6876,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194727113",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요 포켓몬 댄스",
         "creator": "화이트★",
         "song": "화이트★",
@@ -6890,7 +6890,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194726741",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 달링 / 청바지옷",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6904,7 +6904,7 @@ window.danceImportFeed = [
     {
         "id": "clip-194726289",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 마무리인사 하면서 무한 프리큐큐",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6918,7 +6918,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194725617",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] LSD / 청바지옷",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6932,7 +6932,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194724707",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 간바레센빠이 / 청바지옷",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6946,7 +6946,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194724401",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] We! (with you) / 치마옷",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6960,7 +6960,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194724017",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 스누반너 / 치마옷",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6974,7 +6974,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194723723",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 너나별 / 귀여운옷",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -6988,7 +6988,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194723583",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 진압해~ / 귀여운옷",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7002,7 +7002,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194723283",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 핑크레이디",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7016,7 +7016,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194723023",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 계엄령",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7030,7 +7030,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194722101",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 하이디라오 / 귀여운옷",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7044,7 +7044,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194721849",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 콩나물 / 귀여운옷",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7058,7 +7058,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194721061",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] BANG BANG",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7072,7 +7072,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194720355",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] BANG BANG / 갸루요",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7086,7 +7086,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194720237",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] Knock Knock / 갸루요",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7100,7 +7100,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194720065",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 정육점 앞 풍선요",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7114,7 +7114,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194719663",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 프리큐큐 / 팔척슬요",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7128,7 +7128,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194719251",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 프리큐큐 / 바기너불 오리지날옷",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7142,7 +7142,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194718261",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 시러ㅓㅓㅓㅓㅓㅓㅓ",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7156,7 +7156,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194718037",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 말할 시간 안주고 조림보이 시키기",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7170,7 +7170,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194717461",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 롤리폴리~",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7184,7 +7184,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194717217",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 글래머라고 해서 미안해!!! / 프리큐큐",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7198,7 +7198,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194716933",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 404",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7212,7 +7212,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194716803",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] Funk",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7226,7 +7226,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194716725",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 단가 올려서 빡신거로 해와라~~~ // 시러~~~!!!!",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7240,7 +7240,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194715977",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 뱅뱅 추다가 머리 꺾임ㅋㅋㅋㅋㅋㅋ",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7254,7 +7254,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194715479",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 기대해",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7268,7 +7268,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194715297",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 꼬마선장 4명버전",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7282,7 +7282,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194715231",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 모시모시",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7296,7 +7296,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194715165",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] RUDE!",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7310,7 +7310,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194715027",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 싸이코",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7324,7 +7324,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194714945",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] sexy love",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7338,7 +7338,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194714881",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 홀리건",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7352,7 +7352,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194714761",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 카와이 다케쟈 다메디스까",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7366,7 +7366,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194714673",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] knock knock",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7380,7 +7380,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194714609",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 소문의 낙원",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7394,7 +7394,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194714539",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 간바떼~",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7408,7 +7408,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194714347",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 기대해",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7422,7 +7422,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194713877",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 으르렁~",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7436,7 +7436,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194713829",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 자기야 화풀어~ 구슬요 4명버전",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7450,7 +7450,7 @@ window.danceImportFeed = [
     {
         "id": "clip-194713747",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 100개로 쏘라고해서 무한 프리큐큐 시키는 구북이들",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7464,7 +7464,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194713345",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 캐치캐치",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7478,7 +7478,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194713237",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 조림보이 구슬요3명버전",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7492,7 +7492,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194713183",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[시그 풀트뱅]감나무 선장",
         "creator": "우룡팔",
         "song": "우룡팔",
@@ -7506,7 +7506,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194713125",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 롤리폴리",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7520,7 +7520,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194712837",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 조림보이 구슬요4명버전",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7534,7 +7534,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194712019",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 카와이 다케쟈 다메데스까",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7548,7 +7548,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194711959",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 뱅뱅",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7562,7 +7562,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194711799",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 달링",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7576,7 +7576,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194711677",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 조림보이",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7590,7 +7590,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194711537",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 으르렁",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7604,7 +7604,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194711443",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 꼬마선장",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7618,7 +7618,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194711317",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 루드",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7632,7 +7632,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194710863",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 프리큐큐 무한반복",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7646,7 +7646,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194710303",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 레제",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7660,7 +7660,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194710201",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 퍼펙트 나이트",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7674,7 +7674,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194710039",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 꼬마선장",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7688,7 +7688,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194709981",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 기대해",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7702,7 +7702,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194709867",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 버터떡",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7716,7 +7716,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194709705",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] BANG BANG",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7730,7 +7730,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194709599",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 으르렁",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7744,7 +7744,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194709449",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [구슬요 풀트 시그뱅] 조림보이",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7758,7 +7758,7 @@ window.danceImportFeed = [
     {
         "id": "catch-194709341",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀[구슬요 풀트 시그뱅] 자기야 화풀어~",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7772,7 +7772,7 @@ window.danceImportFeed = [
     {
         "id": "catch-191856425",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]오리지널 바디에서 셀레스티아 바디로 바꾼 구슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -7786,7 +7786,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190283615",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 'BANG BANG' 댄스 챌린지",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7800,7 +7800,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190281879",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 IVE (아이브) - BANG BANG 챌린지",
         "creator": "달화숭",
         "song": "달화숭",
@@ -7814,7 +7814,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190280971",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 간바레 챌린지",
         "creator": "달화숭",
         "song": "달화숭",
@@ -7828,7 +7828,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190279371",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡 버스킹] 구슬요 '사랑해서 그래' / 앵콜 마지막곡",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7842,7 +7842,7 @@ window.danceImportFeed = [
     {
         "id": "clip-190279291",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립][모캡 버스킹 라이브] 🎤 구슬요 - 사랑해서 그래 (강민경)",
         "creator": "달화숭",
         "song": "달화숭",
@@ -7856,7 +7856,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190279137",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[모캡 버스킹 라이브] 🎤 구슬요 - 사랑해서 그래 (강민경) 1분 미리듣기",
         "creator": "달화숭",
         "song": "달화숭",
@@ -7870,7 +7870,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190278899",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡 버스킹] 구슬요 '오늘 뭐했는지 말해봐' / 앵콜 세번째곡",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7884,7 +7884,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190278815",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[모캡 버스킹 라이브] 🎤 구슬요 - 오늘 뭐 했는지 말해봐 (권진아) 1분 미리듣기",
         "creator": "달화숭",
         "song": "달화숭",
@@ -7898,7 +7898,7 @@ window.danceImportFeed = [
     {
         "id": "clip-190278629",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립][모캡 버스킹 라이브] 구슬요 - 오늘 뭐 했는지 말해봐 (권진아)",
         "creator": "달화숭",
         "song": "달화숭",
@@ -7912,7 +7912,7 @@ window.danceImportFeed = [
     {
         "id": "clip-190278553",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]깜짝! 모캡 버스킹 라이브~🎤",
         "creator": "봉조쿠",
         "song": "봉조쿠",
@@ -7926,7 +7926,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190278117",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡 버스킹] 구슬요 '청춘만화' / 앵콜 두번째곡",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7940,7 +7940,7 @@ window.danceImportFeed = [
     {
         "id": "clip-190277985",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립][모캡 버스킹 라이브] 구슬요 - 청춘만화 (이무진)",
         "creator": "달화숭",
         "song": "달화숭",
@@ -7954,7 +7954,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190277385",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[모캡 버스킹 라이브] 🎤 구슬요 - 봄 내음보다 너를 (김나영) 1분 미리듣기",
         "creator": "달화숭",
         "song": "달화숭",
@@ -7968,7 +7968,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190277373",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡 버스킹] 구슬요 '봄 내음보다 너를' / 앵콜 첫번째곡",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -7982,7 +7982,7 @@ window.danceImportFeed = [
     {
         "id": "clip-190277243",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립][모캡 버스킹 라이브] 구슬요 - 봄 내음보다 너를 (김나영)",
         "creator": "달화숭",
         "song": "달화숭",
@@ -7996,7 +7996,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190276185",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡 버스킹] 구슬요 '바람에 기대어 너를 불러본다' / 마지막 무대",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8010,7 +8010,7 @@ window.danceImportFeed = [
     {
         "id": "clip-190276141",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립][모캡 버스킹 라이브] 구슬요 - 바람에 기대어 너를 불러본다",
         "creator": "달화숭",
         "song": "달화숭",
@@ -8024,7 +8024,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190276013",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[모캡 버스킹 라이브] 🎤 구슬요 - 바람에 기대어 너를 불러본다 1분 미리듣기",
         "creator": "달화숭",
         "song": "달화숭",
@@ -8038,7 +8038,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190275737",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡 버스킹] 구슬요 '연의 편지' / 일곱번째 무대",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8052,7 +8052,7 @@ window.danceImportFeed = [
     {
         "id": "clip-190275461",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립][모캡 버스킹 라이브] 구슬요 - 연의 편지 (이수현)",
         "creator": "달화숭",
         "song": "달화숭",
@@ -8066,7 +8066,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190274835",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[모캡 버스킹 라이브] 🎤 구슬요 - 히로인 (백넘버) 1분 미리듣기",
         "creator": "달화숭",
         "song": "달화숭",
@@ -8080,7 +8080,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190274739",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡 버스킹] 구슬요 '히로인' / 여섯번째 무대",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8094,7 +8094,7 @@ window.danceImportFeed = [
     {
         "id": "clip-190274727",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립][모캡 버스킹 라이브] 구슬요 - 히로인 (백넘버)",
         "creator": "달화숭",
         "song": "달화숭",
@@ -8108,7 +8108,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190274073",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[모캡 버스킹 라이브] 🎤 구슬요 - 옛사랑 (이문세) 1분 미리듣기",
         "creator": "달화숭",
         "song": "달화숭",
@@ -8122,7 +8122,7 @@ window.danceImportFeed = [
     {
         "id": "clip-190273877",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립][모캡 버스킹 라이브] 구슬요 - 옛사랑 (이문세)",
         "creator": "달화숭",
         "song": "달화숭",
@@ -8136,7 +8136,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190273871",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡 버스킹] 구슬요 '옛사랑' / 다섯번째 무대",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8150,7 +8150,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190273349",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡 버스킹] 구슬요 '책방오빠 문학소녀' / 네번째 무대",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8164,7 +8164,7 @@ window.danceImportFeed = [
     {
         "id": "clip-190273219",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립][모캡 버스킹 라이브] 구슬요 - 책방오빠 문학소녀 (비비)",
         "creator": "달화숭",
         "song": "달화숭",
@@ -8178,7 +8178,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190272721",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡 버스킹] 구슬요 'Like a dream' / 세번째 무대",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8192,7 +8192,7 @@ window.danceImportFeed = [
     {
         "id": "clip-190272541",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립][모캡 버스킹 라이브] 구슬요 - Like A Dream (Chrisette Michele)",
         "creator": "달화숭",
         "song": "달화숭",
@@ -8206,7 +8206,7 @@ window.danceImportFeed = [
     {
         "id": "clip-190271955",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립][모캡 버스킹 라이브] 구슬요 - Really High (서리)",
         "creator": "달화숭",
         "song": "달화숭",
@@ -8220,7 +8220,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190271947",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡 버스킹] 구슬요 'Really high' / 두번째 무대",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8234,7 +8234,7 @@ window.danceImportFeed = [
     {
         "id": "catch-190271401",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡 버스킹] 구슬요 '지켜줄게' / 첫번째 무대",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8248,7 +8248,7 @@ window.danceImportFeed = [
     {
         "id": "clip-190271163",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립][모캡 버스킹 라이브] 구슬요 - 지켜줄게 (백예린)",
         "creator": "달화숭",
         "song": "달화숭",
@@ -8262,7 +8262,7 @@ window.danceImportFeed = [
     {
         "id": "catch-187843177",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]시리안 제로투",
         "creator": "gebo8883",
         "song": "gebo8883",
@@ -8276,7 +8276,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187428133",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡방송] 릴동파2 대비 컬링 은메달리스트가 금메달 따는법 알려주는 구슬요",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8290,7 +8290,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187365855",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]2부 집돌아와서 모캡뱅 후기~",
         "creator": "무싱호",
         "song": "무싱호",
@@ -8304,7 +8304,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187334169",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요] We! 모캡 안무",
         "creator": "오빛엘._.",
         "song": "오빛엘._.",
@@ -8318,7 +8318,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187333545",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요] 스페셜 모캡 안무",
         "creator": "오빛엘._.",
         "song": "오빛엘._.",
@@ -8332,7 +8332,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187333455",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]릴동파 빨간약 모캡으로 보여드리겠습니다!!!",
         "creator": "니코틴조개",
         "song": "니코틴조개",
@@ -8346,7 +8346,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187332725",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [모캡방송] 구슬요의 댄스 으르렁 (EXO)",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8360,7 +8360,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187332547",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [모캡방송] 구슬요의 댄스 Billie Jean (마이클잭슨)",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8374,7 +8374,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187332545",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]릴동파 빨간약 모캡으로 보여드리겠습니다!!!",
         "creator": "니코틴조개",
         "song": "니코틴조개",
@@ -8388,7 +8388,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187332245",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 [모캡방송] 구슬요의 댄스 bad girl good girl (미쓰에이)",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8402,7 +8402,7 @@ window.danceImportFeed = [
     {
         "id": "catch-187331749",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]릴동파 빨간약 모캡으로 보여드리겠습니다!!!",
         "creator": "Saber77",
         "song": "Saber77",
@@ -8416,7 +8416,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187331483",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]릴동파 빨간약 모캡으로 보여드리겠습니다!!!",
         "creator": "Moo.아사히",
         "song": "Moo.아사히",
@@ -8430,7 +8430,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187331269",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡방송] 릴동파2 대비 피겨스케이팅 보여주는 구슬요",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8444,7 +8444,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187330519",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡방송] 스켈레톤하다 잠드는 우리 아가슬요 찍어주는 스태프님",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8458,7 +8458,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187330345",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡방송] 릴동파2 대비 스켈레톤 보여준다더니 냅다 자버리는 구슬요",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8472,7 +8472,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187330181",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]릴동파 빨간약 모캡으로 보여드리겠습니다!!!",
         "creator": "Dcc",
         "song": "Dcc",
@@ -8486,7 +8486,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187330055",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡방송] 릴동파2 대비 봅슬레이 빨간약 보여주는 구슬요",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8500,7 +8500,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187329761",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀[모캡방송] 릴동파2 대비 바이애슬론 사격부분에서 잘쏘는법 알려주는 구슬요 \"빵야\"",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8514,7 +8514,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187329395",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 [모캡방송] 릴동파2 대비 아이스골프 금메달 따는법 알려주는 구슬요",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -8528,7 +8528,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187328637",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]릴동파 빨간약 모캡으로 보여드리겠습니다!!!",
         "creator": "버즈낀북극곰",
         "song": "버즈낀북극곰",
@@ -8542,7 +8542,7 @@ window.danceImportFeed = [
     {
         "id": "clip-187328615",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]릴동파 빨간약 모캡으로 보여드리겠습니다!!!",
         "creator": "버즈낀북극곰",
         "song": "버즈낀북극곰",
@@ -8556,7 +8556,7 @@ window.danceImportFeed = [
     {
         "id": "catch-187035487",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "시리안 제로투",
         "creator": "터보레인저",
         "song": "터보레인저",
@@ -8570,7 +8570,7 @@ window.danceImportFeed = [
     {
         "id": "clip-186875803",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "가질 수 없는 너 - 따린 (풀트)",
         "creator": "모닝:3",
         "song": "모닝:3",
@@ -8584,7 +8584,7 @@ window.danceImportFeed = [
     {
         "id": "clip-186868703",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립][구슬요] 시리안의 제로투는 귀하다",
         "creator": "pogni822",
         "song": "pogni822",
@@ -8598,7 +8598,7 @@ window.danceImportFeed = [
     {
         "id": "clip-186868361",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]시리안 제로투",
         "creator": "앤준.",
         "song": "앤준.",
@@ -8612,7 +8612,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186868321",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]본진에서도 안하는 제로투를 추게 된 시리안 레인",
         "creator": "사막도깨비",
         "song": "사막도깨비",
@@ -8626,7 +8626,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186467165",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 BOP BOP! 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8640,7 +8640,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186466875",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 유리구슬 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8654,7 +8654,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186466583",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 After LIKE 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8668,7 +8668,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186466321",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 HIP 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8682,7 +8682,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186466003",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 Step Back 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8696,7 +8696,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186465775",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 한 발짝 두 발짝 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8710,7 +8710,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186465349",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 Cheer UP 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8724,7 +8724,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186465177",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 다섯 번째 계절 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8738,7 +8738,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186464967",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 짐살라빔 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8752,7 +8752,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186464827",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 OOH-AHH하게 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8766,7 +8766,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186464461",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 ANTIFRAGILE 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8780,7 +8780,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186464153",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 SNEAKERS 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8794,7 +8794,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186462909",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 Attention 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8808,7 +8808,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186462639",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 너에게 닿기를 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8822,7 +8822,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186462415",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 달라달라 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8836,7 +8836,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186462045",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 WA DA DA 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8850,7 +8850,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186461827",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 Lovesick 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8864,7 +8864,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186461423",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 Stay This Way 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8878,7 +8878,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186461265",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 휘파람 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8892,7 +8892,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186461039",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 Wow Thing 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8906,7 +8906,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186460855",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 Pink Venom 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8920,7 +8920,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186460475",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 What is Love? 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8934,7 +8934,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186460247",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 마.피.아. In the morning 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8948,7 +8948,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186460031",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 너무너무너무 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8962,7 +8962,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186459323",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 Queendom 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8976,7 +8976,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186458927",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 Rumor 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -8990,7 +8990,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186458567",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 FEARLESS 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -9004,7 +9004,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186458443",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 Psycho 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -9018,7 +9018,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186458299",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 바나나 알러지 원숭이 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -9032,7 +9032,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186458187",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 LA DI DA 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -9046,7 +9046,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186457901",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 HYPE BOY 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -9060,7 +9060,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186457583",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 PICK ME 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -9074,7 +9074,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186457329",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 LOVE DIVE 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -9088,7 +9088,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186457103",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 비밀정원 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -9102,7 +9102,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186456955",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 덤디덤디 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -9116,7 +9116,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186456485",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 TT 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -9130,7 +9130,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186456195",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 RATATA 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -9144,7 +9144,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186455865",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 지금, 우리 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -9158,7 +9158,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186455499",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 Forever Young 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -9172,7 +9172,7 @@ window.danceImportFeed = [
     {
         "id": "catch-186454647",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 빨간맛 슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -9186,7 +9186,7 @@ window.danceImportFeed = [
     {
         "id": "clip-185984495",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 바기너불 고음챌린지에 한스푼 / 개인소장용",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9200,7 +9200,7 @@ window.danceImportFeed = [
     {
         "id": "clip-185830081",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]이야가 해준 듀엣 챌린지 보는 슬요 + 이야에게 편지쓰는 슬요",
         "creator": "덩그러니",
         "song": "덩그러니",
@@ -9214,7 +9214,7 @@ window.danceImportFeed = [
     {
         "id": "clip-185509145",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 랜덤플레이 댄스 벌칙 구슬요의 아로아로봉봉💚",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9228,7 +9228,7 @@ window.danceImportFeed = [
     {
         "id": "clip-185508801",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]댄스 챌린지 하는 구슬요🔮",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -9242,7 +9242,7 @@ window.danceImportFeed = [
     {
         "id": "clip-185508789",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]댄스 챌린지 모음",
         "creator": "심심한마왕",
         "song": "심심한마왕",
@@ -9256,7 +9256,7 @@ window.danceImportFeed = [
     {
         "id": "clip-185506563",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]듀엣 챌린지 파트 한소절",
         "creator": "덩그러니",
         "song": "덩그러니",
@@ -9270,7 +9270,7 @@ window.danceImportFeed = [
     {
         "id": "catch-185506425",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]구슬요 3집 '바람에 기대어 너를 불러본다' 듀엣 챌린지 파트",
         "creator": "달화숭",
         "song": "달화숭",
@@ -9284,7 +9284,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184325025",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요풀트댄스 - 아브라카타브라 (브아걸)☃",
         "creator": "풀트발닦개",
         "song": "풀트발닦개",
@@ -9298,7 +9298,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184324889",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요풀트댄스 - 다시 만난 세계 (소녀시대)☃",
         "creator": "풀트발닦개",
         "song": "풀트발닦개",
@@ -9312,7 +9312,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184324183",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요풀트댄스 - 위아래☃",
         "creator": "풀트발닦개",
         "song": "풀트발닦개",
@@ -9326,7 +9326,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184303509",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요 앙탈 챌린지",
         "creator": "화이트★",
         "song": "화이트★",
@@ -9340,7 +9340,7 @@ window.danceImportFeed = [
     {
         "id": "clip-184303355",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요풀트댄스 - 으르릉 풀버전☃",
         "creator": "풀트발닦개",
         "song": "풀트발닦개",
@@ -9354,7 +9354,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184303189",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요풀트댄스 - 으르릉☃",
         "creator": "풀트발닦개",
         "song": "풀트발닦개",
@@ -9368,7 +9368,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184303187",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]오랜만에 풀트뱅",
         "creator": "비싼_주머니",
         "song": "비싼_주머니",
@@ -9382,7 +9382,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184303137",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 K-POP DANCE ' EXO - 으르렁 '",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9396,7 +9396,7 @@ window.danceImportFeed = [
     {
         "id": "clip-184303069",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 K-POP DANCE ' EXO - 으르렁 '",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9410,7 +9410,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184301119",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요풀트댄스 - A (Rainbow)☃",
         "creator": "풀트발닦개",
         "song": "풀트발닦개",
@@ -9424,7 +9424,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184300751",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 K-POP DANCE 'Cheer up'",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9438,7 +9438,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184300727",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요풀트댄스 - Cheer Up (트라이스)☃",
         "creator": "풀트발닦개",
         "song": "풀트발닦개",
@@ -9452,7 +9452,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184299993",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 K-POP DANCE '달링'",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9466,7 +9466,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184299875",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요풀트댄스 - 달링☃",
         "creator": "풀트발닦개",
         "song": "풀트발닦개",
@@ -9480,7 +9480,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184299205",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 섹시댄스 '위아래'",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9494,7 +9494,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184298669",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구츠리의 뮤직 뮤직 챌린지ㅋㅋㅋ",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9508,7 +9508,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184298103",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 섹시댄스 '너 때문에 미쳐'",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9522,7 +9522,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184297003",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치] 위플래쉬(Whiplash) 풀트뱅 구슬요",
         "creator": "rizard_h",
         "song": "rizard_h",
@@ -9536,7 +9536,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184296917",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 섹시댄스 '위플래시'",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9550,7 +9550,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184296679",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 섹시댄스 '롤린'",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9564,7 +9564,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184296607",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치] 롤린(Rollin') 풀트뱅 구슬요",
         "creator": "rizard_h",
         "song": "rizard_h",
@@ -9578,7 +9578,7 @@ window.danceImportFeed = [
     {
         "id": "clip-184296553",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]오랜만에 풀트뱅",
         "creator": "터보레인저",
         "song": "터보레인저",
@@ -9592,7 +9592,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184296281",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치] 어머님이누구니 풀트뱅 구슬요",
         "creator": "rizard_h",
         "song": "rizard_h",
@@ -9606,7 +9606,7 @@ window.danceImportFeed = [
     {
         "id": "clip-184296227",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]오랜만에 풀트뱅",
         "creator": "터보레인저",
         "song": "터보레인저",
@@ -9620,7 +9620,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184296203",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 섹시댄스 '어머님이 누구니'",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9634,7 +9634,7 @@ window.danceImportFeed = [
     {
         "id": "clip-184296169",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]승요땅 어머님이 누구니 풀트",
         "creator": "moo.전타성",
         "song": "moo.전타성",
@@ -9648,7 +9648,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184295777",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 섹시댄스 '롤러코스터'",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9662,7 +9662,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184295167",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 섹시댄스 '나 혼자'",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9676,7 +9676,7 @@ window.danceImportFeed = [
     {
         "id": "clip-184295131",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]오랜만에 풀트뱅",
         "creator": "터보레인저",
         "song": "터보레인저",
@@ -9690,7 +9690,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184294477",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 섹시댄스 '아브라카다브라'",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9704,7 +9704,7 @@ window.danceImportFeed = [
     {
         "id": "clip-184294395",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]오랜만에 풀트뱅",
         "creator": "터보레인저",
         "song": "터보레인저",
@@ -9718,7 +9718,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184294023",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 섹시댄스 '썸띵'",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9732,7 +9732,7 @@ window.danceImportFeed = [
     {
         "id": "clip-184293855",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]오랜만에 풀트뱅",
         "creator": "단이비",
         "song": "단이비",
@@ -9746,7 +9746,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184293197",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 K-POP DANCE 다시 만난 세계 \"사랑해 널 이느낌 이대로~\"",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9760,7 +9760,7 @@ window.danceImportFeed = [
     {
         "id": "clip-184293101",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]다만세 챌린지",
         "creator": "공대구슬",
         "song": "공대구슬",
@@ -9774,7 +9774,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184292269",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]오랜만에 풀트뱅",
         "creator": "미단시티",
         "song": "미단시티",
@@ -9788,7 +9788,7 @@ window.danceImportFeed = [
     {
         "id": "clip-184292115",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]오랜만에 풀트뱅",
         "creator": "pogni822",
         "song": "pogni822",
@@ -9802,7 +9802,7 @@ window.danceImportFeed = [
     {
         "id": "clip-184291701",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]비밀정원 챌린지",
         "creator": "공대구슬",
         "song": "공대구슬",
@@ -9816,7 +9816,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184291055",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 댄스챌린지 [ 난 오늘 니가 킹받으면 좋겠어 ]",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9830,7 +9830,7 @@ window.danceImportFeed = [
     {
         "id": "clip-184290957",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]킹받으면 좋겠어 챌린지",
         "creator": "공대구슬",
         "song": "공대구슬",
@@ -9844,7 +9844,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184290789",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 댄스챌린지 [ 스파게티 ] 소리 내는 버전",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9858,7 +9858,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184290557",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 댄스챌린지 [ 스파게티 ] 소리안내는버전",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9872,7 +9872,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184289997",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]스파게티 챌린지",
         "creator": "공대구슬",
         "song": "공대구슬",
@@ -9886,7 +9886,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184289441",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]오랜만에 풀트뱅",
         "creator": "공대구슬",
         "song": "공대구슬",
@@ -9900,7 +9900,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184289201",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 구슬요의 댄스챌린지 [ 돈이나 벌래 챌린지 ]",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9914,7 +9914,7 @@ window.danceImportFeed = [
     {
         "id": "clip-184289127",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]우린 이별 했다고 챌린지",
         "creator": "공대구슬",
         "song": "공대구슬",
@@ -9928,7 +9928,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184288915",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 댄스챌린지 [ 왜요 쌤 챌린지 ]",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9942,7 +9942,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184288615",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]뮤직 챌린지",
         "creator": "공대구슬",
         "song": "공대구슬",
@@ -9956,7 +9956,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184288433",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]오랜만에 풀트뱅",
         "creator": "공대구슬",
         "song": "공대구슬",
@@ -9970,7 +9970,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184288399",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 댄스챌린지 [ 뮤직 챌린지 ]",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9984,7 +9984,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184287991",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 댄스챌린지 [ 중국 손 댄스 YANGYINYUE ]",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -9998,7 +9998,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184287029",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]오랜만에 풀트뱅",
         "creator": "공대구슬",
         "song": "공대구슬",
@@ -10012,7 +10012,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184286175",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 댄스챌린지 [ Love Love Love ]",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -10026,7 +10026,7 @@ window.danceImportFeed = [
     {
         "id": "clip-184286099",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]에픽하이 love x3 챌린지",
         "creator": "공대구슬",
         "song": "공대구슬",
@@ -10040,7 +10040,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184285771",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 댄스챌린지 [ What is love? ]",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -10054,7 +10054,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184285567",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 댄스챌린지 [ Gameboy ]",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -10068,7 +10068,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184284985",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 댄스챌린지 [ love me more ]",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -10082,7 +10082,7 @@ window.danceImportFeed = [
     {
         "id": "catch-184284663",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]Love Me More 챌린지",
         "creator": "달화숭",
         "song": "달화숭",
@@ -10096,7 +10096,7 @@ window.danceImportFeed = [
     {
         "id": "clip-183505009",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]구슬요 노바디 인트로 손짓",
         "creator": "덩그러니",
         "song": "덩그러니",
@@ -10110,7 +10110,7 @@ window.danceImportFeed = [
     {
         "id": "clip-183504851",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]노바디",
         "creator": "슈밤닉넴병맛",
         "song": "슈밤닉넴병맛",
@@ -10124,7 +10124,7 @@ window.danceImportFeed = [
     {
         "id": "clip-183388873",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]하나도 안무서워 생각보다~ / 라고 말하는 순간",
         "creator": "덩그러니",
         "song": "덩그러니",
@@ -10138,7 +10138,7 @@ window.danceImportFeed = [
     {
         "id": "catch-182964531",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 구슬요의 망한 키링 챌린지ㅋㅋㅋㅋㅋㅋㅋ",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -10152,7 +10152,7 @@ window.danceImportFeed = [
     {
         "id": "catch-182964433",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]개짜치는 키링 챌린지 ㅋㅋㅋㅋ",
         "creator": "달화숭",
         "song": "달화숭",
@@ -10166,7 +10166,7 @@ window.danceImportFeed = [
     {
         "id": "catch-182834227",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치][Priz-RE] 우리, 다시 (Re:begin) 오리지널 싱글 발매 모캡 라이브 (구슬요, 해리)",
         "creator": "완두_",
         "song": "완두_",
@@ -10180,7 +10180,7 @@ window.danceImportFeed = [
     {
         "id": "catch-182640163",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]체인소맨 레제 댄스",
         "creator": "심심한마왕",
         "song": "심심한마왕",
@@ -10194,7 +10194,7 @@ window.danceImportFeed = [
     {
         "id": "catch-182584603",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요가 직접 추는 레제 댄스 챌린지",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -10208,7 +10208,7 @@ window.danceImportFeed = [
     {
         "id": "catch-181343455",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]사투리 리듬게임 챌린지",
         "creator": "달화숭",
         "song": "달화숭",
@@ -10222,7 +10222,7 @@ window.danceImportFeed = [
     {
         "id": "clip-181080811",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]2월 쯤에 개모임 모캡 합방 할 예정이다",
         "creator": "지니ˇ",
         "song": "지니ˇ",
@@ -10236,7 +10236,7 @@ window.danceImportFeed = [
     {
         "id": "clip-180844481",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "🍀 모캡 합방에서 풍차돌리기 보여주는 빙밍이 보는 구슬요",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -10250,7 +10250,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180786865",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구갸루 풀트 [케이댄스](feat. 후하후하)",
         "creator": "사막도깨비",
         "song": "사막도깨비",
@@ -10264,7 +10264,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180784947",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 풀트 [Tell Me / 원더걸스]",
         "creator": "사막도깨비",
         "song": "사막도깨비",
@@ -10278,7 +10278,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180784183",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요 포켓몬 댄스",
         "creator": "화이트★",
         "song": "화이트★",
@@ -10292,7 +10292,7 @@ window.danceImportFeed = [
     {
         "id": "clip-180784013",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]구슬요 풀트 [shake-it/씨스타]",
         "creator": "사막도깨비",
         "song": "사막도깨비",
@@ -10306,7 +10306,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180783945",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 풀트 [BAAM/모모랜드]",
         "creator": "사막도깨비",
         "song": "사막도깨비",
@@ -10320,7 +10320,7 @@ window.danceImportFeed = [
     {
         "id": "clip-180783479",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 포켓몬 챌린지",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -10334,7 +10334,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180781483",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]풀트 오류로 서서 죽은 구슬요 ㅋㅋ",
         "creator": "사막도깨비",
         "song": "사막도깨비",
@@ -10348,7 +10348,7 @@ window.danceImportFeed = [
     {
         "id": "catch-180781259",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 구슬요의 스파게티 챌린지",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -10362,7 +10362,7 @@ window.danceImportFeed = [
     {
         "id": "catch-178992013",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 스료의 스파게티 챌린지",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -10376,7 +10376,7 @@ window.danceImportFeed = [
     {
         "id": "catch-178991625",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 스료의 아일릿 챌린지",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -10390,7 +10390,7 @@ window.danceImportFeed = [
     {
         "id": "catch-178991141",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 스료의 샤넬 챌린지",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -10404,7 +10404,7 @@ window.danceImportFeed = [
     {
         "id": "catch-178990849",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "🍀 스료의 이라이라 챌린지",
         "creator": "찌닝♬",
         "song": "찌닝♬",
@@ -10418,7 +10418,7 @@ window.danceImportFeed = [
     {
         "id": "clip-177321115",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "제갈금자, 머독 모캡 합방을 보는 구슬요",
         "creator": "꾸잉꾸잉잉",
         "song": "꾸잉꾸잉잉",
@@ -10432,7 +10432,7 @@ window.danceImportFeed = [
     {
         "id": "clip-177107869",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]시그널(다룽,달타,서피카,연솔,최또) : 플레이브 - 메리플리스마스 / 구슬요.",
         "creator": "silenthhan",
         "song": "silenthhan",
@@ -10446,7 +10446,7 @@ window.danceImportFeed = [
     {
         "id": "clip-176480359",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]할로윈 기념 미츠리 풀트뱅",
         "creator": "가을르미",
         "song": "가을르미",
@@ -10460,7 +10460,7 @@ window.danceImportFeed = [
     {
         "id": "catch-176470379",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 풀트 [나루토 챌린지]",
         "creator": "사막도깨비",
         "song": "사막도깨비",
@@ -10474,7 +10474,7 @@ window.danceImportFeed = [
     {
         "id": "catch-176466855",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 풀트 [LSD]",
         "creator": "사막도깨비",
         "song": "사막도깨비",
@@ -10488,7 +10488,7 @@ window.danceImportFeed = [
     {
         "id": "catch-176466739",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요]제로투",
         "creator": "흐름이",
         "song": "흐름이",
@@ -10502,7 +10502,7 @@ window.danceImportFeed = [
     {
         "id": "catch-176466415",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 풀트 [제로투]",
         "creator": "사막도깨비",
         "song": "사막도깨비",
@@ -10516,7 +10516,7 @@ window.danceImportFeed = [
     {
         "id": "catch-176466125",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 풀트 [간바레 센빠이]",
         "creator": "사막도깨비",
         "song": "사막도깨비",
@@ -10530,7 +10530,7 @@ window.danceImportFeed = [
     {
         "id": "catch-176439579",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]시그풍 터져서 갑자기 터미널 추는 폭유 미츠리 구슬요 ㅋㅋㅋㅋ",
         "creator": "판다다리",
         "song": "판다다리",
@@ -10544,7 +10544,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173344909",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮구슬요 유튜브 구독 3만 기념 풀트 으르렁",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10558,7 +10558,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173344609",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮구슬요 유튜브 구독 3만 기념 풀트 Tell Me",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10572,7 +10572,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173344455",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮구슬요 유튜브 구독 3만 기념 풀트 NOBODY",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10586,7 +10586,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173344195",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮구슬요 유튜브 구독 3만 기념 풀트 까탈레나",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10600,7 +10600,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173343803",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮구슬요 유튜브 구독 3만 기념 풀트 Bo Peep Bo Peep",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10614,7 +10614,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173343407",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮구슬요 유튜브 구독 3만 기념 풀트 Bad Girl Good Girl",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10628,7 +10628,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173343073",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮구슬요 유튜브 구독 3만 기념 풀트 GEE",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10642,7 +10642,7 @@ window.danceImportFeed = [
     {
         "id": "clip-173342841",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]🔮구슬요 유튜브 구독 3만 기념 풀트 으르렁",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -10656,7 +10656,7 @@ window.danceImportFeed = [
     {
         "id": "clip-173342361",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]🔮구슬요 유튜브 구독 3만 기념 풀트 Tell Me",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -10670,7 +10670,7 @@ window.danceImportFeed = [
     {
         "id": "clip-173342271",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]🔮구슬요 유튜브 구독 3만 기념 풀트 NOBODY",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -10684,7 +10684,7 @@ window.danceImportFeed = [
     {
         "id": "clip-173342013",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]🔮구슬요 유튜브 구독 3만 기념 풀트 까탈레나",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -10698,7 +10698,7 @@ window.danceImportFeed = [
     {
         "id": "clip-173341821",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]🔮구슬요 유튜브 구독 3만 기념 풀트 Bo Peep Bo Peep",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -10712,7 +10712,7 @@ window.danceImportFeed = [
     {
         "id": "clip-173341257",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]🔮구슬요 유튜브 구독 3만 기념 풀트 Bad Girl Good Girl",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -10726,7 +10726,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173340991",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮구슬요 유튜브 구독 3만 기념 풀트 ROLY-POLY",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10740,7 +10740,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173340545",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮구슬요 유튜브 구독 3만 기념 풀트 반짝반짝",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10754,7 +10754,7 @@ window.danceImportFeed = [
     {
         "id": "clip-173340461",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]🔮구슬요 유튜브 구독 3만 기념 풀트 GEE",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -10768,7 +10768,7 @@ window.danceImportFeed = [
     {
         "id": "clip-173339633",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]🔮구슬요 유튜브 구독 3만 기념 풀트 ROLY-POLY",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -10782,7 +10782,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173339451",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮구슬요 유튜브 구독 3만 기념 풀트 Magnetic",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10796,7 +10796,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173338945",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮구슬요 유튜브 구독 3만 기념 풀트 슈퍼 구슬요 LIVE",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10810,7 +10810,7 @@ window.danceImportFeed = [
     {
         "id": "clip-173338825",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]🔮구슬요 유튜브 구독 3만 기념 풀트 반짝반짝",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -10824,7 +10824,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173338439",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮구슬요 유튜브 구독 3만 기념 풀트 달링",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10838,7 +10838,7 @@ window.danceImportFeed = [
     {
         "id": "clip-173337929",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]🔮구슬요 유튜브 구독 3만 기념 풀트 슈퍼 구슬요 LIVE",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -10852,7 +10852,7 @@ window.danceImportFeed = [
     {
         "id": "clip-173337703",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]🔮구슬요 유튜브 구독 3만 기념 풀트 달링",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -10866,7 +10866,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173337195",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮구슬요 유튜브 구독 3만 기념 풀트 Touch My Body",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10880,7 +10880,7 @@ window.danceImportFeed = [
     {
         "id": "clip-173336839",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]🔮구슬요 유튜브 구독 3만 기념 풀트 Touch My Body",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -10894,7 +10894,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173336407",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[구슬요] 제로투",
         "creator": "맵싹하이",
         "song": "맵싹하이",
@@ -10908,7 +10908,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173336361",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮구슬요 유튜브 구독 3만 기념 풀트 제로투",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10922,7 +10922,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173336183",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "구슬요님 제로투",
         "creator": "화이트★",
         "song": "화이트★",
@@ -10936,7 +10936,7 @@ window.danceImportFeed = [
     {
         "id": "catch-173336179",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮구슬요 유튜브 구독 3만 기념 풀트 위아래",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10950,7 +10950,7 @@ window.danceImportFeed = [
     {
         "id": "clip-173336069",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]🔮구슬요 유튜브 구독 3만 기념 풀트 위아래",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -10964,7 +10964,7 @@ window.danceImportFeed = [
     {
         "id": "catch-171231827",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮풀트 슬요 - ROLY-POLY",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -10978,7 +10978,7 @@ window.danceImportFeed = [
     {
         "id": "clip-171231427",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]🔮풀트 슬요 - ROLY-POLY",
         "creator": "봇꾸부기",
         "song": "봇꾸부기",
@@ -10992,7 +10992,7 @@ window.danceImportFeed = [
     {
         "id": "catch-171230249",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮풀트 슬요 - 핫 이슈",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -11006,7 +11006,7 @@ window.danceImportFeed = [
     {
         "id": "catch-171229831",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮풀트 슬요 -  BAAM",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -11020,7 +11020,7 @@ window.danceImportFeed = [
     {
         "id": "catch-171229413",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮풀트 슬요 -  HANDS UP",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -11034,7 +11034,7 @@ window.danceImportFeed = [
     {
         "id": "catch-171228899",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮풀트 슬요 - 살짝 설렜어",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -11048,7 +11048,7 @@ window.danceImportFeed = [
     {
         "id": "catch-171227713",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮풀트 슬요 - 롯데 아웃송",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -11062,7 +11062,7 @@ window.danceImportFeed = [
     {
         "id": "catch-171222023",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮풀트 슬요 - Pookie",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -11076,7 +11076,7 @@ window.danceImportFeed = [
     {
         "id": "catch-171221411",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮풀트 슬요 - 빙글뱅글",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -11090,7 +11090,7 @@ window.danceImportFeed = [
     {
         "id": "catch-171217965",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]🔮풀트 슬요 - Tick-Tack",
         "creator": "돚꾸부기",
         "song": "돚꾸부기",
@@ -11104,7 +11104,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170867815",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]집들이때 풀트 해줘라",
         "creator": "지니ˇ",
         "song": "지니ˇ",
@@ -11118,7 +11118,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170811359",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]이사기념 풀트 test 방송",
         "creator": "boraJoa●",
         "song": "boraJoa●",
@@ -11132,7 +11132,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170811333",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]이사기념 풀트 test 방송",
         "creator": "boraJoa●",
         "song": "boraJoa●",
@@ -11146,7 +11146,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170811281",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]이사기념 풀트 test 방송",
         "creator": "boraJoa●",
         "song": "boraJoa●",
@@ -11160,7 +11160,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170796985",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]이사기념 풀트 test 방송",
         "creator": "완두_",
         "song": "완두_",
@@ -11174,7 +11174,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170796671",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]이사기념 풀트 test 방송",
         "creator": "완두_",
         "song": "완두_",
@@ -11188,7 +11188,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170770297",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]Pretty little baby 챌린지 따린 지목하는 구슬요",
         "creator": "단감씨`",
         "song": "단감씨`",
@@ -11202,7 +11202,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170770215",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "Pretty Little Baby 챌린지 따린 지목하는 구슬요",
         "creator": "안척추",
         "song": "안척추",
@@ -11216,7 +11216,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170770203",
         "source": "clip",
-        "status": "review",
+        "status": "hidden",
         "title": "[클립]Pretty little baby 챌린지 (구슬요->따린)",
         "creator": "달화숭",
         "song": "달화숭",
@@ -11230,7 +11230,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170762847",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]구슬요 Mr.Chu 미스터츄 댄스",
         "creator": "단감씨`",
         "song": "단감씨`",
@@ -11244,7 +11244,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170760839",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]구슬요 버블팝 댄스",
         "creator": "단감씨`",
         "song": "단감씨`",
@@ -11258,7 +11258,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170760555",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]구슬요 씨스타 니까짓게 댄스",
         "creator": "단감씨`",
         "song": "단감씨`",
@@ -11272,7 +11272,7 @@ window.danceImportFeed = [
     {
         "id": "catch-170759861",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]구슬요 하이디라오",
         "creator": "단감씨`",
         "song": "단감씨`",
@@ -11286,7 +11286,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170759705",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]구슬요 내꺼야 댄스",
         "creator": "단감씨`",
         "song": "단감씨`",
@@ -11300,7 +11300,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170759363",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]구슬요 픽미 댄스",
         "creator": "단감씨`",
         "song": "단감씨`",
@@ -11314,7 +11314,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170758729",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]구슬요 바나나알러지원숭이 댄스",
         "creator": "단감씨`",
         "song": "단감씨`",
@@ -11328,7 +11328,7 @@ window.danceImportFeed = [
     {
         "id": "catch-170758597",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치][풀트] 구슬요 - 바나나 알러지 원숭이(오마이걸 반하나)",
         "creator": "우쏘섹시삭비",
         "song": "우쏘섹시삭비",
@@ -11342,7 +11342,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170758049",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]구슬요 오마이걸 한발짝두발짝 댄스",
         "creator": "단감씨`",
         "song": "단감씨`",
@@ -11356,7 +11356,7 @@ window.danceImportFeed = [
     {
         "id": "catch-170757387",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치][풀트] 구슬요 - 달링",
         "creator": "우쏘섹시삭비",
         "song": "우쏘섹시삭비",
@@ -11370,7 +11370,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170757273",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]구슬요 걸스데이 - 달링 댄스",
         "creator": "단감씨`",
         "song": "단감씨`",
@@ -11384,7 +11384,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170756459",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]슬요의 프리즈 아이돌모먼트 댄스",
         "creator": "밀류",
         "song": "밀류",
@@ -11398,7 +11398,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170756431",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]구슬요 프리즈 We! 댄스",
         "creator": "단감씨`",
         "song": "단감씨`",
@@ -11412,7 +11412,7 @@ window.danceImportFeed = [
     {
         "id": "catch-170756249",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]이사기념 풀트 test 방송",
         "creator": "하나남은조각",
         "song": "하나남은조각",
@@ -11426,7 +11426,7 @@ window.danceImportFeed = [
     {
         "id": "clip-170755907",
         "source": "clip",
-        "status": "review",
+        "status": "approved",
         "title": "[클립]구슬요 Bad Girl Good Girl 댄스",
         "creator": "단감씨`",
         "song": "단감씨`",
@@ -11440,7 +11440,7 @@ window.danceImportFeed = [
     {
         "id": "catch-170755055",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]이사기념 풀트 test 방송",
         "creator": "무능한짐승",
         "song": "무능한짐승",
@@ -11454,7 +11454,7 @@ window.danceImportFeed = [
     {
         "id": "catch-170754899",
         "source": "catch",
-        "status": "review",
+        "status": "approved",
         "title": "[캐치]이사기념 풀트 test 방송",
         "creator": "무능한짐승",
         "song": "무능한짐승",
@@ -11468,7 +11468,7 @@ window.danceImportFeed = [
     {
         "id": "catch-170754723",
         "source": "catch",
-        "status": "review",
+        "status": "hidden",
         "title": "[캐치]이사기념 풀트 test 방송",
         "creator": "무능한짐승",
         "song": "무능한짐승",
