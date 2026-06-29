@@ -559,7 +559,7 @@
             const frameWrap = document.getElementById('videoFrameWrap');
             if (!modal || !frameWrap || !titleEl) return;
             titleEl.textContent = title || '트랙터서비스';
-            frameWrap.innerHTML = `<iframe src="https://www.youtube.com/embed/${esc(videoId)}?autoplay=1&rel=0" title="${esc(title || '트랙터서비스 영상')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+            frameWrap.innerHTML = `<iframe src="https://www.youtube.com/embed/${esc(videoId)}?autoplay=1&rel=0" title="${esc(title || '트랙터서비스 영상')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups" allowfullscreen></iframe>`;
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';

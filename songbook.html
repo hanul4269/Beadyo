@@ -1557,7 +1557,7 @@ function ensureDb() {
     if (_dbReady) return _dbReady;
     _dbReady = new Promise((res, rej) => {
         const s = document.createElement('script');
-        s.src = 'supabase.min.js';
+        s.src = 'supabase.min.js?v=supabase-2-108-2';
         s.onload = () => {
                 db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
                     auth: { detectSessionInUrl: false }
@@ -2683,6 +2683,8 @@ function updateAuthUI() {
 }
 
 window.addEventListener('message', (e) => {
+    const allowed = ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'];
+    if (!allowed.includes(e.origin) && e.origin !== window.location.origin) return;
     if (e.data?.type === 'beadyo-auth-sync' && db) {
         db.auth.getSession().then(({ data: { session } }) => {
             S.session = session;

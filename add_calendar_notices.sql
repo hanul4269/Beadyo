@@ -25,24 +25,42 @@ alter table calendar_notices add column if not exists button_text_color text not
 alter table calendar_notices add column if not exists header_bg_color text not null default '#190a07';
 alter table calendar_notices add column if not exists header_text_color text not null default '#fff3cf';
 
+create or replace function public.is_beadyo_editor()
+returns boolean
+language sql
+security definer
+set search_path = public
+as $$
+  select
+    lower(coalesce(auth.jwt() ->> 'email', '')) = 'riosniper12@gmail.com'
+    or exists (
+      select 1
+      from public.editors e
+      where lower(e.email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+    );
+$$;
+
 alter table calendar_notices enable row level security;
 
 drop policy if exists "calendar_notices public read" on calendar_notices;
 drop policy if exists "calendar_notices authenticated insert" on calendar_notices;
 drop policy if exists "calendar_notices authenticated update" on calendar_notices;
 drop policy if exists "calendar_notices authenticated delete" on calendar_notices;
+drop policy if exists "calendar_notices editor insert" on calendar_notices;
+drop policy if exists "calendar_notices editor update" on calendar_notices;
+drop policy if exists "calendar_notices editor delete" on calendar_notices;
 
 create policy "calendar_notices public read" on calendar_notices
   for select using (true);
 
-create policy "calendar_notices authenticated insert" on calendar_notices
-  for insert to authenticated with check (true);
+create policy "calendar_notices editor insert" on calendar_notices
+  for insert to authenticated with check (public.is_beadyo_editor());
 
-create policy "calendar_notices authenticated update" on calendar_notices
-  for update to authenticated using (true) with check (true);
+create policy "calendar_notices editor update" on calendar_notices
+  for update to authenticated using (public.is_beadyo_editor()) with check (public.is_beadyo_editor());
 
-create policy "calendar_notices authenticated delete" on calendar_notices
-  for delete to authenticated using (true);
+create policy "calendar_notices editor delete" on calendar_notices
+  for delete to authenticated using (public.is_beadyo_editor());
 
 insert into calendar_notices (
   slug,

@@ -13,21 +13,38 @@ CREATE TABLE IF NOT EXISTS broadcast_infos (
 ALTER TABLE broadcast_infos
 ADD COLUMN IF NOT EXISTS vod_titles TEXT;
 
+CREATE OR REPLACE FUNCTION public.is_beadyo_editor()
+RETURNS boolean
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT
+    lower(coalesce(auth.jwt() ->> 'email', '')) = 'riosniper12@gmail.com'
+    OR EXISTS (
+      SELECT 1
+      FROM public.editors e
+      WHERE lower(e.email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+    );
+$$;
+
 ALTER TABLE broadcast_infos ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "read_broadcast_infos" ON broadcast_infos;
 DROP POLICY IF EXISTS "write_broadcast_infos" ON broadcast_infos;
+DROP POLICY IF EXISTS "editor_write_broadcast_infos" ON broadcast_infos;
 
 CREATE POLICY "read_broadcast_infos"
 ON broadcast_infos
 FOR SELECT
 USING (true);
 
-CREATE POLICY "write_broadcast_infos"
+CREATE POLICY "editor_write_broadcast_infos"
 ON broadcast_infos
 FOR ALL
-USING (true)
-WITH CHECK (true);
+TO authenticated
+USING (public.is_beadyo_editor())
+WITH CHECK (public.is_beadyo_editor());
 
 ALTER TABLE schedules
 ADD COLUMN IF NOT EXISTS sort_order INTEGER;

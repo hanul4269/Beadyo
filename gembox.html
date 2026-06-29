@@ -863,6 +863,10 @@
             );
         }
 
+        function jsArg(value) {
+            return esc(JSON.stringify(String(value ?? '')));
+        }
+
         function safeUrl(value) {
             const raw = String(value || '').trim();
             if (!raw) return '';
@@ -1004,7 +1008,7 @@
                     member.stationUrl ? `<a class="action-link secondary" href="${esc(member.stationUrl)}" target="_blank" rel="noopener noreferrer">${esc(member.name)} 방송국</a>` : ''
                 ).join('') : '';
                 return `<article class="cast-card">
-                    ${videoUrl ? `<button class="cast-cover video-cover" type="button" onclick="openVideoModal('${esc(videoUrl)}', '${esc(primarySong?.title || cast.name || '영상')}')" aria-label="${esc(cast.name || '출연진')} 영상 재생">` : `<div class="cast-cover ${isDuet && !imageUrl ? 'duet-cover' : ''}">`}
+                    ${videoUrl ? `<button class="cast-cover video-cover" type="button" onclick="openVideoModal(${jsArg(videoUrl)}, ${jsArg(primarySong?.title || cast.name || '영상')})" aria-label="${esc(cast.name || '출연진')} 영상 재생">` : `<div class="cast-cover ${isDuet && !imageUrl ? 'duet-cover' : ''}">`}
                         ${coverHtml}
                         <div class="season-badge">Season ${esc(cast.season || '')}${isDuet ? ' Duet' : ''}</div>
                     ${videoUrl ? `</button>` : `</div>`}
@@ -1036,7 +1040,7 @@
             const safeSrc = safeUrl(src);
             if (!modal || !frameWrap || !safeSrc) return;
             titleEl.textContent = title || '영상';
-            frameWrap.innerHTML = `<iframe src="${esc(safeSrc)}" title="${esc(title || 'YouTube 영상')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+            frameWrap.innerHTML = `<iframe src="${esc(safeSrc)}" title="${esc(title || 'YouTube 영상')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups" allowfullscreen></iframe>`;
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';

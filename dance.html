@@ -487,7 +487,7 @@
                 <button class="video-modal-close" type="button" data-close-video aria-label="닫기">&times;</button>
             </div>
             <div class="video-frame">
-                <iframe id="videoModalFrame" title="춤영상 재생" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                <iframe id="videoModalFrame" title="춤영상 재생" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"></iframe>
             </div>
             <div class="video-modal-foot">
                 <a class="video-modal-original" id="videoModalOriginal" href="#" target="_blank" rel="noopener noreferrer">원본 열기</a>
@@ -600,22 +600,31 @@
             }[ch]));
         }
 
+        function safeExternalUrl(value) {
+            try {
+                const url = new URL(String(value || '').trim());
+                if (url.protocol === 'http:' || url.protocol === 'https:') return url.toString();
+            } catch {}
+            return '#';
+        }
+
         function getVideoEmbedUrl(video) {
             try {
-                const url = new URL(video.url);
-                if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
+                const url = new URL(safeExternalUrl(video.url));
+                const host = url.hostname.toLowerCase();
+                if (host === 'youtube.com' || host.endsWith('.youtube.com') || host === 'youtu.be') {
                     const id = url.pathname.includes('/shorts/')
                         ? url.pathname.split('/shorts/')[1]?.split('/')[0]
                         : url.searchParams.get('v') || url.pathname.split('/').filter(Boolean).pop();
-                    return id ? `https://www.youtube.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0` : video.url;
+                    return /^[A-Za-z0-9_-]{11}$/.test(id || '') ? `https://www.youtube.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0` : 'about:blank';
                 }
-                if (url.hostname.includes('sooplive.com')) {
+                if (host === 'sooplive.com' || host.endsWith('.sooplive.com')) {
                     const id = url.pathname.match(/\/player\/(\d+)/)?.[1];
-                    return id ? `https://vod.sooplive.com/player/${encodeURIComponent(id)}/embed?autoPlay=true&showChat=false&mutePlay=false` : video.url;
+                    return id ? `https://vod.sooplive.com/player/${encodeURIComponent(id)}/embed?autoPlay=true&showChat=false&mutePlay=false` : 'about:blank';
                 }
-                return video.url;
+                return 'about:blank';
             } catch {
-                return video.url;
+                return 'about:blank';
             }
         }
 
@@ -630,7 +639,7 @@
             modal.classList.remove('soop-crop');
             resetVideoFrame();
             frame.src = getVideoEmbedUrl(video);
-            document.getElementById('videoModalOriginal').href = video.url;
+            document.getElementById('videoModalOriginal').href = safeExternalUrl(video.url);
             modal.hidden = false;
         }
 
@@ -668,7 +677,7 @@
                         <div class="card-line"><span>${esc(video.date)}</span><span>${esc(video.song)}</span></div>
                         <div class="tags">${video.tags.map(tag => `<span class="tag">${esc(tag)}</span>`).join('')}</div>
                         <div class="card-actions">
-                            <a class="card-action primary" href="${esc(video.url)}" target="_blank" rel="noopener noreferrer">원본 열기</a>
+                            <a class="card-action primary" href="${esc(safeExternalUrl(video.url))}" target="_blank" rel="noopener noreferrer">원본 열기</a>
                             <button class="card-action" type="button" data-url="${esc(video.url)}">링크 복사</button>
                         </div>
                     </div>

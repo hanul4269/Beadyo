@@ -173,7 +173,7 @@ function _ensureDb() {
     if (_dbReady) return _dbReady;
     _dbReady = new Promise((resolve, reject) => {
         const s = document.createElement('script');
-        s.src = 'supabase.min.js';
+        s.src = 'supabase.min.js?v=supabase-2-108-2';
         s.onload = () => { db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); resolve(db); };
         s.onerror = reject;
         document.head.appendChild(s);
@@ -185,7 +185,7 @@ function typeOf(key) {
     return EVENT_TYPES.find(t => t.key === key) ?? EVENT_TYPES.find(t => t.key === 'general');
 }
 
-const GOBOOKTICON_STICKERS = Array.from({ length: 18 }, (_, i) =>
+const GOBOOKTICON_STICKERS = Array.from({ length: 19 }, (_, i) =>
     `game-assets/gobookticon/gobook-${String(i + 1).padStart(2, '0')}.png`
 );
 const MOOD_STICKERS = {
@@ -351,6 +351,9 @@ function esc(s) {
     return String(s ?? '').replace(/[&<>"']/g, c =>
         ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
     );
+}
+function jsArg(s) {
+    return esc(JSON.stringify(String(s ?? '')));
 }
 function safeUrl(s) {
     try {
@@ -1406,20 +1409,20 @@ function _memoCardHtml(card, sidebar) {
     const isLink = !!card.url;
     const actions = state.isEditor
         ? `<div class="memo-card-actions">
-            <button class="memo-card-edit" onclick="event.stopPropagation();editMemoCard('${esc(card.id)}','${sidebar ? 'sidebar' : 'modal'}')" title="수정">✎</button>
-            <button class="memo-card-del" onclick="event.stopPropagation();deleteMemoCard('${esc(card.id)}')" title="삭제">✕</button>
+            <button class="memo-card-edit" onclick="event.stopPropagation();editMemoCard(${jsArg(card.id)},${jsArg(sidebar ? 'sidebar' : 'modal')})" title="수정">✎</button>
+            <button class="memo-card-del" onclick="event.stopPropagation();deleteMemoCard(${jsArg(card.id)})" title="삭제">✕</button>
         </div>`
         : '';
     const dragAttrs = state.isEditor && sidebar
         ? `draggable="true"
-           ondragstart="memoDragStart(event,'${esc(card.id)}')"
-           ondragover="memoDragOver(event,'${esc(card.id)}')"
+           ondragstart="memoDragStart(event,${jsArg(card.id)})"
+           ondragover="memoDragOver(event,${jsArg(card.id)})"
            ondragleave="this.classList.remove('drag-over')"
-           ondrop="memoDrop(event,'${esc(card.id)}')"
+           ondrop="memoDrop(event,${jsArg(card.id)})"
            ondragend="memoDragEnd(event)"`
         : '';
     const clickAttr = isLink
-        ? `onclick="openMemoCard('${esc(card.url)}')"` : '';
+        ? `onclick="openMemoCard(${jsArg(card.url)})"` : '';
     const handle = state.isEditor && sidebar
         ? `<span class="memo-drag-handle">• • •</span>` : '';
     return `<div class="memo-card${isLink ? ' is-link' : ''}" ${clickAttr} ${dragAttrs}>
@@ -1553,10 +1556,10 @@ function renderMemoModalList() {
         const isLink = !!card.url;
         const actions = state.isEditor
             ? `<div class="memo-card-actions">
-                <button class="memo-card-edit" onclick="event.stopPropagation();editMemoCard('${esc(card.id)}','modal')" title="수정">✎</button>
-                <button class="memo-card-del" onclick="event.stopPropagation();deleteMemoCard('${esc(card.id)}')" title="삭제">✕</button>
+                <button class="memo-card-edit" onclick="event.stopPropagation();editMemoCard(${jsArg(card.id)},${jsArg('modal')})" title="수정">✎</button>
+                <button class="memo-card-del" onclick="event.stopPropagation();deleteMemoCard(${jsArg(card.id)})" title="삭제">✕</button>
             </div>` : '';
-        const clickAttr = isLink ? `onclick="openMemoCard('${esc(card.url)}')"` : '';
+        const clickAttr = isLink ? `onclick="openMemoCard(${jsArg(card.url)})"` : '';
         return `<div class="memo-modal-card${isLink ? ' is-link' : ''}" ${clickAttr}>
             ${actions}
             <div style="white-space:pre-wrap">${esc(card.content)}</div>
@@ -1599,7 +1602,7 @@ function renderYtLinkList() {
         return `<div class="yt-link-item">
             ${badge}
             <a href="${esc(safeUrl(yl.url))}" target="_blank" rel="noopener noreferrer">${esc(yl.url)}</a>
-            <button class="yt-link-del" onclick="deleteYtLink('${esc(yl.id)}')" title="삭제">✕</button>
+            <button class="yt-link-del" onclick="deleteYtLink(${jsArg(yl.id)})" title="삭제">✕</button>
         </div>`;
     }).join('');
 }
@@ -1797,8 +1800,8 @@ function dayEventCardHtml(ev, dateStr) {
             ${links.length ? `<div class="day-link-row">${links.join('')}</div>` : ''}
         </div>
         ${state.isEditor ? `<div class="day-event-actions">
-            <button class="day-edit-btn" onclick="openEditModal('${esc(ev.id)}', { type: 'day', date: '${esc(dateStr)}' })">수정</button>
-            <button class="day-delete-btn" onclick="event.stopPropagation();deleteEvent('${esc(ev.id)}')">삭제</button>
+            <button class="day-edit-btn" onclick="openEditModal(${jsArg(ev.id)}, { type: 'day', date: ${jsArg(dateStr)} })">수정</button>
+            <button class="day-delete-btn" onclick="event.stopPropagation();deleteEvent(${jsArg(ev.id)})">삭제</button>
         </div>` : ''}
     </div>`;
 }
@@ -1835,8 +1838,8 @@ function openDayViewModal(dateStr) {
 
     document.getElementById('viewContent').innerHTML = html;
     document.getElementById('viewBtns').innerHTML = state.isEditor
-        ? `<button class="btn btn-primary" onclick="openBroadcastModal('${dateStr}')">방송정보 편집</button>
-           <button class="btn btn-secondary" onclick="closeViewModal();openAddModal('${dateStr}')">일정 추가</button>
+        ? `<button class="btn btn-primary" onclick="openBroadcastModal(${jsArg(dateStr)})">방송정보 편집</button>
+           <button class="btn btn-secondary" onclick="closeViewModal();openAddModal(${jsArg(dateStr)})">일정 추가</button>
            <button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>`
         : `<button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>`;
     document.getElementById('viewModal').classList.add('open');
@@ -1877,10 +1880,10 @@ function openViewModal(id) {
 
     document.getElementById('viewContent').innerHTML = html;
     document.getElementById('viewBtns').innerHTML = state.isEditor
-        ? `<button class="btn btn-primary"  onclick="openEditModal('${esc(id)}')">수정</button>
-           <button class="btn btn-secondary" onclick="copyEvent('${esc(id)}')">복사</button>
-           <button class="btn btn-secondary" onclick="repeatWeekly('${esc(id)}')">매주 반복</button>
-           <button class="btn btn-danger"   onclick="deleteEvent('${esc(id)}')">삭제</button>
+        ? `<button class="btn btn-primary"  onclick="openEditModal(${jsArg(id)})">수정</button>
+           <button class="btn btn-secondary" onclick="copyEvent(${jsArg(id)})">복사</button>
+           <button class="btn btn-secondary" onclick="repeatWeekly(${jsArg(id)})">매주 반복</button>
+           <button class="btn btn-danger"   onclick="deleteEvent(${jsArg(id)})">삭제</button>
            <button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>`
         : `<button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>`;
 
@@ -2637,7 +2640,7 @@ function renderEditorList() {
     list.innerHTML = state.editors.map(e => `
         <div class="editor-item">
             <span>${esc(e.email)}</span>
-            <button class="editor-remove-btn" onclick="removeEditor('${esc(e.id)}')">삭제</button>
+            <button class="editor-remove-btn" onclick="removeEditor(${jsArg(e.id)})">삭제</button>
         </div>
     `).join('');
 }
@@ -2937,8 +2940,8 @@ function renderCalendarNoticeList() {
                     <input type="checkbox" ${notice.is_active ? 'checked' : ''} onchange="toggleCalendarNoticeActive('${esc(notice.id)}', this.checked)">
                     <span>활성</span>
                 </label>
-                <button class="editor-remove-btn" onclick="previewCalendarNotice('${esc(notice.id)}')">미리보기</button>
-                <button class="editor-remove-btn" onclick="removeCalendarNotice('${esc(notice.id)}')">삭제</button>
+                <button class="editor-remove-btn" onclick="previewCalendarNotice(${jsArg(notice.id)})">미리보기</button>
+                <button class="editor-remove-btn" onclick="removeCalendarNotice(${jsArg(notice.id)})">삭제</button>
             </div>
         </div>
     `).join('');
@@ -3095,14 +3098,14 @@ function renderUpEventList() {
             </div>
             <div class="up-event-admin-actions">
                 <div class="up-order-actions" aria-label="UP 이벤트 순서 변경">
-                    <button class="up-order-btn" onclick="moveUpEvent('${esc(String(e.id))}', -1)" ${index === 0 ? 'disabled' : ''}>위</button>
-                    <button class="up-order-btn" onclick="moveUpEvent('${esc(String(e.id))}', 1)" ${index === upEvents.length - 1 ? 'disabled' : ''}>아래</button>
+                    <button class="up-order-btn" onclick="moveUpEvent(${jsArg(e.id)}, -1)" ${index === 0 ? 'disabled' : ''}>위</button>
+                    <button class="up-order-btn" onclick="moveUpEvent(${jsArg(e.id)}, 1)" ${index === upEvents.length - 1 ? 'disabled' : ''}>아래</button>
                 </div>
                 <label class="up-startup-toggle">
                     <input type="checkbox" ${isUpStartupEvent(e) ? 'checked' : ''} onchange="toggleUpStartup('${esc(String(e.id))}', this.checked)">
                     <span>먼저 띄우기</span>
                 </label>
-                <button class="editor-remove-btn" onclick="removeUpEvent('${esc(String(e.id))}')">삭제</button>
+                <button class="editor-remove-btn" onclick="removeUpEvent(${jsArg(e.id)})">삭제</button>
             </div>
         </div>
     `).join('');
