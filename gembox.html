@@ -119,25 +119,6 @@
             font-size: 13px;
             font-weight: 900;
         }
-        .dday-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            min-height: 34px;
-            padding: 0 13px;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.86);
-            color: rgba(20,24,18,0.96);
-            border: 1px solid rgba(127,184,63,0.24);
-            font-size: 14px;
-            font-weight: 900;
-            text-decoration: none;
-            box-shadow: 0 8px 18px rgba(34,39,32,0.08);
-        }
-        .dday-chip strong {
-            color: var(--accent-dark);
-            font-size: 18px;
-        }
         .hero-side {
             display: grid;
             grid-template-columns: repeat(2, 132px);
@@ -293,6 +274,74 @@
             font-size: 54px;
             font-weight: 900;
         }
+        .duet-cover {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 22px 18px;
+            background: linear-gradient(135deg, #eef7e4 0%, #fff8e6 52%, #f6e8e1 100%);
+        }
+        .duet-cover-inner {
+            width: min(100%, 300px);
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            align-items: start;
+            gap: 12px;
+            text-align: center;
+        }
+        .duet-cover-inner strong {
+            grid-column: 1 / -1;
+            margin-top: 2px;
+            color: rgba(79,127,37,0.42);
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 0;
+        }
+        .duet-cover-profile {
+            display: grid;
+            justify-items: center;
+            gap: 8px;
+            min-width: 0;
+            color: rgba(20,24,18,0.9);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 900;
+        }
+        .duet-cover-profile:hover,
+        .duet-cover-profile:focus-visible {
+            color: var(--accent-dark);
+        }
+        .duet-cover-profile:focus-visible {
+            outline: 3px solid rgba(127,184,63,0.38);
+            outline-offset: 4px;
+            border-radius: 8px;
+        }
+        .duet-cover-avatar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(255,255,255,0.9);
+            background: var(--accent-light);
+            box-shadow: 0 8px 18px rgba(34,39,32,0.12);
+        }
+        .duet-cover-avatar img,
+        .duet-cover-fallback {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .duet-cover-fallback {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-dark);
+            font-size: 24px;
+            font-weight: 900;
+        }
         .season-badge {
             position: absolute;
             left: 10px;
@@ -324,6 +373,52 @@
             align-items: center;
             gap: 9px;
             min-width: 0;
+        }
+        a.cast-profile {
+            color: inherit;
+            text-decoration: none;
+            border-radius: 999px;
+        }
+        a.cast-profile:hover .cast-name,
+        a.cast-profile:focus-visible .cast-name {
+            color: var(--accent-dark);
+        }
+        a.cast-profile:focus-visible {
+            outline: 3px solid rgba(127,184,63,0.38);
+            outline-offset: 4px;
+        }
+        .duet-profiles {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            min-width: 0;
+        }
+        .duet-profile-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-width: 0;
+            padding: 2px 8px 2px 2px;
+            border-radius: 999px;
+            background: rgba(127,184,63,0.08);
+            color: inherit;
+            text-decoration: none;
+        }
+        .duet-profile-link:hover .duet-member-name,
+        .duet-profile-link:focus-visible .duet-member-name {
+            color: var(--accent-dark);
+        }
+        .duet-profile-link:focus-visible {
+            outline: 3px solid rgba(127,184,63,0.38);
+            outline-offset: 3px;
+        }
+        .duet-member-name {
+            min-width: 0;
+            color: var(--text);
+            font-size: 15px;
+            font-weight: 900;
+            white-space: nowrap;
         }
         .profile-img {
             width: 40px;
@@ -525,8 +620,7 @@
             h1 { font-size: 34px; }
             .hero-copy { font-size: 13px; max-width: 94%; line-height: 1.38; }
             .hero-actions { gap: 7px; margin-top: 8px; }
-            .hero-button, .dday-chip { min-height: 34px; padding: 0 12px; font-size: 12px; }
-            .dday-chip strong { font-size: 16px; }
+            .hero-button { min-height: 34px; padding: 0 12px; font-size: 12px; }
             .hero-side { grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
             .season-card strong { font-size: 22px; }
             .controls { align-items: stretch; }
@@ -549,9 +643,9 @@
                     </p>
                     <div class="hero-actions">
                         <a class="hero-button secondary" href="https://vod.sooplive.com/player/132894553" target="_blank" rel="noopener noreferrer">시즌1 다시보기</a>
+                        <a class="hero-button secondary" href="https://vod.sooplive.com/player/200047887" target="_blank" rel="noopener noreferrer">시즌2 다시보기</a>
                         <a class="hero-button secondary" href="https://ch.sooplive.co.kr/beadyo97" target="_blank" rel="noopener noreferrer">SOOP 방송국</a>
-                        <a class="dday-chip" id="season2Dday" href="https://www.sooplive.com/station/beadyo97/post/199734125" target="_blank" rel="noopener noreferrer">Season 2 <strong>D-</strong></a>
-                        <span class="hero-meta">2026.06.29 오후 7시</span>
+                        <span class="hero-meta">Season 2 Archive</span>
                     </div>
                 </div>
                 <div class="hero-side">
@@ -687,10 +781,42 @@
                 tone: 'Season 2',
                 stationId: 'jeongwazzang',
                 stationUrl: 'https://www.sooplive.com/station/jeongwazzang'
+            },
+            {
+                season: 2,
+                name: '모요 & 유나기',
+                tone: 'Season 2 Duet',
+                duet: true,
+                duetOrder: 1,
+                members: [
+                    { name: '모요', stationId: 'duvl123', stationUrl: 'https://www.sooplive.com/station/duvl123' },
+                    { name: '유나기', stationId: 'nagi0413', stationUrl: 'https://www.sooplive.com/station/nagi0413' }
+                ]
+            },
+            {
+                season: 2,
+                name: '송현 & 리리스',
+                tone: 'Season 2 Duet',
+                duet: true,
+                duetOrder: 2,
+                members: [
+                    { name: '송현', stationId: 'songhy', stationUrl: 'https://www.sooplive.com/station/songhy' },
+                    { name: '리리스', stationId: 'lilith1211', stationUrl: 'https://www.sooplive.com/station/lilith1211' }
+                ]
+            },
+            {
+                season: 2,
+                name: '구슬요 & 정와',
+                tone: 'Season 2 Duet',
+                duet: true,
+                duetOrder: 3,
+                members: [
+                    { name: '구슬요', stationId: 'beadyo97', stationUrl: 'https://www.sooplive.com/station/beadyo97' },
+                    { name: '정와', stationId: 'jeongwazzang', stationUrl: 'https://www.sooplive.com/station/jeongwazzang' }
+                ]
             }
         ];
 
-        const SEASON2_AT = new Date('2026-06-29T19:00:00+09:00');
         const state = { season: 2 };
         const seasons = [2, 1];
 
@@ -742,6 +868,10 @@
             return `https://stimg.sooplive.co.kr/LOGO/${id.slice(0, 2)}/${id}/${id}.jpg`;
         }
 
+        function memberProfileImage(member) {
+            return safeUrl(member?.profileImage) || soopProfileImage(member?.stationId);
+        }
+
         function renderSeasonTabs() {
             const labels = { 1: 'Season 1', 2: 'Season 2' };
             document.getElementById('seasonTabs').innerHTML = seasons.map(season => `
@@ -765,7 +895,12 @@
         function renderCast() {
             const grid = document.getElementById('castGrid');
             const items = CAST.filter(matchesCast)
-                .sort((a, b) => Number(b.season || 0) - Number(a.season || 0) || String(a.name || '').localeCompare(String(b.name || ''), 'ko-KR'));
+                .sort((a, b) =>
+                    Number(b.season || 0) - Number(a.season || 0)
+                    || Number(Boolean(a.duet)) - Number(Boolean(b.duet))
+                    || Number(a.duetOrder ?? 999) - Number(b.duetOrder ?? 999)
+                    || String(a.name || '').localeCompare(String(b.name || ''), 'ko-KR')
+                );
 
             if (!items.length) {
                 grid.innerHTML = `<div class="empty">
@@ -777,12 +912,37 @@
 
             grid.innerHTML = items.map(cast => {
                 const stationUrl = safeUrl(cast.stationUrl);
+                const members = Array.isArray(cast.members)
+                    ? cast.members.map(member => {
+                        const name = String(member?.name || '').trim() || '출연진';
+                        return {
+                            name,
+                            stationUrl: safeUrl(member?.stationUrl),
+                            profileUrl: memberProfileImage(member),
+                            initial: esc(name.slice(0, 1) || '?')
+                        };
+                    })
+                    : [];
+                const isDuet = members.length > 1;
                 const songs = Array.isArray(cast.songs) ? cast.songs : [];
                 const primarySong = songs[0] || null;
                 const videoUrl = youtubeEmbedUrl(primarySong?.url || '');
                 const profileUrl = safeUrl(cast.profileImage) || soopProfileImage(cast.stationId);
                 const imageUrl = safeUrl(cast.image) || youtubeThumb(primarySong?.url || '') || profileUrl;
                 const initial = esc(String(cast.name || '?').trim().slice(0, 1) || '?');
+                const duetCoverHtml = isDuet ? `<div class="duet-cover-inner">
+                    ${members.map(member => {
+                        const avatar = `<span class="duet-cover-avatar">${member.profileUrl ? `<img src="${esc(member.profileUrl)}" alt="" loading="lazy" decoding="async">` : `<span class="duet-cover-fallback">${member.initial}</span>`}</span>
+                            <span>${esc(member.name)}</span>`;
+                        return member.stationUrl
+                            ? `<a class="duet-cover-profile" href="${esc(member.stationUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(member.name)} 방송국으로 이동">${avatar}</a>`
+                            : `<div class="duet-cover-profile">${avatar}</div>`;
+                    }).join('')}
+                    <strong>DUET</strong>
+                </div>` : '';
+                const coverHtml = imageUrl
+                    ? `<img src="${esc(imageUrl)}" alt="${esc(cast.name || '')}" loading="lazy" decoding="async">`
+                    : (isDuet ? duetCoverHtml : `<div class="cast-fallback">${initial}</div>`);
                 const songHtml = songs.length
                     ? songs.map(song => {
                         const href = safeUrl(song.url);
@@ -791,23 +951,37 @@
                             <span>${esc(song.title || '개인곡')}</span>
                         </a>`;
                     }).join('')
-                    : `<div class="song-link" aria-disabled="true"><span>개인곡 준비 중</span><small>soon</small></div>`;
+                    : `<div class="song-link" aria-disabled="true"><span>${isDuet ? '듀엣곡 준비 중' : '개인곡 준비 중'}</span><small>soon</small></div>`;
+                const profileHtml = `${profileUrl ? `<img class="profile-img" src="${esc(profileUrl)}" alt="" loading="lazy" decoding="async">` : `<span class="profile-fallback">${initial}</span>`}
+                                <div class="cast-name">${esc(cast.name || '출연진')}</div>`;
+                const duetProfileHtml = isDuet ? `<div class="duet-profiles">
+                    ${members.map(member => {
+                        const avatar = member.profileUrl ? `<img class="profile-img" src="${esc(member.profileUrl)}" alt="" loading="lazy" decoding="async">` : `<span class="profile-fallback">${member.initial}</span>`;
+                        const content = `${avatar}<span class="duet-member-name">${esc(member.name)}</span>`;
+                        return member.stationUrl
+                            ? `<a class="duet-profile-link" href="${esc(member.stationUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(member.name)} 방송국으로 이동">${content}</a>`
+                            : `<span class="duet-profile-link">${content}</span>`;
+                    }).join('')}
+                </div>` : '';
+                const memberActionHtml = isDuet ? members.map(member =>
+                    member.stationUrl ? `<a class="action-link secondary" href="${esc(member.stationUrl)}" target="_blank" rel="noopener noreferrer">${esc(member.name)} 방송국</a>` : ''
+                ).join('') : '';
                 return `<article class="cast-card">
-                    ${videoUrl ? `<button class="cast-cover video-cover" type="button" onclick="openVideoModal('${esc(videoUrl)}', '${esc(primarySong?.title || cast.name || '영상')}')" aria-label="${esc(cast.name || '출연진')} 영상 재생">` : `<div class="cast-cover">`}
-                        ${imageUrl ? `<img src="${esc(imageUrl)}" alt="${esc(cast.name || '')}" loading="lazy" decoding="async">` : `<div class="cast-fallback">${initial}</div>`}
-                        <div class="season-badge">Season ${esc(cast.season || '')}</div>
+                    ${videoUrl ? `<button class="cast-cover video-cover" type="button" onclick="openVideoModal('${esc(videoUrl)}', '${esc(primarySong?.title || cast.name || '영상')}')" aria-label="${esc(cast.name || '출연진')} 영상 재생">` : `<div class="cast-cover ${isDuet && !imageUrl ? 'duet-cover' : ''}">`}
+                        ${coverHtml}
+                        <div class="season-badge">Season ${esc(cast.season || '')}${isDuet ? ' Duet' : ''}</div>
                     ${videoUrl ? `</button>` : `</div>`}
                     <div class="cast-body">
                         <div class="cast-head">
-                            <div class="cast-profile">
-                                ${profileUrl ? `<img class="profile-img" src="${esc(profileUrl)}" alt="" loading="lazy" decoding="async">` : `<span class="profile-fallback">${initial}</span>`}
-                                <div class="cast-name">${esc(cast.name || '출연진')}</div>
-                            </div>
+                            ${isDuet ? duetProfileHtml : (stationUrl
+                                ? `<a class="cast-profile" href="${esc(stationUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(cast.name || '출연진')} 방송국으로 이동">${profileHtml}</a>`
+                                : `<div class="cast-profile">${profileHtml}</div>`)}
                         </div>
                         ${cast.note ? `<p class="cast-note">${esc(cast.note)}</p>` : ''}
                         <div class="song-list">${songHtml}</div>
                         <div class="cast-actions">
                             ${stationUrl ? `<a class="action-link" href="${esc(stationUrl)}" target="_blank" rel="noopener noreferrer">방송국</a>` : ''}
+                            ${memberActionHtml}
                             ${(cast.links || []).map(link => {
                                 const href = safeUrl(link.url);
                                 return href ? `<a class="action-link secondary" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(link.label || '링크')}</a>` : '';
@@ -816,20 +990,6 @@
                     </div>
                 </article>`;
             }).join('');
-        }
-
-        function renderDday() {
-            const el = document.getElementById('season2Dday');
-            if (!el) return;
-            const now = new Date();
-            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            const eventDay = new Date(SEASON2_AT.getFullYear(), SEASON2_AT.getMonth(), SEASON2_AT.getDate());
-            const dayDiff = Math.round((eventDay.getTime() - today.getTime()) / 86400000);
-            let label;
-            if (dayDiff > 0) label = `D-${dayDiff}`;
-            else if (dayDiff === 0) label = 'D-Day';
-            else label = `D+${Math.abs(dayDiff)}`;
-            el.innerHTML = `Season 2 <strong>${label}</strong>`;
         }
 
         function openVideoModal(src, title) {
@@ -863,7 +1023,6 @@
             if (event.key === 'Escape') closeVideoModal();
         });
 
-        renderDday();
         renderSeasonTabs();
         renderCast();
     </script>
