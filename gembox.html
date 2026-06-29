@@ -6,8 +6,14 @@
     <title>구슬요의 보석함</title>
     <link rel="icon" href="logo-icon.webp">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@800;900&display=swap" rel="stylesheet">
+    </noscript>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -70,11 +76,18 @@
             max-width: 720px;
         }
         h1 {
-            font-size: clamp(34px, 4vw, 50px);
-            line-height: 1.05;
+            font-family: 'AppleMyungjo', 'Hahmlet', 'Noto Serif KR', 'Nanum Myeongjo', 'Batang', serif;
+            font-size: 58px;
+            line-height: 0.98;
             letter-spacing: 0;
-            color: rgba(20,24,18,0.96);
-            text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+            color: #2d5f70;
+            font-weight: 900;
+            word-break: keep-all;
+            -webkit-text-stroke: 0.35px rgba(255,255,255,0.78);
+            text-shadow:
+                0 2px 0 rgba(255,255,255,0.92),
+                0 5px 12px rgba(47,95,111,0.16),
+                0 0 18px rgba(127,184,63,0.18);
         }
         .hero-copy {
             max-width: 680px;
@@ -617,7 +630,7 @@
                 min-height: 266px;
                 padding: 10px 12px 16px;
             }
-            h1 { font-size: 34px; }
+            h1 { font-size: 40px; line-height: 1; }
             .hero-copy { font-size: 13px; max-width: 94%; line-height: 1.38; }
             .hero-actions { gap: 7px; margin-top: 8px; }
             .hero-button { min-height: 34px; padding: 0 12px; font-size: 12px; }
@@ -752,35 +765,50 @@
                 name: '모요',
                 tone: 'Season 2',
                 stationId: 'duvl123',
-                stationUrl: 'https://www.sooplive.com/station/duvl123'
+                stationUrl: 'https://www.sooplive.com/station/duvl123',
+                songs: [
+                    { title: '신지훈 - 추억은 한 편의 산문집 되어 | 모요 Cover. 구슬요의 보석함 시즌 2', url: 'https://youtu.be/FWQcRu4xivI', label: 'YouTube' }
+                ]
             },
             {
                 season: 2,
                 name: '송현',
                 tone: 'Season 2',
                 stationId: 'songhy',
-                stationUrl: 'https://www.sooplive.com/station/songhy'
+                stationUrl: 'https://www.sooplive.com/station/songhy',
+                songs: [
+                    { title: '아도 (Ado) - ROCKSTAR (ロックスター) | 송현 Cover. 구슬요의 보석함 시즌 2', url: 'https://youtu.be/-bS8G6YdOeg', label: 'YouTube' }
+                ]
             },
             {
                 season: 2,
                 name: '리리스',
                 tone: 'Season 2',
                 stationId: 'lilith1211',
-                stationUrl: 'https://www.sooplive.com/station/lilith1211'
+                stationUrl: 'https://www.sooplive.com/station/lilith1211',
+                songs: [
+                    { title: '김나영 - 어쩔 수가 없나 봐 | 리리스 Cover. 구슬요의 보석함 시즌2', url: 'https://youtu.be/K-3J-WjjfVQ', label: 'YouTube' }
+                ]
             },
             {
                 season: 2,
                 name: '유나기',
                 tone: 'Season 2',
                 stationId: 'nagi0413',
-                stationUrl: 'https://www.sooplive.com/station/nagi0413'
+                stationUrl: 'https://www.sooplive.com/station/nagi0413',
+                songs: [
+                    { title: '윈터 - 헌정연서 | 유나기 Cover. 구슬요의 보석함 시즌 2', url: 'https://youtu.be/CDC1Iz1gH60', label: 'YouTube' }
+                ]
             },
             {
                 season: 2,
                 name: '정와',
                 tone: 'Season 2',
                 stationId: 'jeongwazzang',
-                stationUrl: 'https://www.sooplive.com/station/jeongwazzang'
+                stationUrl: 'https://www.sooplive.com/station/jeongwazzang',
+                songs: [
+                    { title: '윤하 - 먹구름 | 정와 Cover. 구슬요의 보석함 시즌2', url: 'https://youtu.be/ehh9iYE9ubg', label: 'YouTube' }
+                ]
             },
             {
                 season: 2,
@@ -791,6 +819,9 @@
                 members: [
                     { name: '모요', stationId: 'duvl123', stationUrl: 'https://www.sooplive.com/station/duvl123' },
                     { name: '유나기', stationId: 'nagi0413', stationUrl: 'https://www.sooplive.com/station/nagi0413' }
+                ],
+                songs: [
+                    { title: 'DAOKO & 요네즈켄시 - 타상연화 | 모요&유나기 Cover. 구슬요의 보석함 시즌2', url: 'https://youtu.be/_f9RFMBlrN4', label: 'YouTube' }
                 ]
             },
             {
@@ -802,6 +833,9 @@
                 members: [
                     { name: '송현', stationId: 'songhy', stationUrl: 'https://www.sooplive.com/station/songhy' },
                     { name: '리리스', stationId: 'lilith1211', stationUrl: 'https://www.sooplive.com/station/lilith1211' }
+                ],
+                songs: [
+                    { title: 'Tori Kelly & JoJo - A Natural Woman | 송현&리리스 Cover. 구슬요의 보석함 시즌2', url: 'https://youtu.be/GjCu2f4Sbts', label: 'YouTube' }
                 ]
             },
             {
@@ -813,6 +847,9 @@
                 members: [
                     { name: '구슬요', stationId: 'beadyo97', stationUrl: 'https://www.sooplive.com/station/beadyo97' },
                     { name: '정와', stationId: 'jeongwazzang', stationUrl: 'https://www.sooplive.com/station/jeongwazzang' }
+                ],
+                songs: [
+                    { title: '순순희 - 눈을 감아도 | 구슬요&정와 Cover. 구슬요의 보석함 시즌 2', url: 'https://youtu.be/x5KfUyyKyA4', label: 'YouTube' }
                 ]
             }
         ];
