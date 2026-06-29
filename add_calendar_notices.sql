@@ -77,7 +77,7 @@ insert into calendar_notices (
 ) values (
   'bosikham-season2-20260627',
   '공지사항',
-  'notice-bosikham-season2-20260627.png',
+  'notice-bosikham-season2-20260627.jpg',
   'https://www.sooplive.com/station/beadyo97/post/199734125',
   '공지 보러가기',
   '#d9a53a',

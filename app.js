@@ -155,7 +155,7 @@ const state = {
 const DEFAULT_CALENDAR_NOTICE = {
     id: 'bosikham-season2-20260627',
     title: '공지사항',
-    image_url: 'notice-bosikham-season2-20260627.png',
+    image_url: 'notice-bosikham-season2-20260627.jpg',
     link_url: 'https://www.sooplive.com/station/beadyo97/post/199734125',
     link_label: '공지 보러가기',
     button_bg_color: '#d9a53a',
@@ -164,6 +164,10 @@ const DEFAULT_CALENDAR_NOTICE = {
     header_text_color: '#fff3cf',
     is_active: true,
     sort_order: 0,
+};
+
+const OPTIMIZED_NOTICE_IMAGES = {
+    'notice-bosikham-season2-20260627.png': 'notice-bosikham-season2-20260627.jpg',
 };
 
 let db = null;
@@ -2689,7 +2693,8 @@ function normalizeNoticeImageInput(value) {
 }
 
 function noticeImageSrc(value) {
-    return normalizeNoticeImageInput(value) || DEFAULT_CALENDAR_NOTICE.image_url;
+    const src = normalizeNoticeImageInput(value) || DEFAULT_CALENDAR_NOTICE.image_url;
+    return OPTIMIZED_NOTICE_IMAGES[src] || src;
 }
 
 function normalizeNoticeColor(value, fallback) {
@@ -2793,7 +2798,9 @@ function renderNoticePopup(notice) {
         head.style.setProperty('--notice-head-text', notice.header_text_color);
     }
     if (img) {
-        img.src = noticeImageSrc(notice.image_url);
+        const src = noticeImageSrc(notice.image_url);
+        if (img.getAttribute('src') !== src) img.src = src;
+        img.dataset.src = src;
         img.alt = `${notice.title || '공지'} 이미지`;
     }
     if (link) {

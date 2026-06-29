@@ -35,7 +35,7 @@
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background:
                 linear-gradient(180deg, rgba(255,255,255,.72) 0 0),
-                url("banner.png") top center / 1600px auto no-repeat,
+                url("banner.jpg") top center / 1600px auto no-repeat,
                 var(--bg);
         }
 
@@ -942,7 +942,7 @@
         const DATA_VERSION = 'status-20260628';
         const LAST_IMPORT_KEY = 'beadyoDanceLastImportAt';
         const BACKUP_KEY = 'beadyoDanceVideoBackups';
-        const PLACEHOLDER_THUMBNAILS = new Set(['', 'banner.png', 'loading-img.png', 'songbook-char.png']);
+        const PLACEHOLDER_THUMBNAILS = new Set(['', 'banner.png', 'banner.jpg', 'loading-img.png', 'songbook-char.png']);
         let videos = loadVideos();
 
         let activeSource = 'all';
@@ -985,7 +985,7 @@
             const youtubeId = getYouTubeId(video.url);
             if (youtubeId) return `https://img.youtube.com/vi/${encodeURIComponent(youtubeId)}/hqdefault.jpg`;
 
-            return current || 'banner.png';
+            return 'banner.jpg';
         }
 
         function shouldExcludeVideo(video) {
@@ -996,7 +996,7 @@
             const normalized = {
                 status: 'review',
                 tags: [],
-                thumbnail: 'banner.png',
+                thumbnail: 'banner.jpg',
                 ...video,
             };
             normalized.thumbnail = resolveThumbnail(normalized);
@@ -1137,7 +1137,7 @@
             grid.innerHTML = items.map(video => `
                 <article class="video-card${video.id === selectedId ? ' active' : ''}${selectedIds.has(video.id) ? ' selected' : ''}" data-id="${esc(video.id)}">
                     <div class="thumb">
-                        <img src="${esc(video.thumbnail)}" alt="" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='banner.png';">
+                        <img src="${esc(video.thumbnail)}" alt="" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='banner.jpg';">
                         <span class="source-badge" style="color:${sourceColors[video.source]}">${esc(sourceLabels[video.source])}</span>
                         <span class="status-badge">${esc(statusLabels[video.status])}</span>
                         <label class="select-video">
