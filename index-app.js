@@ -37,6 +37,7 @@ const MUSIC_PAGES = {
     songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'gembox-subnav-20260628' },
     dance: { src: 'dance.html', directUrl: 'dance.html', assetVersion: 'dance-nav-20260628' },
     gembox: { src: 'gembox.html', directUrl: 'gembox.html', assetVersion: 'gembox-subnav-20260628' },
+    tractor: { src: 'tractor-service.html', directUrl: 'tractor-service.html', assetVersion: 'tractor-service-20260630h' },
 };
 let currentMusicPage = 'songs';
 
@@ -46,6 +47,7 @@ function routeToMusicPage() {
     const hash = window.location.hash.replace(/^#/, '').toLowerCase();
     const route = queryTab || hash;
     if (route === 'gembox' || route === 'jewelbox') return 'gembox';
+    if (route === 'tractor' || route === 'tractor-service' || route === 'tractorservice') return 'tractor';
     if (route === 'dance' || route === 'dance-video' || route === 'dance-videos') return 'dance';
     if (route === 'music' || route === 'songs') return 'songs';
     return null;
@@ -55,13 +57,13 @@ function routeToTabIndex() {
     const params = new URLSearchParams(window.location.search);
     const queryTab = (params.get('tab') || '').toLowerCase();
     if (queryTab === 'game') return GAME_TAB_INDEX;
-    if (queryTab === 'songs' || queryTab === 'music' || queryTab === 'gembox' || queryTab === 'jewelbox' || queryTab === 'dance' || queryTab === 'dance-video' || queryTab === 'dance-videos') return MUSIC_TAB_INDEX;
+    if (queryTab === 'songs' || queryTab === 'music' || queryTab === 'gembox' || queryTab === 'jewelbox' || queryTab === 'tractor' || queryTab === 'tractor-service' || queryTab === 'tractorservice' || queryTab === 'dance' || queryTab === 'dance-video' || queryTab === 'dance-videos') return MUSIC_TAB_INDEX;
     const queryIndex = TAB_ROUTES.indexOf(queryTab);
     if (queryIndex >= 0) return queryIndex;
 
     const hash = window.location.hash.replace(/^#/, '').toLowerCase();
     if (hash === 'game-preview') return GAME_TAB_INDEX;
-    if (hash === 'songs' || hash === 'music' || hash === 'gembox' || hash === 'jewelbox' || hash === 'dance' || hash === 'dance-video' || hash === 'dance-videos') return MUSIC_TAB_INDEX;
+    if (hash === 'songs' || hash === 'music' || hash === 'gembox' || hash === 'jewelbox' || hash === 'tractor' || hash === 'tractor-service' || hash === 'tractorservice' || hash === 'dance' || hash === 'dance-video' || hash === 'dance-videos') return MUSIC_TAB_INDEX;
     const hashIndex = TAB_ROUTES.indexOf(hash);
     if (hashIndex >= 0) return hashIndex;
 

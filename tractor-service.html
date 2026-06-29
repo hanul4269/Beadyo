@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>트랙터서비스</title>
+    <link rel="icon" href="logo-icon.webp">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://www.youtube.com">
+    <link rel="preconnect" href="https://i.ytimg.com">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --field: #f7f0e9;
+            --soil: #3b2d29;
+            --ink: #201918;
+            --muted: #806f68;
+            --cream: #fffaf2;
+            --line: rgba(59,45,41,0.12);
+            --coral: #e87364;
+            --mint: #5ac6bd;
+            --leaf: #5c8f3f;
+            --gold: #d99b3d;
+        }
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 16% 6%, rgba(232,115,100,0.24), transparent 30%),
+                radial-gradient(circle at 82% 8%, rgba(90,198,189,0.22), transparent 30%),
+                linear-gradient(180deg, #fff8ef 0%, var(--field) 52%, #efe4d8 100%);
+            color: var(--ink);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .page {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 24px 18px 48px;
+        }
+        .hero {
+            margin-bottom: 18px;
+        }
+        .hero-copy {
+            min-height: 155px;
+            padding: 18px 30px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background:
+                linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,250,242,0.72)),
+                linear-gradient(90deg, rgba(232,115,100,0.13), rgba(90,198,189,0.1));
+            box-shadow: 0 18px 44px rgba(59,45,41,0.09);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .hero-copy::after {
+            content: "";
+            position: absolute;
+            right: -54px;
+            bottom: -64px;
+            width: 220px;
+            height: 220px;
+            border: 28px solid rgba(92,143,63,0.1);
+            border-radius: 50%;
+        }
+        .eyebrow {
+            color: var(--leaf);
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+        }
+        h1 {
+            position: relative;
+            z-index: 1;
+            margin-top: 4px;
+            color: #fff;
+            font-family: "Brush Script MT", "Segoe Script", "Snell Roundhand", cursive;
+            font-size: clamp(52px, 8vw, 92px);
+            font-weight: 400;
+            line-height: 0.86;
+            letter-spacing: 0;
+            text-shadow: 0 2px 0 rgba(126,50,45,0.32), 0 10px 24px rgba(232,115,100,0.22);
+        }
+        .hero-title-sub {
+            position: relative;
+            z-index: 1;
+            width: fit-content;
+            margin-top: 6px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.72);
+            color: var(--soil);
+            font-size: 13px;
+            font-weight: 900;
+        }
+        .hero-actions {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 0 15px;
+            border-radius: 8px;
+            background: var(--soil);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 900;
+            text-decoration: none;
+            box-shadow: 0 10px 24px rgba(59,45,41,0.17);
+        }
+        .button.secondary {
+            background: rgba(255,255,255,0.82);
+            color: var(--soil);
+            border: 1px solid var(--line);
+            box-shadow: none;
+        }
+        .episode-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+        .episode {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255,250,242,0.92);
+            overflow: hidden;
+            box-shadow: 0 10px 28px rgba(59,45,41,0.08);
+        }
+        .episode-media {
+            display: grid;
+            grid-template-columns: 42% 58%;
+            min-height: 330px;
+            background: #211818;
+        }
+        .poster {
+            position: relative;
+            overflow: hidden;
+            background: #e6d4c7;
+        }
+        .poster img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+        .video-button {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 330px;
+            border: 0;
+            display: block;
+            background: #111;
+            cursor: pointer;
+            overflow: hidden;
+            font: inherit;
+            color: #fff;
+        }
+        .video-button img {
+            width: 100%;
+            height: 100%;
+            min-height: 330px;
+            display: block;
+            object-fit: cover;
+            opacity: 0.82;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        .video-button:hover img {
+            transform: scale(1.03);
+            opacity: 0.92;
+        }
+        .play-mark {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 66px;
+            height: 46px;
+            transform: translate(-50%, -50%);
+            border-radius: 12px;
+            background: rgba(232,64,44,0.96);
+            box-shadow: 0 10px 26px rgba(0,0,0,0.28);
+        }
+        .play-mark::after {
+            content: "";
+            position: absolute;
+            left: 26px;
+            top: 12px;
+            border-left: 18px solid #fff;
+            border-top: 11px solid transparent;
+            border-bottom: 11px solid transparent;
+        }
+        .episode-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 12px 0 10px;
+        }
+        .profile-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: inherit;
+            text-decoration: none;
+            min-width: 0;
+        }
+        .profile-img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.9);
+            background: #ead9cf;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(59,45,41,0.13);
+            flex: 0 0 auto;
+        }
+        .profile-name {
+            font-size: 18px;
+            font-weight: 950;
+            line-height: 1.1;
+        }
+        .profile-sub {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 850;
+        }
+        .episode-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 13px;
+        }
+        .episode-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 32px;
+            padding: 0 11px;
+            border-radius: 8px;
+            border: 1px solid rgba(59,45,41,0.12);
+            background: rgba(255,255,255,0.72);
+            color: var(--soil);
+            font-size: 12px;
+            font-weight: 900;
+            text-decoration: none;
+        }
+        .episode-link.primary {
+            background: var(--soil);
+            color: #fff;
+        }
+        .episode-body {
+            padding: 16px;
+        }
+        .episode-kicker {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 9px;
+            color: var(--leaf);
+            font-size: 12px;
+            font-weight: 950;
+        }
+        .episode-date {
+            color: var(--muted);
+            font-weight: 900;
+        }
+        .episode h3 {
+            font-size: 24px;
+            line-height: 1.1;
+            letter-spacing: 0;
+        }
+        .episode p {
+            margin-top: 10px;
+            color: #5a4842;
+            font-size: 14px;
+            font-weight: 760;
+            line-height: 1.55;
+            word-break: keep-all;
+        }
+        .episode-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 13px;
+        }
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 10px;
+            border-radius: 999px;
+            background: rgba(90,198,189,0.14);
+            color: #26746e;
+            font-size: 12px;
+            font-weight: 900;
+            text-decoration: none;
+        }
+        .tag.coral {
+            background: rgba(232,115,100,0.14);
+            color: #a33e34;
+        }
+        .episode.soon {
+            min-height: 100%;
+        }
+        .soon-panel {
+            min-height: 330px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 28px;
+            background:
+                linear-gradient(135deg, rgba(232,115,100,0.18), rgba(90,198,189,0.16)),
+                rgba(255,250,242,0.9);
+        }
+        .soon-label {
+            color: var(--leaf);
+            font-size: 13px;
+            font-weight: 950;
+            letter-spacing: 0.06em;
+        }
+        .soon-panel h3 {
+            margin-top: 8px;
+            font-size: 30px;
+            line-height: 1.1;
+            letter-spacing: 0;
+        }
+        .soon-panel p {
+            margin-top: 10px;
+            color: #5a4842;
+            font-size: 14px;
+            font-weight: 780;
+            line-height: 1.6;
+            word-break: keep-all;
+        }
+        .video-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 22px;
+            background: rgba(20,15,14,0.72);
+        }
+        .video-modal.open {
+            display: flex;
+        }
+        .video-dialog {
+            width: min(1100px, 100%);
+            border-radius: 8px;
+            overflow: hidden;
+            background: #120f0e;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+        }
+        .video-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            min-height: 50px;
+            padding: 0 10px 0 16px;
+            background: #fffaf2;
+            border-bottom: 1px solid rgba(59,45,41,0.12);
+        }
+        .video-title {
+            color: var(--soil);
+            font-size: 14px;
+            font-weight: 950;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .video-close {
+            width: 38px;
+            height: 38px;
+            border: 0;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--soil);
+            font-size: 26px;
+            line-height: 1;
+            cursor: pointer;
+        }
+        .video-frame-wrap {
+            aspect-ratio: 16 / 9;
+            background: #000;
+        }
+        .video-frame-wrap iframe {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border: 0;
+        }
+        @media (max-width: 960px) {
+            .episode-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 700px) {
+            .page { padding: 14px 12px 34px; }
+            .hero-copy { min-height: 150px; padding: 18px; }
+            .episode-media { grid-template-columns: 1fr; min-height: 0; }
+            .poster { max-height: 430px; }
+            .video-button, .video-button img { min-height: 220px; aspect-ratio: 16 / 9; }
+            .episode h3 { font-size: 22px; }
+            .soon-panel { min-height: 220px; }
+            .soon-panel h3 { font-size: 26px; }
+            .video-modal { padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <section class="hero">
+            <div class="hero-copy">
+                <div class="eyebrow">MUSIC TALK SHOW</div>
+                <h1>Tractor Service</h1>
+                <div class="hero-title-sub">트랙터서비스</div>
+                <div class="hero-actions">
+                    <a class="button" href="https://youtu.be/4Y-HUHv40Tg?si=K75M_jTtda3N4dZU" target="_blank" rel="noopener noreferrer">EP1 보기</a>
+                    <a class="button secondary" href="https://youtu.be/ErHZCyIkYA0?si=k00HwdL5FHYzkfWr" target="_blank" rel="noopener noreferrer">EP2 보기</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="episode-grid" aria-label="트랙터서비스 에피소드">
+            <article class="episode">
+                <div class="episode-media">
+                    <div class="poster">
+                        <img src="tractor-service-ep1-ddinggyul.png" alt="트랙터서비스 EP1 띵귤 포스터" loading="lazy" decoding="async">
+                    </div>
+                    <button class="video-button" type="button" data-video="4Y-HUHv40Tg" data-title="[트랙터서비스]EP.01 하데스 띵귤" aria-label="트랙터서비스 EP1 영상 재생">
+                        <img src="https://i.ytimg.com/vi/4Y-HUHv40Tg/hqdefault.jpg" alt="" loading="lazy" decoding="async">
+                        <span class="play-mark" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="episode-body">
+                    <div class="episode-kicker">
+                        <span>EP.01 with 띵귤</span>
+                        <span class="episode-date">2025.11.08 7PM</span>
+                    </div>
+                    <div class="episode-profile">
+                        <a class="profile-link" href="https://www.sooplive.com/station/singgyul" target="_blank" rel="noopener noreferrer">
+                            <img class="profile-img" src="https://stimg.sooplive.co.kr/LOGO/si/singgyul/singgyul.jpg" alt="" loading="lazy" decoding="async">
+                            <span>
+                                <span class="profile-name">띵귤</span>
+                                <span class="profile-sub">HADES</span>
+                            </span>
+                        </a>
+                    </div>
+                    <h3>[트랙터서비스]EP.01 하데스 띵귤</h3>
+                    <div class="episode-links">
+                        <a class="episode-link primary" href="https://www.sooplive.com/station/singgyul" target="_blank" rel="noopener noreferrer">방송국</a>
+                        <a class="episode-link" href="https://www.youtube.com/@HADES_offi/featured" target="_blank" rel="noopener noreferrer">하데스 YouTube</a>
+                    </div>
+                    <div class="episode-tags">
+                        <a class="tag coral" href="https://www.youtube.com/hashtag/%EA%B5%AC%EC%8A%AC%EC%9A%94" target="_blank" rel="noopener noreferrer">#구슬요</a>
+                        <a class="tag" href="https://www.youtube.com/hashtag/%EB%9D%B5%EA%B7%A4" target="_blank" rel="noopener noreferrer">#띵귤</a>
+                        <a class="tag coral" href="https://www.youtube.com/hashtag/%ED%95%98%EB%8D%B0%EC%8A%A4" target="_blank" rel="noopener noreferrer">#하데스</a>
+                        <a class="tag" href="https://www.youtube.com/hashtag/%EB%B2%84%ED%8A%9C%EB%B2%84" target="_blank" rel="noopener noreferrer">#버튜버</a>
+                        <a class="tag coral" href="https://www.youtube.com/hashtag/%ED%8A%B8%EB%9E%99%ED%84%B0%EC%84%9C%EB%B9%84%EC%8A%A4" target="_blank" rel="noopener noreferrer">#트랙터서비스</a>
+                        <a class="tag" href="https://www.youtube.com/hashtag/%EC%9D%8C%EC%95%85%ED%86%A0%ED%81%AC%EC%87%BC" target="_blank" rel="noopener noreferrer">#음악토크쇼</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="episode">
+                <div class="episode-media">
+                    <div class="poster">
+                        <img src="tractor-service-ep2-songhyun.png" alt="트랙터서비스 EP2 송현 포스터" loading="lazy" decoding="async">
+                    </div>
+                    <button class="video-button" type="button" data-video="ErHZCyIkYA0" data-title="[트랙터서비스]EP.02 송현" aria-label="트랙터서비스 EP2 영상 재생">
+                        <img src="https://i.ytimg.com/vi/ErHZCyIkYA0/hqdefault.jpg" alt="" loading="lazy" decoding="async">
+                        <span class="play-mark" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="episode-body">
+                    <div class="episode-kicker">
+                        <span>EP.02 with 송현</span>
+                        <span class="episode-date">2026.02.13 7PM</span>
+                    </div>
+                    <div class="episode-profile">
+                        <a class="profile-link" href="https://www.sooplive.com/station/songhy" target="_blank" rel="noopener noreferrer">
+                            <img class="profile-img" src="https://stimg.sooplive.co.kr/LOGO/so/songhy/songhy.jpg" alt="" loading="lazy" decoding="async">
+                            <span>
+                                <span class="profile-name">송현</span>
+                                <span class="profile-sub">SOOP · YouTube</span>
+                            </span>
+                        </a>
+                    </div>
+                    <h3>[트랙터서비스]EP.02 송현</h3>
+                    <div class="episode-links">
+                        <a class="episode-link primary" href="https://www.sooplive.com/station/songhy" target="_blank" rel="noopener noreferrer">방송국</a>
+                        <a class="episode-link" href="https://www.youtube.com/@songhy___" target="_blank" rel="noopener noreferrer">YouTube</a>
+                    </div>
+                    <div class="episode-tags">
+                        <a class="tag coral" href="https://www.youtube.com/hashtag/%EA%B5%AC%EC%8A%AC%EC%9A%94" target="_blank" rel="noopener noreferrer">#구슬요</a>
+                        <a class="tag" href="https://www.youtube.com/hashtag/%EC%86%A1%ED%98%84" target="_blank" rel="noopener noreferrer">#송현</a>
+                        <a class="tag coral" href="https://www.youtube.com/hashtag/%ED%8A%B8%EB%9E%99%ED%84%B0%EC%84%9C%EB%B9%84%EC%8A%A4" target="_blank" rel="noopener noreferrer">#트랙터서비스</a>
+                        <a class="tag" href="https://www.youtube.com/hashtag/%EB%B2%84%EC%B8%84%EC%96%BC" target="_blank" rel="noopener noreferrer">#버츄얼</a>
+                        <a class="tag coral" href="https://www.youtube.com/hashtag/vtuber" target="_blank" rel="noopener noreferrer">#vtuber</a>
+                    </div>
+                </div>
+            </article>
+            <article class="episode soon">
+                <div class="soon-panel">
+                    <div class="soon-label">EP.03</div>
+                    <h3>7월 Coming soon</h3>
+                    <p>다음 트랙터서비스가 준비 중입니다.</p>
+                </div>
+            </article>
+        </section>
+    </main>
+    <div class="video-modal" id="videoModal" aria-hidden="true" onclick="handleVideoBackdrop(event)">
+        <div class="video-dialog" role="dialog" aria-modal="true" aria-labelledby="videoTitle">
+            <div class="video-head">
+                <div class="video-title" id="videoTitle"></div>
+                <button class="video-close" type="button" onclick="closeVideoModal()" aria-label="영상 닫기">×</button>
+            </div>
+            <div class="video-frame-wrap" id="videoFrameWrap"></div>
+        </div>
+    </div>
+    <script>
+        function esc(value) {
+            return String(value ?? '').replace(/[&<>"']/g, ch =>
+                ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])
+            );
+        }
+
+        function openVideoModal(videoId, title) {
+            if (!/^[A-Za-z0-9_-]{11}$/.test(String(videoId || ''))) return;
+            const modal = document.getElementById('videoModal');
+            const titleEl = document.getElementById('videoTitle');
+            const frameWrap = document.getElementById('videoFrameWrap');
+            if (!modal || !frameWrap || !titleEl) return;
+            titleEl.textContent = title || '트랙터서비스';
+            frameWrap.innerHTML = `<iframe src="https://www.youtube.com/embed/${esc(videoId)}?autoplay=1&rel=0" title="${esc(title || '트랙터서비스 영상')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const frameWrap = document.getElementById('videoFrameWrap');
+            if (!modal || !frameWrap) return;
+            modal.classList.remove('open');
+            modal.setAttribute('aria-hidden', 'true');
+            frameWrap.innerHTML = '';
+            document.body.style.overflow = '';
+        }
+
+        function handleVideoBackdrop(event) {
+            if (event.target?.id === 'videoModal') closeVideoModal();
+        }
+
+        document.querySelectorAll('.video-button').forEach(button => {
+            button.addEventListener('click', () => {
+                openVideoModal(button.dataset.video, button.dataset.title);
+            });
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') closeVideoModal();
+        });
+    </script>
+</body>
+</html>
