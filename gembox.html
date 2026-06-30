@@ -762,28 +762,9 @@
             },
             {
                 season: 2,
-                name: '모요',
-                tone: 'Season 2',
-                stationId: 'duvl123',
-                stationUrl: 'https://www.sooplive.com/station/duvl123',
-                songs: [
-                    { title: '신지훈 - 추억은 한 편의 산문집 되어 | 모요 Cover. 구슬요의 보석함 시즌 2', url: 'https://youtu.be/FWQcRu4xivI', label: 'YouTube' }
-                ]
-            },
-            {
-                season: 2,
-                name: '송현',
-                tone: 'Season 2',
-                stationId: 'songhy',
-                stationUrl: 'https://www.sooplive.com/station/songhy',
-                songs: [
-                    { title: '아도 (Ado) - ROCKSTAR (ロックスター) | 송현 Cover. 구슬요의 보석함 시즌 2', url: 'https://youtu.be/-bS8G6YdOeg', label: 'YouTube' }
-                ]
-            },
-            {
-                season: 2,
                 name: '리리스',
                 tone: 'Season 2',
+                soloOrder: 1,
                 stationId: 'lilith1211',
                 stationUrl: 'https://www.sooplive.com/station/lilith1211',
                 songs: [
@@ -792,8 +773,31 @@
             },
             {
                 season: 2,
+                name: '모요',
+                tone: 'Season 2',
+                soloOrder: 2,
+                stationId: 'duvl123',
+                stationUrl: 'https://www.sooplive.com/station/duvl123',
+                songs: [
+                    { title: '신지훈 - 추억은 한 편의 산문집 되어 | 모요 Cover. 구슬요의 보석함 시즌 2', url: 'https://youtu.be/FWQcRu4xivI', label: 'YouTube' }
+                ]
+            },
+            {
+                season: 2,
+                name: '정와',
+                tone: 'Season 2',
+                soloOrder: 3,
+                stationId: 'jeongwazzang',
+                stationUrl: 'https://www.sooplive.com/station/jeongwazzang',
+                songs: [
+                    { title: '윤하 - 먹구름 | 정와 Cover. 구슬요의 보석함 시즌2', url: 'https://youtu.be/ehh9iYE9ubg', label: 'YouTube' }
+                ]
+            },
+            {
+                season: 2,
                 name: '유나기',
                 tone: 'Season 2',
+                soloOrder: 4,
                 stationId: 'nagi0413',
                 stationUrl: 'https://www.sooplive.com/station/nagi0413',
                 songs: [
@@ -802,12 +806,13 @@
             },
             {
                 season: 2,
-                name: '정와',
+                name: '송현',
                 tone: 'Season 2',
-                stationId: 'jeongwazzang',
-                stationUrl: 'https://www.sooplive.com/station/jeongwazzang',
+                soloOrder: 5,
+                stationId: 'songhy',
+                stationUrl: 'https://www.sooplive.com/station/songhy',
                 songs: [
-                    { title: '윤하 - 먹구름 | 정와 Cover. 구슬요의 보석함 시즌2', url: 'https://youtu.be/ehh9iYE9ubg', label: 'YouTube' }
+                    { title: '아도 (Ado) - ROCKSTAR (ロックスター) | 송현 Cover. 구슬요의 보석함 시즌 2', url: 'https://youtu.be/-bS8G6YdOeg', label: 'YouTube' }
                 ]
             },
             {
@@ -939,6 +944,7 @@
                 .sort((a, b) =>
                     Number(b.season || 0) - Number(a.season || 0)
                     || Number(Boolean(a.duet)) - Number(Boolean(b.duet))
+                    || Number(a.soloOrder ?? 999) - Number(b.soloOrder ?? 999)
                     || Number(a.duetOrder ?? 999) - Number(b.duetOrder ?? 999)
                     || String(a.name || '').localeCompare(String(b.name || ''), 'ko-KR')
                 );
