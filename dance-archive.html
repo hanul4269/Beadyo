@@ -1061,6 +1061,24 @@
             return items.filter(video => ['approved', 'hidden'].includes(video.status)).length;
         }
 
+        function normalizeSharedStatus(value) {
+            const validStatuses = new Set(Object.keys(statusLabels));
+            if (validStatuses.has(value)) return value;
+            if (typeof value === 'string') {
+                const trimmed = value.trim().replace(/^"|"$/g, '');
+                if (validStatuses.has(trimmed)) return trimmed;
+                try {
+                    return normalizeSharedStatus(JSON.parse(value));
+                } catch {
+                    return '';
+                }
+            }
+            if (value && typeof value === 'object') {
+                return normalizeSharedStatus(value.status || value.value);
+            }
+            return '';
+        }
+
         function pickLocalStatusSeed(canonicalVideos) {
             return readStoredStatusSnapshots()
                 .map(snapshot => {
@@ -1120,13 +1138,7 @@
                 .filter(video => !targetSet || targetSet.has(video.id))
                 .map(video => ({
                     video_id: video.id,
-                    status: video.status || 'review',
-                    title: video.title || '',
-                    source: video.source || '',
-                    song: video.song || '',
-                    url: video.url || '',
-                    thumbnail: video.thumbnail || '',
-                    updated_at: new Date().toISOString(),
+                    status: normalizeSharedStatus(video.status) || 'review',
                 }));
             if (!rows.length) return true;
             await ensureDb();
@@ -1154,13 +1166,11 @@
             try {
                 await ensureDb();
                 const { data, error } = await db.from(DANCE_STATUS_TABLE)
-                    .select('video_id,status,updated_at')
-                    .order('updated_at', { ascending: false });
+                    .select('video_id,status');
                 if (error) throw error;
-                const validStatuses = new Set(Object.keys(statusLabels));
                 const statusById = new Map((data || [])
-                    .filter(row => row?.video_id && validStatuses.has(row.status))
-                    .map(row => [row.video_id, row.status]));
+                    .map(row => [row?.video_id, normalizeSharedStatus(row?.status)])
+                    .filter(([id, status]) => id && status));
                 const canonicalVideos = mergeVideos(window.danceVideos || [], []);
                 if (!statusById.size) {
                     const localSeed = pickLocalStatusSeed(canonicalVideos);
