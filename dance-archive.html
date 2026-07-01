@@ -915,6 +915,7 @@
         </section>
     </div>
 
+    <script src="supabase.min.js?v=supabase-2-108-2"></script>
     <script src="dance-data.js?v=status-20260628"></script>
     <script src="dance-thumbnail-backfill.js?v=thumbs-20260628"></script>
     <script>
@@ -942,8 +943,14 @@
         const DATA_VERSION = 'status-20260628';
         const LAST_IMPORT_KEY = 'beadyoDanceLastImportAt';
         const BACKUP_KEY = 'beadyoDanceVideoBackups';
+        const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
+        const DANCE_STATUS_TABLE = 'dance_video_statuses';
         const PLACEHOLDER_THUMBNAILS = new Set(['', 'banner.png', 'banner.jpg', 'loading-img.png', 'songbook-char.png']);
         let videos = loadVideos();
+        let db = null;
+        let sharedStatusMode = 'loading';
+        let sharedStatusError = '';
 
         let activeSource = 'all';
         let selectedId = videos[0]?.id || null;
@@ -1025,8 +1032,97 @@
             }
         }
 
-        function saveVideos() {
+        function localStatusLabel() {
+            if (sharedStatusMode === 'shared') return '공용 상태 사용 중';
+            if (sharedStatusMode === 'loading') return '공용 상태 확인 중';
+            return '로컬 상태 사용 중';
+        }
+
+        function isMissingDanceStatusTable(error) {
+            const msg = String(error?.message || '');
+            return error?.code === '42P01'
+                || error?.code === '42703'
+                || error?.code === 'PGRST205'
+                || msg.includes(DANCE_STATUS_TABLE);
+        }
+
+        async function ensureDb() {
+            if (db) return db;
+            if (!window.supabase?.createClient) throw new Error('Supabase 클라이언트를 불러오지 못했습니다.');
+            db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                auth: { detectSessionInUrl: false },
+            });
+            return db;
+        }
+
+        function saveVideosLocal() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: DATA_VERSION, updatedAt: new Date().toISOString(), videos }));
+        }
+
+        async function persistSharedStatuses(targetIds = null) {
+            if (sharedStatusMode !== 'shared') return false;
+            const targetSet = targetIds ? new Set(targetIds) : null;
+            const rows = videos
+                .filter(video => !targetSet || targetSet.has(video.id))
+                .map(video => ({
+                    video_id: video.id,
+                    status: video.status || 'review',
+                    title: video.title || '',
+                    source: video.source || '',
+                    song: video.song || '',
+                    url: video.url || '',
+                    thumbnail: video.thumbnail || '',
+                    updated_at: new Date().toISOString(),
+                }));
+            if (!rows.length) return true;
+            await ensureDb();
+            const { error } = await db.from(DANCE_STATUS_TABLE).upsert(rows, { onConflict: 'video_id' });
+            if (error) throw error;
+            return true;
+        }
+
+        async function saveVideos(options = {}) {
+            saveVideosLocal();
+            try {
+                const savedShared = await persistSharedStatuses(options.ids || null);
+                if (savedShared && options.message) updateImportStatus(options.message);
+                return savedShared;
+            } catch (error) {
+                sharedStatusError = `공용 상태 저장 실패: ${error.message}`;
+                updateImportStatus(sharedStatusError);
+                return false;
+            }
+        }
+
+        async function loadSharedStatuses() {
+            sharedStatusMode = 'loading';
+            updateImportStatus();
+            try {
+                await ensureDb();
+                const { data, error } = await db.from(DANCE_STATUS_TABLE)
+                    .select('video_id,status,updated_at')
+                    .order('updated_at', { ascending: false });
+                if (error) throw error;
+                const validStatuses = new Set(Object.keys(statusLabels));
+                const statusById = new Map((data || [])
+                    .filter(row => row?.video_id && validStatuses.has(row.status))
+                    .map(row => [row.video_id, row.status]));
+                const canonicalVideos = mergeVideos(window.danceVideos || [], []);
+                videos = canonicalVideos.map(video => statusById.has(video.id)
+                    ? { ...video, status: statusById.get(video.id) }
+                    : video);
+                sharedStatusMode = 'shared';
+                sharedStatusError = '';
+                renderSummary();
+                renderGrid();
+                updateImportStatus(`공용 상태 ${statusById.size}개 반영`);
+            } catch (error) {
+                sharedStatusMode = 'local';
+                sharedStatusError = isMissingDanceStatusTable(error)
+                    ? '공용 상태 테이블이 없습니다. add_dance_video_statuses.sql을 Supabase SQL Editor에서 먼저 실행해 주세요.'
+                    : `공용 상태 불러오기 실패: ${error.message}`;
+                updateImportStatus(sharedStatusError);
+            }
         }
 
         function backupVideos(reason) {
@@ -1052,7 +1148,7 @@
 
         function updateImportStatus(message) {
             const lastImportAt = localStorage.getItem(LAST_IMPORT_KEY);
-            importStatus.textContent = message || formatImportTime(lastImportAt);
+            importStatus.textContent = `${localStatusLabel()} · ${message || formatImportTime(lastImportAt)}`;
         }
 
         function esc(value) {
@@ -1258,24 +1354,23 @@
             hideBtn.onclick = () => setVideoStatus(video.id, 'hidden');
         }
 
-        function setVideoStatus(id, status) {
+        async function setVideoStatus(id, status) {
             backupVideos(`single-${status}`);
             videos = videos.map(video => video.id === id ? { ...video, status } : video);
-            saveVideos();
+            await saveVideos({ ids: [id], message: `${statusLabels[status]} 저장됨` });
             renderSummary();
             renderGrid();
         }
 
-        function setSelectedStatus(status) {
+        async function setSelectedStatus(status) {
             if (!selectedIds.size) return;
             backupVideos(`bulk-${status}`);
             const ids = new Set(selectedIds);
             videos = videos.map(video => ids.has(video.id) ? { ...video, status } : video);
             selectedIds.clear();
-            saveVideos();
+            await saveVideos({ ids, message: `선택 ${ids.size}개를 ${statusLabels[status]} 처리했습니다.` });
             renderSummary();
             renderGrid();
-            updateImportStatus(`선택 ${ids.size}개를 ${statusLabels[status]} 처리했습니다.`);
         }
 
         function statusSummary(items) {
@@ -1310,7 +1405,7 @@
             updateImportStatus(`상태 파일 저장됨 · 전체 ${payload.total}개 · 채택 ${payload.summary.approved || 0}개 · 숨김 ${payload.summary.hidden || 0}개`);
         }
 
-        function applyStatusPayload(payload) {
+        async function applyStatusPayload(payload) {
             const statusItems = Array.isArray(payload?.statuses)
                 ? payload.statuses
                 : Array.isArray(payload?.videos)
@@ -1330,17 +1425,16 @@
                 return { ...video, status };
             });
             selectedIds.clear();
-            saveVideos();
+            await saveVideos({ message: `상태 가져오기 완료 · ${appliedCount}개 반영 · 채택 ${videos.filter(video => video.status === 'approved').length}개` });
             renderSummary();
             renderGrid();
-            updateImportStatus(`상태 가져오기 완료 · ${appliedCount}개 반영 · 채택 ${videos.filter(video => video.status === 'approved').length}개`);
         }
 
         async function importStatusFile(file) {
             if (!file) return;
             try {
                 const payload = JSON.parse(await file.text());
-                applyStatusPayload(payload);
+                await applyStatusPayload(payload);
             } catch {
                 updateImportStatus('상태 파일을 읽지 못했습니다.');
             }
@@ -1398,13 +1492,12 @@
                 }).length;
                 backupVideos('data-import');
                 videos = mergeVideos(videos, importItems, { preserveExistingStatus: true });
-                saveVideos();
                 const importedAt = new Date().toISOString();
                 localStorage.setItem(LAST_IMPORT_KEY, importedAt);
                 selectedId = newItems[0]?.id || selectedId;
+                await saveVideos({ message: `${formatImportSummary(newItems.length, updatedCount, skippedReaction, importedAt, meta)} · 기존 상태 보존` });
                 renderSummary();
                 renderGrid();
-                updateImportStatus(`${formatImportSummary(newItems.length, updatedCount, skippedReaction, importedAt, meta)} · 기존 상태 보존`);
             } catch {
                 updateImportStatus('가져오기에 실패했습니다.');
             } finally {
@@ -1452,6 +1545,7 @@
         updateImportStatus();
         renderSummary();
         renderGrid();
+        loadSharedStatuses();
     </script>
 </body>
 </html>
