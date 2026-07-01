@@ -1046,7 +1046,7 @@
             const safeSrc = safeUrl(src);
             if (!modal || !frameWrap || !safeSrc) return;
             titleEl.textContent = title || '영상';
-            frameWrap.innerHTML = `<iframe src="${esc(safeSrc)}" title="${esc(title || 'YouTube 영상')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups" allowfullscreen></iframe>`;
+            frameWrap.innerHTML = `<iframe src="${esc(safeSrc)}" title="${esc(title || 'YouTube 영상')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation" allowfullscreen></iframe>`;
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
