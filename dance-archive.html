@@ -1022,6 +1022,60 @@
             return Array.from(byId.values()).filter(video => !shouldExcludeVideo(video));
         }
 
+        function readStoredStatusSnapshots() {
+            const snapshots = [];
+            try {
+                const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+                if (stored?.version === DATA_VERSION && Array.isArray(stored.videos)) {
+                    snapshots.push({ label: '현재 브라우저 저장 상태', videos: stored.videos });
+                }
+            } catch {
+                // Ignore malformed local snapshots.
+            }
+
+            try {
+                const backups = JSON.parse(localStorage.getItem(BACKUP_KEY) || '[]');
+                if (Array.isArray(backups)) {
+                    backups.forEach((backup, index) => {
+                        if (backup?.version === DATA_VERSION && Array.isArray(backup.videos)) {
+                            snapshots.push({ label: `브라우저 백업 ${index + 1}`, videos: backup.videos });
+                        }
+                    });
+                }
+            } catch {
+                // Ignore malformed backup snapshots.
+            }
+
+            return snapshots;
+        }
+
+        function countStatusDifferences(baseVideos, candidateVideos) {
+            const baseStatusById = new Map(baseVideos.map(video => [video.id, video.status || 'review']));
+            return candidateVideos.reduce((count, video) => {
+                if (!baseStatusById.has(video.id)) return count;
+                return baseStatusById.get(video.id) !== (video.status || 'review') ? count + 1 : count;
+            }, 0);
+        }
+
+        function countDecidedStatuses(items) {
+            return items.filter(video => ['approved', 'hidden'].includes(video.status)).length;
+        }
+
+        function pickLocalStatusSeed(canonicalVideos) {
+            return readStoredStatusSnapshots()
+                .map(snapshot => {
+                    const merged = mergeVideos(canonicalVideos, snapshot.videos);
+                    return {
+                        ...snapshot,
+                        videos: merged,
+                        diffCount: countStatusDifferences(canonicalVideos, merged),
+                        decidedCount: countDecidedStatuses(merged),
+                    };
+                })
+                .filter(snapshot => snapshot.diffCount > 0)
+                .sort((a, b) => b.decidedCount - a.decidedCount || b.diffCount - a.diffCount)[0] || null;
+        }
+
         function loadVideos() {
             try {
                 const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
@@ -1108,6 +1162,25 @@
                     .filter(row => row?.video_id && validStatuses.has(row.status))
                     .map(row => [row.video_id, row.status]));
                 const canonicalVideos = mergeVideos(window.danceVideos || [], []);
+                if (!statusById.size) {
+                    const localSeed = pickLocalStatusSeed(canonicalVideos);
+                    if (localSeed) {
+                        videos = localSeed.videos;
+                        sharedStatusMode = 'shared';
+                        sharedStatusError = '';
+                        renderSummary();
+                        renderGrid();
+                        try {
+                            await persistSharedStatuses();
+                            updateImportStatus(`${localSeed.label} ${localSeed.diffCount}개를 공용 DB로 이관 완료`);
+                        } catch (migrationError) {
+                            sharedStatusMode = 'local';
+                            sharedStatusError = `기존 브라우저 상태 공용 이관 실패: ${migrationError.message}`;
+                            updateImportStatus(sharedStatusError);
+                        }
+                        return;
+                    }
+                }
                 videos = canonicalVideos.map(video => statusById.has(video.id)
                     ? { ...video, status: statusById.get(video.id) }
                     : video);
