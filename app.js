@@ -185,6 +185,29 @@ function _ensureDb() {
     return _dbReady;
 }
 
+async function fetchRuntimeCache(cacheKey, timeoutMs = 5000) {
+    const controller = new AbortController();
+    const tid = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+        const url = `${SUPABASE_URL}/rest/v1/site_runtime_cache?select=payload,updated_at&cache_key=eq.${encodeURIComponent(cacheKey)}&limit=1`;
+        const res = await fetch(url, {
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            },
+            signal: controller.signal,
+        });
+        clearTimeout(tid);
+        if (!res.ok) throw new Error(`runtime cache HTTP ${res.status}`);
+        const rows = await res.json();
+        const row = Array.isArray(rows) ? rows[0] : null;
+        return row?.payload ? { ...row.payload, row_updated_at: row.updated_at } : null;
+    } catch (error) {
+        clearTimeout(tid);
+        throw error;
+    }
+}
+
 function typeOf(key) {
     return EVENT_TYPES.find(t => t.key === key) ?? EVENT_TYPES.find(t => t.key === 'general');
 }
@@ -1912,12 +1935,8 @@ async function openUpModal(options = {}) {
     document.getElementById('upModal').classList.add('open');
     document.getElementById('upModalContent').innerHTML = upEmptyHtml('불러오는 중...', 'loading');
 
-    // up.json 캐시 로드
-    let cachedData = { updated: null, events: [] };
-    try {
-        const res = await fetch(upJsonCacheUrl());
-        if (res.ok) cachedData = await res.json();
-    } catch {}
+    // UP 랭킹 캐시 로드: Supabase 런타임 캐시 우선, 기존 up.json fallback
+    const cachedData = await loadUpRankingCache();
 
     const cachedEvents = startupOnly ? [] : (cachedData.events || []).map(upEventFromRow);
     if (cachedEvents.length) {
@@ -1991,6 +2010,31 @@ function parseSoopUrl(url) {
 
 function upJsonCacheUrl() {
     return `up.json?v=${Math.floor(Date.now() / 60000)}`;
+}
+
+function normalizeUpCachePayload(payload) {
+    if (!payload || !Array.isArray(payload.events)) return null;
+    return {
+        updated: payload.updated || payload.row_updated_at || null,
+        events: payload.events,
+    };
+}
+
+async function loadUpRankingCache() {
+    try {
+        const cached = normalizeUpCachePayload(await fetchRuntimeCache('up_ranking'));
+        if (cached) return cached;
+    } catch {}
+
+    try {
+        const res = await fetch(upJsonCacheUrl());
+        if (res.ok) {
+            const cached = normalizeUpCachePayload(await res.json());
+            if (cached) return cached;
+        }
+    } catch {}
+
+    return { updated: null, events: [] };
 }
 
 const UP_LIVE_CACHE_TTL_MS = 2 * 60 * 1000;

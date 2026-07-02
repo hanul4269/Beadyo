@@ -1,5 +1,6 @@
 import json, subprocess, sys
 from datetime import datetime, timezone
+from runtime_cache import upsert_runtime_cache
 
 result = subprocess.run(
     ['curl', '-s', '--max-time', '10',
@@ -35,3 +36,4 @@ output = {
 with open('live.json', 'w', encoding='utf-8') as f:
     json.dump(output, f, ensure_ascii=False)
 print('live.json written:', output)
+upsert_runtime_cache('live_status', output, output['updated'])

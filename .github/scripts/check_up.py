@@ -1,5 +1,6 @@
 import json, re, sys, urllib.request, urllib.parse
 from datetime import datetime, timezone
+from runtime_cache import upsert_runtime_cache
 
 SUPABASE_URL      = 'https://qlmcwobfldgmhwhptkfz.supabase.co'
 SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR'
@@ -137,3 +138,4 @@ output = {
 with open('up.json', 'w', encoding='utf-8') as f:
     json.dump(output, f, ensure_ascii=False)
 print(f'up.json written: {len(events_out)} events')
+upsert_runtime_cache('up_ranking', output, output['updated'])

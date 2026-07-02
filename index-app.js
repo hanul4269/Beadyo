@@ -367,11 +367,11 @@ window.addEventListener('hashchange', () => {
 // ── 라이브 상태 체크 ──
 const PROXY = 'https://clever-rhino-36.hanul4269.deno.net';
 
-async function fetchWithTimeout(url, ms) {
+async function fetchWithTimeout(url, ms, options = {}) {
     const ctrl = new AbortController();
     const tid = setTimeout(() => ctrl.abort(), ms);
     try {
-        const res = await fetch(url, { signal: ctrl.signal });
+        const res = await fetch(url, { ...options, signal: ctrl.signal });
         clearTimeout(tid);
         return res;
     } catch (e) {
@@ -380,14 +380,49 @@ async function fetchWithTimeout(url, ms) {
     }
 }
 
+async function fetchRuntimeCache(cacheKey, ms = 4000) {
+    const url = `${SUPABASE_URL}/rest/v1/site_runtime_cache?select=payload,updated_at&cache_key=eq.${encodeURIComponent(cacheKey)}&limit=1`;
+    const res = await fetchWithTimeout(url, ms, {
+        headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+    });
+    if (!res.ok) throw new Error(`runtime cache HTTP ${res.status}`);
+    const rows = await res.json();
+    const row = Array.isArray(rows) ? rows[0] : null;
+    return row?.payload ? { ...row.payload, row_updated_at: row.updated_at } : null;
+}
+
 let _lastLiveStatusCheckAt = 0;
 async function checkLiveStatus(force = false) {
     const now = Date.now();
-    if (!force && now - _lastLiveStatusCheckAt < 20000) return;
+    if (!force && now - _lastLiveStatusCheckAt < 55000) return;
     _lastLiveStatusCheckAt = now;
     const badge = document.getElementById('live-badge');
+    if (!badge) return;
 
-    // 1) 실시간: SOOP chapi API 직접 호출 (Deno 프록시 경유)
+    // 1) Supabase 런타임 캐시: GitHub Actions가 5분마다 갱신
+    try {
+        const data = await fetchRuntimeCache('live_status');
+        if (data && typeof data.live !== 'undefined') {
+            badge.classList.toggle('is-live', !!data.live);
+            return;
+        }
+    } catch {}
+
+    // 2) 기존 JSON fallback
+    for (const url of ['live.json?t=' + Date.now(), 'https://beadyo.com/live.json?t=' + Date.now()]) {
+        try {
+            const res = await fetchWithTimeout(url, 5000);
+            if (!res.ok) continue;
+            const data = await res.json();
+            badge.classList.toggle('is-live', !!data.live);
+            return;
+        } catch {}
+    }
+
+    // 3) 마지막 fallback: SOOP chapi API 직접 호출 (Deno 프록시 경유)
     try {
         const res = await fetchWithTimeout(
             `${PROXY}?url=${encodeURIComponent('https://chapi.sooplive.co.kr/api/beadyo97/station')}`,
@@ -400,22 +435,11 @@ async function checkLiveStatus(force = false) {
             return;
         }
     } catch {}
-
-    // 2) 폴백: live.json
-    for (const url of ['live.json?t=' + Date.now(), 'https://beadyo.com/live.json?t=' + Date.now()]) {
-        try {
-            const res = await fetchWithTimeout(url, 5000);
-            if (!res.ok) continue;
-            const data = await res.json();
-            badge.classList.toggle('is-live', !!data.live);
-            return;
-        } catch {}
-    }
 }
 
 checkLiveStatus(true);
 setTimeout(checkLiveStatus, 3000);
-setInterval(checkLiveStatus, 10 * 60 * 1000);
+setInterval(checkLiveStatus, 60 * 1000);
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') checkLiveStatus(true);
 });
