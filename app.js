@@ -166,6 +166,24 @@ const DEFAULT_CALENDAR_NOTICE = {
     sort_order: 0,
 };
 
+// Set this to false when the celebration popup is no longer needed.
+const CALENDAR_CELEBRATION_NOTICE_ENABLED = true;
+const CALENDAR_CELEBRATION_NOTICE = {
+    id: 'gosegu-blue-white-pass-20260703',
+    title: '고세구 청백 가요대전 합격!',
+    message: '',
+    image_url: 'notice-gosegu-pass-20260703.png',
+    link_url: '',
+    link_label: '',
+    button_bg_color: '#4aa3ff',
+    button_text_color: '#ffffff',
+    header_bg_color: '#06172e',
+    header_text_color: '#eaf5ff',
+    fireworks: true,
+    is_active: true,
+    sort_order: -100,
+};
+
 const OPTIMIZED_NOTICE_IMAGES = {
     'notice-bosikham-season2-20260627.png': 'notice-bosikham-season2-20260627.jpg',
 };
@@ -810,11 +828,44 @@ let dragState = { id: null, dateStr: null };
 let _dragged = false;
 let _eventsLoaded = false;
 let _retryTimer = null;
+let _calendarRealtimeChannel = null;
+let _calendarRealtimeReloadTimer = null;
+let _calendarFallbackPollTimer = null;
 var renderUpTab;
 
 function _scheduleLoadRetry(delay = 3000) {
     clearTimeout(_retryTimer);
     _retryTimer = setTimeout(() => { if (!_eventsLoaded) loadEvents(); }, delay);
+}
+
+function scheduleCalendarReload(delay = 350) {
+    clearTimeout(_calendarRealtimeReloadTimer);
+    _calendarRealtimeReloadTimer = setTimeout(() => {
+        if (document.visibilityState === 'visible') loadEvents().catch(() => {});
+    }, delay);
+}
+
+function startCalendarFallbackPolling() {
+    clearInterval(_calendarFallbackPollTimer);
+    _calendarFallbackPollTimer = setInterval(() => {
+        if (document.visibilityState === 'visible') loadEvents().catch(() => {});
+    }, 30000);
+}
+
+async function initCalendarRealtime() {
+    startCalendarFallbackPolling();
+    try {
+        await _ensureDb();
+        if (_calendarRealtimeChannel || typeof db.channel !== 'function') return;
+        _calendarRealtimeChannel = db
+            .channel('beadyo-calendar-schedules')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'schedules' }, () => {
+                scheduleCalendarReload();
+            })
+            .subscribe();
+    } catch (error) {
+        console.warn('calendar realtime unavailable:', error);
+    }
 }
 
 function eventOrderValue(ev) {
@@ -2774,6 +2825,7 @@ function normalizeCalendarNotice(row) {
     return {
         id: String(row.id || row.slug || row.title || DEFAULT_CALENDAR_NOTICE.id),
         title: row.title || '공지사항',
+        message: row.message || '',
         image_url: noticeImageSrc(row.image_url),
         link_url: normalizeOptionalUrl(row.link_url || '') || '',
         link_label: row.link_label || '공지 보러가기',
@@ -2781,6 +2833,7 @@ function normalizeCalendarNotice(row) {
         button_text_color: normalizeNoticeColor(row.button_text_color, DEFAULT_CALENDAR_NOTICE.button_text_color),
         header_bg_color: normalizeNoticeColor(row.header_bg_color, DEFAULT_CALENDAR_NOTICE.header_bg_color),
         header_text_color: normalizeNoticeColor(row.header_text_color, DEFAULT_CALENDAR_NOTICE.header_text_color),
+        fireworks: row.fireworks === true,
         is_active: row.is_active !== false,
         sort_order: Number(row.sort_order || 0),
         created_at: row.created_at || null,
@@ -2825,10 +2878,13 @@ function isCalendarNoticeHiddenToday(notice) {
 function renderNoticePopup(notice) {
     const title = document.getElementById('noticeTitle');
     const img = document.getElementById('noticeImage');
+    const message = document.getElementById('noticeMessage');
     const link = document.getElementById('noticeLink');
     const linkLabel = document.getElementById('noticeLinkLabel');
+    const modal = document.querySelector('#noticePopup .notice-modal');
     const head = document.querySelector('#noticePopup .notice-head');
     if (title) title.textContent = notice.title || '공지사항';
+    if (modal) modal.classList.toggle('notice-celebration', notice.fireworks === true);
     if (head) {
         head.style.setProperty('--notice-head-bg', notice.header_bg_color);
         head.style.setProperty('--notice-head-bg-light', mixNoticeColor(notice.header_bg_color, 0.18));
@@ -2839,6 +2895,10 @@ function renderNoticePopup(notice) {
         if (img.getAttribute('src') !== src) img.src = src;
         img.dataset.src = src;
         img.alt = `${notice.title || '공지'} 이미지`;
+    }
+    if (message) {
+        message.textContent = notice.message || '';
+        message.hidden = !notice.message;
     }
     if (link) {
         const href = normalizeOptionalUrl(notice.link_url || '');
@@ -2855,16 +2915,62 @@ function renderNoticePopup(notice) {
     if (linkLabel) linkLabel.textContent = notice.link_label || '공지 보러가기';
 }
 
+let _noticeFireworkInterval = null;
+
+function stopNoticeFireworks() {
+    if (_noticeFireworkInterval) clearInterval(_noticeFireworkInterval);
+    _noticeFireworkInterval = null;
+    const layer = document.getElementById('noticeFireworks');
+    if (layer) {
+        layer.hidden = true;
+        layer.innerHTML = '';
+    }
+}
+
+function launchNoticeFirework() {
+    const layer = document.getElementById('noticeFireworks');
+    if (!layer || layer.hidden) return;
+    const burst = document.createElement('div');
+    const colors = ['#5ec9ff', '#ffffff', '#9ad6ff', '#ffd76a', '#ff8bd8'];
+    const sparkCount = 14;
+    burst.className = 'notice-firework-burst';
+    burst.style.left = `${18 + Math.random() * 64}%`;
+    burst.style.top = `${12 + Math.random() * 46}%`;
+    for (let i = 0; i < sparkCount; i++) {
+        const spark = document.createElement('i');
+        const angle = (Math.PI * 2 * i) / sparkCount;
+        const distance = 46 + Math.random() * 36;
+        spark.style.setProperty('--x', `${Math.cos(angle) * distance}px`);
+        spark.style.setProperty('--y', `${Math.sin(angle) * distance}px`);
+        spark.style.setProperty('--firework-color', colors[i % colors.length]);
+        burst.appendChild(spark);
+    }
+    layer.appendChild(burst);
+    setTimeout(() => burst.remove(), 1000);
+}
+
+function startNoticeFireworks() {
+    const layer = document.getElementById('noticeFireworks');
+    if (!layer || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    stopNoticeFireworks();
+    layer.hidden = false;
+    for (let i = 0; i < 6; i++) setTimeout(launchNoticeFirework, i * 180);
+    _noticeFireworkInterval = setInterval(launchNoticeFirework, 760);
+}
+
 function openNoticePopup(notice = _activeCalendarNotice, options = {}) {
     const normalized = notice ? normalizeCalendarNotice(notice) : null;
     if (!normalized || (!options.ignoreHiddenToday && isCalendarNoticeHiddenToday(normalized))) return;
     _activeCalendarNotice = normalized;
     renderNoticePopup(normalized);
     document.getElementById('noticePopup')?.classList.add('open');
+    if (normalized.fireworks) startNoticeFireworks();
+    else stopNoticeFireworks();
 }
 
 function closeNoticePopup() {
     document.getElementById('noticePopup')?.classList.remove('open');
+    stopNoticeFireworks();
 }
 
 function hideNoticeToday() {
@@ -2874,6 +2980,10 @@ function hideNoticeToday() {
 }
 
 async function maybeOpenCalendarNoticeOnStart() {
+    if (CALENDAR_CELEBRATION_NOTICE_ENABLED) {
+        openNoticePopup(CALENDAR_CELEBRATION_NOTICE);
+        return;
+    }
     const notices = await loadCalendarNotices({ includeInactive: false, fallback: true });
     const notice = notices.find(n => n.is_active);
     if (notice) openNoticePopup(notice);
@@ -3392,13 +3502,13 @@ document.addEventListener('touchend', e => {
 
 // 인앱브라우저(네이버 등) 백그라운드 정지 대응 — 포그라운드 복귀 시 재시도
 document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && !_eventsLoaded) {
+    if (document.visibilityState === 'visible') {
         loadEvents();
     }
 });
 // iOS bfcache 복원 대응 (뒤로가기/탭전환 후 페이지 재표시)
 window.addEventListener('pageshow', () => {
-    if (!_eventsLoaded) loadEvents();
+    loadEvents();
 });
 
 // ── 이스터에그 ──
@@ -3418,6 +3528,7 @@ loadEvents().catch(err => {
     loadYtLinks().catch(() => {});
 });
 loadMemoCards().catch(err => console.error('initial loadMemoCards:', err));
+initCalendarRealtime();
 initAuth();
 maybeOpenCalendarNoticeOnStart();
 setTimeout(() => { maybeOpenUpModalOnStart(); }, 700);
