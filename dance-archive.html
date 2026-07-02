@@ -939,18 +939,16 @@
             youtube: 'var(--youtube)',
         };
 
-        const STORAGE_KEY = 'beadyoDanceVideos';
-        const DATA_VERSION = 'status-20260628';
-        const LAST_IMPORT_KEY = 'beadyoDanceLastImportAt';
-        const BACKUP_KEY = 'beadyoDanceVideoBackups';
         const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
         const DANCE_STATUS_TABLE = 'dance_video_statuses';
+        const DANCE_STATUS_COLUMNS = 'video_id,status,title,source,song,url,thumbnail';
         const PLACEHOLDER_THUMBNAILS = new Set(['', 'banner.png', 'banner.jpg', 'loading-img.png', 'songbook-char.png']);
         let videos = loadVideos();
         let db = null;
         let sharedStatusMode = 'loading';
         let sharedStatusError = '';
+        let lastImportAt = null;
 
         let activeSource = 'all';
         let selectedId = videos[0]?.id || null;
@@ -1022,45 +1020,6 @@
             return Array.from(byId.values()).filter(video => !shouldExcludeVideo(video));
         }
 
-        function readStoredStatusSnapshots() {
-            const snapshots = [];
-            try {
-                const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-                if (stored?.version === DATA_VERSION && Array.isArray(stored.videos)) {
-                    snapshots.push({ label: '현재 브라우저 저장 상태', videos: stored.videos });
-                }
-            } catch {
-                // Ignore malformed local snapshots.
-            }
-
-            try {
-                const backups = JSON.parse(localStorage.getItem(BACKUP_KEY) || '[]');
-                if (Array.isArray(backups)) {
-                    backups.forEach((backup, index) => {
-                        if (backup?.version === DATA_VERSION && Array.isArray(backup.videos)) {
-                            snapshots.push({ label: `브라우저 백업 ${index + 1}`, videos: backup.videos });
-                        }
-                    });
-                }
-            } catch {
-                // Ignore malformed backup snapshots.
-            }
-
-            return snapshots;
-        }
-
-        function countStatusDifferences(baseVideos, candidateVideos) {
-            const baseStatusById = new Map(baseVideos.map(video => [video.id, video.status || 'review']));
-            return candidateVideos.reduce((count, video) => {
-                if (!baseStatusById.has(video.id)) return count;
-                return baseStatusById.get(video.id) !== (video.status || 'review') ? count + 1 : count;
-            }, 0);
-        }
-
-        function countDecidedStatuses(items) {
-            return items.filter(video => ['approved', 'hidden'].includes(video.status)).length;
-        }
-
         function normalizeSharedStatus(value) {
             const validStatuses = new Set(Object.keys(statusLabels));
             if (validStatuses.has(value)) return value;
@@ -1079,35 +1038,27 @@
             return '';
         }
 
-        function pickLocalStatusSeed(canonicalVideos) {
-            return readStoredStatusSnapshots()
-                .map(snapshot => {
-                    const merged = mergeVideos(canonicalVideos, snapshot.videos);
-                    return {
-                        ...snapshot,
-                        videos: merged,
-                        diffCount: countStatusDifferences(canonicalVideos, merged),
-                        decidedCount: countDecidedStatuses(merged),
-                    };
-                })
-                .filter(snapshot => snapshot.diffCount > 0)
-                .sort((a, b) => b.decidedCount - a.decidedCount || b.diffCount - a.diffCount)[0] || null;
+        function sharedRowToVideo(row) {
+            return normalizeVideo({
+                id: row?.video_id,
+                status: normalizeSharedStatus(row?.status) || 'review',
+                title: row?.title || '',
+                source: row?.source || 'soop',
+                song: row?.song || '',
+                url: row?.url || '',
+                thumbnail: row?.thumbnail || 'banner.jpg',
+                tags: [],
+            });
         }
 
         function loadVideos() {
-            try {
-                const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-                const storedVideos = stored?.version === DATA_VERSION && Array.isArray(stored.videos) ? stored.videos : [];
-                return mergeVideos(window.danceVideos || [], storedVideos);
-            } catch {
-                return (window.danceVideos || []).map(normalizeVideo);
-            }
+            return (window.danceVideos || []).map(normalizeVideo).filter(video => !shouldExcludeVideo(video));
         }
 
         function localStatusLabel() {
             if (sharedStatusMode === 'shared') return '공용 상태 사용 중';
             if (sharedStatusMode === 'loading') return '공용 상태 확인 중';
-            return '로컬 상태 사용 중';
+            return '공용 상태 오류';
         }
 
         function isMissingDanceStatusTable(error) {
@@ -1127,18 +1078,18 @@
             return db;
         }
 
-        function saveVideosLocal() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: DATA_VERSION, updatedAt: new Date().toISOString(), videos }));
-        }
-
         async function persistSharedStatuses(targetIds = null) {
-            if (sharedStatusMode !== 'shared') return false;
             const targetSet = targetIds ? new Set(targetIds) : null;
             const rows = videos
                 .filter(video => !targetSet || targetSet.has(video.id))
                 .map(video => ({
                     video_id: video.id,
                     status: normalizeSharedStatus(video.status) || 'review',
+                    title: video.title || null,
+                    source: video.source || null,
+                    song: video.song || null,
+                    url: video.url || null,
+                    thumbnail: video.thumbnail || null,
                 }));
             if (!rows.length) return true;
             await ensureDb();
@@ -1148,12 +1099,12 @@
         }
 
         async function saveVideos(options = {}) {
-            saveVideosLocal();
             try {
                 const savedShared = await persistSharedStatuses(options.ids || null);
                 if (savedShared && options.message) updateImportStatus(options.message);
                 return savedShared;
             } catch (error) {
+                sharedStatusMode = 'error';
                 sharedStatusError = `공용 상태 저장 실패: ${error.message}`;
                 updateImportStatus(sharedStatusError);
                 return false;
@@ -1166,31 +1117,15 @@
             try {
                 await ensureDb();
                 const { data, error } = await db.from(DANCE_STATUS_TABLE)
-                    .select('video_id,status');
+                    .select(DANCE_STATUS_COLUMNS);
                 if (error) throw error;
                 const statusById = new Map((data || [])
                     .map(row => [row?.video_id, normalizeSharedStatus(row?.status)])
                     .filter(([id, status]) => id && status));
-                const canonicalVideos = mergeVideos(window.danceVideos || [], []);
-                if (!statusById.size) {
-                    const localSeed = pickLocalStatusSeed(canonicalVideos);
-                    if (localSeed) {
-                        videos = localSeed.videos;
-                        sharedStatusMode = 'shared';
-                        sharedStatusError = '';
-                        renderSummary();
-                        renderGrid();
-                        try {
-                            await persistSharedStatuses();
-                            updateImportStatus(`${localSeed.label} ${localSeed.diffCount}개를 공용 DB로 이관 완료`);
-                        } catch (migrationError) {
-                            sharedStatusMode = 'local';
-                            sharedStatusError = `기존 브라우저 상태 공용 이관 실패: ${migrationError.message}`;
-                            updateImportStatus(sharedStatusError);
-                        }
-                        return;
-                    }
-                }
+                const sharedVideos = (data || [])
+                    .filter(row => row?.video_id && (row.url || row.title))
+                    .map(sharedRowToVideo);
+                const canonicalVideos = mergeVideos(window.danceVideos || [], sharedVideos);
                 videos = canonicalVideos.map(video => statusById.has(video.id)
                     ? { ...video, status: statusById.get(video.id) }
                     : video);
@@ -1200,27 +1135,11 @@
                 renderGrid();
                 updateImportStatus(`공용 상태 ${statusById.size}개 반영`);
             } catch (error) {
-                sharedStatusMode = 'local';
+                sharedStatusMode = 'error';
                 sharedStatusError = isMissingDanceStatusTable(error)
                     ? '공용 상태 테이블이 없습니다. add_dance_video_statuses.sql을 Supabase SQL Editor에서 먼저 실행해 주세요.'
                     : `공용 상태 불러오기 실패: ${error.message}`;
                 updateImportStatus(sharedStatusError);
-            }
-        }
-
-        function backupVideos(reason) {
-            try {
-                const backups = JSON.parse(localStorage.getItem(BACKUP_KEY) || '[]');
-                backups.unshift({
-                    reason,
-                    version: DATA_VERSION,
-                    savedAt: new Date().toISOString(),
-                    summary: statusSummary(videos),
-                    videos,
-                });
-                localStorage.setItem(BACKUP_KEY, JSON.stringify(backups.slice(0, 8)));
-            } catch {
-                // Backups are best-effort; the primary save path should continue.
             }
         }
 
@@ -1230,7 +1149,6 @@
         }
 
         function updateImportStatus(message) {
-            const lastImportAt = localStorage.getItem(LAST_IMPORT_KEY);
             importStatus.textContent = `${localStatusLabel()} · ${message || formatImportTime(lastImportAt)}`;
         }
 
@@ -1438,20 +1356,22 @@
         }
 
         async function setVideoStatus(id, status) {
-            backupVideos(`single-${status}`);
+            const previousVideos = videos;
             videos = videos.map(video => video.id === id ? { ...video, status } : video);
-            await saveVideos({ ids: [id], message: `${statusLabels[status]} 저장됨` });
+            const saved = await saveVideos({ ids: [id], message: `${statusLabels[status]} 저장됨` });
+            if (!saved) videos = previousVideos;
             renderSummary();
             renderGrid();
         }
 
         async function setSelectedStatus(status) {
             if (!selectedIds.size) return;
-            backupVideos(`bulk-${status}`);
+            const previousVideos = videos;
             const ids = new Set(selectedIds);
             videos = videos.map(video => ids.has(video.id) ? { ...video, status } : video);
             selectedIds.clear();
-            await saveVideos({ ids, message: `선택 ${ids.size}개를 ${statusLabels[status]} 처리했습니다.` });
+            const saved = await saveVideos({ ids, message: `선택 ${ids.size}개를 ${statusLabels[status]} 처리했습니다.` });
+            if (!saved) videos = previousVideos;
             renderSummary();
             renderGrid();
         }
@@ -1499,7 +1419,7 @@
                 .filter(item => item?.id && validStatuses.has(item.status))
                 .map(item => [item.id, item.status]));
             if (!statusById.size) throw new Error('empty status file');
-            backupVideos('status-import');
+            const previousVideos = videos;
             let appliedCount = 0;
             videos = videos.map(video => {
                 const status = statusById.get(video.id);
@@ -1508,7 +1428,8 @@
                 return { ...video, status };
             });
             selectedIds.clear();
-            await saveVideos({ message: `상태 가져오기 완료 · ${appliedCount}개 반영 · 채택 ${videos.filter(video => video.status === 'approved').length}개` });
+            const saved = await saveVideos({ message: `상태 가져오기 완료 · ${appliedCount}개 반영 · 채택 ${videos.filter(video => video.status === 'approved').length}개` });
+            if (!saved) videos = previousVideos;
             renderSummary();
             renderGrid();
         }
@@ -1573,12 +1494,18 @@
                         || existing.source !== video.source
                         || existing.song !== video.song;
                 }).length;
-                backupVideos('data-import');
+                const previousVideos = videos;
+                const previousSelectedId = selectedId;
                 videos = mergeVideos(videos, importItems, { preserveExistingStatus: true });
                 const importedAt = new Date().toISOString();
-                localStorage.setItem(LAST_IMPORT_KEY, importedAt);
                 selectedId = newItems[0]?.id || selectedId;
-                await saveVideos({ message: `${formatImportSummary(newItems.length, updatedCount, skippedReaction, importedAt, meta)} · 기존 상태 보존` });
+                const saved = await saveVideos({ message: `${formatImportSummary(newItems.length, updatedCount, skippedReaction, importedAt, meta)} · 기존 상태 보존` });
+                if (saved) {
+                    lastImportAt = importedAt;
+                } else {
+                    videos = previousVideos;
+                    selectedId = previousSelectedId;
+                }
                 renderSummary();
                 renderGrid();
             } catch {

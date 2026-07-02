@@ -970,12 +970,6 @@
         });
 
         // ─── 초기 로드 ───
-        // localStorage 캐시로 편집자 상태 즉시 복원
-        if (localStorage.getItem('beadyo_was_editor') === '1') {
-            document.body.classList.add('is-editor');
-            state.isEditor = true;
-        }
-
         loadSongs();
     </script>
 </body>

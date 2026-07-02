@@ -286,7 +286,6 @@ function switchTab(index, options = {}) {
     updateMusicSubnav(index);
 
     updateMobileFab(index);
-    try { localStorage.setItem('activeTab', index); } catch {}
     if (updateUrl) syncTabUrl(index, replaceUrl);
 
     const frame = document.getElementById(`frame-${index}`);
@@ -309,7 +308,6 @@ function switchTab(index, options = {}) {
 function switchMusicPage(page) {
     if (!MUSIC_PAGES[page]) return;
     currentMusicPage = page;
-    try { localStorage.setItem('musicSubpage', page); } catch {}
     updateMusicSubnav(MUSIC_TAB_INDEX);
 
     const frame = document.getElementById(`frame-${MUSIC_TAB_INDEX}`);
@@ -335,7 +333,7 @@ function switchMusicPage(page) {
 // 첫 탭 초기 로드
 try {
     let initialTab = 0;
-    currentMusicPage = routeToMusicPage() || localStorage.getItem('musicSubpage') || 'songs';
+    currentMusicPage = routeToMusicPage() || 'songs';
     if (!MUSIC_PAGES[currentMusicPage]) currentMusicPage = 'songs';
     const routeTab = routeToTabIndex();
     if (routeTab !== null) {
@@ -343,11 +341,6 @@ try {
     } else if (window.location.hash === '#songbook') {
         history.replaceState({}, document.title, window.location.pathname);
         initialTab = 2;
-    } else {
-        const saved = parseInt(localStorage.getItem('activeTab'));
-        if (Number.isFinite(saved) && saved >= 0 && saved < TABS.length) {
-            initialTab = saved;
-        }
     }
     switchTab(initialTab, { replaceUrl: true });
 } catch {
@@ -497,23 +490,14 @@ function closeQuickMenu() {
 
 function viewDesktop() {
     document.querySelector('meta[name=viewport]').content = 'width=1200';
-    try { localStorage.setItem('desktopView', '1'); } catch {}
     closeQuickMenu();
     document.getElementById('mobile-restore-btn').style.display = '';
     document.getElementById('mobile-fab').classList.remove('show');
 }
 
 function viewMobile() {
-    try { localStorage.removeItem('desktopView'); } catch {}
     location.reload();
 }
-
-try {
-    if (localStorage.getItem('desktopView') === '1') {
-        document.querySelector('meta[name=viewport]').content = 'width=1200';
-        document.getElementById('mobile-restore-btn').style.display = '';
-    }
-} catch {}
 
 async function initAuth() {
     authDb.auth.onAuthStateChange((_event, session) => {

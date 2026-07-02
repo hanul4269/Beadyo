@@ -960,13 +960,7 @@ async function loadEvents() {
         if (weekEndStr > last) last = weekEndStr;
     }
 
-    const cacheKey = `beadyo_ev_${state.year}_${pad(state.month + 1)}`;
-    const cached = localStorage.getItem(cacheKey);
-    if (cached && state.events.length === 0) {
-        try { state.events = JSON.parse(cached); renderCalendar(); } catch {}
-    }
-
-    // 캐시 없으면 빈 상태라도 즉시 렌더 (모바일 무한 빈 화면 방지)
+    // 빈 상태라도 즉시 렌더 (모바일 무한 빈 화면 방지)
     if (state.events.length === 0) renderCalendar();
 
     // 페이지가 hidden이면 fetch 건너뜀 — visibilitychange 복귀 시 재시도
@@ -1012,14 +1006,14 @@ async function loadEvents() {
         data = await res.json();
     } catch (e) {
         clearTimeout(tid);
-        if (!cached) { state.events = []; renderCalendar(); }
+        state.events = [];
+        renderCalendar();
         _scheduleLoadRetry();
         return;
     }
 
     state.events = Array.isArray(data) ? data : [];
     await loadBroadcastInfos(extFirst, last);
-    try { localStorage.setItem(cacheKey, JSON.stringify(state.events)); } catch {}
     _eventsLoaded = true;
     renderCalendar();
     loadYtLinks().catch(() => {});
@@ -1977,11 +1971,14 @@ function closeUpModal() {
     _upModalIsAutoPrompt = false;
 }
 
+let _upPopupDismissedForSession = false;
+let _upPopupHiddenDate = '';
+
 function dismissUpAutoPopup(mode) {
     if (mode === 'never') {
-        localStorage.setItem('beadyo_up_popup_never', '1');
+        _upPopupDismissedForSession = true;
     } else {
-        localStorage.setItem('beadyo_up_popup_hide_date', dateToStr(new Date()));
+        _upPopupHiddenDate = dateToStr(new Date());
     }
     closeUpModal();
 }
@@ -1989,8 +1986,8 @@ function dismissUpAutoPopup(mode) {
 async function maybeOpenUpModalOnStart() {
     if (_upAutoPopupChecked) return;
     _upAutoPopupChecked = true;
-    if (localStorage.getItem('beadyo_up_popup_never') === '1') return;
-    if (localStorage.getItem('beadyo_up_popup_hide_date') === dateToStr(new Date())) return;
+    if (_upPopupDismissedForSession) return;
+    if (_upPopupHiddenDate === dateToStr(new Date())) return;
     try {
         await _ensureDb();
         const { data, error } = await db.from('up_events').select('*').eq('is_active', true).order('sort_order');
@@ -2039,32 +2036,30 @@ async function loadUpRankingCache() {
 
 const UP_LIVE_CACHE_TTL_MS = 2 * 60 * 1000;
 const _upLiveFetchPromises = new Map();
+const _upLiveRankingCache = new Map();
 
 function upLiveCacheKey(bjId, postNo) {
     return `beadyo_up_live_${bjId}_${postNo}`;
 }
 
 function readCachedUpRanking(bjId, postNo) {
-    try {
-        const cached = JSON.parse(sessionStorage.getItem(upLiveCacheKey(bjId, postNo)) || 'null');
-        if (!cached || !Array.isArray(cached.ranking)) return null;
-        if (Date.now() - Number(cached.savedAt || 0) > UP_LIVE_CACHE_TTL_MS) return null;
-        return { ranking: cached.ranking, updatedAt: cached.updatedAt || cached.savedAt };
-    } catch {}
-    return null;
+    const cached = _upLiveRankingCache.get(upLiveCacheKey(bjId, postNo));
+    if (!cached || !Array.isArray(cached.ranking)) return null;
+    if (Date.now() - Number(cached.savedAt || 0) > UP_LIVE_CACHE_TTL_MS) {
+        _upLiveRankingCache.delete(upLiveCacheKey(bjId, postNo));
+        return null;
+    }
+    return { ranking: cached.ranking, updatedAt: cached.updatedAt || cached.savedAt };
 }
 
 function writeCachedUpRanking(bjId, postNo, ranking) {
-    try {
-        const updatedAt = new Date().toISOString();
-        sessionStorage.setItem(upLiveCacheKey(bjId, postNo), JSON.stringify({
-            savedAt: Date.now(),
-            updatedAt,
-            ranking,
-        }));
-        return updatedAt;
-    } catch {}
-    return new Date().toISOString();
+    const updatedAt = new Date().toISOString();
+    _upLiveRankingCache.set(upLiveCacheKey(bjId, postNo), {
+        savedAt: Date.now(),
+        updatedAt,
+        ranking,
+    });
+    return updatedAt;
 }
 
 async function fetchSoopRankingLive(bjId, postNo, options = {}) {
@@ -2821,12 +2816,10 @@ function calendarNoticeHideKey(notice) {
     return `beadyoNoticeHiddenDate:${notice?.id || DEFAULT_CALENDAR_NOTICE.id}`;
 }
 
+const _calendarNoticeHiddenDates = new Map();
+
 function isCalendarNoticeHiddenToday(notice) {
-    try {
-        return localStorage.getItem(calendarNoticeHideKey(notice)) === dateToStr(new Date());
-    } catch (error) {
-        return false;
-    }
+    return _calendarNoticeHiddenDates.get(calendarNoticeHideKey(notice)) === dateToStr(new Date());
 }
 
 function renderNoticePopup(notice) {
@@ -2876,11 +2869,7 @@ function closeNoticePopup() {
 
 function hideNoticeToday() {
     const notice = _activeCalendarNotice || normalizeCalendarNotice(DEFAULT_CALENDAR_NOTICE);
-    try {
-        localStorage.setItem(calendarNoticeHideKey(notice), dateToStr(new Date()));
-    } catch (error) {
-        // localStorage can be unavailable in private browsing; closing still works.
-    }
+    _calendarNoticeHiddenDates.set(calendarNoticeHideKey(notice), dateToStr(new Date()));
     closeNoticePopup();
 }
 
@@ -3347,10 +3336,6 @@ function normalizeAuthUser(userLike) {
 
 async function initAuth() {
     await _ensureDb();
-    // 이전 세션에서 편집자였다면 즉시 is-editor 클래스 적용 (네트워크 대기 없이)
-    if (localStorage.getItem('beadyo_was_editor') === '1') {
-        document.body.classList.add('is-editor');
-    }
     const { data: { session } } = await db.auth.getSession();
     await setSessionUser(normalizeAuthUser(session?.user));
     db.auth.onAuthStateChange((_event, session) => {
@@ -3380,7 +3365,6 @@ async function setSessionUser(user) {
         state.isEditor = false;
         state.isOwner = false;
         document.body.classList.remove('is-editor');
-        localStorage.removeItem('beadyo_was_editor');
         renderCalendar();
         return;
     }
@@ -3388,7 +3372,6 @@ async function setSessionUser(user) {
     await loadEditors();
     state.isEditor = state.isOwner || state.editors.some(e => e.email.toLowerCase() === state.user.email.toLowerCase());
     document.body.classList.toggle('is-editor', state.isEditor);
-    localStorage.setItem('beadyo_was_editor', state.isEditor ? '1' : '0');
     renderCalendar();
     renderMemoSidebar();
 }

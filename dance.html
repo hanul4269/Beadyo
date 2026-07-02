@@ -511,8 +511,10 @@
             youtube: 'var(--youtube)',
         };
 
-        const STORAGE_KEY = 'beadyoDanceVideos';
-        const DATA_VERSION = 'status-20260630-approved';
+        const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
+        const DANCE_STATUS_TABLE = 'dance_video_statuses';
+        const DANCE_STATUS_COLUMNS = 'video_id,status,title,source,song,url,thumbnail';
         const PLACEHOLDER_THUMBNAILS = new Set(['', 'banner.png', 'banner.jpg', 'loading-img.png', 'songbook-char.png']);
 
         function getYouTubeId(urlValue) {
@@ -561,29 +563,15 @@
             return normalized;
         }
 
-        function mergeVideos(base, incoming) {
-            const byId = new Map(base.map(video => [video.id, normalizeVideo(video)]));
-            incoming.map(normalizeVideo).forEach(video => {
-                byId.set(video.id, { ...byId.get(video.id), ...video });
-            });
-            return Array.from(byId.values()).filter(video => !shouldExcludeVideo(video));
-        }
-
         function loadVideos() {
-            try {
-                const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-                const storedVideos = stored?.version === DATA_VERSION && Array.isArray(stored.videos) ? stored.videos : [];
-                return mergeVideos(window.danceVideos || [], storedVideos);
-            } catch {
-                return (window.danceVideos || []).map(normalizeVideo);
-            }
+            return (window.danceVideos || []).map(normalizeVideo).filter(video => !shouldExcludeVideo(video));
         }
 
         const videos = loadVideos();
 
         let activeSource = 'all';
 
-        const approvedVideos = videos.filter(video => video.status === 'approved');
+        let approvedVideos = videos.filter(video => video.status === 'approved');
         const grid = document.getElementById('videoGrid');
         const emptyState = document.getElementById('emptyState');
         const searchInput = document.getElementById('searchInput');
@@ -605,6 +593,48 @@
                 if (url.protocol === 'http:' || url.protocol === 'https:') return url.toString();
             } catch {}
             return '#';
+        }
+
+        function normalizeSharedStatus(value, fallback = 'review') {
+            return ['review', 'approved', 'hidden'].includes(value) ? value : fallback;
+        }
+
+        function sharedRowToVideo(row, existing = {}) {
+            return normalizeVideo({
+                ...existing,
+                id: row?.video_id || existing.id,
+                status: normalizeSharedStatus(row?.status, existing.status || 'review'),
+                title: row?.title || existing.title || '',
+                source: row?.source || existing.source || 'soop',
+                song: row?.song || existing.song || '',
+                url: row?.url || existing.url || '',
+                thumbnail: row?.thumbnail || existing.thumbnail || 'banner.jpg',
+                tags: existing.tags || [],
+            });
+        }
+
+        async function refreshApprovedVideosFromSharedStatus() {
+            try {
+                const url = `${SUPABASE_URL}/rest/v1/${DANCE_STATUS_TABLE}?select=${DANCE_STATUS_COLUMNS}`;
+                const res = await fetch(url, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                    },
+                });
+                if (!res.ok) return;
+                const rows = await res.json();
+                const byId = new Map(videos.map(video => [video.id, video]));
+                (Array.isArray(rows) ? rows : []).forEach(row => {
+                    if (!row?.video_id) return;
+                    const existing = byId.get(row.video_id);
+                    if (!existing && !row.url) return;
+                    byId.set(row.video_id, sharedRowToVideo(row, existing));
+                });
+                approvedVideos = Array.from(byId.values())
+                    .filter(video => video.status === 'approved' && !shouldExcludeVideo(video));
+                renderGrid();
+            } catch {}
         }
 
         function getVideoEmbedUrl(video) {
@@ -724,6 +754,7 @@
             }
         });
         renderGrid();
+        refreshApprovedVideosFromSharedStatus();
     </script>
 </body>
 </html>
