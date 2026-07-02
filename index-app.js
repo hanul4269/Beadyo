@@ -394,6 +394,11 @@ async function fetchRuntimeCache(cacheKey, ms = 4000) {
     return row?.payload ? { ...row.payload, row_updated_at: row.updated_at } : null;
 }
 
+function isFreshRuntimeCache(data, maxAgeMs) {
+    const updatedAt = Date.parse(data?.updated || data?.row_updated_at || '');
+    return Number.isFinite(updatedAt) && Date.now() - updatedAt < maxAgeMs;
+}
+
 let _lastLiveStatusCheckAt = 0;
 async function checkLiveStatus(force = false) {
     const now = Date.now();
@@ -405,24 +410,13 @@ async function checkLiveStatus(force = false) {
     // 1) Supabase 런타임 캐시: GitHub Actions가 5분마다 갱신
     try {
         const data = await fetchRuntimeCache('live_status');
-        if (data && typeof data.live !== 'undefined') {
+        if (data && typeof data.live !== 'undefined' && isFreshRuntimeCache(data, 15 * 60 * 1000)) {
             badge.classList.toggle('is-live', !!data.live);
             return;
         }
     } catch {}
 
-    // 2) 기존 JSON fallback
-    for (const url of ['live.json?t=' + Date.now(), 'https://beadyo.com/live.json?t=' + Date.now()]) {
-        try {
-            const res = await fetchWithTimeout(url, 5000);
-            if (!res.ok) continue;
-            const data = await res.json();
-            badge.classList.toggle('is-live', !!data.live);
-            return;
-        } catch {}
-    }
-
-    // 3) 마지막 fallback: SOOP chapi API 직접 호출 (Deno 프록시 경유)
+    // 2) Supabase 캐시가 없거나 오래되면 SOOP chapi API 직접 호출 (Deno 프록시 경유)
     try {
         const res = await fetchWithTimeout(
             `${PROXY}?url=${encodeURIComponent('https://chapi.sooplive.co.kr/api/beadyo97/station')}`,
@@ -435,6 +429,17 @@ async function checkLiveStatus(force = false) {
             return;
         }
     } catch {}
+
+    // 3) 기존 JSON fallback
+    for (const url of ['live.json?t=' + Date.now(), 'https://beadyo.com/live.json?t=' + Date.now()]) {
+        try {
+            const res = await fetchWithTimeout(url, 5000);
+            if (!res.ok) continue;
+            const data = await res.json();
+            badge.classList.toggle('is-live', !!data.live);
+            return;
+        } catch {}
+    }
 }
 
 checkLiveStatus(true);
