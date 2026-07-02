@@ -6,8 +6,8 @@
     <title>구슬요 일정표</title>
     <link rel="icon" href="logo-icon.webp">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
-    <link rel="preload" href="app.js?v=calendar-celebration-no-message-20260703" as="script">
-    <script defer src="app.js?v=calendar-celebration-no-message-20260703"></script>
+    <link rel="preload" href="app.js?v=calendar-fireworks-boost-20260703" as="script">
+    <script defer src="app.js?v=calendar-fireworks-boost-20260703"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
@@ -1418,41 +1418,80 @@
         .notice-fireworks {
             position: absolute;
             inset: 0;
-            z-index: 0;
+            z-index: 2;
             overflow: hidden;
             pointer-events: none;
+            mix-blend-mode: screen;
         }
         .notice-fireworks[hidden] {
             display: none;
         }
         .notice-firework-burst {
             position: absolute;
-            width: 8px;
-            height: 8px;
+            width: 12px;
+            height: 12px;
             transform: translate(-50%, -50%);
+        }
+        .notice-firework-burst::before {
+            content: "";
+            position: absolute;
+            inset: -26px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.95) 0 8%, rgba(94,201,255,0.42) 18%, transparent 62%);
+            animation: noticeFireworkFlash 0.64s ease-out forwards;
+        }
+        .notice-firework-burst.big::before {
+            inset: -36px;
         }
         .notice-firework-burst i {
             position: absolute;
             left: 50%;
             top: 50%;
-            width: 7px;
-            height: 7px;
+            width: var(--spark-size, 9px);
+            height: var(--spark-size, 9px);
             border-radius: 999px;
             background: var(--firework-color, #fff);
-            box-shadow: 0 0 12px var(--firework-color, #fff);
-            animation: noticeSpark 0.9s ease-out forwards;
+            box-shadow: 0 0 16px 3px var(--firework-color, #fff), 0 0 34px rgba(255,255,255,0.42);
+            animation: noticeSpark 1.18s cubic-bezier(.08,.72,.16,1) forwards;
+            animation-delay: var(--spark-delay, 0ms);
+        }
+        .notice-firework-burst i::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 30px;
+            height: 3px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--firework-color, #fff), transparent);
+            opacity: 0.76;
+            transform: translate(-4px, -50%) rotate(var(--angle, 0rad));
+            transform-origin: left center;
         }
         @keyframes noticeSpark {
             0% {
                 opacity: 1;
-                transform: translate(-50%, -50%) scale(0.7);
+                transform: translate(-50%, -50%) scale(0.45);
             }
-            75% {
+            68% {
                 opacity: 1;
             }
             100% {
                 opacity: 0;
-                transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(0.2);
+                transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(0.16);
+            }
+        }
+        @keyframes noticeFireworkFlash {
+            0% {
+                opacity: 0.95;
+                transform: scale(0.08);
+            }
+            55% {
+                opacity: 0.62;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1);
             }
         }
         @media (max-width: 480px) {

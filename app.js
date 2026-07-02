@@ -2930,23 +2930,30 @@ function stopNoticeFireworks() {
 function launchNoticeFirework() {
     const layer = document.getElementById('noticeFireworks');
     if (!layer || layer.hidden) return;
+    const compact = window.matchMedia('(max-width: 480px)').matches;
+    const bigBurst = Math.random() > 0.45;
     const burst = document.createElement('div');
-    const colors = ['#5ec9ff', '#ffffff', '#9ad6ff', '#ffd76a', '#ff8bd8'];
-    const sparkCount = 14;
+    const colors = ['#5ec9ff', '#ffffff', '#9ad6ff', '#ffd76a', '#ff8bd8', '#7df7ff', '#b9f7ff'];
+    const sparkCount = bigBurst ? (compact ? 24 : 34) : (compact ? 18 : 26);
     burst.className = 'notice-firework-burst';
-    burst.style.left = `${18 + Math.random() * 64}%`;
-    burst.style.top = `${12 + Math.random() * 46}%`;
+    if (bigBurst) burst.classList.add('big');
+    burst.style.left = `${8 + Math.random() * 84}%`;
+    burst.style.top = `${7 + Math.random() * 64}%`;
     for (let i = 0; i < sparkCount; i++) {
         const spark = document.createElement('i');
-        const angle = (Math.PI * 2 * i) / sparkCount;
-        const distance = 46 + Math.random() * 36;
+        const ring = i % 3;
+        const angle = (Math.PI * 2 * i) / sparkCount + Math.random() * 0.16;
+        const distance = (bigBurst ? 88 : 62) + ring * (compact ? 12 : 18) + Math.random() * (compact ? 28 : 44);
         spark.style.setProperty('--x', `${Math.cos(angle) * distance}px`);
         spark.style.setProperty('--y', `${Math.sin(angle) * distance}px`);
+        spark.style.setProperty('--angle', `${angle}rad`);
+        spark.style.setProperty('--spark-size', `${(bigBurst ? 8 : 6) + Math.random() * 4}px`);
+        spark.style.setProperty('--spark-delay', `${Math.random() * 80}ms`);
         spark.style.setProperty('--firework-color', colors[i % colors.length]);
         burst.appendChild(spark);
     }
     layer.appendChild(burst);
-    setTimeout(() => burst.remove(), 1000);
+    setTimeout(() => burst.remove(), 1400);
 }
 
 function startNoticeFireworks() {
@@ -2954,8 +2961,11 @@ function startNoticeFireworks() {
     if (!layer || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     stopNoticeFireworks();
     layer.hidden = false;
-    for (let i = 0; i < 6; i++) setTimeout(launchNoticeFirework, i * 180);
-    _noticeFireworkInterval = setInterval(launchNoticeFirework, 760);
+    for (let i = 0; i < 10; i++) setTimeout(launchNoticeFirework, i * 110);
+    _noticeFireworkInterval = setInterval(() => {
+        launchNoticeFirework();
+        if (Math.random() > 0.35) setTimeout(launchNoticeFirework, 150);
+    }, 620);
 }
 
 function openNoticePopup(notice = _activeCalendarNotice, options = {}) {
