@@ -172,7 +172,7 @@ const CALENDAR_CELEBRATION_NOTICE = {
     id: 'gosegu-blue-white-pass-20260703',
     title: '고세구 청백 가요대전 합격!',
     message: '',
-    image_url: 'notice-gosegu-pass-20260703.png',
+    image_url: 'notice-gosegu-pass-20260703-v2.png',
     link_url: '',
     link_label: '',
     button_bg_color: '#4aa3ff',
