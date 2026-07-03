@@ -37,7 +37,7 @@ const MUSIC_PAGES = {
     songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'security-review-20260630' },
     dance: { src: 'dance.html', directUrl: 'dance.html', assetVersion: 'security-review-20260630' },
     gembox: { src: 'gembox.html', directUrl: 'gembox.html', assetVersion: 'security-review-20260630' },
-    tractor: { src: 'tractor-service.html', directUrl: 'tractor-service.html', assetVersion: 'tractor-reverse-cards-20260704' },
+    tractor: { src: 'tractor-service.html', directUrl: 'tractor-service.html', assetVersion: 'tractor-coming-soon-card-20260704' },
 };
 let currentMusicPage = 'songs';
 

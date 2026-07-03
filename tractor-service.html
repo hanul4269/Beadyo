@@ -326,14 +326,49 @@
             min-height: 100%;
         }
         .soon-panel {
-            min-height: 330px;
+            position: relative;
+            isolation: isolate;
+            min-height: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
+            gap: 26px;
             padding: 28px;
+            overflow: hidden;
             background:
-                linear-gradient(135deg, rgba(232,115,100,0.18), rgba(90,198,189,0.16)),
+                radial-gradient(circle at 16% 14%, rgba(232,115,100,0.34), transparent 28%),
+                radial-gradient(circle at 78% 18%, rgba(90,198,189,0.36), transparent 30%),
+                linear-gradient(150deg, rgba(255,250,242,0.94) 0%, rgba(244,226,216,0.88) 44%, rgba(232,248,240,0.94) 100%),
                 rgba(255,250,242,0.9);
+        }
+        .soon-panel::before {
+            content: "Tractor Service";
+            position: absolute;
+            right: -32px;
+            bottom: 118px;
+            z-index: -1;
+            color: rgba(59,45,41,0.07);
+            font-family: "Brush Script MT", "Segoe Script", "Snell Roundhand", cursive;
+            font-size: clamp(58px, 8vw, 116px);
+            line-height: 0.8;
+            transform: rotate(-8deg);
+            white-space: nowrap;
+        }
+        .soon-panel::after {
+            content: "";
+            position: absolute;
+            right: -78px;
+            top: -78px;
+            z-index: -1;
+            width: 260px;
+            height: 260px;
+            border: 32px solid rgba(255,255,255,0.46);
+            border-radius: 50%;
+            box-shadow: -96px 210px 0 -92px rgba(92,143,63,0.32);
+        }
+        .soon-copy {
+            max-width: 520px;
         }
         .soon-label {
             color: var(--leaf);
@@ -354,6 +389,126 @@
             font-weight: 780;
             line-height: 1.6;
             word-break: keep-all;
+        }
+        .soon-teaser {
+            display: grid;
+            grid-template-columns: minmax(128px, 0.8fr) minmax(0, 1.2fr);
+            gap: 14px;
+            align-items: stretch;
+        }
+        .soon-month-card,
+        .soon-info-card {
+            border: 1px solid rgba(255,255,255,0.64);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.58);
+            box-shadow: 0 14px 34px rgba(59,45,41,0.1);
+            backdrop-filter: blur(12px);
+        }
+        .soon-month-card {
+            min-height: 170px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background:
+                linear-gradient(150deg, rgba(59,45,41,0.88), rgba(151,82,72,0.78)),
+                rgba(59,45,41,0.9);
+            color: #fffaf2;
+            overflow: hidden;
+            position: relative;
+        }
+        .soon-month-card::after {
+            content: "";
+            position: absolute;
+            right: -40px;
+            bottom: -46px;
+            width: 126px;
+            height: 126px;
+            border: 20px solid rgba(217,155,61,0.3);
+            border-radius: 50%;
+        }
+        .soon-month {
+            position: relative;
+            z-index: 1;
+            font-size: 36px;
+            font-weight: 950;
+            line-height: 0.9;
+        }
+        .soon-month span {
+            display: block;
+            margin-top: 8px;
+            color: rgba(255,250,242,0.72);
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+        }
+        .soon-signal {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,250,242,0.86);
+            font-size: 12px;
+            font-weight: 900;
+        }
+        .soon-signal::before {
+            content: "";
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 0 6px rgba(217,155,61,0.18);
+        }
+        .soon-info-card {
+            min-height: 170px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .soon-lineup {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+        .soon-lineup span {
+            min-height: 58px;
+            border-radius: 8px;
+            background:
+                linear-gradient(135deg, rgba(232,115,100,0.2), rgba(90,198,189,0.2)),
+                rgba(255,250,242,0.72);
+            border: 1px solid rgba(59,45,41,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(59,45,41,0.52);
+            font-size: 22px;
+            font-weight: 950;
+        }
+        .soon-info-card strong {
+            color: var(--soil);
+            font-size: 16px;
+            line-height: 1.3;
+            word-break: keep-all;
+        }
+        .soon-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 12px;
+        }
+        .soon-chip {
+            display: inline-flex;
+            align-items: center;
+            min-height: 30px;
+            padding: 0 10px;
+            border-radius: 999px;
+            background: rgba(255,250,242,0.82);
+            color: var(--soil);
+            border: 1px solid rgba(59,45,41,0.1);
+            font-size: 12px;
+            font-weight: 900;
         }
         .video-modal {
             position: fixed;
@@ -424,8 +579,11 @@
             .episode-detail .poster { min-height: 0; max-height: 430px; }
             .video-button { aspect-ratio: 16 / 9; }
             .episode h3 { font-size: 22px; }
-            .soon-panel { min-height: 220px; }
+            .soon-panel { min-height: 420px; padding: 22px; }
             .soon-panel h3 { font-size: 26px; }
+            .soon-teaser { grid-template-columns: 1fr; }
+            .soon-month-card,
+            .soon-info-card { min-height: 140px; }
             .video-modal { padding: 12px; }
         }
     </style>
@@ -447,9 +605,32 @@
         <section class="episode-grid" aria-label="트랙터서비스 에피소드">
             <article class="episode soon">
                 <div class="soon-panel">
-                    <div class="soon-label">EP.03</div>
-                    <h3>7월 Coming soon</h3>
-                    <p>다음 트랙터서비스가 준비 중입니다.</p>
+                    <div class="soon-copy">
+                        <div class="soon-label">EP.03</div>
+                        <h3>7월 Coming soon</h3>
+                        <p>다음 트랙터서비스가 준비 중입니다.</p>
+                    </div>
+                    <div class="soon-teaser" aria-hidden="true">
+                        <div class="soon-month-card">
+                            <div class="soon-month">JULY<span>NEXT EPISODE</span></div>
+                            <div class="soon-signal">ON AIR SOON</div>
+                        </div>
+                        <div class="soon-info-card">
+                            <div class="soon-lineup">
+                                <span>?</span>
+                                <span>♪</span>
+                                <span>!</span>
+                            </div>
+                            <div>
+                                <strong>게스트 공개를 기다려 주세요</strong>
+                                <div class="soon-chips">
+                                    <span class="soon-chip">트랙터서비스</span>
+                                    <span class="soon-chip">라이브 토크</span>
+                                    <span class="soon-chip">음악</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </article>
 
