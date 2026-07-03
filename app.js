@@ -167,7 +167,7 @@ const DEFAULT_CALENDAR_NOTICE = {
 };
 
 // Set this to false when the celebration popup is no longer needed.
-const CALENDAR_CELEBRATION_NOTICE_ENABLED = true;
+const CALENDAR_CELEBRATION_NOTICE_ENABLED = false;
 const CALENDAR_CELEBRATION_NOTICE = {
     id: 'gosegu-blue-white-pass-20260703',
     title: '고세구 청백 가요대전 합격!',
@@ -2990,13 +2990,8 @@ function hideNoticeToday() {
 }
 
 async function maybeOpenCalendarNoticeOnStart() {
-    if (CALENDAR_CELEBRATION_NOTICE_ENABLED) {
-        openNoticePopup(CALENDAR_CELEBRATION_NOTICE);
-        return;
-    }
-    const notices = await loadCalendarNotices({ includeInactive: false, fallback: true });
-    const notice = notices.find(n => n.is_active);
-    if (notice) openNoticePopup(notice);
+    if (!CALENDAR_CELEBRATION_NOTICE_ENABLED) return;
+    openNoticePopup(CALENDAR_CELEBRATION_NOTICE);
 }
 
 function setNoticeColorInputs(colors) {
