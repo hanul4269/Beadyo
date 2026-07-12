@@ -24,8 +24,8 @@ function withFrameAssetVersion(src, assetVersion = APP_ASSET_VERSION) {
 const TABS = [
     { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'calendar-holidays-2026-2028-fix-20260704' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
-    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'songbook-random-live-cover-20260712' },
-    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'songbook-random-live-cover-20260712' },
+    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'songbook-quality-recent-20260713' },
+    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'songbook-quality-recent-20260713' },
     { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'security-review-20260630' },
     { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'gacha-wall-hit-20260614' },
 ];
