@@ -516,7 +516,7 @@
             border-color: var(--card-accent);
             box-shadow: 0 8px 18px rgba(34,39,32,0.1);
         }
-        .song-card.editable { cursor: pointer; }
+        .song-card.clickable { cursor: pointer; }
         .song-card.cat-kpop {
             --card-accent: #7fb83f;
             --card-accent-bg: #eef7e4;
@@ -708,7 +708,7 @@
             border-color: rgba(127,184,63,0.34);
             box-shadow: 0 6px 16px rgba(34,39,32,0.08);
         }
-        .songbook-list-row.editable { cursor: pointer; }
+        .songbook-list-row.clickable { cursor: pointer; }
         .song-list-cover {
             width: 76px;
             height: 76px;
@@ -1408,6 +1408,137 @@
         .btn-again { background: var(--accent); color: #fff; }
         .btn-close  { background: var(--bg); color: var(--text); }
 
+        /* ─── 노래 상세 패널 ─── */
+        .song-detail-panel {
+            max-width: 640px;
+            padding: 0;
+            overflow: hidden;
+            text-align: left;
+            max-height: calc(100vh - 40px);
+            display: grid;
+            grid-template-columns: 240px minmax(0, 1fr);
+        }
+        .song-detail-cover-wrap {
+            min-height: 100%;
+            background: var(--accent-light);
+            border-right: 1px solid var(--border);
+        }
+        .song-detail-cover {
+            width: 100%;
+            height: 100%;
+            min-height: 360px;
+            object-fit: cover;
+            display: block;
+        }
+        .song-detail-cover.song-cover-fallback {
+            min-height: 360px;
+            border-radius: 0;
+        }
+        .song-detail-body {
+            position: relative;
+            min-width: 0;
+            padding: 22px 22px 20px;
+            overflow-y: auto;
+        }
+        .song-detail-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 50%;
+            background: var(--bg);
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1;
+            cursor: pointer;
+        }
+        .song-detail-close:hover { color: var(--text); background: var(--accent-light); }
+        .song-detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            padding-right: 36px;
+            margin-bottom: 12px;
+        }
+        .song-detail-tags {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .song-detail-tag {
+            display: inline-flex;
+            align-items: center;
+            min-height: 24px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: var(--bg);
+            color: var(--accent-dark);
+            border: 1px solid rgba(127,184,63,0.22);
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        .song-detail-title {
+            margin: 0 34px 6px 0;
+            color: var(--text);
+            font-size: 24px;
+            line-height: 1.28;
+            font-weight: 900;
+            overflow-wrap: anywhere;
+            word-break: keep-all;
+        }
+        .song-detail-artist {
+            margin-bottom: 18px;
+            color: var(--muted);
+            font-size: 15px;
+            font-weight: 800;
+            overflow-wrap: anywhere;
+        }
+        .song-detail-fields {
+            display: grid;
+            gap: 9px;
+        }
+        .song-detail-field {
+            display: grid;
+            grid-template-columns: 94px minmax(0, 1fr);
+            gap: 10px;
+            align-items: start;
+            padding: 10px 0;
+            border-top: 1px solid var(--border);
+        }
+        .song-detail-field-label {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 900;
+            line-height: 1.4;
+        }
+        .song-detail-field-value {
+            min-width: 0;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.55;
+            overflow-wrap: anywhere;
+        }
+        .song-detail-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+        .song-detail-skill {
+            color: var(--accent-dark);
+            font-size: 16px;
+            letter-spacing: 0;
+            white-space: nowrap;
+        }
+        .song-detail-empty {
+            color: var(--muted);
+            font-weight: 700;
+        }
+
         /* ─── 토스트 ─── */
         .toast {
             position: fixed; bottom: 24px; left: 50%;
@@ -1615,11 +1746,31 @@
         .wc-search-results {
             margin-top: 20px;
         }
+        .wc-results-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
         .wc-results-head {
-            margin: 0 0 10px;
+            margin: 0;
             font-size: 15px;
             font-weight: 800;
             color: var(--accent-dark);
+        }
+        .wc-view-toggle {
+            flex-shrink: 0;
+        }
+        .wc-view-toggle .songbook-view-btn {
+            width: auto;
+            padding: 0 11px;
+            gap: 4px;
+            font-size: 12px;
+        }
+        .wc-search-results .songbook-card-grid {
+            padding: 0;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         }
         .wc-search-results .song-table-wrap {
             border: 1px solid var(--border);
@@ -1643,6 +1794,20 @@
             .wc-photo-panel { height: 220px; }
             .wc-random-panel { order: 3; }
             .wc-search-zone { display: block; }
+            .song-detail-panel {
+                max-width: 460px;
+                grid-template-columns: 1fr;
+            }
+            .song-detail-cover-wrap {
+                height: 220px;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+            .song-detail-cover,
+            .song-detail-cover.song-cover-fallback {
+                min-height: 220px;
+                height: 220px;
+            }
         }
         @media (max-width: 480px) {
             .wc-photo-panel { height: 180px; }
@@ -1651,6 +1816,32 @@
             .wc-random-face { width: 122px; height: 122px; }
             .wc-random-arc { top: 52px; width: 166px; height: 50px; }
             .wc-random-arc text { font-size: 20px; }
+            .wc-results-toolbar {
+                align-items: stretch;
+                flex-direction: column;
+            }
+            .wc-view-toggle {
+                width: 100%;
+                justify-content: center;
+            }
+            .wc-search-results .songbook-card-grid {
+                grid-template-columns: 1fr;
+            }
+            .song-detail-panel {
+                max-width: 100%;
+                max-height: calc(100vh - 24px);
+            }
+            .song-detail-body {
+                padding: 18px 16px 16px;
+            }
+            .song-detail-title {
+                margin-right: 34px;
+                font-size: 21px;
+            }
+            .song-detail-field {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
         }
 
         /* ─── 편집 FAB ─── */
@@ -2067,9 +2258,11 @@
         }
         .skill-heart:hover { transform: scale(1.25); }
 
-        /* 편집 가능 행 */
-        .song-table tbody tr.editable { cursor: pointer; }
-        .song-table tbody tr.editable:hover .col-title { color: var(--accent-dark); text-decoration: underline; text-decoration-style: dotted; }
+        /* 클릭 가능 행 */
+        .song-table tbody tr.editable,
+        .song-table tbody tr.clickable { cursor: pointer; }
+        .song-table tbody tr.editable:hover .col-title,
+        .song-table tbody tr.clickable:hover .col-title { color: var(--accent-dark); text-decoration: underline; text-decoration-style: dotted; }
 
         /* ─── 모바일: 테이블 가로 스크롤 ─── */
         @media (max-width: 480px) {
@@ -2333,6 +2526,11 @@
     </div>
 </div>
 
+<!-- ══════════════ 일반 사용자 노래 상세 패널 ══════════════ -->
+<div id="song-detail-modal" class="modal-overlay" onclick="if(event.target===this)closeSongDetailPanel()">
+    <div class="modal song-detail-panel" id="song-detail-panel"></div>
+</div>
+
 <!-- ══════════════ 노래 일괄 추가 모달 ══════════════ -->
 <div id="bulk-modal" class="modal-overlay" onclick="if(event.target===this)closeBulkModal()">
     <div class="modal edit-modal" style="max-width:820px;width:96vw">
@@ -2517,6 +2715,7 @@ const S = {
     mainTab:      INITIAL_VIEW,
     songbookCat:  'welcome',
     songbookView: 'grid',
+    welcomeSearchView: 'table',
     songbookTag:  'all',
     songbookFilterExpanded: {
         tags: false,
@@ -2911,8 +3110,14 @@ function songLinksHtml(song) {
         linkBtn(song.clip_url, '클립', 'clip'),
     ].filter(Boolean).join('');
 }
+function songClickClass() {
+    return `clickable${S.session ? ' editable' : ''}`;
+}
+function songClickHandler(song) {
+    return `openSongDetail(${song.id})`;
+}
 function editableSongAttrs(song) {
-    return S.session ? `class="editable" onclick="openSongModal(${song.id})"` : '';
+    return `class="${songClickClass()}" onclick="${songClickHandler(song)}"`;
 }
 function fmtDate(d) {
     if (!d) return '';
@@ -2929,42 +3134,27 @@ function daysBetween(a, b) {
     return Math.max(0, Math.floor((a - b) / 86400000));
 }
 
+function welcomeSearchViewToggleHtml(extraClass = '') {
+    return `<div class="songbook-view-toggle ${extraClass}">
+        <button type="button" class="songbook-view-btn${S.welcomeSearchView === 'grid' ? ' active' : ''}" data-view="grid" onclick="setWelcomeSearchView('grid')" title="앨범형 보기" aria-label="앨범형 보기">▦ <span>앨범형</span></button>
+        <button type="button" class="songbook-view-btn${S.welcomeSearchView === 'table' ? ' active' : ''}" data-view="table" onclick="setWelcomeSearchView('table')" title="리스트형 보기" aria-label="리스트형 보기">▤ <span>리스트형</span></button>
+    </div>`;
+}
+
 function welcomeSearchResultsHtml() {
     if (!S.query) return '';
     const items = filteredSongbookItems({ forceAll: true, tag: 'all' });
     if (!items.length) return emptyHtml(`"${esc(S.query)}" 검색 결과가 없어요`);
+    const resultsHtml = S.welcomeSearchView === 'grid'
+        ? songbookCardGridHtml(items, true)
+        : songbookTableHtml(items, true);
 
     return `
-        <div class="wc-results-head">"${esc(S.query)}" 검색 결과 ${items.length}곡</div>
-        <div class="song-table-wrap">
-            <table class="song-table">
-                <thead><tr>
-                    <th class="col-num">#</th>
-                    <th class="col-cover">커버</th>
-                    <th class="col-cat">분류</th>
-                    <th class="col-title">제목</th>
-                    <th class="col-artist">가수</th>
-                    <th class="col-mr th-center">MR</th>
-                    <th class="col-clip th-center">구슬요 클립</th>
-                    <th class="col-skill th-center">숙련도</th>
-                    <th class="col-memo">메모</th>
-                </tr></thead>
-                <tbody>
-                ${items.map((s, i) => `
-                    <tr ${editableSongAttrs(s)}>
-                        <td class="col-num">${i + 1}</td>
-                        <td class="col-cover">${songCoverMediaHtml(s)}</td>
-                        <td class="col-cat"><span class="cat-badge">${esc(s.category)}</span></td>
-                        <td class="col-title">${esc(s.title)}</td>
-                        <td class="col-artist">${esc(s.artist || '')}</td>
-                        <td class="col-mr">${linkBtn(s.mr_url, 'MR', 'mr')}</td>
-                        <td class="col-clip">${linkBtn(s.clip_url, '클립', 'clip')}</td>
-                        <td class="col-skill">${skillDots(s.skill_level || 0)}</td>
-                        <td class="col-memo">${esc(s.memo || '')}</td>
-                    </tr>`).join('')}
-                </tbody>
-            </table>
-        </div>`;
+        <div class="wc-results-toolbar">
+            <div class="wc-results-head">"${esc(S.query)}" 검색 결과 ${items.length}곡</div>
+            ${welcomeSearchViewToggleHtml('wc-view-toggle')}
+        </div>
+        ${resultsHtml}`;
 }
 
 function renderWelcomeSearchResults() {
@@ -3081,7 +3271,7 @@ function songbookCardGridHtml(items, isAll) {
                     ${links ? `<div class="song-card-links">${links}</div>` : ''}
                     ${s.memo ? `<div class="song-card-memo">${esc(s.memo)}</div>` : ''}
                 </div>` : '';
-            return `<article class="song-card ${songCategoryClass(s.category)}${S.session ? ' editable' : ''}"${S.session ? ` onclick="openSongModal(${s.id})"` : ''}>
+            return `<article class="song-card ${songCategoryClass(s.category)} ${songClickClass()}" onclick="${songClickHandler(s)}">
                 <div class="song-card-cover-wrap">${songCoverMediaHtml(s, 'song-card-cover')}</div>
                 <div class="song-card-info">
                     <div class="song-card-head">
@@ -3101,7 +3291,7 @@ function songbookListHtml(items, isAll) {
     return `<div class="songbook-list-view">
         ${items.map((s, i) => {
             const links = songLinksHtml(s);
-            return `<div class="songbook-list-row${S.session ? ' editable' : ''}"${S.session ? ` onclick="openSongModal(${s.id})"` : ''}>
+            return `<div class="songbook-list-row ${songClickClass()}" onclick="${songClickHandler(s)}">
                 <div>${songCoverMediaHtml(s, 'song-list-cover')}</div>
                 <div class="song-list-main">
                     <div class="song-list-title">${esc(s.title)}</div>
@@ -3813,6 +4003,12 @@ function setSongbookView(view) {
     S.songbookView = view;
     updateSongbookViewToggle();
     renderSongbook();
+}
+
+function setWelcomeSearchView(view) {
+    if (!['grid', 'table'].includes(view)) return;
+    S.welcomeSearchView = view;
+    renderWelcomeSearchResults();
 }
 
 function setSongbookFacetFromButton(kind, button) {
@@ -5289,6 +5485,155 @@ async function updateSongTagsStatus() {
         el.textContent = 'Supabase에 tags 컬럼을 추가해야 태그 수정이 저장됩니다.';
     }
 }
+
+let _songDetailLivePromise = null;
+
+function findSongbookSongById(id) {
+    const target = String(id ?? '');
+    return (S.songbookData || []).find(song => String(song.id) === target) || null;
+}
+
+function songDetailLinkValue(url, label, cls) {
+    const normalized = normalizeOptionalUrl(url);
+    return normalized
+        ? `<div class="song-detail-links">${linkBtn(normalized, label, cls)}</div>`
+        : '<span class="song-detail-empty">없음</span>';
+}
+
+function formatDetailDate(dateText) {
+    return String(dateText || '').replace(/-/g, '.');
+}
+
+function songDetailPanelHtml(song) {
+    const tags = songbookTags(song);
+    const tagHtml = tags.length
+        ? `<span class="song-detail-tags">${tags.map(tag => `<span class="song-detail-tag">${esc(tag)}</span>`).join('')}</span>`
+        : '';
+    const memo = String(song?.memo || '').trim();
+    const memoHtml = `
+                <div class="song-detail-field">
+                    <div class="song-detail-field-label">메모</div>
+                    <div class="song-detail-field-value">${memo ? esc(memo) : '<span class="song-detail-empty">메모 없음</span>'}</div>
+                </div>`;
+
+    return `
+        <div class="song-detail-cover-wrap">${songCoverMediaHtml(song, 'song-detail-cover', 'eager')}</div>
+        <div class="song-detail-body">
+            <button class="song-detail-close" type="button" onclick="closeSongDetailPanel()" aria-label="닫기">✕</button>
+            <div class="song-detail-meta">
+                <span class="cat-badge">${esc(song.category || '')}</span>
+                ${tagHtml}
+            </div>
+            <h2 class="song-detail-title">${esc(song.title || '')}</h2>
+            <div class="song-detail-artist">${esc(song.artist || '')}</div>
+            <div class="song-detail-fields">
+                <div class="song-detail-field">
+                    <div class="song-detail-field-label">MR 링크</div>
+                    <div class="song-detail-field-value">${songDetailLinkValue(song.mr_url, 'MR', 'mr')}</div>
+                </div>
+                <div class="song-detail-field">
+                    <div class="song-detail-field-label">클립 링크</div>
+                    <div class="song-detail-field-value">${songDetailLinkValue(song.clip_url, '클립', 'clip')}</div>
+                </div>
+                <div class="song-detail-field">
+                    <div class="song-detail-field-label">숙련도</div>
+                    <div class="song-detail-field-value song-detail-skill">${skillDots(song.skill_level || 0)}</div>
+                </div>
+                <div class="song-detail-field" id="sd-last-date-row" style="display:none">
+                    <div class="song-detail-field-label">최근 부른 날짜</div>
+                    <div class="song-detail-field-value" id="sd-last-date"></div>
+                </div>
+                ${memoHtml}
+            </div>
+        </div>`;
+}
+
+function latestLiveRecordForSong(song, rows) {
+    const key = liveStatKey(song);
+    let latest = null;
+    let latestTime = -Infinity;
+    for (const row of rows || []) {
+        if (liveStatKey(row) !== key) continue;
+        const date = parseLiveDate(row.performed_date);
+        if (!date) continue;
+        const time = date.getTime();
+        if (time > latestTime) {
+            latest = row;
+            latestTime = time;
+        }
+    }
+    return latest;
+}
+
+async function ensureLiveAllForSongDetail() {
+    if (S.liveCache['all'] !== undefined) return S.liveCache['all'];
+    if (_songDetailLivePromise) return _songDetailLivePromise;
+
+    const years = [2022, 2023, 2024, 2025, 2026];
+    _songDetailLivePromise = Promise.all(years.map(async year => {
+        if (S.liveCache[year] !== undefined) return S.liveCache[year] || [];
+        const rows = await fetchAll('live_songs', { year }, [['performed_date', false], ['id', false]]);
+        S.liveCache[year] = rows;
+        return rows;
+    })).then(parts => {
+        S.liveCache['all'] = parts.flat()
+            .sort((a, b) => (b.performed_date || '').localeCompare(a.performed_date || ''));
+        return S.liveCache['all'];
+    }).finally(() => {
+        _songDetailLivePromise = null;
+    });
+    return _songDetailLivePromise;
+}
+
+async function updateSongDetailLastDate(song) {
+    const rowEl = document.getElementById('sd-last-date-row');
+    const dateEl = document.getElementById('sd-last-date');
+    if (!rowEl || !dateEl) return;
+    rowEl.style.display = 'none';
+    dateEl.textContent = '';
+
+    try {
+        const rows = await ensureLiveAllForSongDetail();
+        const latest = latestLiveRecordForSong(song, rows);
+        const modal = document.getElementById('song-detail-modal');
+        if (!modal?.classList.contains('open') || modal.dataset.songId !== String(song.id)) return;
+        if (!latest?.performed_date) return;
+        dateEl.textContent = formatDetailDate(latest.performed_date);
+        rowEl.style.display = '';
+    } catch {}
+}
+
+function openSongDetailPanel(id) {
+    const song = findSongbookSongById(id);
+    if (!song) return;
+    const modal = document.getElementById('song-detail-modal');
+    const panel = document.getElementById('song-detail-panel');
+    modal.dataset.songId = String(song.id);
+    panel.innerHTML = songDetailPanelHtml(song);
+    modal.classList.add('open');
+    updateSongDetailLastDate(song);
+}
+
+function closeSongDetailPanel() {
+    const modal = document.getElementById('song-detail-modal');
+    modal.classList.remove('open');
+    modal.dataset.songId = '';
+}
+
+function openSongDetail(id) {
+    if (S.session) openSongModal(id);
+    else openSongDetailPanel(id);
+}
+
+function closeSongDetail() {
+    closeSongDetailPanel();
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    const modal = document.getElementById('song-detail-modal');
+    if (modal?.classList.contains('open')) closeSongDetail();
+});
 
 function openSongModal(id) {
     if (!S.session) return;

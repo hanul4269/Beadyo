@@ -4,9 +4,11 @@
 create table if not exists songbook (
   id        serial primary key,
   category  text    not null,   -- KPOP | POP | JPOP | ETC | 애교송 | 오리지널
+  tags      text[] default '{}',
   sort_order integer,
   title     text    not null,
   artist    text,
+  cover_url text,
   mr_url    text,
   clip_url  text,
   skill_level integer default 0,  -- 0~5 (💚 개수)
