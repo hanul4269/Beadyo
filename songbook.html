@@ -279,6 +279,81 @@
         }
         .lf-dir.active { background: #555; color: #fff; border-color: #333; }
 
+        .songbook-filter-panel {
+            margin-top: 8px;
+            padding: 10px 12px;
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+        .sbf-row {
+            display: grid;
+            grid-template-columns: 42px minmax(0, 1fr) auto;
+            gap: 8px;
+            align-items: start;
+        }
+        .sbf-label {
+            padding-top: 7px;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+        .sbf-chips {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            min-width: 0;
+        }
+        .sbf-chip,
+        .sbf-more-btn {
+            min-height: 29px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            border: 1.5px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1.2;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background .12s, border-color .12s, color .12s;
+        }
+        .sbf-chip:hover,
+        .sbf-more-btn:hover {
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
+        .sbf-chip.active {
+            background: var(--accent);
+            border-color: var(--accent-dark);
+            color: #fff;
+        }
+        .sbf-chip b {
+            margin-left: 4px;
+            font-size: 11px;
+            font-weight: 900;
+            opacity: .72;
+        }
+        .sbf-empty {
+            padding: 7px 0;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .sbf-more-btn {
+            justify-self: end;
+            background: var(--surface);
+            color: var(--accent-dark);
+        }
+
         /* 월 변경 구분선 */
         .song-table tbody tr.month-start td { border-top: 2.5px solid var(--accent); }
         .song-table tbody tr.month-start td.col-date { color: var(--accent-dark); }
@@ -334,8 +409,358 @@
             min-width: 52px;
             padding: 3px 8px; border-radius: 999px;
             font-size: 11px; font-weight: 700;
-            background: var(--accent-light); color: var(--accent-dark);
-            border: 1px solid rgba(127,184,63,0.22);
+            background: var(--cat-bg, var(--accent-light)); color: var(--cat-color, var(--accent-dark));
+            border: 1px solid var(--cat-border, rgba(127,184,63,0.22));
+            white-space: nowrap;
+        }
+
+        .songbook-view-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            height: 38px;
+            padding: 3px;
+            border: 1.5px solid var(--border);
+            border-radius: 19px;
+            background: var(--surface);
+            flex-shrink: 0;
+            box-shadow: 0 1px 4px rgba(34,39,32,0.06);
+        }
+        .songbook-view-toggle[hidden] { display: none; }
+        .songbook-view-btn {
+            width: 32px;
+            height: 30px;
+            border: none;
+            border-radius: 15px;
+            background: transparent;
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 900;
+            line-height: 1;
+            cursor: pointer;
+            transition: background .12s, color .12s, box-shadow .12s;
+        }
+        .songbook-view-btn:hover {
+            background: var(--accent-light);
+            color: var(--accent-dark);
+        }
+        .songbook-view-btn.active {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 2px 7px rgba(127,184,63,0.26);
+        }
+
+        .song-cover-thumb {
+            width: 54px;
+            height: 54px;
+            border-radius: 8px;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+            background: var(--accent-light);
+            border: 1px solid rgba(34,39,32,0.08);
+        }
+        .song-cover-fallback {
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 2px;
+            color: var(--accent-dark);
+            text-align: center;
+            font-weight: 900;
+            line-height: 1;
+        }
+        .song-cover-fallback span { font-size: 20px; }
+        .song-cover-fallback small {
+            max-width: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 9px;
+            font-weight: 800;
+            color: var(--muted);
+        }
+
+        .songbook-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 12px;
+            padding: 6px 12px 18px;
+        }
+        .song-card {
+            --card-accent: var(--accent);
+            --card-accent-bg: var(--accent-light);
+            --card-accent-soft: #fbfdf7;
+            --cat-bg: var(--accent-light);
+            --cat-color: var(--accent-dark);
+            --cat-border: rgba(127,184,63,0.22);
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            align-items: stretch;
+            gap: 0;
+            aspect-ratio: 2 / 1;
+            min-width: 0;
+            min-height: 174px;
+            padding: 0;
+            border-radius: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(34,39,32,0.05);
+            overflow: hidden;
+            transition: transform .12s, box-shadow .12s, border-color .12s;
+        }
+        .song-card:hover {
+            transform: translateY(-1px);
+            border-color: var(--card-accent);
+            box-shadow: 0 8px 18px rgba(34,39,32,0.1);
+        }
+        .song-card.editable { cursor: pointer; }
+        .song-card.cat-kpop {
+            --card-accent: #7fb83f;
+            --card-accent-bg: #eef7e4;
+            --card-accent-soft: #fbfdf7;
+            --cat-bg: #eef7e4;
+            --cat-color: #4f7f25;
+            --cat-border: rgba(127,184,63,0.24);
+        }
+        .song-card.cat-pop {
+            --card-accent: #3f78a8;
+            --card-accent-bg: #eaf3fb;
+            --card-accent-soft: #f6fafd;
+            --cat-bg: #eaf3fb;
+            --cat-color: #2f6b9b;
+            --cat-border: rgba(63,120,168,0.22);
+        }
+        .song-card.cat-jpop {
+            --card-accent: #e48652;
+            --card-accent-bg: #fff0e7;
+            --card-accent-soft: #fffaf6;
+            --cat-bg: #fff0e7;
+            --cat-color: #b6602f;
+            --cat-border: rgba(228,134,82,0.24);
+        }
+        .song-card.cat-original {
+            --card-accent: #8b7ac9;
+            --card-accent-bg: #f1effb;
+            --card-accent-soft: #fbfaff;
+            --cat-bg: #f1effb;
+            --cat-color: #6654a8;
+            --cat-border: rgba(139,122,201,0.24);
+        }
+        .song-card.cat-aegyo {
+            --card-accent: #d76e95;
+            --card-accent-bg: #fdebf2;
+            --card-accent-soft: #fff8fb;
+            --cat-bg: #fdebf2;
+            --cat-color: #af4770;
+            --cat-border: rgba(215,110,149,0.24);
+        }
+        .song-card.cat-etc {
+            --card-accent: #798070;
+            --card-accent-bg: #f0f2ed;
+            --card-accent-soft: #fbfcf8;
+            --cat-bg: #f0f2ed;
+            --cat-color: #5d6657;
+            --cat-border: rgba(121,128,112,0.22);
+        }
+        .song-card-cover-wrap {
+            position: relative;
+            z-index: 1;
+            min-width: 0;
+            min-height: 0;
+            background: var(--card-accent-bg);
+            overflow: hidden;
+        }
+        .song-card-cover {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+            object-fit: cover;
+            display: block;
+        }
+        .song-card-info {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+            padding: 14px 14px 12px 16px;
+            min-width: 0;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.96), var(--card-accent-soft)),
+                var(--surface);
+            border-left: 1px solid rgba(34,39,32,0.06);
+        }
+        .song-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+            min-height: 24px;
+            min-width: 0;
+        }
+        .song-card-title {
+            margin-top: 12px;
+            min-height: 0;
+            font-size: 17px;
+            font-weight: 900;
+            line-height: 1.28;
+            color: var(--text);
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .song-card-artist {
+            margin-top: 4px;
+            min-height: 0;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--muted);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .song-card-skill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            min-height: 16px;
+            white-space: nowrap;
+        }
+        .song-card-skill-label,
+        .song-card-skill-score {
+            font-size: 10px;
+            font-weight: 900;
+            line-height: 1;
+        }
+        .song-card-skill-label { color: var(--muted); }
+        .song-card-skill-score { color: var(--card-accent); }
+        .song-card-skill-bars {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 3px;
+            width: 58px;
+            height: 8px;
+        }
+        .song-card-skill-bar {
+            border-radius: 999px;
+            background: rgba(34,39,32,0.13);
+        }
+        .song-card-skill-bar.filled {
+            background: var(--card-accent);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18);
+        }
+        .song-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: auto;
+            padding-top: 8px;
+            min-width: 0;
+        }
+        .song-card-links {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            min-height: 0;
+            flex-shrink: 0;
+        }
+        .song-card-memo {
+            min-width: 0;
+            max-width: 100%;
+            color: var(--muted);
+            font-size: 11.5px;
+            line-height: 1.45;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .songbook-list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            padding: 4px 12px 18px;
+        }
+        .songbook-list-row {
+            display: grid;
+            grid-template-columns: 76px minmax(0, 1fr) minmax(150px, auto);
+            gap: 14px;
+            align-items: center;
+            min-height: 92px;
+            padding: 8px 12px 8px 8px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            box-shadow: 0 1px 3px rgba(34,39,32,0.04);
+            transition: background .12s, border-color .12s, box-shadow .12s;
+        }
+        .songbook-list-row:hover {
+            background: var(--accent-soft);
+            border-color: rgba(127,184,63,0.34);
+            box-shadow: 0 6px 16px rgba(34,39,32,0.08);
+        }
+        .songbook-list-row.editable { cursor: pointer; }
+        .song-list-cover {
+            width: 76px;
+            height: 76px;
+            border-radius: 8px;
+            object-fit: cover;
+            display: block;
+            background: var(--accent-light);
+            border: 1px solid rgba(34,39,32,0.08);
+        }
+        .song-list-main {
+            min-width: 0;
+        }
+        .song-list-title {
+            font-size: 16px;
+            font-weight: 900;
+            line-height: 1.35;
+            color: var(--text);
+            overflow-wrap: anywhere;
+        }
+        .song-list-artist {
+            margin-top: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--muted);
+        }
+        .song-list-memo {
+            margin-top: 6px;
+            font-size: 12px;
+            line-height: 1.4;
+            color: var(--muted);
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .song-list-side {
+            display: flex;
+            align-items: flex-end;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+        }
+        .song-list-links {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .song-list-skill {
+            color: var(--accent-dark);
+            font-size: 13px;
+            letter-spacing: -1px;
             white-space: nowrap;
         }
 
@@ -385,6 +810,7 @@
 
         /* 열 너비 */
         .col-num    { width: 46px;  text-align: center; font-weight: 700; }
+        .col-cover  { width: 74px;  text-align: center; }
         .col-cat    { width: 88px; }
         .col-title  { width: 240px; font-weight: 800; color: #1f241d; }
         .col-artist { width: 220px; font-weight: 700; color: #3f443b; }
@@ -432,11 +858,14 @@
         #songbook-list .col-cat {
             width: 96px;
         }
+        #songbook-list .col-cover {
+            width: 78px;
+        }
         #songbook-list .col-title {
-            width: 292px;
+            width: 252px;
         }
         #songbook-list .col-artist {
-            width: 270px;
+            width: 230px;
         }
         #songbook-list .col-mr {
             width: 82px;
@@ -820,9 +1249,90 @@
             box-shadow: 0 12px 40px rgba(0,0,0,.18);
             text-align: center;
         }
+        .random-modal-card {
+            max-width: 430px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
         .random-label {
             font-size: 11px; font-weight: 700; letter-spacing: .08em;
             color: var(--muted); text-transform: uppercase; margin-bottom: 16px;
+        }
+        .random-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+            margin: -4px 0 10px;
+        }
+        .random-option {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .random-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .random-option span {
+            display: inline-flex;
+            align-items: center;
+            min-height: 29px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            border: 1.5px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1.2;
+            white-space: nowrap;
+            transition: background .12s, border-color .12s, color .12s;
+        }
+        .random-option:hover span {
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
+        .random-option input:checked + span {
+            background: var(--accent);
+            border-color: var(--accent-dark);
+            color: #fff;
+        }
+        .random-count {
+            min-height: 18px;
+            margin-bottom: 14px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .random-empty {
+            margin: 2px 0 16px;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg);
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+        .random-cover {
+            width: 118px;
+            height: 118px;
+            margin: -4px auto 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--accent-light);
+            border: 1px solid var(--border);
+            box-shadow: 0 6px 18px rgba(34,39,32,0.12);
+        }
+        .random-cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
         .random-title {
             font-size: 22px; font-weight: 700; line-height: 1.3;
@@ -830,6 +1340,8 @@
         }
         /* 셔플 모션 */
         .modal.shuffling .random-title { color: var(--muted); opacity: .85; }
+        .modal.shuffling .random-options { opacity: .55; pointer-events: none; }
+        .modal.shuffling #r-empty, .modal.shuffling #r-tags,
         .modal.shuffling #r-skill, .modal.shuffling #r-links, .modal.shuffling #r-memo,
         .modal.shuffling .modal-btns { opacity: .35; pointer-events: none; }
         @keyframes r-pop {
@@ -841,9 +1353,44 @@
         .random-artist {
             font-size: 14px; color: var(--muted); margin-bottom: 14px;
         }
+        .random-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            margin: -4px 0 13px;
+        }
+        .random-tag {
+            display: inline-flex;
+            align-items: center;
+            min-height: 24px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: var(--accent-light);
+            color: var(--accent-dark);
+            border: 1px solid rgba(127,184,63,0.24);
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
         .random-skill { font-size: 18px; letter-spacing: 1px; margin-bottom: 16px; }
         .random-links { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
         .random-links .link-btn { padding: 6px 16px; font-size: 13px; }
+        .random-link-empty {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 54px;
+            height: 30px;
+            padding: 0 10px;
+            border-radius: 999px;
+            border: 1.5px dashed var(--border);
+            background: var(--bg);
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
         .random-memo {
             font-size: 12px; color: var(--muted);
             background: var(--bg); border-radius: 8px;
@@ -1133,6 +1680,7 @@
             box-shadow: 0 2px 10px rgba(0,0,0,.15);
         }
         .fab-menu button:hover { background: var(--accent-light); color: var(--accent-dark); }
+        .fab-menu .fab-menu-cover { color: #3f78a8; }
 
         /* ─── 편집 모달 ─── */
         .edit-modal {
@@ -1164,6 +1712,255 @@
             transition: border-color .15s;
         }
         .ef-row input:focus, .ef-row select:focus { border-color: var(--accent); background: var(--surface); }
+        .cover-preview {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface-2);
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .cover-preview.show { display: flex; }
+        .cover-preview img {
+            width: 54px;
+            height: 54px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: var(--accent-light);
+            border: 1px solid rgba(34,39,32,0.08);
+            flex-shrink: 0;
+        }
+        .cover-tool-summary {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .cover-tool-card {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface-2);
+        }
+        .cover-tool-card strong {
+            display: block;
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--accent-dark);
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+        .cover-tool-card span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .cover-tool-note {
+            margin-bottom: 12px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.55;
+        }
+        .cover-tool-options {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .cover-tool-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface-2);
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .cover-tool-check input {
+            width: auto;
+            accent-color: var(--accent);
+        }
+        .cover-youtube-key {
+            display: none;
+            gap: 6px;
+        }
+        .cover-youtube-key.show {
+            display: grid;
+        }
+        .cover-youtube-key label {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .cover-youtube-key input {
+            width: 100%;
+            height: 38px;
+            padding: 0 10px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 13px;
+            outline: none;
+        }
+        .cover-youtube-key small {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.45;
+        }
+        .cover-review {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            max-height: 310px;
+            overflow: auto;
+        }
+        .cover-review.show { display: block; }
+        .cover-review-title {
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 900;
+            color: var(--text);
+        }
+        .cover-review-song {
+            padding: 9px 0 10px;
+            border-top: 1px solid var(--border);
+        }
+        .cover-review-song:first-of-type { border-top: none; padding-top: 0; }
+        .cover-review-label {
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text);
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+        .cover-review-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+            gap: 8px;
+        }
+        .cover-review-card {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 7px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+        }
+        .cover-review-card img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 6px;
+            background: var(--accent-light);
+        }
+        .cover-review-meta {
+            min-height: 47px;
+            font-size: 10px;
+            line-height: 1.35;
+            color: var(--muted);
+        }
+        .cover-review-meta strong {
+            display: block;
+            color: var(--text);
+            font-size: 11px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .cover-review-card button {
+            height: 28px;
+            border: none;
+            border-radius: 7px;
+            background: var(--accent);
+            color: #fff;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+        .cover-review-card button:disabled {
+            background: var(--muted);
+            cursor: default;
+        }
+        .cover-progress-wrap {
+            height: 8px;
+            margin: 8px 0 10px;
+            border-radius: 999px;
+            background: var(--bg);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .cover-progress-bar {
+            width: 0%;
+            height: 100%;
+            border-radius: 999px;
+            background: var(--accent);
+            transition: width .12s;
+        }
+        .cover-status {
+            min-height: 20px;
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .cover-log {
+            height: 190px;
+            overflow: auto;
+            padding: 9px 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #111511;
+            color: #dce9d4;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 11px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        .cover-log:empty::before {
+            content: '대기 중';
+            color: rgba(220,233,212,.55);
+        }
+        .cover-run-actions {
+            display: none;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .cover-run-actions.show { display: flex; }
+        .cover-run-actions .btn-cancel-sm {
+            font-size: 12px;
+            height: 32px;
+            padding: 0 12px;
+        }
+        .btn-cover-clear {
+            height: 34px;
+            padding: 0 12px;
+            border: 1.5px solid #f0b5b5;
+            border-radius: 8px;
+            background: #fff5f5;
+            color: #b43a3a;
+            font-size: 12px;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+        }
         .ef-check {
             display: flex; align-items: center; gap: 8px;
             padding: 9px 12px;
@@ -1174,6 +1971,51 @@
         }
         .ef-check input { width: auto; flex-shrink: 0; accent-color: var(--accent); }
         .ef-check small { display: block; margin-top: 2px; font-size: 11px; font-weight: 500; color: var(--muted); }
+        .tag-picker {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .tag-check {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .tag-check input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .tag-check span {
+            display: inline-flex;
+            align-items: center;
+            min-height: 30px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            border: 1.5px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1.2;
+            white-space: nowrap;
+            transition: background .12s, border-color .12s, color .12s;
+        }
+        .tag-check input:checked + span {
+            background: var(--accent);
+            border-color: var(--accent-dark);
+            color: #fff;
+        }
+        .tag-status {
+            margin-top: 7px;
+            color: #b46b2a;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+        .tag-status:empty {
+            display: none;
+        }
         .emod-footer {
             display: flex; align-items: center; gap: 8px;
             padding: 12px 20px; border-top: 1px solid var(--border);
@@ -1190,7 +2032,7 @@
         .bulk-cat-hint { font-size: 11px; color: var(--muted); }
         .bulk-paste-hint { font-size: 11px; color: var(--muted); line-height: 1.6; background: var(--bg); border-radius: 8px; padding: 7px 10px; border: 1px solid var(--border); }
         .bulk-table-wrap { overflow-x: auto; max-height: 360px; overflow-y: auto; border: 1.5px solid var(--border); border-radius: 8px; }
-        .bulk-table { border-collapse: collapse; width: 100%; min-width: 860px; font-size: 13px; }
+        .bulk-table { border-collapse: collapse; width: 100%; min-width: 1140px; font-size: 13px; }
         .bulk-table thead th { background: #eaf2e0; padding: 7px 8px; font-size: 11px; font-weight: 700; color: #4a6a30; text-align: left; white-space: nowrap; border-bottom: 2px solid rgba(100,150,50,.2); position: sticky; top: 0; z-index: 1; }
         .bulk-table tbody td { padding: 4px 4px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         .bulk-table tbody tr:last-child td { border-bottom: none; }
@@ -1204,7 +2046,9 @@
         .bt-mr    { width: 130px; }
         .bt-clip  { width: 130px; }
         .bt-skill { width: 116px; }
+        .bt-tags  { width: 130px; }
         .bt-memo  { width: 120px; }
+        .bt-cover { width: 150px; }
         .bt-year  { width: 76px; }
         .bt-date  { width: 90px; }
         .bt-exclude { width: 72px; text-align: center; }
@@ -1233,6 +2077,69 @@
             .col-memo, .col-lmemo { display: none; }
             .stat-bar-wrap { display: none; }
             .sheet-open-link { height: 36px; padding: 0 10px; font-size: 11px; }
+            .search-wrap { flex-wrap: wrap; }
+            .songbook-filter-panel {
+                padding: 9px 10px;
+                gap: 8px;
+            }
+            .sbf-row {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+            .sbf-label {
+                padding-top: 0;
+            }
+            .sbf-chip,
+            .sbf-more-btn {
+                min-height: 28px;
+                padding: 5px 9px;
+                font-size: 11px;
+            }
+            .sbf-more-btn {
+                justify-self: start;
+            }
+            .songbook-view-toggle {
+                order: 4;
+                width: 100%;
+                justify-content: center;
+            }
+            .songbook-card-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            .song-card {
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                min-height: 168px;
+                padding: 0;
+            }
+            .song-card-info {
+                padding: 12px 11px 10px 13px;
+            }
+            .song-card-title { font-size: 14px; }
+            .song-card-skill-bars { width: 48px; }
+            .song-card-footer {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 5px;
+                padding-top: 6px;
+            }
+            .song-card-memo { display: none; }
+            .songbook-list-row {
+                grid-template-columns: 64px minmax(0, 1fr);
+                gap: 10px;
+                padding: 8px 10px 8px 8px;
+            }
+            .song-list-cover {
+                width: 64px;
+                height: 64px;
+            }
+            .song-list-side {
+                grid-column: 2;
+                align-items: flex-start;
+                gap: 6px;
+            }
         }
     </style>
 </head>
@@ -1288,6 +2195,10 @@
                 <input type="search" id="search-input" placeholder="제목 또는 가수 검색..." oninput="onSearch(this.value)" autocomplete="off">
                 <button class="search-clear" id="search-clear" onclick="clearSearch()">×</button>
             </div>
+            <div class="songbook-view-toggle" id="songbook-view-toggle" hidden>
+                <button class="songbook-view-btn active" data-view="grid" onclick="setSongbookView('grid')" title="카드 보기" aria-label="카드 보기">▦</button>
+                <button class="songbook-view-btn" data-view="table" onclick="setSongbookView('table')" title="엑셀형 보기" aria-label="엑셀형 보기">▤</button>
+            </div>
         </div>
         <!-- 라이브 필터 패널 -->
         <div id="live-filter-panel" class="live-filter-panel" style="display:none">
@@ -1314,6 +2225,7 @@
                 </div>
             </div>
         </div>
+        <div id="songbook-filter-panel" class="songbook-filter-panel" style="display:none"></div>
     </div>
 </div>
 
@@ -1323,9 +2235,7 @@
 
     <!-- 노래책 섹션 -->
     <div id="songbook-section">
-        <div class="song-table-wrap">
-            <div id="songbook-list"></div>
-        </div>
+        <div id="songbook-list"></div>
     </div>
 
     <!-- 라이브 섹션 -->
@@ -1339,10 +2249,22 @@
 
 <!-- ══════════════ 랜덤 모달 ══════════════ -->
 <div id="random-modal" class="modal-overlay" onclick="if(event.target===this)closeRandom()">
-    <div class="modal">
+    <div class="modal random-modal-card">
         <div class="random-label">🎲 랜덤 뽑기</div>
+        <div class="random-options" id="r-options">
+            <label class="random-option"><input type="checkbox" id="r-opt-current-filter" onchange="onRandomOptionChange(this)"><span>현재 필터 결과</span></label>
+            <label class="random-option"><input type="checkbox" id="r-opt-mr" onchange="onRandomOptionChange(this)"><span>MR 있는 곡</span></label>
+            <label class="random-option"><input type="checkbox" id="r-opt-clip" onchange="onRandomOptionChange(this)"><span>클립 있는 곡</span></label>
+            <label class="random-option"><input type="checkbox" id="r-opt-skill3" onchange="onRandomOptionChange(this)"><span>숙련도 3 이상</span></label>
+            <label class="random-option"><input type="checkbox" id="r-opt-no-jpop" onchange="onRandomOptionChange(this)"><span>JPOP 제외</span></label>
+            <label class="random-option"><input type="checkbox" id="r-opt-cover" onchange="onRandomOptionChange(this)"><span>커버 있는 곡</span></label>
+        </div>
+        <div id="r-count" class="random-count" aria-live="polite"></div>
+        <div id="r-empty" class="random-empty" style="display:none"></div>
+        <div id="r-cover" class="random-cover" style="display:none"></div>
         <div id="r-title"  class="random-title"></div>
         <div id="r-artist" class="random-artist"></div>
+        <div id="r-tags"   class="random-tags" style="display:none"></div>
         <div id="r-skill"  class="random-skill"></div>
         <div id="r-links"  class="random-links"></div>
         <div id="r-memo"   class="random-memo" style="display:none"></div>
@@ -1359,6 +2281,7 @@
 <div id="fab-menu" class="fab-menu">
     <button class="fab-menu-song" onclick="closeFabMenu(); openSongModal(null)">한 곡 추가</button>
     <button class="fab-menu-song" onclick="closeFabMenu(); openBulkModal()">여러 곡 추가</button>
+    <button class="fab-menu-song fab-menu-cover" onclick="closeFabMenu(); openCoverBackfillModal()">커버 자동채우기</button>
     <button class="fab-menu-live" onclick="closeFabMenu(); openLiveModal(null)">한 곡 추가</button>
     <button class="fab-menu-live" onclick="closeFabMenu(); openLiveBulkModal()">여러 곡 추가</button>
 </div>
@@ -1372,6 +2295,7 @@
         </div>
         <div class="emod-body">
             <input type="hidden" id="ef-id">
+            <input type="hidden" id="ef-tags-original">
             <div class="ef-row"><label>분류 *</label>
                 <select id="ef-category">
                     <option>KPOP</option><option>POP</option><option>JPOP</option>
@@ -1380,6 +2304,12 @@
             </div>
             <div class="ef-row"><label>제목 *</label><input type="text" id="ef-title" placeholder="노래 제목"></div>
             <div class="ef-row"><label>가수</label><input type="text" id="ef-artist" placeholder="가수명"></div>
+            <div class="ef-row">
+                <label>커버 이미지 URL</label>
+                <input type="url" id="ef-cover" placeholder="https://..." oninput="updateCoverPreview(this.value)">
+                <div id="ef-cover-preview" class="cover-preview"></div>
+                <button type="button" class="btn-cover-clear" id="ef-cover-clear-btn" onclick="clearEditingSongCover()" style="display:none">커버 삭제</button>
+            </div>
             <div class="ef-row"><label>MR URL</label><input type="url" id="ef-mr" placeholder="https://..."></div>
             <div class="ef-row"><label>구슬요 클립 URL</label><input type="url" id="ef-clip" placeholder="https://..."></div>
             <div class="ef-row"><label>숙련도</label>
@@ -1392,6 +2322,7 @@
                 </div>
                 <input type="hidden" id="ef-skill" value="0">
             </div>
+            <div class="ef-row"><label>태그</label><div class="tag-picker" id="ef-tags"></div><div class="tag-status" id="ef-tags-status"></div></div>
             <div class="ef-row"><label>메모</label><input type="text" id="ef-memo" placeholder="(선택)"></div>
         </div>
         <div class="emod-footer">
@@ -1419,7 +2350,7 @@
                     </select>
                     <span class="bulk-cat-hint">※ 행별 분류 칸을 바꾸면 개별 적용</span>
                 </div>
-                <div class="bulk-paste-hint">💡 엑셀에서 복사한 셀을 아무 칸에나 붙여넣기 하면 자동 채워집니다<br>열 순서: 제목 · 가수 · MR URL · 클립 URL · 숙련도(0-5) · 메모</div>
+                <div class="bulk-paste-hint">💡 엑셀에서 복사한 셀을 아무 칸에나 붙여넣기 하면 자동 채워집니다<br>열 순서: 제목 · 가수 · MR URL · 클립 URL · 숙련도(0-5) · 태그(쉼표) · 메모 · 커버 URL</div>
             </div>
             <div class="bulk-table-wrap">
                 <table class="bulk-table" id="bulk-table">
@@ -1431,7 +2362,9 @@
                         <th class="bt-mr">MR URL</th>
                         <th class="bt-clip">클립 URL</th>
                         <th class="bt-skill">숙련도</th>
+                        <th class="bt-tags">태그</th>
                         <th class="bt-memo">메모</th>
+                        <th class="bt-cover">커버 URL</th>
                     </tr></thead>
                     <tbody id="bulk-rows"></tbody>
                 </table>
@@ -1442,6 +2375,59 @@
             <span id="bulk-status" class="bulk-status"></span>
             <button class="btn-cancel-sm" onclick="closeBulkModal()">취소</button>
             <button class="btn-save-sm" id="bulk-save-btn" onclick="saveBulk()">추가</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════ 커버 자동 채우기 모달 ══════════════ -->
+<div id="cover-modal" class="modal-overlay" onclick="if(event.target===this)closeCoverBackfillModal()">
+    <div class="modal edit-modal">
+        <div class="emod-header">
+            <span>커버 자동채우기</span>
+            <button class="emod-close" onclick="closeCoverBackfillModal()">✕</button>
+        </div>
+        <div class="emod-body">
+            <div class="cover-tool-summary">
+                <div class="cover-tool-card">
+                    <strong id="cover-current-count">0</strong>
+                    <span>현재 탭 빈 커버</span>
+                </div>
+                <div class="cover-tool-card">
+                    <strong id="cover-all-count">0</strong>
+                    <span>전체 빈 커버</span>
+                </div>
+            </div>
+            <div class="cover-tool-note">
+                iTunes Search API로 앨범 커버를 찾습니다. 후보가 여러 개면 직접 고를 수 있고, 선택하면 실패한 곡만 YouTube 썸네일로 한 번 더 찾습니다. 이미 커버가 있는 곡은 건드리지 않습니다.
+            </div>
+            <div class="cover-tool-options">
+                <label class="cover-tool-check">
+                    <input type="checkbox" id="cover-youtube-enabled" onchange="toggleYoutubeBackfillInputs()">
+                    <span>iTunes 실패곡만 YouTube로 보조 채우기</span>
+                </label>
+                <label class="cover-tool-check">
+                    <input type="checkbox" id="cover-review-enabled" checked>
+                    <span>iTunes 후보가 여러 개면 직접 고르기</span>
+                </label>
+                <div class="cover-youtube-key" id="cover-youtube-key-wrap">
+                    <label for="cover-youtube-key">YouTube Data API 키</label>
+                    <input type="password" id="cover-youtube-key" placeholder="AIza..." autocomplete="off" oninput="saveCoverYoutubeSettings()">
+                    <small>키는 이 브라우저에만 저장됩니다. YouTube 결과는 영상 썸네일이라 앨범커버와 다를 수 있습니다.</small>
+                </div>
+            </div>
+            <div class="cover-status" id="cover-status">대기 중</div>
+            <div class="cover-progress-wrap"><div class="cover-progress-bar" id="cover-progress-bar"></div></div>
+            <div class="cover-log" id="cover-log"></div>
+            <div class="cover-review" id="cover-review"></div>
+            <div class="cover-run-actions" id="cover-run-actions">
+                <button class="btn-cancel-sm" id="cover-undo-btn" onclick="undoLastCoverBackfill()">이번 저장분 되돌리기</button>
+            </div>
+        </div>
+        <div class="emod-footer">
+            <button class="btn-cancel-sm" id="cover-cancel-btn" onclick="cancelCoverBackfill()" style="display:none">중지</button>
+            <button class="btn-cancel-sm" id="cover-close-btn" onclick="closeCoverBackfillModal()">닫기</button>
+            <button class="btn-save-sm" id="cover-current-btn" onclick="startCoverBackfill('current')">현재 탭</button>
+            <button class="btn-save-sm" id="cover-all-btn" onclick="startCoverBackfill('all')">전체</button>
         </div>
     </div>
 </div>
@@ -1530,6 +2516,11 @@ const SHEET_LINKS = {
 const S = {
     mainTab:      INITIAL_VIEW,
     songbookCat:  'welcome',
+    songbookView: 'grid',
+    songbookTag:  'all',
+    songbookFilterExpanded: {
+        tags: false,
+    },
     liveYear:     'stats',
     query:        '',
     songbookData: null,
@@ -1578,6 +2569,24 @@ async function ensureLiveExcludeColumn() {
     const { error } = await db.from('live_songs').select('exclude_from_stats').limit(1);
     _liveExcludeColumnReady = !error;
     return _liveExcludeColumnReady;
+}
+
+let _songCoverColumnReady = null;
+async function ensureSongCoverColumn() {
+    if (_songCoverColumnReady !== null) return _songCoverColumnReady;
+    await ensureDb();
+    const { error } = await db.from('songbook').select('cover_url').limit(1);
+    _songCoverColumnReady = !error;
+    return _songCoverColumnReady;
+}
+
+let _songbookTagsColumnReady = null;
+async function ensureSongbookTagsColumn() {
+    if (_songbookTagsColumnReady === true) return _songbookTagsColumnReady;
+    await ensureDb();
+    const { error } = await db.from('songbook').select('tags').limit(1);
+    _songbookTagsColumnReady = !error;
+    return _songbookTagsColumnReady;
 }
 
 // Supabase에서 페이지네이션 처리해 전체 데이터 가져오기
@@ -1671,7 +2680,144 @@ function normalizeSongbookCompare(value) {
 function songbookCompareKey(song) {
     return `${normalizeSongbookCompare(song.title)}|||${normalizeSongbookCompare(song.artist)}`;
 }
-function filteredSongbookItems({ forceAll = false, category = S.songbookCat, query = S.query } = {}) {
+
+const SONGBOOK_TAG_OPTIONS = [
+    'OST',
+    '발라드',
+    '댄스',
+    '여자아이돌',
+    '남자아이돌',
+    '락',
+    'R&B',
+    '인디/포크',
+    '뮤지컬',
+    '애니/보컬로이드',
+    '고음',
+    '잔잔한곡',
+    '신나는곡',
+    '감성곡',
+];
+const SONGBOOK_FILTER_LIMITS = { tags: 8 };
+const SONGBOOK_EMPTY_TAG_SENTINEL = '__manual_empty__';
+const SONGBOOK_TAG_ALIASES = new Map([
+    ['오에스티', 'OST'],
+    ['soundtrack', 'OST'],
+    ['사운드트랙', 'OST'],
+    ['ballad', '발라드'],
+    ['dance', '댄스'],
+    ['여돌', '여자아이돌'],
+    ['여자아이돌', '여자아이돌'],
+    ['걸그룹', '여자아이돌'],
+    ['girlgroup', '여자아이돌'],
+    ['femaleidol', '여자아이돌'],
+    ['girlidol', '여자아이돌'],
+    ['남돌', '남자아이돌'],
+    ['남자아이돌', '남자아이돌'],
+    ['보이그룹', '남자아이돌'],
+    ['boygroup', '남자아이돌'],
+    ['maleidol', '남자아이돌'],
+    ['boyidol', '남자아이돌'],
+    ['록', '락'],
+    ['rock', '락'],
+    ['rnb', 'R&B'],
+    ['알앤비', 'R&B'],
+    ['리듬앤블루스', 'R&B'],
+    ['indie', '인디/포크'],
+    ['folk', '인디/포크'],
+    ['인디', '인디/포크'],
+    ['포크', '인디/포크'],
+    ['musical', '뮤지컬'],
+    ['anime', '애니/보컬로이드'],
+    ['animation', '애니/보컬로이드'],
+    ['애니', '애니/보컬로이드'],
+    ['보컬로이드', '애니/보컬로이드'],
+    ['vocaloid', '애니/보컬로이드'],
+    ['보카로', '애니/보컬로이드'],
+    ['highnote', '고음'],
+    ['잔잔', '잔잔한곡'],
+    ['조용', '잔잔한곡'],
+    ['calm', '잔잔한곡'],
+    ['신남', '신나는곡'],
+    ['신나는', '신나는곡'],
+    ['신나', '신나는곡'],
+    ['텐션', '신나는곡'],
+    ['감성', '감성곡'],
+]);
+
+function normalizeSongbookTag(value) {
+    const raw = String(value ?? '').trim().replace(/^["']|["']$/g, '');
+    if (!raw) return '';
+    const compact = raw.toLowerCase().replace(/\s+/g, '').replace(/[._\-/]/g, '');
+    const direct = SONGBOOK_TAG_OPTIONS.find(tag =>
+        tag.toLowerCase().replace(/\s+/g, '').replace(/[._\-/]/g, '') === compact
+    );
+    return direct || SONGBOOK_TAG_ALIASES.get(compact) || '';
+}
+
+function parseSongbookTagsInput(value) {
+    const rawParts = Array.isArray(value)
+        ? value
+        : String(value ?? '').replace(/^\{|\}$/g, '').split(/[,\n;|]+/);
+    const tags = [];
+    const seen = new Set();
+    for (const part of rawParts) {
+        const tag = normalizeSongbookTag(part);
+        if (!tag || seen.has(tag)) continue;
+        seen.add(tag);
+        tags.push(tag);
+    }
+    return tags;
+}
+
+function hasManualEmptySongbookTags(value) {
+    return Array.isArray(value)
+        ? value.includes(SONGBOOK_EMPTY_TAG_SENTINEL)
+        : String(value ?? '').includes(SONGBOOK_EMPTY_TAG_SENTINEL);
+}
+
+function inferSongbookTags(song) {
+    const tags = new Set();
+    const fullText = `${song?.title || ''} ${song?.artist || ''} ${song?.memo || ''}`.toLowerCase();
+    const memoText = String(song?.memo || '').toLowerCase();
+    const add = tag => tags.add(tag);
+
+    if (/\bost\b|오에스티|soundtrack|사운드트랙/.test(fullText)) add('OST');
+    if (/뮤지컬|musical/.test(fullText)) add('뮤지컬');
+    if (/여자\s*아이돌|여돌|걸그룹|girl\s*group|\bgirl\s*idol\b|\bfemale\s*idol\b|\bnewjeans\b|뉴진스|\bive\b|아이브|\ble\s*sserafim\b|르세라핌|\baespa\b|에스파|\bitzy\b|있지|\btwice\b|트와이스|\bblackpink\b|블랙핑크|\bred\s*velvet\b|레드벨벳|\bgfriend\b|여자친구|\bg\s*i-?dle\b|\bgidle\b|여자아이들/.test(fullText)) add('여자아이돌');
+    if (/남자\s*아이돌|남돌|보이그룹|boy\s*group|\bboy\s*idol\b|\bmale\s*idol\b|\bbts\b|방탄소년단|방탄|\bseventeen\b|세븐틴|\bnct\b|\bexo\b|엑소|\bstray\s*kids\b|스트레이\s*키즈|스키즈|\btxt\b|투모로우바이투게더|\benhypen\b|엔하이픈|\bateez\b|에이티즈|\bthe\s*boyz\b|더보이즈|\bshinee\b|샤이니|\bsuper\s*junior\b|슈퍼주니어|\bbigbang\b|빅뱅|\bbtob\b|비투비|\bwinner\b|위너|\bikon\b|아이콘|\briize\b|라이즈/.test(fullText)) add('남자아이돌');
+    if (/보컬로이드|vocaloid|\bgumi\b|\bmiku\b|하츠네|미쿠|카가미네|메구리네|\bkaito\b|\bmeiko\b|보카로/.test(fullText)) add('애니/보컬로이드');
+    if (/애니|anime|animation|러브라이브|마크로스|귀멸의\s*칼날|귀멸|나루토|원피스|최애의\s*아이|아이돌마스터|뱅드림/.test(fullText)) add('애니/보컬로이드');
+
+    if (/발라드|ballad/.test(memoText)) add('발라드');
+    if (/댄스|dance/.test(memoText)) { add('댄스'); add('신나는곡'); }
+    if (/락|록|rock/.test(memoText)) add('락');
+    if (/r\s*&\s*b|rnb|알앤비|리듬앤블루스/.test(memoText)) add('R&B');
+    if (/인디|indie|포크|folk/.test(memoText)) add('인디/포크');
+    if (/고음|high\s*note/.test(memoText)) add('고음');
+    if (/잔잔|조용|calm/.test(memoText)) add('잔잔한곡');
+    if (/감성|감미|sentimental/.test(memoText)) add('감성곡');
+    if (/신남|신나는|신나|텐션|업템포|uptempo/.test(memoText)) add('신나는곡');
+
+    return SONGBOOK_TAG_OPTIONS.filter(tag => tags.has(tag));
+}
+
+function songbookTags(song) {
+    if (hasManualEmptySongbookTags(song?.tags)) return [];
+    const explicit = parseSongbookTagsInput(song?.tags);
+    return explicit.length ? explicit : inferSongbookTags(song);
+}
+
+function songbookTagsSignature(tags) {
+    return parseSongbookTagsInput(tags).join('|');
+}
+
+function filteredSongbookItems({
+    forceAll = false,
+    category = S.songbookCat,
+    query = S.query,
+    tag = S.songbookTag,
+    ignoreTag = false,
+} = {}) {
     const isAll = forceAll || category === 'all';
     const originalKeys = new Set(
         (S.songbookData || [])
@@ -1683,6 +2829,7 @@ function filteredSongbookItems({ forceAll = false, category = S.songbookCat, que
         if (!isAll && s.category !== category) return false;
         if (query && !matches(s.title, s.artist, query, s.memo)) return false;
         if (query && s.category !== '오리지널' && originalKeys.has(songbookCompareKey(s))) return false;
+        if (!ignoreTag && tag && tag !== 'all' && !songbookTags(s).includes(tag)) return false;
         return true;
     });
 }
@@ -1721,9 +2868,51 @@ function skillDots(n) {
     const filled = '💚', empty = '🤍';
     return filled.repeat(Math.max(0, n)) + empty.repeat(Math.max(0, 5 - n));
 }
+function skillMeterHtml(n) {
+    const level = Math.max(0, Math.min(5, parseInt(n, 10) || 0));
+    const bars = [1,2,3,4,5].map(v => `<span class="song-card-skill-bar${v <= level ? ' filled' : ''}"></span>`).join('');
+    return `<div class="song-card-skill" aria-label="숙련도 ${level}/5">
+        <span class="song-card-skill-label">숙련</span>
+        <span class="song-card-skill-bars">${bars}</span>
+        <span class="song-card-skill-score">${level}/5</span>
+    </div>`;
+}
 function linkBtn(url, label, cls) {
     if (!url) return '';
     return `<a href="${esc(safeUrl(url))}" class="link-btn ${cls}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${label}</a>`;
+}
+function songCategoryClass(category) {
+    const key = String(category || '').trim().toLowerCase();
+    if (key === 'kpop' || key === 'k-pop') return 'cat-kpop';
+    if (key === 'pop') return 'cat-pop';
+    if (key === 'jpop' || key === 'j-pop') return 'cat-jpop';
+    if (key === '오리지널') return 'cat-original';
+    if (key === '애교송') return 'cat-aegyo';
+    return 'cat-etc';
+}
+function songCoverUrl(song) {
+    const url = safeUrl(song?.cover_url);
+    if (url === '#') return '';
+    return youtubeThumbnailFromUrl(url) || url;
+}
+function songCoverFallbackLabel(song) {
+    const category = String(song?.category || '').trim();
+    return category ? category.slice(0, 4) : 'SONG';
+}
+function songCoverMediaHtml(song, cls = 'song-cover-thumb', loading = 'lazy') {
+    const src = songCoverUrl(song);
+    const fallback = `<div class="${cls} song-cover-fallback" style="${src ? 'display:none' : 'display:flex'}"><span>♪</span><small>${esc(songCoverFallbackLabel(song))}</small></div>`;
+    if (!src) return fallback;
+    return `<img class="${cls}" src="${esc(src)}" alt="${esc(song?.title || '노래 커버')}" loading="${loading}" decoding="async" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">${fallback}`;
+}
+function songLinksHtml(song) {
+    return [
+        linkBtn(song.mr_url, 'MR', 'mr'),
+        linkBtn(song.clip_url, '클립', 'clip'),
+    ].filter(Boolean).join('');
+}
+function editableSongAttrs(song) {
+    return S.session ? `class="editable" onclick="openSongModal(${song.id})"` : '';
 }
 function fmtDate(d) {
     if (!d) return '';
@@ -1742,7 +2931,7 @@ function daysBetween(a, b) {
 
 function welcomeSearchResultsHtml() {
     if (!S.query) return '';
-    const items = filteredSongbookItems({ forceAll: true });
+    const items = filteredSongbookItems({ forceAll: true, tag: 'all' });
     if (!items.length) return emptyHtml(`"${esc(S.query)}" 검색 결과가 없어요`);
 
     return `
@@ -1751,6 +2940,7 @@ function welcomeSearchResultsHtml() {
             <table class="song-table">
                 <thead><tr>
                     <th class="col-num">#</th>
+                    <th class="col-cover">커버</th>
                     <th class="col-cat">분류</th>
                     <th class="col-title">제목</th>
                     <th class="col-artist">가수</th>
@@ -1761,13 +2951,14 @@ function welcomeSearchResultsHtml() {
                 </tr></thead>
                 <tbody>
                 ${items.map((s, i) => `
-                    <tr ${S.session ? `class="editable" onclick="openSongModal(${s.id})"` : ''}>
+                    <tr ${editableSongAttrs(s)}>
                         <td class="col-num">${i + 1}</td>
+                        <td class="col-cover">${songCoverMediaHtml(s)}</td>
                         <td class="col-cat"><span class="cat-badge">${esc(s.category)}</span></td>
                         <td class="col-title">${esc(s.title)}</td>
                         <td class="col-artist">${esc(s.artist || '')}</td>
-                        <td class="col-mr">${s.mr_url ? `<a href="${esc(safeUrl(s.mr_url))}" class="link-btn mr" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">MR</a>` : ''}</td>
-                        <td class="col-clip">${s.clip_url ? `<a href="${esc(safeUrl(s.clip_url))}" class="link-btn clip" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">클립</a>` : ''}</td>
+                        <td class="col-mr">${linkBtn(s.mr_url, 'MR', 'mr')}</td>
+                        <td class="col-clip">${linkBtn(s.clip_url, '클립', 'clip')}</td>
                         <td class="col-skill">${skillDots(s.skill_level || 0)}</td>
                         <td class="col-memo">${esc(s.memo || '')}</td>
                     </tr>`).join('')}
@@ -1786,6 +2977,8 @@ function renderWelcomeCard() {
     document.querySelector('.sb-body').classList.add('welcome-wide');
     document.querySelector('.sb-body').classList.remove('stats-wide');
     document.getElementById('sb-search-row').style.display = 'none';
+    document.getElementById('songbook-view-toggle').hidden = true;
+    document.getElementById('songbook-filter-panel').style.display = 'none';
     document.getElementById('random-btn').classList.add('hidden');
     document.getElementById('result-info').style.display   = 'none';
 
@@ -1846,55 +3039,186 @@ function renderWelcomeCard() {
     </div>`;
 }
 
+function songbookTableHtml(items, isAll) {
+    const catCol = isAll ? `<th class="col-cat">분류</th>` : '';
+    return `
+    <div class="song-table-wrap">
+        <table class="song-table">
+            <thead><tr>
+                <th class="col-num">#</th>
+                <th class="col-cover">커버</th>
+                ${catCol}
+                <th class="col-title">제목</th>
+                <th class="col-artist">가수</th>
+                <th class="col-mr th-center">MR</th>
+                <th class="col-clip th-center">구슬요 클립</th>
+                <th class="col-skill th-center">숙련도</th>
+                <th class="col-memo">메모</th>
+            </tr></thead>
+            <tbody>
+            ${items.map((s, i) => `
+                <tr ${editableSongAttrs(s)}>
+                    <td class="col-num">${i + 1}</td>
+                    <td class="col-cover">${songCoverMediaHtml(s)}</td>
+                    ${isAll ? `<td class="col-cat"><span class="cat-badge">${esc(s.category)}</span></td>` : ''}
+                    <td class="col-title">${esc(s.title)}</td>
+                    <td class="col-artist">${esc(s.artist || '')}</td>
+                    <td class="col-mr">${linkBtn(s.mr_url, 'MR', 'mr')}</td>
+                    <td class="col-clip">${linkBtn(s.clip_url, '클립', 'clip')}</td>
+                    <td class="col-skill">${skillDots(s.skill_level || 0)}</td>
+                    <td class="col-memo">${esc(s.memo || '')}</td>
+                </tr>`).join('')}
+            </tbody>
+        </table>
+    </div>`;
+}
+
+function songbookCardGridHtml(items, isAll) {
+    return `<div class="songbook-card-grid">
+        ${items.map(s => {
+            const links = songLinksHtml(s);
+            const footer = links || s.memo ? `<div class="song-card-footer">
+                    ${links ? `<div class="song-card-links">${links}</div>` : ''}
+                    ${s.memo ? `<div class="song-card-memo">${esc(s.memo)}</div>` : ''}
+                </div>` : '';
+            return `<article class="song-card ${songCategoryClass(s.category)}${S.session ? ' editable' : ''}"${S.session ? ` onclick="openSongModal(${s.id})"` : ''}>
+                <div class="song-card-cover-wrap">${songCoverMediaHtml(s, 'song-card-cover')}</div>
+                <div class="song-card-info">
+                    <div class="song-card-head">
+                        <span class="cat-badge">${esc(s.category)}</span>
+                    </div>
+                    <div class="song-card-title">${esc(s.title)}</div>
+                    <div class="song-card-artist">${esc(s.artist || '')}</div>
+                    ${skillMeterHtml(s.skill_level || 0)}
+                    ${footer}
+                </div>
+            </article>`;
+        }).join('')}
+    </div>`;
+}
+
+function songbookListHtml(items, isAll) {
+    return `<div class="songbook-list-view">
+        ${items.map((s, i) => {
+            const links = songLinksHtml(s);
+            return `<div class="songbook-list-row${S.session ? ' editable' : ''}"${S.session ? ` onclick="openSongModal(${s.id})"` : ''}>
+                <div>${songCoverMediaHtml(s, 'song-list-cover')}</div>
+                <div class="song-list-main">
+                    <div class="song-list-title">${esc(s.title)}</div>
+                    <div class="song-list-artist">${esc(s.artist || '')}</div>
+                    ${s.memo ? `<div class="song-list-memo">${esc(s.memo)}</div>` : ''}
+                </div>
+                <div class="song-list-side">
+                    <span class="cat-badge">${esc(s.category)}</span>
+                    <div class="song-list-skill">${skillDots(s.skill_level || 0)}</div>
+                    <div class="song-list-links">${links || '<span style="color:var(--muted);font-size:11px">링크 없음</span>'}</div>
+                </div>
+            </div>`;
+        }).join('')}
+    </div>`;
+}
+
+function songbookTagCounts(items) {
+    const counts = Object.fromEntries(SONGBOOK_TAG_OPTIONS.map(tag => [tag, 0]));
+    for (const song of items) {
+        for (const tag of songbookTags(song)) counts[tag] = (counts[tag] || 0) + 1;
+    }
+    return counts;
+}
+
+function limitedSongbookFacetEntries(entries, selected, limit, expanded) {
+    if (expanded || entries.length <= limit) return entries;
+    const visible = entries.slice(0, limit);
+    if (selected && selected !== 'all' && !visible.some(entry => entry.label === selected)) {
+        const active = entries.find(entry => entry.label === selected);
+        if (active) visible.push(active);
+    }
+    return visible;
+}
+
+function songbookFacetChipHtml(kind, value, label, count, active) {
+    return `<button type="button" class="sbf-chip${active ? ' active' : ''}" data-filter-value="${esc(value)}" onclick="setSongbookFacetFromButton('${kind}', this)">${esc(label)}<b>${count}</b></button>`;
+}
+
+function songbookFacetRowHtml(kind, label, allCount, entries, selected, expanded) {
+    const limit = SONGBOOK_FILTER_LIMITS[kind] || 10;
+    const visible = limitedSongbookFacetEntries(entries, selected, limit, expanded);
+    const chips = [
+        songbookFacetChipHtml(kind, 'all', '전체', allCount, selected === 'all'),
+        ...visible.map(entry => songbookFacetChipHtml(kind, entry.label, entry.label, entry.count, selected === entry.label)),
+    ].join('');
+    const more = entries.length > limit
+        ? `<button type="button" class="sbf-more-btn" onclick="toggleSongbookFacet('${kind}')">${expanded ? '접기' : `전체 보기 +${entries.length - limit}`}</button>`
+        : '';
+    return `<div class="sbf-row">
+        <div class="sbf-label">${label}</div>
+        <div class="sbf-chips">${chips || `<span class="sbf-empty">표시할 항목이 없어요</span>`}</div>
+        ${more}
+    </div>`;
+}
+
+function renderSongbookFilterPanel() {
+    const panel = document.getElementById('songbook-filter-panel');
+    if (!panel) return;
+    if (S.mainTab !== 'songbook' || S.songbookCat === 'welcome' || !S.songbookData) {
+        panel.style.display = 'none';
+        panel.innerHTML = '';
+        return;
+    }
+
+    const forceAll = S.songbookCat === 'all';
+    const tagBase = filteredSongbookItems({ forceAll, ignoreTag: true });
+    const tagCounts = songbookTagCounts(tagBase);
+    const tagEntries = SONGBOOK_TAG_OPTIONS
+        .map(label => ({ label, count: tagCounts[label] || 0 }))
+        .filter(entry => entry.count || S.songbookTag === entry.label);
+
+    panel.innerHTML = songbookFacetRowHtml('tags', '태그', tagBase.length, tagEntries, S.songbookTag, S.songbookFilterExpanded.tags);
+    panel.style.display = '';
+}
+
+function updateSongbookViewToggle() {
+    const toggle = document.getElementById('songbook-view-toggle');
+    if (!toggle) return;
+    toggle.hidden = S.mainTab !== 'songbook' || S.songbookCat === 'welcome';
+    toggle.querySelectorAll('.songbook-view-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === S.songbookView);
+    });
+}
+
 // ── 렌더: 노래책 ────────────────────────────────
 function renderSongbook(forceAll) {
     if (!forceAll && S.songbookCat === 'welcome') { renderWelcomeCard(); return; }
 
     document.querySelector('.sb-body').classList.remove('welcome-wide', 'stats-wide');
     document.getElementById('sb-search-row').style.display = '';
+    document.getElementById('songbook-view-toggle').hidden = false;
+    updateSongbookViewToggle();
     document.getElementById('random-btn').classList.remove('hidden');
     document.getElementById('result-info').style.display   = '';
 
     const el = document.getElementById('songbook-list');
-    if (!S.songbookData) { renderSkeleton('songbook-list'); return; }
-
-    const isAll = forceAll || S.songbookCat === 'all';
-    const items = filteredSongbookItems({ forceAll: isAll });
-
-    updateResultInfo(items.length, S.songbookData.filter(s => isAll || s.category === S.songbookCat).length);
-
-    if (!items.length) {
-        el.innerHTML = emptyHtml(S.query ? `"${esc(S.query)}" 검색 결과가 없어요` : '등록된 곡이 없어요');
+    if (!S.songbookData) {
+        renderSongbookFilterPanel();
+        renderSkeleton('songbook-list');
         return;
     }
 
-    const catCol = isAll ? `<th class="col-cat">분류</th>` : '';
-    el.innerHTML = `
-    <table class="song-table">
-        <thead><tr>
-            <th class="col-num">#</th>
-            ${catCol}
-            <th class="col-title">제목</th>
-            <th class="col-artist">가수</th>
-            <th class="col-mr th-center">MR</th>
-            <th class="col-clip th-center">구슬요 클립</th>
-            <th class="col-skill th-center">숙련도</th>
-            <th class="col-memo">메모</th>
-        </tr></thead>
-        <tbody>
-        ${items.map((s, i) => `
-            <tr ${S.session ? `class="editable" onclick="openSongModal(${s.id})"` : ''}>
-                <td class="col-num">${i + 1}</td>
-                ${isAll ? `<td class="col-cat"><span class="cat-badge">${esc(s.category)}</span></td>` : ''}
-                <td class="col-title">${esc(s.title)}</td>
-                <td class="col-artist">${esc(s.artist || '')}</td>
-                <td class="col-mr">${s.mr_url ? `<a href="${esc(safeUrl(s.mr_url))}" class="link-btn mr" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">MR</a>` : ''}</td>
-                <td class="col-clip">${s.clip_url ? `<a href="${esc(safeUrl(s.clip_url))}" class="link-btn clip" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">클립</a>` : ''}</td>
-                <td class="col-skill">${skillDots(s.skill_level || 0)}</td>
-                <td class="col-memo">${esc(s.memo || '')}</td>
-            </tr>`).join('')}
-        </tbody>
-    </table>`;
+    const isAll = forceAll || S.songbookCat === 'all';
+    const items = filteredSongbookItems({ forceAll: isAll });
+    const scopedTotal = filteredSongbookItems({ forceAll: isAll, ignoreTag: true }).length;
+
+    renderSongbookFilterPanel();
+    updateResultInfo(items.length, scopedTotal);
+
+    if (!items.length) {
+        const hasFacet = S.songbookTag !== 'all';
+        el.innerHTML = emptyHtml(S.query ? `"${esc(S.query)}" 검색 결과가 없어요` : hasFacet ? '필터 조건에 맞는 곡이 없어요' : '등록된 곡이 없어요');
+        return;
+    }
+
+    if (S.songbookView === 'table') el.innerHTML = songbookTableHtml(items, isAll);
+    else el.innerHTML = songbookCardGridHtml(items, isAll);
 }
 
 // ── 렌더: 라이브 ─────────────────────────────────
@@ -1902,7 +3226,7 @@ async function renderLive() {
     const year = S.liveYear;
     document.querySelector('.sb-body').classList.remove('welcome-wide');
 
-    if (year === 'stats') {
+    if (year === 'stats' && !S.query) {
         document.getElementById('live-list').parentElement.style.display = 'none';
         document.getElementById('stats-panel').style.display = 'block';
         document.getElementById('result-info').style.display = 'none';
@@ -1915,9 +3239,9 @@ async function renderLive() {
 
     document.getElementById('live-list').parentElement.style.display = '';
     document.getElementById('stats-panel').style.display = 'none';
+    document.getElementById('result-info').style.display = '';
 
-    // 검색 중일 때만 전체 연도 데이터 사용
-    const key = (S.query || year === 'all') ? 'all' : year;
+    const key = (year === 'stats' || year === 'all') ? 'all' : year;
     if (S.liveCache[key] === undefined) {
         renderSkeleton('live-list');
         await loadLive(key);
@@ -1925,9 +3249,9 @@ async function renderLive() {
 
     const raw = S.liveCache[key] || [];
 
-    // 연도 필터 적용 (전체 데이터 사용 중일 때)
+    // 연도 필터 적용 (전체 보기에서만)
     const filtered = key === 'all'
-        ? raw.filter(r => S.liveFilter.years.has(r.year))
+        ? (year === 'stats' ? raw : raw.filter(r => S.liveFilter.years.has(r.year)))
         : raw;
 
     // 검색어 필터
@@ -2367,7 +3691,19 @@ function renderStats() {
 // ── 결과 카운트 ─────────────────────────────────
 function updateResultInfo(shown, total) {
     const el = document.getElementById('result-info');
-    if (S.query && shown !== total) {
+    if (S.mainTab === 'songbook') {
+        const active = [];
+        if (S.songbookTag !== 'all') active.push(`#${S.songbookTag}`);
+        if (S.query && active.length) {
+            el.textContent = `"${S.query}" · ${active.join(' · ')} — ${total}곡 중 ${shown}곡`;
+        } else if (S.query) {
+            el.textContent = `"${S.query}" 검색 결과 ${shown}곡`;
+        } else if (active.length) {
+            el.textContent = `${active.join(' · ')} — ${total}곡 중 ${shown}곡`;
+        } else {
+            el.textContent = `총 ${total}곡`;
+        }
+    } else if (S.query && shown !== total) {
         el.textContent = `"${S.query}" — ${total}곡 중 ${shown}곡`;
     } else {
         el.textContent = `총 ${total}곡`;
@@ -2376,10 +3712,12 @@ function updateResultInfo(shown, total) {
 
 // ── 스켈레톤 ────────────────────────────────────
 function renderSkeleton(id) {
-    document.getElementById(id).innerHTML = `
+    const isSongbook = id === 'songbook-list';
+    const html = `
     <table class="song-table">
         <thead><tr>
             <th class="col-num">#</th>
+            ${isSongbook ? '<th class="col-cover">커버</th>' : ''}
             <th class="col-title">제목</th>
             <th class="col-artist">가수</th>
             <th class="col-mr">MR</th>
@@ -2389,6 +3727,7 @@ function renderSkeleton(id) {
         ${Array(10).fill(0).map(() => `
             <tr>
                 <td><div class="skeleton" style="height:12px;width:20px;border-radius:4px"></div></td>
+                ${isSongbook ? '<td><div class="skeleton" style="height:54px;width:54px;border-radius:8px;margin:0 auto"></div></td>' : ''}
                 <td><div class="skeleton" style="height:13px;border-radius:4px"></div></td>
                 <td><div class="skeleton" style="height:12px;width:80%;border-radius:4px"></div></td>
                 <td></td>
@@ -2396,6 +3735,7 @@ function renderSkeleton(id) {
             </tr>`).join('')}
         </tbody>
     </table>`;
+    document.getElementById(id).innerHTML = isSongbook ? `<div class="song-table-wrap">${html}</div>` : html;
 }
 
 
@@ -2419,10 +3759,14 @@ function setMainTab(tab) {
     document.getElementById('songbook-subtabs').style.display = isSong ? '' : 'none';
     document.getElementById('live-subtabs').style.display     = isSong ? 'none' : '';
     document.getElementById('live-filter-btn').style.display  = isSong ? 'none' : '';
+    document.getElementById('songbook-view-toggle').hidden = !isSong || S.songbookCat === 'welcome';
     if (isSong) {
         const panel = document.getElementById('live-filter-panel');
         panel.style.display = 'none';
         document.getElementById('live-filter-btn').classList.remove('active');
+    } else {
+        const panel = document.getElementById('songbook-filter-panel');
+        if (panel) panel.style.display = 'none';
     }
     document.getElementById('search-input').placeholder = isSong
         ? '노래책 전체 검색 (제목·가수·메모)...'
@@ -2435,6 +3779,7 @@ function setMainTab(tab) {
         document.getElementById('sb-search-row').style.display = '';
         document.getElementById('result-info').style.display   = '';
         document.getElementById('random-btn').classList.add('hidden');
+        document.getElementById('songbook-view-toggle').hidden = true;
         renderLive();
     }
     updateFab();
@@ -2456,15 +3801,35 @@ function applyInitialView() {
 }
 
 function setSongbookCat(cat) {
-    const isChangingCat = S.songbookCat !== cat;
-    if (isChangingCat && S.query) {
-        clearSongbookSearchState();
-    }
     S.songbookCat = cat;
     document.querySelectorAll('#songbook-subtabs .sub-tab').forEach(el =>
         el.classList.toggle('active', el.dataset.cat === cat));
     renderSongbook();
     updateFab();
+}
+
+function setSongbookView(view) {
+    if (!['grid', 'table'].includes(view)) return;
+    S.songbookView = view;
+    updateSongbookViewToggle();
+    renderSongbook();
+}
+
+function setSongbookFacetFromButton(kind, button) {
+    const value = button?.dataset?.filterValue || 'all';
+    if (kind === 'tags') setSongbookTag(value);
+}
+
+function setSongbookTag(tag) {
+    S.songbookTag = tag === 'all' ? 'all' : normalizeSongbookTag(tag);
+    if (!S.songbookTag) S.songbookTag = 'all';
+    renderSongbook();
+}
+
+function toggleSongbookFacet(kind) {
+    if (!(kind in S.songbookFilterExpanded)) return;
+    S.songbookFilterExpanded[kind] = !S.songbookFilterExpanded[kind];
+    renderSongbook();
 }
 
 function setLiveYear(year) {
@@ -2516,12 +3881,8 @@ function onSearch(val) {
     document.getElementById('search-clear').classList.toggle('show', !!S.query);
 
     if (S.mainTab === 'songbook') {
-        // 노래책: 현재 서브탭 무시하고 전체 검색
-        if (S.query) renderSongbook(true);
-        else renderSongbook();
+        renderSongbook();
     } else {
-        // 라이브 기록: 연도 무시하고 전체 검색
-        if (S.query && S.liveYear === 'stats') S.liveYear = 2026;
         renderLive();
     }
 }
@@ -2550,11 +3911,203 @@ function clearSearch() {
 }
 
 // ── 랜덤 뽑기 ────────────────────────────────────
+const RANDOM_OPTION_INPUTS = {
+    currentFilter: 'r-opt-current-filter',
+    mrOnly:        'r-opt-mr',
+    clipOnly:      'r-opt-clip',
+    skill3:        'r-opt-skill3',
+    noJpop:        'r-opt-no-jpop',
+    coverOnly:     'r-opt-cover',
+};
+const RANDOM_OPTION_DEFAULTS = {
+    currentFilter: true,
+    mrOnly:        false,
+    clipOnly:      false,
+    skill3:        false,
+    noJpop:        false,
+    coverOnly:     false,
+};
+let _randomOptions = { ...RANDOM_OPTION_DEFAULTS };
+let _randomOptionsTouched = false;
+let _randomScopeTouched = false;
 let _shuffleTimer = null;
+
+function defaultRandomOptionsForContext() {
+    return {
+        ...RANDOM_OPTION_DEFAULTS,
+        currentFilter: S.songbookCat !== 'welcome',
+    };
+}
+
+function currentRandomOptions() {
+    if (!_randomOptionsTouched) return defaultRandomOptionsForContext();
+    return {
+        ..._randomOptions,
+        currentFilter: _randomScopeTouched ? _randomOptions.currentFilter : defaultRandomOptionsForContext().currentFilter,
+    };
+}
+
+function syncRandomOptionInputs(options = currentRandomOptions()) {
+    for (const [key, id] of Object.entries(RANDOM_OPTION_INPUTS)) {
+        const el = document.getElementById(id);
+        if (el) el.checked = !!options[key];
+    }
+}
+
+function readRandomOptionsFromInputs() {
+    const options = currentRandomOptions();
+    for (const [key, id] of Object.entries(RANDOM_OPTION_INPUTS)) {
+        const el = document.getElementById(id);
+        if (el) options[key] = el.checked;
+    }
+    return options;
+}
+
+function onRandomOptionChange(input) {
+    _randomOptionsTouched = true;
+    if (input?.id === RANDOM_OPTION_INPUTS.currentFilter) _randomScopeTouched = true;
+    _randomOptions = readRandomOptionsFromInputs();
+    const info = updateRandomCandidateCount(_randomOptions);
+    if (!info.pool.length) showRandomEmpty('조건에 맞는 곡이 없어요. 옵션을 줄여보세요.');
+}
+
+function songHasValidUrl(song, key) {
+    return !!normalizeOptionalUrl(song?.[key]);
+}
+
+function isJpopSong(song) {
+    const category = String(song?.category || '').trim().toLowerCase().replace(/\s+/g, '');
+    return category === 'jpop' || category === 'j-pop';
+}
+
+function randomCurrentFilterPool() {
+    if (S.songbookCat === 'welcome') {
+        return S.query
+            ? filteredSongbookItems({ forceAll: true, tag: 'all' })
+            : (S.songbookData || []);
+    }
+    return filteredSongbookItems({ forceAll: S.songbookCat === 'all' });
+}
+
+function randomBasePool(options) {
+    return options.currentFilter ? randomCurrentFilterPool() : (S.songbookData || []);
+}
+
+function randomCandidateInfo(options = currentRandomOptions()) {
+    const base = randomBasePool(options);
+    const pool = base.filter(song => {
+        if (options.mrOnly && !songHasValidUrl(song, 'mr_url')) return false;
+        if (options.clipOnly && !songHasValidUrl(song, 'clip_url')) return false;
+        if (options.skill3 && (parseInt(song.skill_level, 10) || 0) < 3) return false;
+        if (options.noJpop && isJpopSong(song)) return false;
+        if (options.coverOnly && !songCoverUrl(song)) return false;
+        return true;
+    });
+    return { base, pool };
+}
+
+function randomScopeLabel(options) {
+    if (!options.currentFilter) return '전체 곡';
+    if (S.songbookCat === 'welcome') return S.query ? '검색 결과' : '전체 곡';
+    return '현재 필터 결과';
+}
+
+function updateRandomCandidateCount(options = currentRandomOptions()) {
+    const info = randomCandidateInfo(options);
+    const countEl = document.getElementById('r-count');
+    if (countEl) {
+        countEl.textContent = `${randomScopeLabel(options)} ${info.base.length}곡 · 조건 일치 ${info.pool.length}곡`;
+    }
+    const emptyEl = document.getElementById('r-empty');
+    if (emptyEl && info.pool.length) emptyEl.style.display = 'none';
+    return info;
+}
+
+function randomTagHtml(song) {
+    return songbookTags(song)
+        .map(tag => `<span class="random-tag">${esc(tag)}</span>`)
+        .join('');
+}
+
+function randomLinksHtml(song) {
+    const mrUrl = normalizeOptionalUrl(song?.mr_url);
+    const clipUrl = normalizeOptionalUrl(song?.clip_url);
+    return [
+        mrUrl ? linkBtn(mrUrl, 'MR', 'mr') : '<span class="random-link-empty">MR 없음</span>',
+        clipUrl ? linkBtn(clipUrl, '클립', 'clip') : '<span class="random-link-empty">클립 없음</span>',
+    ].join('');
+}
+
+function showRandomEmpty(message) {
+    const coverEl = document.getElementById('r-cover');
+    const titleEl = document.getElementById('r-title');
+    const artistEl = document.getElementById('r-artist');
+    const tagsEl = document.getElementById('r-tags');
+    const skillEl = document.getElementById('r-skill');
+    const linksEl = document.getElementById('r-links');
+    const memoEl = document.getElementById('r-memo');
+    const emptyEl = document.getElementById('r-empty');
+
+    if (coverEl) { coverEl.style.display = 'none'; coverEl.innerHTML = ''; }
+    if (titleEl) { titleEl.textContent = ''; titleEl.classList.remove('r-revealed'); }
+    if (artistEl) artistEl.textContent = '';
+    if (tagsEl) { tagsEl.style.display = 'none'; tagsEl.innerHTML = ''; }
+    if (skillEl) skillEl.textContent = '';
+    if (linksEl) linksEl.innerHTML = '';
+    if (memoEl) { memoEl.style.display = 'none'; memoEl.textContent = ''; }
+    if (emptyEl) { emptyEl.textContent = message; emptyEl.style.display = ''; }
+}
+
+function renderRandomResult(song) {
+    const coverEl = document.getElementById('r-cover');
+    const titleEl  = document.getElementById('r-title');
+    const artistEl = document.getElementById('r-artist');
+    const tagsEl   = document.getElementById('r-tags');
+    const skillEl  = document.getElementById('r-skill');
+    const linksEl  = document.getElementById('r-links');
+    const memoEl   = document.getElementById('r-memo');
+    const emptyEl  = document.getElementById('r-empty');
+
+    if (emptyEl) emptyEl.style.display = 'none';
+    coverEl.innerHTML = songCoverMediaHtml(song, 'random-cover-img', 'eager');
+    coverEl.style.display = '';
+    titleEl.textContent = song.title;
+    artistEl.textContent = song.artist || '';
+
+    const tags = randomTagHtml(song);
+    if (tags) {
+        tagsEl.innerHTML = tags;
+        tagsEl.style.display = '';
+    } else {
+        tagsEl.innerHTML = '';
+        tagsEl.style.display = 'none';
+    }
+
+    skillEl.textContent = skillDots(song.skill_level || 0);
+    titleEl.classList.remove('r-revealed'); void titleEl.offsetWidth; titleEl.classList.add('r-revealed');
+    linksEl.innerHTML = randomLinksHtml(song);
+
+    if (song.memo) { memoEl.textContent = song.memo; memoEl.style.display = ''; }
+    else           { memoEl.textContent = ''; memoEl.style.display = 'none'; }
+}
+
 function pickRandom() {
-    // 장르 탭과 무관하게 전체 곡에서 뽑기
-    const pool = S.songbookData || [];
-    if (!pool.length) { showToast('노래책 데이터를 먼저 불러오세요'); return; }
+    if (!S.songbookData) {
+        showToast('노래책 데이터를 먼저 불러오세요');
+        return;
+    }
+
+    const options = currentRandomOptions();
+    syncRandomOptionInputs(options);
+    const info = updateRandomCandidateCount(options);
+    const pool = info.pool;
+    const modal = document.getElementById('random-modal');
+    modal.classList.add('open');
+
+    if (!pool.length) {
+        showRandomEmpty(S.songbookData.length ? '조건에 맞는 곡이 없어요. 옵션을 줄여보세요.' : '등록된 곡이 없어요.');
+        return;
+    }
 
     // 버튼: 셔플 도는 동안 계속 회전
     const btn = document.getElementById('random-btn');
@@ -2562,18 +4115,27 @@ function pickRandom() {
     const welcomeBtn = document.querySelector('.wc-random-btn');
     if (welcomeBtn) welcomeBtn.classList.add('spinning');
 
-    const modal = document.getElementById('random-modal');
+    const coverEl = document.getElementById('r-cover');
     const titleEl  = document.getElementById('r-title');
     const artistEl = document.getElementById('r-artist');
+    const tagsEl   = document.getElementById('r-tags');
     const skillEl  = document.getElementById('r-skill');
     const linksEl  = document.getElementById('r-links');
     const memoEl   = document.getElementById('r-memo');
+    const emptyEl  = document.getElementById('r-empty');
 
     // 최종 결과 미리 결정
     const final = pool[Math.floor(Math.random() * pool.length)];
 
-    modal.classList.add('open');
     document.querySelector('#random-modal .modal').classList.add('shuffling');
+    coverEl.style.display = 'none';
+    coverEl.innerHTML = '';
+    if (emptyEl) emptyEl.style.display = 'none';
+    tagsEl.style.display = 'none';
+    tagsEl.innerHTML = '';
+    linksEl.innerHTML = '';
+    memoEl.style.display = 'none';
+    memoEl.textContent = '';
     titleEl.classList.remove('r-revealed');
 
     // 셔플 모션: 빠르게 노래 제목을 바꿔가며 점점 느려짐 (~800ms)
@@ -2594,18 +4156,7 @@ function pickRandom() {
             if (btn) btn.classList.remove('spinning');
             if (welcomeBtn) welcomeBtn.classList.remove('spinning');
             document.querySelector('#random-modal .modal').classList.remove('shuffling');
-            titleEl.textContent  = final.title;
-            artistEl.textContent = final.artist || '';
-            skillEl.textContent  = skillDots(final.skill_level || 0);
-            titleEl.classList.remove('r-revealed'); void titleEl.offsetWidth; titleEl.classList.add('r-revealed');
-
-            linksEl.innerHTML = [
-                linkBtn(final.mr_url,   'MR',  'mr'),
-                linkBtn(final.clip_url, '클립', 'clip'),
-            ].filter(Boolean).join('') || '<span style="color:var(--muted);font-size:12px">링크 없음</span>';
-
-            if (final.memo) { memoEl.textContent = final.memo; memoEl.style.display = ''; }
-            else            memoEl.style.display = 'none';
+            renderRandomResult(final);
             _shuffleTimer = null;
         }
     }
@@ -2619,6 +4170,11 @@ function closeRandom() {
     const welcomeBtn = document.querySelector('.wc-random-btn');
     if (welcomeBtn) welcomeBtn.classList.remove('spinning');
     document.querySelector('#random-modal .modal').classList.remove('shuffling');
+    document.getElementById('r-cover').style.display = 'none';
+    document.getElementById('r-cover').innerHTML = '';
+    document.getElementById('r-tags').style.display = 'none';
+    document.getElementById('r-tags').innerHTML = '';
+    document.getElementById('r-empty').style.display = 'none';
     document.getElementById('random-modal').classList.remove('open');
 }
 
@@ -2731,6 +4287,859 @@ document.addEventListener('change', e => {
 
 function closeBulkModal() { document.getElementById('bulk-modal').classList.remove('open'); }
 
+// ── 커버 자동 채우기 ─────────────────────────────
+const COVER_ITUNES_REQUEST_GAP_MS = 1200;
+const COVER_ITUNES_RETRY_DELAY_MS = 2500;
+const COVER_ITUNES_ACCEPT_SCORE = 0.88;
+const COVER_ITUNES_CONFIDENT_SCORE = 0.94;
+const COVER_ITUNES_MIN_TITLE_SCORE = 0.88;
+const COVER_ITUNES_MIN_ARTIST_SCORE = 0.62;
+const COVER_ITUNES_SEARCH_TITLE_SCORE = 0.9;
+const COVER_ITUNES_SEARCH_TITLE_MAX_RANK = 4;
+const COVER_ITUNES_MAX_QUERIES_PER_SONG = 14;
+const COVER_YOUTUBE_ACCEPT_SCORE = 0.82;
+const COVER_YOUTUBE_MIN_TITLE_SCORE = 0.82;
+const COVER_YOUTUBE_MIN_ARTIST_SCORE = 0.52;
+const COVER_YOUTUBE_KEY_STORAGE = 'beadyo_songbook_youtube_api_key';
+const COVER_YOUTUBE_ENABLED_STORAGE = 'beadyo_songbook_youtube_enabled';
+let _coverBackfillRunning = false;
+let _coverBackfillCancel = false;
+let _coverItunesNextRequestAt = 0;
+let _lastCoverBackfillSaved = [];
+let _coverReviewCandidates = [];
+
+function coverBackfillItems(scope = 'current') {
+    const all = S.songbookData || [];
+    const items = scope === 'all'
+        ? all
+        : filteredSongbookItems({ forceAll: !!S.query || S.songbookCat === 'all' });
+    return items.filter(s => !songCoverUrl(s));
+}
+
+function updateCoverBackfillCounts() {
+    document.getElementById('cover-current-count').textContent = coverBackfillItems('current').length;
+    document.getElementById('cover-all-count').textContent = coverBackfillItems('all').length;
+}
+
+function openCoverBackfillModal() {
+    if (!S.session) return;
+    updateCoverBackfillCounts();
+    loadCoverYoutubeSettings();
+    document.getElementById('cover-log').textContent = '';
+    _coverReviewCandidates = [];
+    renderCoverReviewCandidates();
+    document.getElementById('cover-status').textContent = '대기 중';
+    document.getElementById('cover-progress-bar').style.width = '0%';
+    updateCoverRunActions();
+    setCoverBackfillRunning(false);
+    document.getElementById('cover-modal').classList.add('open');
+}
+
+function closeCoverBackfillModal() {
+    if (_coverBackfillRunning) {
+        _coverBackfillCancel = true;
+        return;
+    }
+    document.getElementById('cover-modal').classList.remove('open');
+}
+
+function setCoverBackfillRunning(running) {
+    _coverBackfillRunning = running;
+    document.getElementById('cover-current-btn').disabled = running;
+    document.getElementById('cover-all-btn').disabled = running;
+    document.getElementById('cover-close-btn').disabled = running;
+    document.getElementById('cover-youtube-enabled').disabled = running;
+    document.getElementById('cover-review-enabled').disabled = running;
+    document.getElementById('cover-youtube-key').disabled = running;
+    document.getElementById('cover-cancel-btn').style.display = running ? '' : 'none';
+    updateCoverRunActions();
+}
+
+function cancelCoverBackfill() {
+    _coverBackfillCancel = true;
+    document.getElementById('cover-status').textContent = '중지 요청 중...';
+}
+
+function appendCoverLog(line) {
+    const el = document.getElementById('cover-log');
+    el.textContent += (el.textContent ? '\n' : '') + line;
+    el.scrollTop = el.scrollHeight;
+}
+
+function updateCoverRunActions() {
+    const wrap = document.getElementById('cover-run-actions');
+    const btn = document.getElementById('cover-undo-btn');
+    if (!wrap || !btn) return;
+    const canUndo = _lastCoverBackfillSaved.length > 0 && !_coverBackfillRunning;
+    wrap.classList.toggle('show', canUndo);
+    btn.disabled = !canUndo;
+    btn.textContent = _lastCoverBackfillSaved.length
+        ? `이번 저장분 ${_lastCoverBackfillSaved.length}곡 되돌리기`
+        : '이번 저장분 되돌리기';
+}
+
+function renderCoverReviewCandidates() {
+    const wrap = document.getElementById('cover-review');
+    if (!wrap) return;
+    const pending = _coverReviewCandidates.filter(group => !group.saved);
+    wrap.classList.toggle('show', pending.length > 0);
+    if (!pending.length) {
+        wrap.innerHTML = '';
+        return;
+    }
+    wrap.innerHTML = `
+        <div class="cover-review-title">직접 선택할 iTunes 후보 ${pending.length}곡</div>
+        ${_coverReviewCandidates.map((group, groupIndex) => {
+            if (group.saved) return '';
+            return `
+                <div class="cover-review-song">
+                    <div class="cover-review-label">${esc(group.label)}</div>
+                    <div class="cover-review-grid">
+                        ${group.candidates.map((candidate, candidateIndex) => `
+                            <div class="cover-review-card">
+                                <img src="${esc(candidate.coverUrl)}" alt="${esc(candidate.title || group.label)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+                                <div class="cover-review-meta">
+                                    <strong>${esc(candidate.title || '제목 없음')}</strong>
+                                    ${esc(candidate.artist || '')}<br>
+                                    ${esc(candidate.album || '')}
+                                </div>
+                                <button onclick="saveCoverReviewCandidate(${groupIndex}, ${candidateIndex})">이 커버 저장</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }).join('')}
+    `;
+}
+
+function addCoverReviewCandidates(song, label, candidates) {
+    const unique = [];
+    const seen = new Set();
+    for (const candidate of candidates || []) {
+        const key = candidate.coverUrl || `${candidate.title}|${candidate.artist}|${candidate.album}`;
+        if (!candidate.coverUrl || seen.has(key)) continue;
+        seen.add(key);
+        unique.push(candidate);
+    }
+    if (!unique.length) return;
+    _coverReviewCandidates.push({
+        songId: song.id,
+        label,
+        candidates: unique.slice(0, 6),
+        saved: false,
+    });
+    renderCoverReviewCandidates();
+}
+
+async function saveCoverReviewCandidate(groupIndex, candidateIndex) {
+    const group = _coverReviewCandidates[groupIndex];
+    const candidate = group?.candidates?.[candidateIndex];
+    if (!S.session || !group || !candidate || group.saved) return;
+    await ensureDb();
+    const { error } = await db.from('songbook').update({ cover_url: candidate.coverUrl }).eq('id', group.songId);
+    if (error) {
+        showToast(`커버 저장 실패: ${error.message}`);
+        return;
+    }
+    const song = (S.songbookData || []).find(item => item.id === group.songId);
+    if (song) song.cover_url = candidate.coverUrl;
+    group.saved = true;
+    _lastCoverBackfillSaved.push({ id: group.songId, label: group.label, coverUrl: candidate.coverUrl });
+    appendCoverLog(`PICK ${group.label} -> iTunes: ${candidate.title} - ${candidate.artist}`);
+    updateCoverRunActions();
+    updateCoverBackfillCounts();
+    renderCoverReviewCandidates();
+    renderSongbook(!!S.query);
+    showToast('선택한 커버 저장 완료');
+}
+
+function loadCoverYoutubeSettings() {
+    const enabled = localStorage.getItem(COVER_YOUTUBE_ENABLED_STORAGE) === '1';
+    const key = localStorage.getItem(COVER_YOUTUBE_KEY_STORAGE) || '';
+    document.getElementById('cover-youtube-enabled').checked = enabled;
+    document.getElementById('cover-youtube-key').value = key;
+    toggleYoutubeBackfillInputs(false);
+}
+
+function saveCoverYoutubeSettings() {
+    const enabled = document.getElementById('cover-youtube-enabled').checked;
+    const key = document.getElementById('cover-youtube-key').value.trim();
+    localStorage.setItem(COVER_YOUTUBE_ENABLED_STORAGE, enabled ? '1' : '0');
+    if (key) localStorage.setItem(COVER_YOUTUBE_KEY_STORAGE, key);
+    else localStorage.removeItem(COVER_YOUTUBE_KEY_STORAGE);
+}
+
+function toggleYoutubeBackfillInputs(save = true) {
+    const enabled = document.getElementById('cover-youtube-enabled').checked;
+    document.getElementById('cover-youtube-key-wrap').classList.toggle('show', enabled);
+    if (save) saveCoverYoutubeSettings();
+}
+
+function coverSearchText(value) {
+    return String(value || '')
+        .toLowerCase()
+        .replace(/\([^)]*\)/g, ' ')
+        .replace(/（[^）]*）/g, ' ')
+        .replace(/\[[^\]]*\]/g, ' ')
+        .replace(/\bfeat\.?\b|\bft\.?\b|\bwith\b/g, ' ')
+        .replace(/[\{\}'"`~!@#$%^&*_+=|\\:;,.?/<>-]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function coverCompactText(value) {
+    return coverSearchText(value).replace(/\s+/g, '');
+}
+
+function coverSimilarity(a, b) {
+    const aa = coverSearchText(a);
+    const bb = coverSearchText(b);
+    if (!aa || !bb) return 0;
+    if (aa === bb) return 1;
+    if (aa.includes(bb) || bb.includes(aa)) return 0.86;
+    const compactA = coverCompactText(a);
+    const compactB = coverCompactText(b);
+    if (compactA && compactB) {
+        if (compactA === compactB) return 0.98;
+        if (compactA.includes(compactB) || compactB.includes(compactA)) return 0.88;
+    }
+    const aTokens = new Set(aa.split(' ').filter(Boolean));
+    const bTokens = new Set(bb.split(' ').filter(Boolean));
+    const overlap = [...aTokens].filter(t => bTokens.has(t)).length;
+    const tokenScore = overlap ? (2 * overlap) / (aTokens.size + bTokens.size) : 0;
+    let same = 0;
+    const len = Math.min(aa.length, bb.length);
+    for (let i = 0; i < len; i++) if (aa[i] === bb[i]) same++;
+    const charScore = same / Math.max(aa.length, bb.length);
+    return Math.max(tokenScore, charScore * 0.72);
+}
+
+function coverBracketParts(value) {
+    const text = String(value || '');
+    const parts = [];
+    const patterns = [/\(([^)]*)\)/g, /（([^）]*)）/g, /\[([^\]]*)\]/g];
+    for (const pattern of patterns) {
+        let match;
+        while ((match = pattern.exec(text))) {
+            const part = match[1].trim();
+            if (part) {
+                parts.push(part);
+                if (/[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]/.test(part)) {
+                    parts.push(...part.split(/\s+/).filter(Boolean));
+                }
+            }
+        }
+    }
+    return parts;
+}
+
+function coverKnownTitleAliases(title) {
+    const text = String(title || '').trim().replace(/\s+/g, ' ');
+    const withoutBrackets = text
+        .replace(/\([^)]*\)/g, ' ')
+        .replace(/（[^）]*）/g, ' ')
+        .replace(/\[[^\]]*\]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    const keys = [
+        text,
+        withoutBrackets,
+        ...coverBracketParts(text),
+    ].map(coverSearchText).filter(Boolean);
+    const aliases = {
+        '밤새도록 널 생각해': ['夜もすがら君想ふ', 'Yoru mo Sugara Kimi Omou', 'Yomosugara Kimi Omou'],
+        '참새': ['すずめ', 'Suzume'],
+        '탄지로의 노래': ['竈門炭治郎のうた', 'Kamado Tanjiro no Uta', 'Tanjiro no Uta'],
+        '내가 죽으려고 생각한 것은': ['僕が死のうと思ったのは', 'Boku ga Shinou to Omotta no wa'],
+        '아무것도 아니야': ['なんでもないや', 'Nandemonaiya', 'Nandemo Naiya'],
+        '그저 목소리 하나': ['ただ声一つ', 'Tada Koe Hitotsu'],
+        '푸른 산호초': ['青い珊瑚礁', 'Aoi Sangosho', 'Aoi Sangoshou'],
+        'marigold': ['マリーゴールド', '마리골드'],
+        '마리골드': ['マリーゴールド', 'Marigold'],
+        '바보같이': ['ばかみたい', 'Baka Mitai', 'Dame Da Ne', 'Damedane'],
+        '다메다네': ['ばかみたい', 'Baka Mitai', 'Dame Da Ne', 'Damedane'],
+        'jane doe': ['JANE DOE', 'Jane Doe'],
+        '제인도': ['JANE DOE', 'Jane Doe'],
+        'mela': ['Mela!'],
+        '불꽃': ['炎', 'Homura'],
+    };
+    return [...new Set(keys.flatMap(key => aliases[key] || []))];
+}
+
+function coverTitleAliases(title) {
+    const text = String(title || '').trim().replace(/\s+/g, ' ');
+    const withoutBrackets = text
+        .replace(/\([^)]*\)/g, ' ')
+        .replace(/（[^）]*）/g, ' ')
+        .replace(/\[[^\]]*\]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    return [...new Set([
+        withoutBrackets,
+        text,
+        coverCompactText(withoutBrackets || text),
+        ...coverBracketParts(text),
+        ...coverKnownTitleAliases(text),
+    ].filter(Boolean))];
+}
+
+function coverBestSimilarity(candidates, target) {
+    return Math.max(0, ...candidates.map(candidate => coverSimilarity(candidate, target)));
+}
+
+function coverArtistAliases(artist) {
+    const text = String(artist || '').trim().replace(/\s+/g, ' ');
+    const aliases = {
+        '데이식스': ['DAY6'],
+        'day6': ['데이식스'],
+        '태연': ['TAEYEON'],
+        'taeyeon': ['태연'],
+        '소녀시대': ["Girls' Generation", 'Girls Generation', 'SNSD'],
+        "girls' generation": ['소녀시대', 'SNSD'],
+        'girls generation': ['소녀시대', 'SNSD'],
+        '백예린': ['Yerin Baek'],
+        'yerin baek': ['백예린'],
+        '로제': ['ROSE', 'ROSÉ'],
+        'rose': ['로제', 'ROSÉ'],
+        'rosé': ['로제', 'ROSE'],
+        '아이유': ['IU'],
+        'iu': ['아이유'],
+        'priz v': ['Priz', 'Priz-V', '프리즈브이'],
+        'priz': ['Priz-V', '프리즈브이'],
+        '프리즈브이': ['Priz-V', 'Priz'],
+        '리사': ['LiSA'],
+        'lisa': ['리사'],
+        '오오츠카 아이': ['大塚 愛', 'Ai Otsuka', 'Otsuka Ai'],
+        '大塚 愛': ['오오츠카 아이', 'Ai Otsuka', 'Otsuka Ai'],
+        'ai otsuka': ['오오츠카 아이', '大塚 愛', 'Otsuka Ai'],
+        'otsuka ai': ['오오츠카 아이', '大塚 愛', 'Ai Otsuka'],
+        '유우리': ['Yuuri', '優里'],
+        'yuuri': ['유우리', '優里'],
+        '優里': ['유우리', 'Yuuri'],
+        '녹황색사회': ['Ryokuoushoku Shakai', '緑黄色社会'],
+        '료쿠오우쇼쿠 샤카이': ['Ryokuoushoku Shakai', '緑黄色社会'],
+        'ryokuoushoku shakai': ['녹황색사회', '료쿠오우쇼쿠 샤카이', '緑黄色社会'],
+        '緑黄色社会': ['녹황색사회', '료쿠오우쇼쿠 샤카이', 'Ryokuoushoku Shakai'],
+        '츠키': ['tuki', 'tuki.'],
+        'tuki': ['츠키', 'tuki.'],
+        'gumi': ['Megpoid', 'TOKOTOKO', '西沢さんP', 'NishizawasanP', 'Nishizawa-sanP'],
+        'radwimps': ['래드윔프스'],
+        '래드윔프스': ['RADWIMPS'],
+        '귀멸의 칼날 ost': ['Go Shiina', '椎名豪', 'Nami Nakagawa', '中川奈美', 'Demon Slayer', '鬼滅の刃'],
+        '너의 이름은 ost': ['RADWIMPS', 'Your Name', '君の名は'],
+        '나카시마 미카': ['Mika Nakashima', '中島美嘉'],
+        'mika nakashima': ['나카시마 미카', '中島美嘉'],
+        '中島美嘉': ['나카시마 미카', 'Mika Nakashima'],
+        '로쿠데나시': ['Rokudenashi', 'ロクデナシ'],
+        'rokudenashi': ['로쿠데나시', 'ロクデナシ'],
+        'ロクデナシ': ['로쿠데나시', 'Rokudenashi'],
+        '마츠다 세이코': ['Seiko Matsuda', '松田聖子'],
+        'seiko matsuda': ['마츠다 세이코', '松田聖子'],
+        '松田聖子': ['마츠다 세이코', 'Seiko Matsuda'],
+        '아이묭': ['Aimyon', 'あいみょん'],
+        'aimyon': ['아이묭', 'あいみょん'],
+        'あいみょん': ['아이묭', 'Aimyon'],
+        '용과같이7 ost': ['SEGA', 'Kazuma Kiryu', 'Takaya Kuroda', 'Hidenori Shoji', '龍が如く', 'Yakuza'],
+        '우타다 히카루': ['Hikaru Utada', '宇多田ヒカル'],
+        'hikaru utada': ['우타다 히카루', '宇多田ヒカル'],
+        '宇多田ヒカル': ['우타다 히카루', 'Hikaru Utada'],
+        '요네즈 켄시': ['Kenshi Yonezu', '米津玄師'],
+        'kenshi yonezu': ['요네즈 켄시', '米津玄師'],
+        '米津玄師': ['요네즈 켄시', 'Kenshi Yonezu'],
+        '우타다 히카루 요네즈 켄시': ['Hikaru Utada', '宇多田ヒカル', 'Kenshi Yonezu', '米津玄師'],
+    };
+    const key = coverSearchText(text);
+    return [...new Set([
+        text,
+        ...(aliases[key] || []),
+    ].filter(Boolean))];
+}
+
+function coverHasArtist(song) {
+    return !!coverSearchText(song?.artist);
+}
+
+function coverIsSourceArtistLabel(artist) {
+    return /\bost\b|soundtrack|오리지널|사운드트랙/i.test(String(artist || ''));
+}
+
+function coverIsJpop(song, country = '') {
+    const cat = String(song?.category || '').toUpperCase();
+    const cc = String(country || '').toUpperCase();
+    return cat.includes('JPOP') || cat.includes('J-POP') || cc === 'JP' || cc === 'JPN';
+}
+
+function coverTermHasTitleAlias(song, term) {
+    const compactTerm = coverCompactText(term);
+    if (!compactTerm) return false;
+    return coverTitleAliases(song.title).some(alias => {
+        const compactAlias = coverCompactText(alias);
+        const isCjkAlias = /[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]/.test(compactAlias);
+        return compactTerm.includes(compactAlias) && (compactAlias.length >= 2 || isCjkAlias);
+    });
+}
+
+function coverCandidateMatch(song, result, context = {}) {
+    const titleAliases = coverTitleAliases(song.title);
+    const artistAliases = coverArtistAliases(song.artist);
+    const titleScore = coverBestSimilarity(titleAliases, result.trackName);
+    const hasArtist = coverHasArtist(song) && !coverIsSourceArtistLabel(song.artist);
+    let artistScore = hasArtist ? Math.max(
+        coverBestSimilarity(artistAliases, result.artistName),
+        coverBestSimilarity(artistAliases, result.collectionName)
+    ) : 0.5;
+    const titleExact = titleAliases.some(title => coverCompactText(title) === coverCompactText(result.trackName));
+    const artistExact = hasArtist && artistAliases.some(artist =>
+        coverCompactText(artist) === coverCompactText(result.artistName) ||
+        coverCompactText(result.collectionName).includes(coverCompactText(artist))
+    );
+    const searchTitleSupported =
+        coverIsJpop(song, context.country) &&
+        context.rank <= COVER_ITUNES_SEARCH_TITLE_MAX_RANK &&
+        coverTermHasTitleAlias(song, context.term) &&
+        (artistExact || artistScore >= 0.86);
+    const effectiveTitleScore = searchTitleSupported
+        ? Math.max(titleScore, COVER_ITUNES_SEARCH_TITLE_SCORE)
+        : titleScore;
+    let score = effectiveTitleScore * 0.68 + artistScore * 0.32;
+    if (titleExact) score += 0.08;
+    score = Math.min(score, 1);
+    const titleSupported = titleExact || searchTitleSupported || effectiveTitleScore >= COVER_ITUNES_MIN_TITLE_SCORE;
+    const accepted =
+        score >= COVER_ITUNES_ACCEPT_SCORE &&
+        titleSupported &&
+        (!hasArtist || artistExact || artistScore >= COVER_ITUNES_MIN_ARTIST_SCORE);
+    return { score, titleScore: effectiveTitleScore, rawTitleScore: titleScore, artistScore, titleExact, artistExact, searchTitleSupported, accepted };
+}
+
+function coverYoutubeCandidateMatch(song, result) {
+    const snippet = result?.snippet || {};
+    const videoTitle = snippet.title || '';
+    const channelTitle = snippet.channelTitle || '';
+    const titleScore = coverBestSimilarity(coverTitleAliases(song.title), videoTitle);
+    const hasArtist = coverHasArtist(song) && !coverIsSourceArtistLabel(song.artist);
+    let artistScore = Math.max(
+        coverBestSimilarity(coverArtistAliases(song.artist), videoTitle),
+        coverBestSimilarity(coverArtistAliases(song.artist), channelTitle)
+    );
+    if (!hasArtist) artistScore = 0.5;
+    let score = titleScore * 0.7 + artistScore * 0.3;
+    const normalizedTitle = coverSearchText(videoTitle);
+    if (/\bofficial\b|\bmv\b|\bmusic video\b|\baudio\b|가사|lyrics/.test(normalizedTitle)) score += 0.04;
+    score = Math.min(score, 1);
+    const accepted =
+        score >= COVER_YOUTUBE_ACCEPT_SCORE &&
+        titleScore >= COVER_YOUTUBE_MIN_TITLE_SCORE &&
+        (!hasArtist || artistScore >= COVER_YOUTUBE_MIN_ARTIST_SCORE);
+    return { score, titleScore, artistScore, accepted };
+}
+
+function upscaleItunesArtwork(url, size = 600) {
+    return String(url || '').replace(/\/\d+x\d+(bb)?\./, `/${size}x${size}bb.`);
+}
+
+function coverQueryVariants(song) {
+    const title = String(song.title || '').trim().replace(/\s+/g, ' ');
+    const artist = String(song.artist || '').trim().replace(/\s+/g, ' ');
+    const titleAliases = coverTitleAliases(title);
+    return [...new Set([
+        title && artist ? `${title} ${artist}` : '',
+        ...titleAliases.map(t => artist ? `${t} ${artist}` : t),
+        ...titleAliases,
+    ].filter(Boolean))];
+}
+
+function coverItunesSearchPlan(song) {
+    const title = String(song.title || '').trim().replace(/\s+/g, ' ');
+    const artist = String(song.artist || '').trim().replace(/\s+/g, ' ');
+    const titleAliases = coverTitleAliases(title);
+    const artistAliases = coverArtistAliases(artist);
+    const countries = coverCountryOrder(song);
+    const primaryCountry = countries[0];
+    const queries = [];
+    const push = (country, term) => {
+        const cleanTerm = String(term || '').trim().replace(/\s+/g, ' ');
+        if (!country || !cleanTerm) return;
+        const key = `${country}|${coverSearchText(cleanTerm)}`;
+        if (!queries.some(q => q.key === key)) queries.push({ country, term: cleanTerm, key });
+    };
+
+    for (const alias of titleAliases) {
+        if (artistAliases[0]) push(primaryCountry, `${alias} ${artistAliases[0]}`);
+    }
+    for (const alias of titleAliases) {
+        for (const artistAlias of artistAliases.slice(1)) push(primaryCountry, artistAlias ? `${alias} ${artistAlias}` : alias);
+    }
+    for (const artistAlias of artistAliases) push(primaryCountry, title ? `${title} ${artistAlias}` : artistAlias);
+    if (artist && title) push(primaryCountry, `${artist} ${title}`);
+    for (const alias of titleAliases) push(primaryCountry, alias);
+
+    for (const country of countries.slice(1)) {
+        for (const artistAlias of artistAliases.slice(0, 2)) push(country, title ? `${title} ${artistAlias}` : artistAlias);
+        for (const alias of titleAliases.slice(0, 2)) push(country, artistAliases[0] ? `${alias} ${artistAliases[0]}` : alias);
+        push(country, titleAliases[0] || title);
+    }
+
+    return queries.slice(0, COVER_ITUNES_MAX_QUERIES_PER_SONG);
+}
+
+function coverYoutubeQueryVariants(song) {
+    const title = String(song.title || '').trim().replace(/\s+/g, ' ');
+    const artist = String(song.artist || '').trim().replace(/\s+/g, ' ');
+    return [...new Set([
+        title && artist ? `${title} ${artist} official audio` : '',
+        title && artist ? `${title} ${artist}` : '',
+        title,
+    ].filter(Boolean))];
+}
+
+function youtubeVideoIdFromUrl(url) {
+    const raw = String(url || '').trim();
+    if (!raw) return '';
+    try {
+        const parsed = new URL(raw);
+        const host = parsed.hostname.replace(/^www\./, '').toLowerCase();
+        if (host === 'youtu.be') {
+            const id = parsed.pathname.split('/').filter(Boolean)[0] || '';
+            return /^[A-Za-z0-9_-]{11}$/.test(id) ? id : '';
+        }
+        if (host === 'youtube.com' || host.endsWith('.youtube.com') || host === 'youtube-nocookie.com') {
+            if (parsed.pathname === '/watch') {
+                const id = parsed.searchParams.get('v') || '';
+                return /^[A-Za-z0-9_-]{11}$/.test(id) ? id : '';
+            }
+            const match = parsed.pathname.match(/^\/(?:embed|shorts|live)\/([A-Za-z0-9_-]{11})/);
+            return match ? match[1] : '';
+        }
+    } catch {}
+    const fallback = raw.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:watch\?v=|embed\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/i);
+    return fallback ? fallback[1] : '';
+}
+
+function youtubeThumbnailFromUrl(url) {
+    const videoId = youtubeVideoIdFromUrl(url);
+    return videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '';
+}
+
+function coverFromSongYoutubeUrl(song) {
+    const sourceUrl = [song?.clip_url, song?.mr_url].find(url => youtubeVideoIdFromUrl(url));
+    const coverUrl = youtubeThumbnailFromUrl(sourceUrl);
+    if (!coverUrl) return null;
+    return {
+        score: 1,
+        coverUrl,
+        title: song.title || 'YouTube thumbnail',
+        artist: song.artist || '',
+        videoId: youtubeVideoIdFromUrl(sourceUrl),
+    };
+}
+
+function itunesJsonp(params) {
+    return new Promise((resolve, reject) => {
+        const callbackName = `__beadyoItunes${Date.now()}${Math.floor(Math.random() * 100000)}`;
+        const script = document.createElement('script');
+        const cleanup = () => {
+            delete window[callbackName];
+            script.remove();
+            clearTimeout(timer);
+        };
+        const timer = setTimeout(() => {
+            cleanup();
+            reject(new Error('iTunes search timeout'));
+        }, 12000);
+
+        window[callbackName] = data => {
+            cleanup();
+            resolve(data);
+        };
+
+        const search = new URLSearchParams({ ...params, callback: callbackName });
+        script.src = `https://itunes.apple.com/search?${search.toString()}`;
+        script.onerror = () => {
+            cleanup();
+            reject(new Error('iTunes search failed'));
+        };
+        document.head.appendChild(script);
+    });
+}
+
+function coverCountryOrder(song) {
+    const cat = String(song?.category || '').toUpperCase();
+    if (cat.includes('JPOP') || cat.includes('J-POP')) return ['JP', 'KR', 'US'];
+    if (cat.includes('KPOP') || cat.includes('K-POP')) return ['KR', 'US', 'JP'];
+    if (cat.includes('POP')) return ['US', 'KR', 'JP'];
+    return ['KR', 'US', 'JP'];
+}
+
+async function throttledItunesJsonp(params) {
+    const waitMs = Math.max(0, _coverItunesNextRequestAt - Date.now());
+    if (waitMs) await wait(waitMs);
+    _coverItunesNextRequestAt = Date.now() + COVER_ITUNES_REQUEST_GAP_MS;
+    return itunesJsonp(params);
+}
+
+async function fetchItunesSearch(params, onRetry) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+            return await throttledItunesJsonp(params);
+        } catch (err) {
+            if (attempt === 0) {
+                onRetry?.(err);
+                await wait(COVER_ITUNES_RETRY_DELAY_MS);
+                continue;
+            }
+            throw err;
+        }
+    }
+    return null;
+}
+
+async function searchItunesCover(song, onRetry) {
+    let best = null;
+    let bestScore = 0;
+    const candidates = [];
+    const seen = new Set();
+    let retryNotified = false;
+    for (const { country, term } of coverItunesSearchPlan(song)) {
+        const params = {
+            term,
+            country,
+            media: 'music',
+            entity: 'song',
+            limit: '12',
+        };
+        let data = null;
+        try {
+            data = await fetchItunesSearch(params, () => {
+                if (!retryNotified) {
+                    retryNotified = true;
+                    onRetry?.();
+                }
+            });
+        } catch {
+            continue;
+        }
+        for (const [rank, result] of (data?.results || []).entries()) {
+            const key = result.trackId || `${result.trackName}|${result.artistName}|${result.collectionName}`;
+            if (seen.has(key)) continue;
+            seen.add(key);
+            const art = result.artworkUrl100 || result.artworkUrl60;
+            if (!art) continue;
+            const match = coverCandidateMatch(song, result, { term, country, rank });
+            if (!match.accepted) continue;
+            const score = match.score;
+            const candidate = {
+                score,
+                country,
+                coverUrl: upscaleItunesArtwork(art, 600),
+                title: result.trackName || '',
+                artist: result.artistName || '',
+                album: result.collectionName || '',
+            };
+            candidates.push(candidate);
+            if (score > bestScore) {
+                bestScore = score;
+                best = candidate;
+            }
+        }
+        if (bestScore >= COVER_ITUNES_CONFIDENT_SCORE) break;
+    }
+    candidates.sort((a, b) => b.score - a.score);
+    if (!best || bestScore < COVER_ITUNES_ACCEPT_SCORE) return null;
+    best.candidates = candidates;
+    return best;
+}
+
+async function searchYoutubeCover(song, apiKey) {
+    let best = null;
+    let bestScore = 0;
+    const seen = new Set();
+    for (const q of coverYoutubeQueryVariants(song)) {
+        const search = new URLSearchParams({
+            key: apiKey,
+            part: 'snippet',
+            type: 'video',
+            maxResults: '6',
+            q,
+            safeSearch: 'none',
+            videoEmbeddable: 'true',
+        });
+        const res = await fetch(`https://www.googleapis.com/youtube/v3/search?${search.toString()}`);
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+            const message = data?.error?.message || `YouTube API error ${res.status}`;
+            throw new Error(message);
+        }
+        for (const result of data?.items || []) {
+            const videoId = result?.id?.videoId;
+            if (!videoId || seen.has(videoId)) continue;
+            seen.add(videoId);
+            const match = coverYoutubeCandidateMatch(song, result);
+            if (!match.accepted) continue;
+            const score = match.score;
+            if (score > bestScore) {
+                const thumbs = result.snippet?.thumbnails || {};
+                bestScore = score;
+                best = {
+                    score,
+                    coverUrl: thumbs.high?.url || thumbs.medium?.url || thumbs.default?.url || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+                    title: result.snippet?.title || '',
+                    artist: result.snippet?.channelTitle || '',
+                    videoId,
+                };
+            }
+        }
+        if (bestScore >= 0.94) break;
+    }
+    return bestScore >= COVER_YOUTUBE_ACCEPT_SCORE ? best : null;
+}
+
+function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function startCoverBackfill(scope) {
+    if (_coverBackfillRunning) return;
+    if (!S.session) return;
+    const canUseCover = await ensureSongCoverColumn();
+    if (!canUseCover) {
+        showToast('Supabase에 cover_url 컬럼을 먼저 추가해주세요');
+        return;
+    }
+
+    const items = coverBackfillItems(scope);
+    if (!items.length) {
+        showToast('채울 커버가 없어요');
+        updateCoverBackfillCounts();
+        return;
+    }
+
+    _coverBackfillCancel = false;
+    setCoverBackfillRunning(true);
+    saveCoverYoutubeSettings();
+    document.getElementById('cover-log').textContent = '';
+    const useYoutube = document.getElementById('cover-youtube-enabled').checked;
+    const youtubeKey = document.getElementById('cover-youtube-key').value.trim();
+    if (useYoutube && !youtubeKey) {
+        setCoverBackfillRunning(false);
+        showToast('YouTube API 키를 먼저 입력해주세요');
+        return;
+    }
+    let itunesHit = 0, youtubeHit = 0, saved = 0, miss = 0, failed = 0;
+    let review = 0;
+    const missedSongs = [];
+    _lastCoverBackfillSaved = [];
+    _coverReviewCandidates = [];
+    renderCoverReviewCandidates();
+    updateCoverRunActions();
+    const reviewEnabled = document.getElementById('cover-review-enabled').checked;
+
+    for (let i = 0; i < items.length; i++) {
+        if (_coverBackfillCancel) {
+            appendCoverLog('중지됨');
+            break;
+        }
+        const song = items[i];
+        const label = `${song.title || ''}${song.artist ? ` - ${song.artist}` : ''}`;
+        document.getElementById('cover-status').textContent = `${i + 1}/${items.length} 검색 중: ${label}`;
+        document.getElementById('cover-progress-bar').style.width = `${Math.round(i / items.length * 100)}%`;
+
+        let match = await searchItunesCover(song, () => {
+            appendCoverLog('iTunes 요청이 많아 잠시 쉬었다가 다시 시도합니다');
+        });
+        let source = 'iTunes';
+        if (!match) {
+            match = coverFromSongYoutubeUrl(song);
+            if (match) source = 'YouTube URL';
+        }
+        if (!match && useYoutube) {
+            document.getElementById('cover-status').textContent = `${i + 1}/${items.length} YouTube 보조 검색 중: ${label}`;
+            try {
+                match = await searchYoutubeCover(song, youtubeKey);
+                source = 'YouTube';
+            } catch (err) {
+                failed++;
+                appendCoverLog(`YOUTUBE FAIL ${label} / ${err.message}`);
+            }
+        }
+        if (!match) {
+            miss++;
+            missedSongs.push(label);
+            appendCoverLog(`MISS ${label}`);
+            await wait(250);
+            continue;
+        }
+
+        if (source === 'iTunes' && reviewEnabled) {
+            const candidateCoverCount = new Set((match.candidates || []).map(candidate => candidate.coverUrl).filter(Boolean)).size;
+            if (candidateCoverCount > 1) {
+                review++;
+                addCoverReviewCandidates(song, label, match.candidates);
+                appendCoverLog(`CHOICE ${label} -> iTunes 후보 ${candidateCoverCount}개`);
+                await wait(250);
+                continue;
+            }
+        }
+
+        if (source === 'YouTube') youtubeHit++;
+        else itunesHit++;
+        const { error } = await db.from('songbook').update({ cover_url: match.coverUrl }).eq('id', song.id);
+        if (error) {
+            failed++;
+            appendCoverLog(`FAIL ${label} / ${error.message}`);
+        } else {
+            saved++;
+            song.cover_url = match.coverUrl;
+            _lastCoverBackfillSaved.push({ id: song.id, label, coverUrl: match.coverUrl });
+            appendCoverLog(`HIT  ${label} -> ${source}: ${match.title} - ${match.artist} (${Math.round(match.score * 100)}%)`);
+        }
+        await wait(250);
+    }
+
+    document.getElementById('cover-progress-bar').style.width = '100%';
+    if (missedSongs.length) {
+        appendCoverLog('');
+        appendCoverLog(`실패 목록 ${missedSongs.length}곡`);
+        missedSongs.slice(0, 80).forEach(label => appendCoverLog(`- ${label}`));
+        if (missedSongs.length > 80) appendCoverLog(`... 외 ${missedSongs.length - 80}곡`);
+    }
+    document.getElementById('cover-status').textContent = `완료: 저장 ${saved}곡 / 선택대기 ${review}곡 / iTunes ${itunesHit}곡 / YouTube ${youtubeHit}곡 / 실패 ${miss}곡${failed ? ` / 오류 ${failed}건` : ''}`;
+    setCoverBackfillRunning(false);
+    updateCoverRunActions();
+    updateCoverBackfillCounts();
+    renderSongbook(!!S.query);
+    showToast(review ? `커버 ${saved}곡 저장, ${review}곡 선택 대기` : `커버 ${saved}곡 저장 완료`);
+}
+
+async function undoLastCoverBackfill() {
+    if (_coverBackfillRunning || !_lastCoverBackfillSaved.length) return;
+    const count = _lastCoverBackfillSaved.length;
+    if (!confirm(`이번 자동채우기로 저장한 커버 ${count}곡을 비울까요? 노래는 삭제되지 않습니다.`)) return;
+    const ids = _lastCoverBackfillSaved.map(item => item.id).filter(Boolean);
+    if (!ids.length) return;
+    const btn = document.getElementById('cover-undo-btn');
+    btn.disabled = true;
+    btn.textContent = '되돌리는 중...';
+    await ensureDb();
+    const { error } = await db.from('songbook').update({ cover_url: null }).in('id', ids);
+    if (error) {
+        showToast('커버 되돌리기 실패: ' + error.message);
+        updateCoverRunActions();
+        return;
+    }
+    const idSet = new Set(ids);
+    (S.songbookData || []).forEach(song => {
+        if (idSet.has(song.id)) song.cover_url = null;
+    });
+    appendCoverLog(`UNDO 이번 저장분 ${count}곡 커버 삭제`);
+    _lastCoverBackfillSaved = [];
+    updateCoverRunActions();
+    updateCoverBackfillCounts();
+    renderSongbook(!!S.query);
+    showToast(`커버 ${count}곡 되돌림`);
+}
+
 const BULK_CATS = ['KPOP','POP','JPOP','ETC','애교송','오리지널'];
 
 function addBulkRow(vals) {
@@ -2740,7 +5149,9 @@ function addBulkRow(vals) {
     const mr      = vals?.[3] ?? '';
     const clip    = vals?.[4] ?? '';
     const skill   = parseInt(vals?.[5]) || 0;
-    const memo    = vals?.[6] ?? '';
+    const tags    = vals?.[6] ?? '';
+    const memo    = vals?.[7] ?? '';
+    const cover   = vals?.[8] ?? '';
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -2753,7 +5164,9 @@ function addBulkRow(vals) {
         <td class="bt-skill"><select class="bc-skill">
             ${[0,1,2,3,4,5].map(v=>`<option value="${v}"${v===skill?' selected':''}>${'💚'.repeat(v)}${'🤍'.repeat(5-v)}</option>`).join('')}
         </select></td>
-        <td class="bt-memo"><input class="bc-memo" type="text" value="${esc(memo)}" placeholder="메모"></td>`;
+        <td class="bt-tags"><input class="bc-tags" type="text" value="${esc(tags)}" placeholder="여자아이돌, OST"></td>
+        <td class="bt-memo"><input class="bc-memo" type="text" value="${esc(memo)}" placeholder="메모"></td>
+        <td class="bt-cover"><input class="bc-cover" type="url" value="${esc(cover)}" placeholder="https://..."></td>`;
 
     // 붙여넣기 핸들러 (엑셀 TSV)
     tr.querySelectorAll('input, select').forEach((el, colIdx) => {
@@ -2790,7 +5203,7 @@ function handleTsvPaste(e, startTr, startColIdx, { tbodyId, fields, addRow, tran
 function handleBulkPaste(e, startTr, startColIdx) {
     handleTsvPaste(e, startTr, startColIdx, {
         tbodyId: 'bulk-rows',
-        fields: ['bc-cat','bc-title','bc-artist','bc-mr','bc-clip','bc-skill','bc-memo'],
+        fields: ['bc-cat','bc-title','bc-artist','bc-mr','bc-clip','bc-skill','bc-tags','bc-memo','bc-cover'],
         addRow: addBulkRow,
         transform: (field, raw, el) => {
             if (el.tagName === 'SELECT') {
@@ -2807,21 +5220,35 @@ async function saveBulk() {
     const records = rows.map(tr => {
         const mrInput = tr.querySelector('.bc-mr').value.trim();
         const clipInput = tr.querySelector('.bc-clip').value.trim();
+        const coverInput = tr.querySelector('.bc-cover').value.trim();
+        const coverUrl = normalizeOptionalUrl(coverInput);
         return {
             category:    tr.querySelector('.bc-cat').value,
             title:       tr.querySelector('.bc-title').value.trim(),
             artist:      tr.querySelector('.bc-artist').value.trim() || null,
             mr_url:      normalizeOptionalUrl(mrInput) || null,
             clip_url:    normalizeOptionalUrl(clipInput) || null,
+            cover_url:   coverUrl || null,
             skill_level: parseInt(tr.querySelector('.bc-skill').value) || 0,
+            tags:        parseSongbookTagsInput(tr.querySelector('.bc-tags').value.trim()),
             memo:        tr.querySelector('.bc-memo').value.trim() || null,
-            _invalidUrl: (mrInput && !normalizeOptionalUrl(mrInput)) || (clipInput && !normalizeOptionalUrl(clipInput)),
+            _invalidUrl: (mrInput && !normalizeOptionalUrl(mrInput)) || (clipInput && !normalizeOptionalUrl(clipInput)) || (coverInput && !coverUrl),
         };
     }).filter(r => r.title);
 
     if (!records.length) { showToast('제목을 하나 이상 입력해주세요'); return; }
-    if (records.some(r => r._invalidUrl)) { showToast('MR/클립 URL은 http 또는 https 주소로 입력해주세요'); return; }
+    if (records.some(r => r._invalidUrl)) { showToast('MR/클립/커버 URL은 http 또는 https 주소로 입력해주세요'); return; }
     records.forEach(r => delete r._invalidUrl);
+    const hasCoverUrls = records.some(r => r.cover_url);
+    const canUseCover = hasCoverUrls ? await ensureSongCoverColumn() : false;
+    if (hasCoverUrls && !canUseCover) {
+        showToast('Supabase에 cover_url 컬럼을 먼저 추가해주세요');
+        return;
+    }
+    if (!canUseCover) records.forEach(r => delete r.cover_url);
+    const hasTags = records.some(r => r.tags?.length);
+    const canUseTags = hasTags ? await ensureSongbookTagsColumn() : false;
+    if (!canUseTags) records.forEach(r => delete r.tags);
 
     const btn = document.getElementById('bulk-save-btn');
     btn.disabled = true; btn.textContent = '저장 중...';
@@ -2831,30 +5258,97 @@ async function saveBulk() {
     btn.disabled = false; btn.textContent = '추가';
 
     if (error) { showToast(songbookSaveErrorMessage(error)); return; }
-    showToast(`${records.length}곡 추가 완료 ✓`);
+    showToast(hasTags && !canUseTags ? `${records.length}곡 추가 완료 ✓ (태그는 컬럼 추가 후 저장 가능)` : `${records.length}곡 추가 완료 ✓`);
     closeBulkModal();
     S.songbookData = null;
     await loadSongbook();
 }
 
 // ── 노래책 CRUD ──────────────────────────────────
+function renderSongTagPicker(selectedTags = []) {
+    const selected = new Set(selectedTags);
+    const el = document.getElementById('ef-tags');
+    if (!el) return;
+    el.innerHTML = SONGBOOK_TAG_OPTIONS.map(tag => `
+        <label class="tag-check">
+            <input type="checkbox" value="${esc(tag)}"${selected.has(tag) ? ' checked' : ''}>
+            <span>${esc(tag)}</span>
+        </label>`).join('');
+}
+
+function selectedSongTagsFromModal() {
+    return parseSongbookTagsInput([...document.querySelectorAll('#ef-tags input:checked')].map(el => el.value));
+}
+
+async function updateSongTagsStatus() {
+    const el = document.getElementById('ef-tags-status');
+    if (!el) return;
+    el.textContent = '';
+    const canUseTags = await ensureSongbookTagsColumn();
+    if (!canUseTags) {
+        el.textContent = 'Supabase에 tags 컬럼을 추가해야 태그 수정이 저장됩니다.';
+    }
+}
+
 function openSongModal(id) {
     if (!S.session) return;
     const s = id ? S.songbookData?.find(x => x.id === id) : null;
+    const currentTags = s ? songbookTags(s) : [];
     document.getElementById('song-modal-title').textContent = s ? '노래 수정' : '노래 추가';
     document.getElementById('ef-id').value       = s?.id ?? '';
+    document.getElementById('ef-tags-original').value = songbookTagsSignature(currentTags);
     document.getElementById('ef-category').value = s?.category ?? 'KPOP';
     document.getElementById('ef-title').value    = s?.title ?? '';
     document.getElementById('ef-artist').value   = s?.artist ?? '';
+    document.getElementById('ef-cover').value    = s?.cover_url ?? '';
+    updateCoverPreview(s?.cover_url ?? '');
+    document.getElementById('ef-cover-clear-btn').style.display = s?.cover_url ? '' : 'none';
     document.getElementById('ef-mr').value       = s?.mr_url ?? '';
     document.getElementById('ef-clip').value     = s?.clip_url ?? '';
     document.getElementById('ef-skill').value    = s?.skill_level ?? 0;
     updateSkillDisplay();
+    renderSongTagPicker(currentTags);
+    updateSongTagsStatus();
     document.getElementById('ef-memo').value     = s?.memo ?? '';
     document.getElementById('song-del-btn').style.display = s ? '' : 'none';
     document.getElementById('song-modal').classList.add('open');
 }
 function closeSongModal() { document.getElementById('song-modal').classList.remove('open'); }
+
+function updateCoverPreview(value) {
+    const el = document.getElementById('ef-cover-preview');
+    if (!el) return;
+    const url = normalizeOptionalUrl(value);
+    if (!url) {
+        el.classList.remove('show');
+        el.innerHTML = '';
+        return;
+    }
+    const previewUrl = youtubeThumbnailFromUrl(url) || url;
+    el.innerHTML = `<img src="${esc(previewUrl)}" alt="" decoding="async" referrerpolicy="no-referrer" onerror="this.parentElement.classList.remove('show');this.parentElement.innerHTML=''"><span>커버 미리보기</span>`;
+    el.classList.add('show');
+}
+
+async function clearEditingSongCover() {
+    const id = parseInt(document.getElementById('ef-id').value);
+    if (!id) {
+        document.getElementById('ef-cover').value = '';
+        updateCoverPreview('');
+        document.getElementById('ef-cover-clear-btn').style.display = 'none';
+        return;
+    }
+    if (!confirm('이 곡의 커버만 삭제할까요? 노래 정보는 유지됩니다.')) return;
+    await ensureDb();
+    const { error } = await db.from('songbook').update({ cover_url: null }).eq('id', id);
+    if (error) { showToast('커버 삭제 실패: ' + error.message); return; }
+    const song = S.songbookData?.find(x => x.id === id);
+    if (song) song.cover_url = null;
+    document.getElementById('ef-cover').value = '';
+    updateCoverPreview('');
+    document.getElementById('ef-cover-clear-btn').style.display = 'none';
+    renderSongbook(!!S.query);
+    showToast('커버 삭제 완료');
+}
 
 function updateSkillDisplay(hoverVal) {
     const val = hoverVal !== undefined ? hoverVal : parseInt(document.getElementById('ef-skill').value) || 0;
@@ -2888,16 +5382,34 @@ async function saveSong() {
     if (!titleVal) { document.getElementById('ef-title').focus(); return; }
     const mrInput = document.getElementById('ef-mr').value.trim();
     const clipInput = document.getElementById('ef-clip').value.trim();
+    const coverInput = document.getElementById('ef-cover').value.trim();
     const mrUrl = normalizeOptionalUrl(mrInput);
     const clipUrl = normalizeOptionalUrl(clipInput);
-    if ((mrInput && !mrUrl) || (clipInput && !clipUrl)) {
-        showToast('MR/클립 URL은 http 또는 https 주소로 입력해주세요');
+    const coverUrl = normalizeOptionalUrl(coverInput);
+    if ((mrInput && !mrUrl) || (clipInput && !clipUrl) || (coverInput && !coverUrl)) {
+        showToast('MR/클립/커버 URL은 http 또는 https 주소로 입력해주세요');
         return;
     }
     const btn = document.getElementById('song-save-btn');
     btn.disabled = true; btn.textContent = '저장 중...';
 
     const id = document.getElementById('ef-id').value;
+    const canUseCover = (coverInput || id) ? await ensureSongCoverColumn() : false;
+    if (coverInput && !canUseCover) {
+        btn.disabled = false; btn.textContent = '저장';
+        showToast('Supabase에 cover_url 컬럼을 먼저 추가해주세요');
+        return;
+    }
+    const selectedTags = selectedSongTagsFromModal();
+    const originalTagsSig = document.getElementById('ef-tags-original').value;
+    const tagsChanged = songbookTagsSignature(selectedTags) !== originalTagsSig;
+    const canUseTags = tagsChanged || selectedTags.length ? await ensureSongbookTagsColumn() : false;
+    if (tagsChanged && !canUseTags) {
+        btn.disabled = false; btn.textContent = '저장';
+        showToast('Supabase에 tags 컬럼을 먼저 추가해주세요');
+        updateSongTagsStatus();
+        return;
+    }
     const payload = {
         category:    document.getElementById('ef-category').value,
         title:       titleVal,
@@ -2907,6 +5419,8 @@ async function saveSong() {
         skill_level: parseInt(document.getElementById('ef-skill').value),
         memo:        document.getElementById('ef-memo').value.trim() || null,
     };
+    if (canUseCover) payload.cover_url = coverUrl || null;
+    if (canUseTags) payload.tags = tagsChanged && !selectedTags.length ? [SONGBOOK_EMPTY_TAG_SENTINEL] : selectedTags;
     await ensureDb();
     const { error } = id
         ? await db.from('songbook').update(payload).eq('id', parseInt(id))
@@ -3037,10 +5551,24 @@ async function saveLiveBulk() {
 }
 
 // ── 라이브 기록 CRUD ─────────────────────────────
+function findLiveRecordById(id) {
+    const targetId = parseInt(id);
+    if (!targetId) return null;
+    const keys = [
+        S.liveYear,
+        'all',
+        ...Object.keys(S.liveCache || {}),
+    ].filter(key => key !== undefined && key !== null);
+    for (const key of [...new Set(keys.map(String))]) {
+        const found = (S.liveCache[key] || []).find(row => row.id === targetId);
+        if (found) return found;
+    }
+    return null;
+}
+
 function openLiveModal(id) {
     if (!S.session) return;
-    const key = S.liveYear === 'all' ? 'all' : S.liveYear;
-    const r = id ? (S.liveCache[key] || []).find(x => x.id === id) : null;
+    const r = id ? findLiveRecordById(id) : null;
     document.getElementById('live-modal-title').textContent = r ? '라이브 기록 수정' : '라이브 기록 추가';
     document.getElementById('lf-id').value     = r?.id ?? '';
     document.getElementById('lf-year').value   = r?.year ?? (typeof S.liveYear === 'number' ? S.liveYear : new Date().getFullYear());
