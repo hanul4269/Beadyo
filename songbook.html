@@ -3285,10 +3285,6 @@ function songQualityBadges(song) {
     return SONGBOOK_QUALITY_ISSUES.filter(issue => songHasQualityIssue(song, issue.key));
 }
 
-function songHasVisibleQualityIssue(song, issue = S.songbookQuality) {
-    return !!S.session && issue !== 'all' && songHasQualityIssue(song, issue);
-}
-
 function songQualityBadgesHtml(song, extraClass = '') {
     if (!S.session) return '';
     const badges = songQualityBadges(song);
@@ -3649,28 +3645,6 @@ function songbookCardGridHtml(items, isAll) {
                     ${footer}
                 </div>
             </article>`;
-        }).join('')}
-    </div>`;
-}
-
-function songbookListHtml(items, isAll) {
-    return `<div class="songbook-list-view">
-        ${items.map((s, i) => {
-            const links = songLinksHtml(s);
-            return `<div class="songbook-list-row ${songClickClass()}" onclick="${songClickHandler(s)}">
-                <div>${songCoverMediaHtml(s, 'song-list-cover')}</div>
-                <div class="song-list-main">
-                    <div class="song-list-title">${esc(s.title)}</div>
-                    <div class="song-list-artist">${esc(s.artist || '')}</div>
-                    ${songQualityBadgesHtml(s, 'list-quality')}
-                    ${s.memo ? `<div class="song-list-memo">${esc(s.memo)}</div>` : ''}
-                </div>
-                <div class="song-list-side">
-                    <span class="cat-badge">${esc(s.category)}</span>
-                    <div class="song-list-skill">${skillDots(s.skill_level || 0)}</div>
-                    <div class="song-list-links">${links || '<span style="color:var(--muted);font-size:11px">링크 없음</span>'}</div>
-                </div>
-            </div>`;
         }).join('')}
     </div>`;
 }
@@ -4486,14 +4460,6 @@ function onWelcomeSearch(val) {
     renderWelcomeRecentSongs();
 }
 
-function clearSongbookSearchState() {
-    S.query = '';
-    const headerInput = document.getElementById('search-input');
-    const headerClear = document.getElementById('search-clear');
-    if (headerInput) headerInput.value = '';
-    if (headerClear) headerClear.classList.remove('show');
-}
-
 function clearSearch() {
     document.getElementById('search-input').value = '';
     S.query = '';
@@ -4892,13 +4858,13 @@ const COVER_ITUNES_MAX_QUERIES_PER_SONG = 14;
 const COVER_YOUTUBE_ACCEPT_SCORE = 0.82;
 const COVER_YOUTUBE_MIN_TITLE_SCORE = 0.82;
 const COVER_YOUTUBE_MIN_ARTIST_SCORE = 0.52;
-const COVER_YOUTUBE_KEY_STORAGE = 'beadyo_songbook_youtube_api_key';
-const COVER_YOUTUBE_ENABLED_STORAGE = 'beadyo_songbook_youtube_enabled';
 let _coverBackfillRunning = false;
 let _coverBackfillCancel = false;
 let _coverItunesNextRequestAt = 0;
 let _lastCoverBackfillSaved = [];
 let _coverReviewCandidates = [];
+let _coverYoutubeEnabled = false;
+let _coverYoutubeKey = '';
 
 function coverBackfillItems(scope = 'current') {
     const all = S.songbookData || [];
@@ -5047,19 +5013,14 @@ async function saveCoverReviewCandidate(groupIndex, candidateIndex) {
 }
 
 function loadCoverYoutubeSettings() {
-    const enabled = localStorage.getItem(COVER_YOUTUBE_ENABLED_STORAGE) === '1';
-    const key = localStorage.getItem(COVER_YOUTUBE_KEY_STORAGE) || '';
-    document.getElementById('cover-youtube-enabled').checked = enabled;
-    document.getElementById('cover-youtube-key').value = key;
+    document.getElementById('cover-youtube-enabled').checked = _coverYoutubeEnabled;
+    document.getElementById('cover-youtube-key').value = _coverYoutubeKey;
     toggleYoutubeBackfillInputs(false);
 }
 
 function saveCoverYoutubeSettings() {
-    const enabled = document.getElementById('cover-youtube-enabled').checked;
-    const key = document.getElementById('cover-youtube-key').value.trim();
-    localStorage.setItem(COVER_YOUTUBE_ENABLED_STORAGE, enabled ? '1' : '0');
-    if (key) localStorage.setItem(COVER_YOUTUBE_KEY_STORAGE, key);
-    else localStorage.removeItem(COVER_YOUTUBE_KEY_STORAGE);
+    _coverYoutubeEnabled = document.getElementById('cover-youtube-enabled').checked;
+    _coverYoutubeKey = document.getElementById('cover-youtube-key').value.trim();
 }
 
 function toggleYoutubeBackfillInputs(save = true) {
@@ -5329,17 +5290,6 @@ function coverYoutubeCandidateMatch(song, result) {
 
 function upscaleItunesArtwork(url, size = 600) {
     return String(url || '').replace(/\/\d+x\d+(bb)?\./, `/${size}x${size}bb.`);
-}
-
-function coverQueryVariants(song) {
-    const title = String(song.title || '').trim().replace(/\s+/g, ' ');
-    const artist = String(song.artist || '').trim().replace(/\s+/g, ' ');
-    const titleAliases = coverTitleAliases(title);
-    return [...new Set([
-        title && artist ? `${title} ${artist}` : '',
-        ...titleAliases.map(t => artist ? `${t} ${artist}` : t),
-        ...titleAliases,
-    ].filter(Boolean))];
 }
 
 function coverItunesSearchPlan(song) {

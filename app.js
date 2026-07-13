@@ -1975,20 +1975,95 @@ function openViewModal(id) {
 }
 function closeViewModal() { document.getElementById('viewModal').classList.remove('open'); }
 
+const UP_LOCAL_RANKING_CACHE_KEY = 'beadyoUpRankingLastSnapshot:v1';
+const UP_LOCAL_RANKING_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+const UP_LOCAL_RANKING_LIMIT = 200;
+
+function compactUpRankingRow(row, index) {
+    return {
+        rank: Number(row.rank || index + 1),
+        bj_id: String(row.bj_id || '').trim(),
+        name: String(row.name || '').trim(),
+        profile_url: String(row.profile_url || '').trim(),
+        timestamp: String(row.timestamp || '').trim(),
+        up_count: Number(row.up_count || 0),
+        reply_no: String(row.reply_no || '').trim(),
+    };
+}
+
+function compactUpEventForCache(event) {
+    return {
+        id: event.id,
+        tab: event.tab_name || event.tab || '',
+        title: event.title || '',
+        soop_url: event.soop_url || '',
+        show_on_startup: isUpStartupEvent(event),
+        live_updated_at: event.live_updated_at || null,
+        ranking: Array.isArray(event.ranking)
+            ? event.ranking.slice(0, UP_LOCAL_RANKING_LIMIT).map(compactUpRankingRow)
+            : [],
+    };
+}
+
+function writeLocalUpRankingSnapshot(data) {
+    const events = (data?.events || []).map(compactUpEventForCache);
+    if (!events.some(event => event.ranking.length)) return;
+    try {
+        localStorage.setItem(UP_LOCAL_RANKING_CACHE_KEY, JSON.stringify({
+            updated: data.updated || new Date().toISOString(),
+            saved_at: new Date().toISOString(),
+            events,
+        }));
+    } catch {}
+}
+
+function readLocalUpRankingSnapshot(options = {}) {
+    try {
+        const raw = localStorage.getItem(UP_LOCAL_RANKING_CACHE_KEY);
+        if (!raw) return null;
+        const parsed = normalizeUpCachePayload(JSON.parse(raw));
+        if (!parsed) return null;
+        const savedAt = new Date(parsed.saved_at || parsed.updated || 0).getTime();
+        if (!Number.isFinite(savedAt) || Date.now() - savedAt > UP_LOCAL_RANKING_MAX_AGE_MS) {
+            localStorage.removeItem(UP_LOCAL_RANKING_CACHE_KEY);
+            return null;
+        }
+        const events = (parsed.events || [])
+            .filter(event => !options.startupOnly || isUpStartupEvent(event))
+            .map(upEventFromRow)
+            .filter(event => Array.isArray(event.ranking) && event.ranking.length);
+        return events.length ? { updated: parsed.updated || parsed.saved_at || null, events } : null;
+    } catch {
+        return null;
+    }
+}
+
 async function openUpModal(options = {}) {
     const startupOnly = options.startupOnly === true;
     const preloadedEvents = Array.isArray(options.sbEvents) ? options.sbEvents : null;
     _upModalIsAutoPrompt = options.auto === true;
     document.getElementById('upModal').classList.add('open');
-    document.getElementById('upModalContent').innerHTML = upEmptyHtml('불러오는 중...', 'loading');
+    let renderedSnapshot = false;
+    const localSnapshot = readLocalUpRankingSnapshot({ startupOnly });
+    if (localSnapshot) {
+        _upCurrentData = localSnapshot;
+        renderUpModal(_upCurrentData, false);
+        renderedSnapshot = true;
+    } else {
+        document.getElementById('upModalContent').innerHTML = upEmptyHtml('불러오는 중...', 'loading');
+    }
 
     // UP 랭킹 캐시 로드: Supabase 런타임 캐시 우선, 기존 up.json fallback
     const cachedData = await loadUpRankingCache();
+    writeLocalUpRankingSnapshot(cachedData);
 
-    const cachedEvents = startupOnly ? [] : (cachedData.events || []).map(upEventFromRow);
+    const cachedEvents = (cachedData.events || [])
+        .filter(e => !startupOnly || isUpStartupEvent(e))
+        .map(upEventFromRow);
     if (cachedEvents.length) {
         _upCurrentData = { updated: cachedData.updated, events: cachedEvents };
         renderUpModal(_upCurrentData, false);
+        renderedSnapshot = true;
     }
 
     // Supabase에서 현재 활성 이벤트 목록 직접 조회
@@ -2010,6 +2085,7 @@ async function openUpModal(options = {}) {
     const mergedEvents = sbEvents.map(e => ({ ...upEventFromRow(e), ranking: cachedMap[e.id]?.ranking || [] }));
 
     if (!mergedEvents.length && (startupOnly || !cachedData.events?.length)) {
+        if (renderedSnapshot) return;
         document.getElementById('upModalContent').innerHTML =
             upEmptyHtml('진행 중인 UP 이벤트가 없습니다', 'empty');
         return;
@@ -2017,6 +2093,7 @@ async function openUpModal(options = {}) {
 
     const fallbackEvents = startupOnly ? [] : (cachedData.events || []).map(upEventFromRow);
     _upCurrentData = { updated: cachedData.updated, events: mergedEvents.length ? mergedEvents : fallbackEvents };
+    writeLocalUpRankingSnapshot(_upCurrentData);
     renderUpModal(_upCurrentData, true);
 }
 function closeUpModal() {
@@ -2069,29 +2146,30 @@ function parseSoopUrl(url) {
 }
 
 function upJsonCacheUrl() {
-    return `up.json?v=${Math.floor(Date.now() / 60000)}`;
+    return 'up.json';
 }
 
 function normalizeUpCachePayload(payload) {
     if (!payload || !Array.isArray(payload.events)) return null;
     return {
         updated: payload.updated || payload.row_updated_at || null,
+        saved_at: payload.saved_at || null,
         events: payload.events,
     };
 }
 
 async function loadUpRankingCache() {
     try {
-        const cached = normalizeUpCachePayload(await fetchRuntimeCache('up_ranking'));
-        if (cached) return cached;
-    } catch {}
-
-    try {
-        const res = await fetch(upJsonCacheUrl());
+        const res = await fetch(upJsonCacheUrl(), { cache: 'force-cache' });
         if (res.ok) {
             const cached = normalizeUpCachePayload(await res.json());
             if (cached) return cached;
         }
+    } catch {}
+
+    try {
+        const cached = normalizeUpCachePayload(await fetchRuntimeCache('up_ranking'));
+        if (cached) return cached;
     } catch {}
 
     return { updated: null, events: [] };
@@ -2264,6 +2342,8 @@ function renderUpModal(data, fetchLive = false) {
         if (result !== null) {
             ev.ranking = result.ranking;
             ev.live_updated_at = result.updatedAt;
+            _upCurrentData = { updated: result.updatedAt || data.updated || null, events };
+            writeLocalUpRankingSnapshot(_upCurrentData);
             if (currentIdx === idx) renderTab(idx);
         } else {
             liveRequested.delete(idx);
@@ -3215,6 +3295,7 @@ function upEventFromRow(e) {
         title: e.title,
         soop_url: e.soop_url,
         show_on_startup: isUpStartupEvent(e),
+        live_updated_at: e.live_updated_at || null,
         ranking: e.ranking || [],
     };
 }

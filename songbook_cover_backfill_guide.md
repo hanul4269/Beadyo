@@ -22,7 +22,7 @@ beadyo.com 또는 로컬 페이지에서 편집자 계정으로 로그인합니�
 
 YouTube는 앨범 커버가 아니라 영상 썸네일입니다. 그래서 iTunes에서 못 찾은 곡만 보조로 쓰는 것이 좋습니다.
 
-필요한 것은 Google Cloud의 YouTube Data API v3 키입니다. 이 키는 Supabase에 넣지 않고, `커버 자동채우기` 창의 `YouTube Data API 키` 입력칸에 넣습니다. 입력한 키는 현재 브라우저의 localStorage에만 저장됩니다.
+필요한 것은 Google Cloud의 YouTube Data API v3 키입니다. 이 키는 Supabase에 넣지 않고, `커버 자동채우기` 창의 `YouTube Data API 키` 입력칸에 넣습니다. 입력한 키는 브라우저 저장소에 남기지 않고, 현재 열린 페이지에서만 유지됩니다.
 
 ## 터미널 백업 방법
 
