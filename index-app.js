@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL = 'riosniper12@gmail.com';
-const FALLBACK_ASSET_VERSION = 'security-review-20260630';
+const FALLBACK_ASSET_VERSION = 'popup-hide-options-20260714';
 const IS_LOCAL_HOST = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
 const APP_ASSET_VERSION = (() => {
     try {
@@ -12,6 +12,7 @@ const APP_ASSET_VERSION = (() => {
     }
 })();
 const FRAME_ASSET_VERSION = IS_LOCAL_HOST ? `dev-${Date.now()}` : APP_ASSET_VERSION;
+const GOODS_NOTICE_HIDE_UNTIL_KEY = 'beadyoGoodsNoticeHideUntil:green-summer-20260714';
 
 function withFrameAssetVersion(src, assetVersion = APP_ASSET_VERSION) {
     if (!src || /^https?:\/\//i.test(src)) return src;
@@ -21,8 +22,25 @@ function withFrameAssetVersion(src, assetVersion = APP_ASSET_VERSION) {
     return `${url.pathname.replace(/^\//, '')}${url.search}${url.hash}`;
 }
 
+function addDaysToDate(date, days) {
+    const next = new Date(date);
+    next.setDate(next.getDate() + days);
+    return next;
+}
+
+function dateKey(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+}
+
+function isDateKeyActive(value) {
+    return /^\d{4}-\d{2}-\d{2}$/.test(value || '') && value >= dateKey(new Date());
+}
+
 const TABS = [
-    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'calendar-holidays-2026-2028-fix-20260704' },
+    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'up-popup-hide-window-20260714' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
     { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'songbook-card-title-height-20260713' },
     { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'songbook-card-title-height-20260713' },
@@ -455,6 +473,40 @@ function handleLoginOverlayClick(e) {
     if (e.target === document.getElementById('login-overlay')) closeLoginModal();
 }
 
+// ── 굿즈 공지 팝업 ──
+function openGoodsNoticePopup() {
+    document.getElementById('goods-notice-overlay')?.classList.add('open');
+}
+
+function closeGoodsNoticePopup() {
+    document.getElementById('goods-notice-overlay')?.classList.remove('open');
+}
+
+function handleGoodsNoticeOverlayClick(e) {
+    if (e.target === document.getElementById('goods-notice-overlay')) closeGoodsNoticePopup();
+}
+
+function initGoodsNoticePopup() {
+    const overlay = document.getElementById('goods-notice-overlay');
+    if (!overlay) return;
+    try {
+        if (isDateKeyActive(localStorage.getItem(GOODS_NOTICE_HIDE_UNTIL_KEY))) return;
+    } catch {}
+    requestAnimationFrame(openGoodsNoticePopup);
+}
+
+function hideGoodsNoticePopupFor(mode) {
+    const days = mode === 'week' ? 6 : 0;
+    try {
+        localStorage.setItem(GOODS_NOTICE_HIDE_UNTIL_KEY, dateKey(addDaysToDate(new Date(), days)));
+    } catch {}
+    closeGoodsNoticePopup();
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeGoodsNoticePopup();
+});
+
 // ── 이용가이드 모달 ──
 function openGuideModal() {
     const overlay = document.getElementById('guide-overlay');
@@ -590,4 +642,5 @@ async function signOut() {
     syncCalendarAuth();
 }
 
+initGoodsNoticePopup();
 initAuth();

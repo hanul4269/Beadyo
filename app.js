@@ -2024,23 +2024,33 @@ function closeUpModal() {
     _upModalIsAutoPrompt = false;
 }
 
-let _upPopupDismissedForSession = false;
-let _upPopupHiddenDate = '';
+const UP_AUTO_POPUP_HIDE_UNTIL_KEY = 'beadyoUpAutoPopupHideUntil';
+
+function upAutoPopupHiddenUntil() {
+    try {
+        const value = localStorage.getItem(UP_AUTO_POPUP_HIDE_UNTIL_KEY) || '';
+        if (/^\d{4}-\d{2}-\d{2}$/.test(value) && value >= dateToStr(new Date())) return value;
+        if (value) localStorage.removeItem(UP_AUTO_POPUP_HIDE_UNTIL_KEY);
+    } catch {}
+    return '';
+}
+
+function hideUpAutoPopupUntil(daysFromToday) {
+    const until = dateToStr(addDays(new Date(), daysFromToday));
+    try {
+        localStorage.setItem(UP_AUTO_POPUP_HIDE_UNTIL_KEY, until);
+    } catch {}
+}
 
 function dismissUpAutoPopup(mode) {
-    if (mode === 'never') {
-        _upPopupDismissedForSession = true;
-    } else {
-        _upPopupHiddenDate = dateToStr(new Date());
-    }
+    hideUpAutoPopupUntil(mode === 'week' ? 6 : 0);
     closeUpModal();
 }
 
 async function maybeOpenUpModalOnStart() {
     if (_upAutoPopupChecked) return;
     _upAutoPopupChecked = true;
-    if (_upPopupDismissedForSession) return;
-    if (_upPopupHiddenDate === dateToStr(new Date())) return;
+    if (upAutoPopupHiddenUntil()) return;
     try {
         await _ensureDb();
         const { data, error } = await db.from('up_events').select('*').eq('is_active', true).order('sort_order');
@@ -2235,7 +2245,7 @@ function renderUpModal(data, fetchLive = false) {
             ${_upModalIsAutoPrompt ? `
                 <div class="up-popup-actions">
                     <button type="button" onclick="dismissUpAutoPopup('today')">오늘 하루 보지 않기</button>
-                    <button type="button" onclick="dismissUpAutoPopup('never')">더이상 보지 않기</button>
+                    <button type="button" onclick="dismissUpAutoPopup('week')">일주일간 보지 않기</button>
                 </div>` : ''}`;
     }
 
