@@ -290,6 +290,57 @@ function ytLinkType(url) {
     } catch {}
     return null;
 }
+const HOTCLIP_LINK_PREFIX = 'hotclip:';
+function scheduleLinkLines(value) {
+    return String(value || '')
+        .split('\n')
+        .map(line => line.trim())
+        .filter(Boolean);
+}
+function isHotclipUrl(url) {
+    const normalized = normalizeOptionalUrl(url);
+    if (!normalized) return false;
+    try {
+        const u = new URL(normalized);
+        const host = u.hostname.toLowerCase();
+        const isSoopVod = host === 'vod.sooplive.com' || host === 'vod.sooplive.co.kr' || host === 'vod.afreecatv.com';
+        return isSoopVod && u.pathname.includes('/player/');
+    } catch {}
+    return false;
+}
+function parseScheduleLinkLine(line) {
+    const raw = String(line || '').trim();
+    if (!raw) return null;
+    if (raw.startsWith(HOTCLIP_LINK_PREFIX)) {
+        const url = normalizeOptionalUrl(raw.slice(HOTCLIP_LINK_PREFIX.length));
+        return url ? { kind: 'hotclip', url, raw } : null;
+    }
+    const ytType = ytLinkType(raw);
+    if (ytType) return { kind: 'youtube', type: ytType, url: normalizeOptionalUrl(raw), raw };
+    const url = normalizeOptionalUrl(raw);
+    if (url && isHotclipUrl(url)) return { kind: 'hotclip', url, raw };
+    return url ? { kind: 'link', url, raw } : null;
+}
+function eventScheduleLinks(ev) {
+    return scheduleLinkLines(ev?.youtube_links)
+        .map(parseScheduleLinkLine)
+        .filter(Boolean);
+}
+function eventHotclipUrls(ev) {
+    return eventScheduleLinks(ev)
+        .filter(link => link.kind === 'hotclip')
+        .map(link => link.url)
+        .slice(0, 3);
+}
+function eventYoutubeLinks(ev) {
+    return eventScheduleLinks(ev).filter(link => link.kind === 'youtube');
+}
+function preservedScheduleLinkLines(ev) {
+    return scheduleLinkLines(ev?.youtube_links).filter(line => parseScheduleLinkLine(line)?.kind !== 'hotclip');
+}
+function encodedHotclipLine(url) {
+    return `${HOTCLIP_LINK_PREFIX}${url}`;
+}
 function pad(n) { return String(n).padStart(2, '0'); }
 function toDateStr(y, m, d) { return `${y}-${pad(m + 1)}-${pad(d)}`; }
 function formatDate(s) {
@@ -1370,11 +1421,8 @@ function renderCalendar() {
 
         const ytBadges = [];
         events.forEach(ev => {
-            if (!ev.youtube_links || ev.date !== dateStr) return;
-            ev.youtube_links.split('\n').forEach(url => {
-                const type = ytLinkType(url);
-                if (type) ytBadges.push({ url: url.trim(), type });
-            });
+            if (ev.date !== dateStr) return;
+            eventYoutubeLinks(ev).forEach(({ url, type }) => ytBadges.push({ url, type }));
         });
         state.ytLinks.filter(yl => yl.date === dateStr).forEach(yl => {
             const type = ytLinkType(yl.url);
@@ -1848,13 +1896,13 @@ function dayEventCardHtml(ev, dateStr) {
         ? `${formatDate(ev.date)} ~ ${formatDate(ev.end_date)}`
         : '';
     const links = [];
-    if (ev.vod_url) links.push(`<a class="day-link" href="${esc(safeUrl(ev.vod_url))}" target="_blank" rel="noopener noreferrer">다시보기</a>`);
-    if (ev.youtube_links) {
-        ev.youtube_links.split('\n').filter(Boolean).forEach(url => {
-            const type = ytLinkType(url);
-            if (type) links.push(`<a class="day-link yt" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">${type === 'long' ? 'YouTube' : 'Shorts'}</a>`);
-        });
-    }
+    if (ev.vod_url) links.push(`<a class="day-link" href="${esc(safeUrl(ev.vod_url))}" target="_blank" rel="noopener noreferrer">참고링크</a>`);
+    eventHotclipUrls(ev).forEach((url, i) => {
+        links.push(`<a class="day-link hotclip" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">핫클립${i + 1}</a>`);
+    });
+    eventYoutubeLinks(ev).forEach(({ url, type }) => {
+        links.push(`<a class="day-link yt" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">${type === 'long' ? 'YouTube' : 'Shorts'}</a>`);
+    });
 
     const eventSticker = ev.is_rest || ev.type === 'rest'
         ? stickerImg(MOOD_STICKERS.fan, 'day-event-sticker', '선풍기')
@@ -1944,13 +1992,13 @@ function openViewModal(id) {
     if (ev.memo)
         html += `<div class="view-section"><div class="view-label">메모</div><div class="view-value" style="white-space:pre-wrap">${esc(ev.memo)}</div></div>`;
     if (ev.vod_url)
-        html += `<a class="vod-link" href="${esc(safeUrl(ev.vod_url))}" target="_blank" rel="noopener noreferrer">▶ 다시보기</a>`;
-    if (ev.youtube_links) {
-        ev.youtube_links.split('\n').filter(Boolean).forEach(url => {
-            const type = ytLinkType(url);
-            if (type) html += `<a class="vod-link yt-vod-link" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">${type === 'long' ? '▶ YouTube' : '▶ YouTube Shorts'}</a>`;
-        });
-    }
+        html += `<a class="vod-link" href="${esc(safeUrl(ev.vod_url))}" target="_blank" rel="noopener noreferrer">▶ 참고링크</a>`;
+    eventHotclipUrls(ev).forEach((url, i) => {
+        html += `<a class="vod-link hotclip-link" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">▶ 핫클립${i + 1}</a>`;
+    });
+    eventYoutubeLinks(ev).forEach(({ url, type }) => {
+        html += `<a class="vod-link yt-vod-link" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">${type === 'long' ? '▶ YouTube' : '▶ YouTube Shorts'}</a>`;
+    });
 
     document.getElementById('viewContent').innerHTML = html;
     document.getElementById('viewBtns').innerHTML = state.isEditor
@@ -2651,8 +2699,10 @@ function openAddModal(dateStr, type = 'chat') {
     document.getElementById('editCollab').value    = '';
     document.getElementById('editSubtitle').value  = '';
     document.getElementById('editVodUrl').value    = '';
+    setHotclipInputs([]);
     document.getElementById('editMemo').value      = '';
     document.getElementById('editIsRest').checked  = false;
+    document.getElementById('editPreservedLinks').value = '';
     document.getElementById('editModal').classList.add('open');
 }
 
@@ -2692,8 +2742,28 @@ function fillEditForm(ev, title, id = '') {
     document.getElementById('editCollab').value    = ev.collab ?? '';
     document.getElementById('editSubtitle').value  = ev.subtitle ?? '';
     document.getElementById('editVodUrl').value    = ev.vod_url ?? '';
+    setHotclipInputs(eventHotclipUrls(ev));
     document.getElementById('editMemo').value      = ev.memo ?? '';
     document.getElementById('editIsRest').checked  = ev.is_rest ?? false;
+    document.getElementById('editPreservedLinks').value = preservedScheduleLinkLines(ev).join('\n');
+}
+
+function setHotclipInputs(urls = []) {
+    document.querySelectorAll('.edit-hotclip-url').forEach((input, i) => {
+        input.value = urls[i] || '';
+    });
+}
+
+function readHotclipInputs() {
+    const urls = [];
+    for (const [i, input] of Array.from(document.querySelectorAll('.edit-hotclip-url')).entries()) {
+        const raw = input.value.trim();
+        if (!raw) continue;
+        const url = normalizeOptionalUrl(raw);
+        if (!url) return { error: `핫클립${i + 1} URL은 http 또는 https 주소로 입력해주세요` };
+        urls.push(url);
+    }
+    return { urls: urls.slice(0, 3) };
 }
 function closeEditModal(options = {}) {
     const { reopenView = true } = options;
@@ -2756,6 +2826,13 @@ async function saveEvent() {
     const vodUrlInput = document.getElementById('editVodUrl').value.trim();
     const vodUrl = normalizeOptionalUrl(vodUrlInput);
     if (vodUrlInput && !vodUrl) { showToast('링크 URL은 http 또는 https 주소로 입력해주세요'); return; }
+    const hotclipResult = readHotclipInputs();
+    if (hotclipResult.error) { showToast(hotclipResult.error); return; }
+    const preservedLinks = scheduleLinkLines(document.getElementById('editPreservedLinks').value);
+    const scheduleLinks = [
+        ...preservedLinks,
+        ...hotclipResult.urls.map(encodedHotclipLine),
+    ];
 
     const payload = {
         date,
@@ -2769,6 +2846,7 @@ async function saveEvent() {
         vod_url:    vodUrl || null,
         memo:       document.getElementById('editMemo').value.trim()     || null,
         is_rest:    document.getElementById('editIsRest').checked,
+        youtube_links: scheduleLinks.length ? scheduleLinks.join('\n') : null,
     };
 
     const id = document.getElementById('editId').value;

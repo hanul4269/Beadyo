@@ -6,8 +6,8 @@
     <title>구슬요 일정표</title>
     <link rel="icon" href="logo-icon.webp">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
-    <link rel="preload" href="app.js?v=up-ranking-fast-cache-20260714" as="script">
-    <script defer src="app.js?v=up-ranking-fast-cache-20260714"></script>
+    <link rel="preload" href="app.js?v=schedule-hotclips-20260716" as="script">
+    <script defer src="app.js?v=schedule-hotclips-20260716"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
@@ -1966,6 +1966,7 @@
             text-decoration: none;
         }
         .day-link.yt { background: #fff0f0; color: #d33; }
+        .day-link.hotclip { background: #fff4dd; color: #b35b00; }
         .day-event-actions {
             display: flex;
             flex-direction: column;
@@ -2043,6 +2044,8 @@
         .vod-link:hover { background: #e53935; }
         .yt-vod-link { background: #ff0000; margin-top: 8px; }
         .yt-vod-link:hover { background: #cc0000; }
+        .hotclip-link { background: #ff9f1c; margin-top: 8px; }
+        .hotclip-link:hover { background: #e88600; }
 
         /* ── 폼 ── */
         .field { margin-bottom: 13px; }
@@ -2072,6 +2075,17 @@
         #editTitle { min-height: 0; height: 54px; resize: none; line-height: 1.45; }
         .field-row { display: flex; gap: 10px; }
         .field-row .field { flex: 1; margin-bottom: 0; }
+        .hotclip-url-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .field-help {
+            margin-top: 6px;
+            color: #aaa;
+            font-size: 11px;
+            line-height: 1.35;
+        }
         .broadcast-vod-list {
             display: flex;
             flex-direction: column;
@@ -3037,7 +3051,17 @@
             <label>링크 URL</label>
             <input type="url" id="editVodUrl" placeholder="https://...">
         </div>
+        <div class="field">
+            <label>핫클립 URL</label>
+            <div class="hotclip-url-list">
+                <input type="url" class="edit-hotclip-url" placeholder="핫클립 1 URL">
+                <input type="url" class="edit-hotclip-url" placeholder="핫클립 2 URL">
+                <input type="url" class="edit-hotclip-url" placeholder="핫클립 3 URL">
+            </div>
+            <div class="field-help">최대 3개까지 등록 가능</div>
+        </div>
         <input type="checkbox" id="editIsRest" hidden>
+        <input type="hidden" id="editPreservedLinks">
         <input type="hidden" id="editId">
         <div class="btn-row">
             <button class="btn btn-primary" onclick="saveEvent()">저장</button>
