@@ -228,6 +228,27 @@ async function fetchRuntimeCache(cacheKey, timeoutMs = 5000) {
     }
 }
 
+async function fetchActiveUpEvents(timeoutMs = 8000) {
+    const controller = new AbortController();
+    const tid = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+        const url = `${SUPABASE_URL}/rest/v1/up_events?select=*&is_active=eq.true&order=sort_order.asc`;
+        const res = await fetch(url, {
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            },
+            signal: controller.signal,
+        });
+        clearTimeout(tid);
+        if (!res.ok) throw new Error(`up_events HTTP ${res.status}`);
+        return await res.json();
+    } catch (error) {
+        clearTimeout(tid);
+        throw error;
+    }
+}
+
 function typeOf(key) {
     return EVENT_TYPES.find(t => t.key === key) ?? EVENT_TYPES.find(t => t.key === 'general');
 }
@@ -2055,13 +2076,22 @@ function compactUpEventForCache(event) {
 
 function writeLocalUpRankingSnapshot(data) {
     const events = (data?.events || []).map(compactUpEventForCache);
-    if (!events.some(event => event.ranking.length)) return;
+    if (!events.some(event => event.ranking.length)) {
+        clearLocalUpRankingSnapshot();
+        return;
+    }
     try {
         localStorage.setItem(UP_LOCAL_RANKING_CACHE_KEY, JSON.stringify({
             updated: data.updated || new Date().toISOString(),
             saved_at: new Date().toISOString(),
             events,
         }));
+    } catch {}
+}
+
+function clearLocalUpRankingSnapshot() {
+    try {
+        localStorage.removeItem(UP_LOCAL_RANKING_CACHE_KEY);
     } catch {}
 }
 
@@ -2091,56 +2121,43 @@ async function openUpModal(options = {}) {
     const preloadedEvents = Array.isArray(options.sbEvents) ? options.sbEvents : null;
     _upModalIsAutoPrompt = options.auto === true;
     document.getElementById('upModal').classList.add('open');
-    let renderedSnapshot = false;
-    const localSnapshot = readLocalUpRankingSnapshot({ startupOnly });
-    if (localSnapshot) {
-        _upCurrentData = localSnapshot;
-        renderUpModal(_upCurrentData, false);
-        renderedSnapshot = true;
-    } else {
-        document.getElementById('upModalContent').innerHTML = upEmptyHtml('불러오는 중...', 'loading');
-    }
-
-    // UP 랭킹 캐시 로드: Supabase 런타임 캐시 우선, 기존 up.json fallback
-    const cachedData = await loadUpRankingCache();
-    writeLocalUpRankingSnapshot(cachedData);
-
-    const cachedEvents = (cachedData.events || [])
-        .filter(e => !startupOnly || isUpStartupEvent(e))
-        .map(upEventFromRow);
-    if (cachedEvents.length) {
-        _upCurrentData = { updated: cachedData.updated, events: cachedEvents };
-        renderUpModal(_upCurrentData, false);
-        renderedSnapshot = true;
-    }
+    document.getElementById('upModalContent').innerHTML = upEmptyHtml('불러오는 중...', 'loading');
 
     // Supabase에서 현재 활성 이벤트 목록 직접 조회
     let sbEvents = [];
+    let loadedActiveEvents = false;
     if (preloadedEvents) {
         sbEvents = preloadedEvents.filter(e => !startupOnly || isUpStartupEvent(e));
+        loadedActiveEvents = true;
     } else {
         try {
-            await _ensureDb();
-            const { data } = await db.from('up_events').select('*').eq('is_active', true).order('sort_order');
+            const data = await fetchActiveUpEvents();
             sbEvents = (data || []).filter(e => !startupOnly || isUpStartupEvent(e));
-        } catch {}
+            loadedActiveEvents = true;
+        } catch {
+            document.getElementById('upModalContent').innerHTML =
+                upEmptyHtml('UP 이벤트 목록을 확인하지 못했습니다', 'empty');
+            return;
+        }
     }
 
-    // Supabase 목록 기준으로 up.json 캐시 랭킹 병합
-    const cachedMap = {};
-    for (const e of (cachedData.events || [])) cachedMap[e.id] = e;
-
-    const mergedEvents = sbEvents.map(e => ({ ...upEventFromRow(e), ranking: cachedMap[e.id]?.ranking || [] }));
-
-    if (!mergedEvents.length && (startupOnly || !cachedData.events?.length)) {
-        if (renderedSnapshot) return;
-        document.getElementById('upModalContent').innerHTML =
-            upEmptyHtml('진행 중인 UP 이벤트가 없습니다', 'empty');
+    if (loadedActiveEvents && !sbEvents.length) {
+        clearLocalUpRankingSnapshot();
+        _upCurrentData = { updated: null, events: [] };
+        renderUpModal(_upCurrentData, false);
         return;
     }
 
-    const fallbackEvents = startupOnly ? [] : (cachedData.events || []).map(upEventFromRow);
-    _upCurrentData = { updated: cachedData.updated, events: mergedEvents.length ? mergedEvents : fallbackEvents };
+    // Supabase 활성 이벤트 목록을 기준으로만 캐시 랭킹을 병합한다.
+    const cachedData = await loadUpRankingCache();
+    const localSnapshot = readLocalUpRankingSnapshot({ startupOnly });
+    const cachedMap = {};
+    for (const e of (cachedData.events || [])) cachedMap[e.id] = e;
+    for (const e of (localSnapshot?.events || [])) cachedMap[e.id] = e;
+
+    const mergedEvents = sbEvents.map(e => ({ ...upEventFromRow(e), ranking: cachedMap[e.id]?.ranking || [] }));
+
+    _upCurrentData = { updated: localSnapshot?.updated || cachedData.updated || null, events: mergedEvents };
     writeLocalUpRankingSnapshot(_upCurrentData);
     renderUpModal(_upCurrentData, true);
 }
@@ -2177,9 +2194,7 @@ async function maybeOpenUpModalOnStart() {
     _upAutoPopupChecked = true;
     if (upAutoPopupHiddenUntil()) return;
     try {
-        await _ensureDb();
-        const { data, error } = await db.from('up_events').select('*').eq('is_active', true).order('sort_order');
-        if (error) return;
+        const data = await fetchActiveUpEvents();
         const events = data || [];
         if (events.some(isUpStartupEvent)) {
             openUpModal({ auto: true, startupOnly: true, sbEvents: events });
@@ -2702,7 +2717,8 @@ function openAddModal(dateStr, type = 'chat') {
     setHotclipInputs([]);
     document.getElementById('editMemo').value      = '';
     document.getElementById('editIsRest').checked  = false;
-    document.getElementById('editPreservedLinks').value = '';
+    const preservedLinksInput = document.getElementById('editPreservedLinks');
+    if (preservedLinksInput) preservedLinksInput.value = '';
     document.getElementById('editModal').classList.add('open');
 }
 
@@ -2745,7 +2761,8 @@ function fillEditForm(ev, title, id = '') {
     setHotclipInputs(eventHotclipUrls(ev));
     document.getElementById('editMemo').value      = ev.memo ?? '';
     document.getElementById('editIsRest').checked  = ev.is_rest ?? false;
-    document.getElementById('editPreservedLinks').value = preservedScheduleLinkLines(ev).join('\n');
+    const preservedLinksInput = document.getElementById('editPreservedLinks');
+    if (preservedLinksInput) preservedLinksInput.value = preservedScheduleLinkLines(ev).join('\n');
 }
 
 function setHotclipInputs(urls = []) {
@@ -2828,7 +2845,7 @@ async function saveEvent() {
     if (vodUrlInput && !vodUrl) { showToast('링크 URL은 http 또는 https 주소로 입력해주세요'); return; }
     const hotclipResult = readHotclipInputs();
     if (hotclipResult.error) { showToast(hotclipResult.error); return; }
-    const preservedLinks = scheduleLinkLines(document.getElementById('editPreservedLinks').value);
+    const preservedLinks = scheduleLinkLines(document.getElementById('editPreservedLinks')?.value || '');
     const scheduleLinks = [
         ...preservedLinks,
         ...hotclipResult.urls.map(encodedHotclipLine),
@@ -3398,6 +3415,7 @@ function _refreshUpModalDisplay() {
     const displayEvents = upEvents
         .filter(e => e.is_active)
         .map(e => ({ ...upEventFromRow(e), ranking: rankingMap[e.id] || [] }));
+    if (!displayEvents.length) clearLocalUpRankingSnapshot();
     _upCurrentData = { updated: _upCurrentData?.updated || null, events: displayEvents };
     renderUpModal(_upCurrentData, false);
 }
