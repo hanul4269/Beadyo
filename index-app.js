@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL = 'riosniper12@gmail.com';
-const FALLBACK_ASSET_VERSION = 'dual-notice-popups-20260724';
+const FALLBACK_ASSET_VERSION = 'remove-anniversary-popup-20260725';
 const IS_LOCAL_HOST = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
 const APP_ASSET_VERSION = (() => {
     try {
@@ -13,7 +13,6 @@ const APP_ASSET_VERSION = (() => {
 })();
 const FRAME_ASSET_VERSION = IS_LOCAL_HOST ? `dev-${Date.now()}` : APP_ASSET_VERSION;
 const GOODS_NOTICE_HIDE_UNTIL_KEY = 'beadyoGoodsNoticeHideUntil:green-summer-20260714';
-const ANNIVERSARY_NOTICE_HIDE_UNTIL_KEY = 'beadyoNoticeHideUntil:5th-anniversary-20260724';
 
 function withFrameAssetVersion(src, assetVersion = APP_ASSET_VERSION) {
     if (!src || /^https?:\/\//i.test(src)) return src;
@@ -479,68 +478,33 @@ function setGoodsNoticeOverlayOpen(open) {
     document.getElementById('goods-notice-overlay')?.classList.toggle('open', open);
 }
 
-function visibleGoodsNoticeCards() {
-    return Array.from(document.querySelectorAll('#goods-notice-overlay .goods-notice-modal'))
-        .filter(card => !card.hidden);
-}
-
-function setGoodsNoticeCardOpen(id, open) {
-    const card = document.getElementById(id);
-    if (!card) return;
-    card.hidden = !open;
-    if (open) {
-        setGoodsNoticeOverlayOpen(true);
-    } else if (visibleGoodsNoticeCards().length === 0) {
-        setGoodsNoticeOverlayOpen(false);
+function setGoodsNoticeCardOpen(open) {
+    const card = document.getElementById('goods-notice-modal');
+    if (card) {
+        card.hidden = !open;
     }
+    setGoodsNoticeOverlayOpen(open);
 }
 
 function openGoodsNoticePopup() {
-    setGoodsNoticeCardOpen('goods-notice-modal', true);
+    setGoodsNoticeCardOpen(true);
 }
 
 function closeGoodsNoticePopup() {
-    setGoodsNoticeCardOpen('goods-notice-modal', false);
-}
-
-function openAnniversaryNoticePopup() {
-    setGoodsNoticeCardOpen('anniversary-notice-modal', true);
-}
-
-function closeAnniversaryNoticePopup() {
-    setGoodsNoticeCardOpen('anniversary-notice-modal', false);
-}
-
-function closeGoodsNoticePopups() {
-    document.querySelectorAll('#goods-notice-overlay .goods-notice-modal').forEach(card => {
-        card.hidden = true;
-    });
-    setGoodsNoticeOverlayOpen(false);
+    setGoodsNoticeCardOpen(false);
 }
 
 function handleGoodsNoticeOverlayClick(e) {
-    if (
-        e.target === document.getElementById('goods-notice-overlay') ||
-        e.target?.classList?.contains('goods-notice-stack')
-    ) {
-        closeGoodsNoticePopups();
-    }
+    if (e.target === document.getElementById('goods-notice-overlay')) closeGoodsNoticePopup();
 }
 
 function initGoodsNoticePopup() {
     const overlay = document.getElementById('goods-notice-overlay');
     if (!overlay) return;
-    let shouldOpenGoods = true;
-    let shouldOpenAnniversary = true;
     try {
-        shouldOpenGoods = !isDateKeyActive(localStorage.getItem(GOODS_NOTICE_HIDE_UNTIL_KEY));
-        shouldOpenAnniversary = !isDateKeyActive(localStorage.getItem(ANNIVERSARY_NOTICE_HIDE_UNTIL_KEY));
+        if (isDateKeyActive(localStorage.getItem(GOODS_NOTICE_HIDE_UNTIL_KEY))) return;
     } catch {}
-    if (!shouldOpenGoods && !shouldOpenAnniversary) return;
-    requestAnimationFrame(() => {
-        if (shouldOpenGoods) openGoodsNoticePopup();
-        if (shouldOpenAnniversary) openAnniversaryNoticePopup();
-    });
+    requestAnimationFrame(openGoodsNoticePopup);
 }
 
 function hideGoodsNoticePopupFor(mode) {
@@ -551,16 +515,8 @@ function hideGoodsNoticePopupFor(mode) {
     closeGoodsNoticePopup();
 }
 
-function hideAnniversaryNoticePopupFor(mode) {
-    const days = mode === 'week' ? 6 : 0;
-    try {
-        localStorage.setItem(ANNIVERSARY_NOTICE_HIDE_UNTIL_KEY, dateKey(addDaysToDate(new Date(), days)));
-    } catch {}
-    closeAnniversaryNoticePopup();
-}
-
 document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeGoodsNoticePopups();
+    if (e.key === 'Escape') closeGoodsNoticePopup();
 });
 
 // ── 이용가이드 모달 ──
