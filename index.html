@@ -15,12 +15,13 @@
     <link rel="dns-prefetch" href="https://www.gstatic.com">
     <link rel="preload" href="logo-icon.webp" as="image">
     <link rel="preload" href="loading-img.png" as="image">
+    <link rel="preload" href="notice-goods-green-summer-20260727.png" as="image">
     <link rel="preload" href="supabase.min.js?v=supabase-2-108-2" as="script">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
     <script defer src="supabase.min.js?v=supabase-2-108-2"></script>
-    <script defer src="index-app.js?v=remove-goods-popup-20260727"></script>
+    <script defer src="index-app.js?v=goods-popup-20260727"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         [hidden] { display: none !important; }
@@ -1024,6 +1025,128 @@
 
         .login-back-btn:hover { background: #ebebeb; }
 
+        /* ── 굿즈 공지 팝업 ── */
+        .goods-notice-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 760;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(12px, 3vw, 28px);
+            background: rgba(20, 36, 18, 0.58);
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
+        }
+
+        .goods-notice-overlay.open { display: flex; }
+
+        .goods-notice-modal {
+            position: relative;
+            width: min(540px, calc(100vw - 24px));
+            max-height: calc(100dvh - 24px);
+            overflow: hidden;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 24px 80px rgba(7, 20, 6, 0.36);
+            animation: modalIn 0.2s ease;
+        }
+
+        .goods-notice-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.58);
+            color: #fff;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .goods-notice-close:hover { background: rgba(0, 0, 0, 0.74); }
+
+        .goods-notice-image-link {
+            display: block;
+            background: #edf8e5;
+            text-decoration: none;
+        }
+
+        .goods-notice-image {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: min(76dvh, 720px);
+            object-fit: contain;
+            object-position: top center;
+            background: #fff;
+        }
+
+        .goods-notice-actions {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+            padding: 12px;
+            background: #fff;
+        }
+
+        .goods-notice-hide-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 7px;
+            flex-wrap: wrap;
+            padding: 0 12px 12px;
+            background: #fff;
+        }
+
+        .goods-notice-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 0 12px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 800;
+            text-decoration: none;
+            text-align: center;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            transition: transform 0.12s, filter 0.12s;
+        }
+
+        .goods-notice-btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.03);
+        }
+
+        .goods-notice-btn.shop { background: #5dbb55; }
+        .goods-notice-btn.post { background: #202820; }
+
+        .goods-notice-hide-btn {
+            border: 1.5px solid rgba(93, 187, 85, 0.24);
+            background: #fff;
+            color: #34622f;
+            border-radius: 999px;
+            padding: 7px 12px;
+            font: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .goods-notice-hide-btn:hover { background: #eef8ea; }
+
+        @media (max-width: 420px) {
+            .goods-notice-actions { grid-template-columns: 1fr; }
+            .goods-notice-btn { min-height: 44px; }
+        }
+
         /* ── 이용가이드 모달 ── */
         .guide-overlay {
             display: none;
@@ -1207,6 +1330,23 @@
                 Google 계정으로 로그인
             </button>
             <button class="login-back-btn" onclick="closeLoginModal()">홈으로 돌아가기</button>
+        </div>
+    </div>
+
+    <div class="goods-notice-overlay" id="goods-notice-overlay" onclick="handleGoodsNoticeOverlayClick(event)">
+        <div class="goods-notice-modal" id="goods-notice-modal" role="dialog" aria-modal="true" aria-label="구슬요 Green Summer 굿즈 공지" hidden>
+            <button type="button" class="goods-notice-close" onclick="closeGoodsNoticePopup()" aria-label="굿즈 공지 닫기">×</button>
+            <a class="goods-notice-image-link" href="https://smartstore.naver.com/studio_sorisam" target="_blank" rel="noopener noreferrer" onclick="closeGoodsNoticePopup()" aria-label="구슬요 Green Summer 굿즈 사러가기">
+                <img class="goods-notice-image" src="notice-goods-green-summer-20260727.png" alt="구슬요 Green Summer 발매기념 한정판 굿즈, 7월 13일부터 7월 31일까지 한정 판매" width="951" height="1200" decoding="async">
+            </a>
+            <div class="goods-notice-actions">
+                <a class="goods-notice-btn shop" href="https://smartstore.naver.com/studio_sorisam" target="_blank" rel="noopener noreferrer" onclick="closeGoodsNoticePopup()">굿즈사러가기</a>
+                <a class="goods-notice-btn post" href="https://www.sooplive.com/station/beadyo97/post/201361961" target="_blank" rel="noopener noreferrer" onclick="closeGoodsNoticePopup()">공지사항 보러가기</a>
+            </div>
+            <div class="goods-notice-hide-actions">
+                <button type="button" class="goods-notice-hide-btn" onclick="hideGoodsNoticePopupFor('today')">오늘 하루 보지 않기</button>
+                <button type="button" class="goods-notice-hide-btn" onclick="hideGoodsNoticePopupFor('week')">일주일간 보지 않기</button>
+            </div>
         </div>
     </div>
 

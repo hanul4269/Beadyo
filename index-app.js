@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL = 'riosniper12@gmail.com';
-const FALLBACK_ASSET_VERSION = 'remove-goods-popup-20260727';
+const FALLBACK_ASSET_VERSION = 'goods-popup-20260727';
 const IS_LOCAL_HOST = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
 const APP_ASSET_VERSION = (() => {
     try {
@@ -12,6 +12,7 @@ const APP_ASSET_VERSION = (() => {
     }
 })();
 const FRAME_ASSET_VERSION = IS_LOCAL_HOST ? `dev-${Date.now()}` : APP_ASSET_VERSION;
+const GOODS_NOTICE_HIDE_UNTIL_KEY = 'beadyoGoodsNoticeHideUntil:green-summer-20260727';
 
 function withFrameAssetVersion(src, assetVersion = APP_ASSET_VERSION) {
     if (!src || /^https?:\/\//i.test(src)) return src;
@@ -19,6 +20,23 @@ function withFrameAssetVersion(src, assetVersion = APP_ASSET_VERSION) {
     if (url.origin !== window.location.origin) return src;
     url.searchParams.set('v', IS_LOCAL_HOST ? FRAME_ASSET_VERSION : assetVersion);
     return `${url.pathname.replace(/^\//, '')}${url.search}${url.hash}`;
+}
+
+function addDaysToDate(date, days) {
+    const next = new Date(date);
+    next.setDate(next.getDate() + days);
+    return next;
+}
+
+function dateKey(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+}
+
+function isDateKeyActive(value) {
+    return /^\d{4}-\d{2}-\d{2}$/.test(value || '') && value >= dateKey(new Date());
 }
 
 const TABS = [
@@ -455,6 +473,44 @@ function handleLoginOverlayClick(e) {
     if (e.target === document.getElementById('login-overlay')) closeLoginModal();
 }
 
+// ── 굿즈 공지 팝업 ──
+function openGoodsNoticePopup() {
+    const card = document.getElementById('goods-notice-modal');
+    if (card) card.hidden = false;
+    document.getElementById('goods-notice-overlay')?.classList.add('open');
+}
+
+function closeGoodsNoticePopup() {
+    const card = document.getElementById('goods-notice-modal');
+    if (card) card.hidden = true;
+    document.getElementById('goods-notice-overlay')?.classList.remove('open');
+}
+
+function handleGoodsNoticeOverlayClick(e) {
+    if (e.target === document.getElementById('goods-notice-overlay')) closeGoodsNoticePopup();
+}
+
+function initGoodsNoticePopup() {
+    const overlay = document.getElementById('goods-notice-overlay');
+    if (!overlay) return;
+    try {
+        if (isDateKeyActive(localStorage.getItem(GOODS_NOTICE_HIDE_UNTIL_KEY))) return;
+    } catch {}
+    requestAnimationFrame(openGoodsNoticePopup);
+}
+
+function hideGoodsNoticePopupFor(mode) {
+    const days = mode === 'week' ? 6 : 0;
+    try {
+        localStorage.setItem(GOODS_NOTICE_HIDE_UNTIL_KEY, dateKey(addDaysToDate(new Date(), days)));
+    } catch {}
+    closeGoodsNoticePopup();
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeGoodsNoticePopup();
+});
+
 // ── 이용가이드 모달 ──
 function openGuideModal() {
     const overlay = document.getElementById('guide-overlay');
@@ -590,4 +646,5 @@ async function signOut() {
     syncCalendarAuth();
 }
 
+initGoodsNoticePopup();
 initAuth();
