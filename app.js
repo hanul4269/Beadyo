@@ -3177,8 +3177,17 @@ function hideNoticeToday() {
 }
 
 async function maybeOpenCalendarNoticeOnStart() {
-    if (!CALENDAR_CELEBRATION_NOTICE_ENABLED) return;
-    openNoticePopup(CALENDAR_CELEBRATION_NOTICE);
+    try {
+        const notices = await loadCalendarNotices({ includeInactive: false, fallback: false });
+        const notice = notices.find(item => item?.is_active !== false && !isCalendarNoticeHiddenToday(item));
+        if (notice) {
+            openNoticePopup(notice);
+            return;
+        }
+    } catch (error) {
+        console.warn('calendar notice startup:', error);
+    }
+    if (CALENDAR_CELEBRATION_NOTICE_ENABLED) openNoticePopup(CALENDAR_CELEBRATION_NOTICE);
 }
 
 function setNoticeColorInputs(colors) {
