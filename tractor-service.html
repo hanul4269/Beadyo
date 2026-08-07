@@ -326,6 +326,9 @@
         .episode.soon {
             min-height: 100%;
         }
+        .episode.soon.poster-ready {
+            grid-column: 1 / -1;
+        }
         .soon-panel {
             position: relative;
             isolation: isolate;
@@ -342,6 +345,13 @@
                 radial-gradient(circle at 78% 18%, rgba(90,198,189,0.36), transparent 30%),
                 linear-gradient(150deg, rgba(255,250,242,0.94) 0%, rgba(244,226,216,0.88) 44%, rgba(232,248,240,0.94) 100%),
                 rgba(255,250,242,0.9);
+        }
+        .episode.soon.poster-ready .soon-panel {
+            min-height: 560px;
+            background:
+                radial-gradient(circle at 20% 12%, rgba(255,205,166,0.34), transparent 28%),
+                radial-gradient(circle at 88% 16%, rgba(255,255,255,0.18), transparent 26%),
+                linear-gradient(150deg, rgba(113,20,20,0.98) 0%, rgba(169,39,33,0.94) 48%, rgba(58,27,24,0.98) 100%);
         }
         .soon-panel::before {
             content: "Tractor Service";
@@ -368,8 +378,18 @@
             border-radius: 50%;
             box-shadow: -96px 210px 0 -92px rgba(92,143,63,0.32);
         }
+        .episode.soon.poster-ready .soon-panel::before {
+            color: rgba(255,255,255,0.12);
+        }
+        .episode.soon.poster-ready .soon-panel::after {
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: -96px 210px 0 -92px rgba(255,210,170,0.28);
+        }
         .soon-copy {
             max-width: 520px;
+        }
+        .episode.soon.poster-ready .soon-copy {
+            max-width: none;
         }
         .soon-label {
             color: var(--leaf);
@@ -377,11 +397,18 @@
             font-weight: 950;
             letter-spacing: 0.06em;
         }
+        .episode.soon.poster-ready .soon-label {
+            color: #ffe0b7;
+        }
         .soon-panel h3 {
             margin-top: 8px;
             font-size: 30px;
             line-height: 1.1;
             letter-spacing: 0;
+        }
+        .episode.soon.poster-ready .soon-panel h3 {
+            color: #fffaf2;
+            text-shadow: 0 2px 14px rgba(0,0,0,0.24);
         }
         .soon-panel p {
             margin-top: 10px;
@@ -391,11 +418,22 @@
             line-height: 1.6;
             word-break: keep-all;
         }
+        .episode.soon.poster-ready .soon-panel p {
+            color: rgba(255,250,242,0.86);
+        }
         .soon-teaser {
             display: grid;
             grid-template-columns: minmax(128px, 0.8fr) minmax(0, 1.2fr);
             gap: 14px;
             align-items: stretch;
+            min-width: 0;
+        }
+        .soon-teaser > * {
+            min-width: 0;
+        }
+        .episode.soon.poster-ready .soon-teaser {
+            flex: 1;
+            grid-template-columns: minmax(300px, 0.42fr) minmax(0, 0.58fr);
         }
         .soon-month-card,
         .soon-info-card {
@@ -418,6 +456,11 @@
             overflow: hidden;
             position: relative;
         }
+        .soon-month-card.poster-card {
+            min-height: 520px;
+            padding: 0;
+            background: rgba(34,9,9,0.72);
+        }
         .soon-month-card::after {
             content: "";
             position: absolute;
@@ -427,6 +470,16 @@
             height: 126px;
             border: 20px solid rgba(217,155,61,0.3);
             border-radius: 50%;
+        }
+        .soon-month-card.poster-card::after {
+            display: none;
+        }
+        .soon-month-card.poster-card img {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
         }
         .soon-month {
             position: relative;
@@ -468,6 +521,11 @@
             flex-direction: column;
             justify-content: space-between;
         }
+        .episode.soon.poster-ready .soon-info-card {
+            justify-content: center;
+            gap: 18px;
+            background: rgba(255,250,242,0.86);
+        }
         .soon-lineup {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -486,6 +544,22 @@
             color: rgba(59,45,41,0.52);
             font-size: 22px;
             font-weight: 950;
+        }
+        .soon-lineup.meta-lineup span {
+            min-height: 62px;
+            flex-direction: column;
+            gap: 4px;
+            color: #9d3028;
+            font-size: 14px;
+            line-height: 1.25;
+            text-align: center;
+        }
+        .soon-lineup.meta-lineup strong {
+            display: block;
+            margin-bottom: 3px;
+            color: var(--soil);
+            font-size: 12px;
+            line-height: 1;
         }
         .soon-info-card strong {
             color: var(--soil);
@@ -580,11 +654,23 @@
             .episode-detail .poster { min-height: 0; max-height: 430px; }
             .video-button { aspect-ratio: 16 / 9; }
             .episode h3 { font-size: 22px; }
+            .episode.soon.poster-ready { grid-column: auto; }
             .soon-panel { min-height: 420px; padding: 22px; }
             .soon-panel h3 { font-size: 26px; }
             .soon-teaser { grid-template-columns: 1fr; }
             .soon-month-card,
             .soon-info-card { min-height: 140px; }
+            .episode.soon.poster-ready .soon-teaser { grid-template-columns: 1fr; }
+            .soon-month-card.poster-card {
+                min-height: 0;
+                width: 100%;
+                max-width: 100%;
+                aspect-ratio: auto;
+            }
+            .soon-month-card.poster-card img {
+                width: 100%;
+                height: auto;
+            }
             .video-modal { padding: 12px; }
         }
     </style>
@@ -604,30 +690,41 @@
         </section>
 
         <section class="episode-grid" aria-label="트랙터서비스 에피소드">
-            <article class="episode soon">
+            <article class="episode soon poster-ready">
                 <div class="soon-panel">
                     <div class="soon-copy">
-                        <div class="soon-label">EP.03</div>
-                        <h3>8월 Coming soon</h3>
-                        <p>다음 트랙터서비스가 준비 중입니다.</p>
+                        <div class="soon-label">EP.03 POSTER</div>
+                        <h3>8월 트랙터서비스</h3>
+                        <p>2026.08.08 7PM · With. im미오</p>
                     </div>
-                    <div class="soon-teaser" aria-hidden="true">
-                        <div class="soon-month-card">
-                            <div class="soon-month">JULY<span>NEXT EPISODE</span></div>
-                            <div class="soon-signal">ON AIR SOON</div>
+                    <div class="soon-teaser">
+                        <div class="soon-month-card poster-card">
+                            <img src="tractor-service-ep3-im-mio-20260808.jpg" alt="트랙터서비스 2026년 8월 im미오 포스터" width="1024" height="1536" loading="eager" decoding="async">
                         </div>
                         <div class="soon-info-card">
-                            <div class="soon-lineup">
-                                <span>?</span>
-                                <span>♪</span>
-                                <span>!</span>
+                            <div class="soon-lineup meta-lineup">
+                                <span><strong>DATE</strong>2026.08.08</span>
+                                <span><strong>TIME</strong>7PM</span>
+                                <span><strong>WITH</strong>im미오</span>
                             </div>
                             <div>
-                                <strong>게스트 공개를 기다려 주세요</strong>
+                                <strong>[트랙터서비스]EP.03 im미오</strong>
+                                <div class="episode-links">
+                                    <a class="episode-link primary" href="https://www.sooplive.com/station/mi0mi0" target="_blank" rel="noopener noreferrer">방송국</a>
+                                    <a class="episode-link" href="https://www.youtube.com/@immi0mi0" target="_blank" rel="noopener noreferrer">YouTube</a>
+                                </div>
                                 <div class="soon-chips">
-                                    <span class="soon-chip">트랙터서비스</span>
-                                    <span class="soon-chip">라이브 토크</span>
-                                    <span class="soon-chip">음악</span>
+                                    <span class="soon-chip">im미오</span>
+                                    <span class="soon-chip">SOOP · YouTube</span>
+                                    <span class="soon-chip">2026.08.08</span>
+                                </div>
+                                <div class="episode-tags">
+                                    <a class="tag coral" href="https://www.youtube.com/hashtag/%EA%B5%AC%EC%8A%AC%EC%9A%94" target="_blank" rel="noopener noreferrer">#구슬요</a>
+                                    <a class="tag" href="https://www.youtube.com/hashtag/im%EB%AF%B8%EC%98%A4" target="_blank" rel="noopener noreferrer">#im미오</a>
+                                    <a class="tag coral" href="https://www.youtube.com/hashtag/%ED%8A%B8%EB%9E%99%ED%84%B0%EC%84%9C%EB%B9%84%EC%8A%A4" target="_blank" rel="noopener noreferrer">#트랙터서비스</a>
+                                    <a class="tag" href="https://www.youtube.com/hashtag/%EB%B2%84%EC%B6%94%EC%96%BC" target="_blank" rel="noopener noreferrer">#버추얼</a>
+                                    <a class="tag coral" href="https://www.youtube.com/hashtag/vtuber" target="_blank" rel="noopener noreferrer">#Vtuber</a>
+                                    <a class="tag" href="https://www.youtube.com/hashtag/%EB%89%B4%EA%B1%B8" target="_blank" rel="noopener noreferrer">#뉴걸</a>
                                 </div>
                             </div>
                         </div>
