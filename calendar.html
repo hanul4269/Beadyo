@@ -6,8 +6,8 @@
     <title>구슬요 일정표</title>
     <link rel="icon" href="logo-icon.webp">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
-    <link rel="preload" href="app.js?v=notice-popup-fix-20260806" as="script">
-    <script defer src="app.js?v=notice-popup-fix-20260806"></script>
+    <link rel="preload" href="app.js?v=paint-palette-chip-20260808" as="script">
+    <script defer src="app.js?v=paint-palette-chip-20260808"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
@@ -776,6 +776,15 @@
         .chips-area.stable-list .event-chip.detail-none.has-time .chip-body {
             -webkit-line-clamp: 2;
             line-height: 1.16;
+        }
+        .chips-area.stable-list .event-chip.short-title.has-time .chip-body {
+            text-align: center !important;
+            transform: translateX(-26px);
+            font-size: clamp(16px, 1.55vw, 22px) !important;
+            line-height: 1.08;
+        }
+        .chips-area.stable-list.count-3 .event-chip.short-title.has-time .chip-body {
+            transform: translateX(-23px);
         }
         .chips-area.stable-list .event-chip.detail-one:not(.has-time) .chip-body,
         .chips-area.stable-list .event-chip.detail-two:not(.has-time) .chip-body {
@@ -2334,6 +2343,28 @@
         .paint-swatch.active {
             box-shadow: 0 0 0 3px rgba(139,195,74,0.34), 0 2px 6px rgba(0,0,0,0.08);
         }
+        .paint-color-picker {
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            background: conic-gradient(#e53935, #f5c400, #43a047, #1e88e5, #7e57c2, #e53935);
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.14), 0 2px 6px rgba(0,0,0,0.08);
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .paint-color-picker::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        .paint-color-picker::-webkit-color-swatch {
+            border: 0;
+            border-radius: 50%;
+        }
+        .paint-color-picker::-moz-color-swatch {
+            border: 0;
+            border-radius: 50%;
+        }
         .paint-size {
             width: 120px;
             accent-color: var(--accent);
@@ -3245,12 +3276,16 @@
                 </button>
             </div>
             <div class="paint-tool-group" id="paintSwatches">
-                <button type="button" class="paint-swatch active" data-color="#2a2f29" style="background:#2a2f29" onclick="setPaintColor('#2a2f29')" title="잉크"></button>
-                <button type="button" class="paint-swatch" data-color="#7fb83f" style="background:#7fb83f" onclick="setPaintColor('#7fb83f')" title="연두"></button>
-                <button type="button" class="paint-swatch" data-color="#f4d06f" style="background:#f4d06f" onclick="setPaintColor('#f4d06f')" title="노랑"></button>
-                <button type="button" class="paint-swatch" data-color="#ff7f6e" style="background:#ff7f6e" onclick="setPaintColor('#ff7f6e')" title="코랄"></button>
-                <button type="button" class="paint-swatch" data-color="#62b6e7" style="background:#62b6e7" onclick="setPaintColor('#62b6e7')" title="하늘"></button>
-                <button type="button" class="paint-swatch" data-color="#ffffff" style="background:#ffffff" onclick="setPaintColor('#ffffff')" title="흰색"></button>
+                <button type="button" class="paint-swatch active" data-color="#2a2f29" style="background:#2a2f29" onclick="setPaintColor('#2a2f29')" title="잉크" aria-label="잉크"></button>
+                <button type="button" class="paint-swatch" data-color="#ffffff" style="background:#ffffff" onclick="setPaintColor('#ffffff')" title="흰색" aria-label="흰색"></button>
+                <button type="button" class="paint-swatch" data-color="#7fb83f" style="background:#7fb83f" onclick="setPaintColor('#7fb83f')" title="연두" aria-label="연두"></button>
+                <button type="button" class="paint-swatch" data-color="#f5c400" style="background:#f5c400" onclick="setPaintColor('#f5c400')" title="진노랑" aria-label="진노랑"></button>
+                <button type="button" class="paint-swatch" data-color="#e53935" style="background:#e53935" onclick="setPaintColor('#e53935')" title="진빨강" aria-label="진빨강"></button>
+                <button type="button" class="paint-swatch" data-color="#f57c00" style="background:#f57c00" onclick="setPaintColor('#f57c00')" title="주황" aria-label="주황"></button>
+                <button type="button" class="paint-swatch" data-color="#62b6e7" style="background:#62b6e7" onclick="setPaintColor('#62b6e7')" title="하늘" aria-label="하늘"></button>
+                <button type="button" class="paint-swatch" data-color="#7e57c2" style="background:#7e57c2" onclick="setPaintColor('#7e57c2')" title="보라" aria-label="보라"></button>
+                <button type="button" class="paint-swatch" data-color="#1e3a8a" style="background:#1e3a8a" onclick="setPaintColor('#1e3a8a')" title="남색" aria-label="남색"></button>
+                <input type="color" class="paint-color-picker" id="paintColorPicker" value="#2a2f29" oninput="setPaintColor(this.value)" title="색상 팔레트" aria-label="색상 팔레트">
             </div>
             <div class="paint-tool-group">
                 <input type="range" class="paint-size" id="paintSize" min="2" max="36" value="8" oninput="setPaintSize(this.value)" aria-label="굵기">

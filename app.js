@@ -692,12 +692,20 @@ function setPaintTool(tool) {
     });
 }
 
+function normalizePaintColor(color) {
+    const normalized = String(color || '').trim().toLowerCase();
+    return /^#[0-9a-f]{6}$/.test(normalized) ? normalized : paintState.color;
+}
+
 function setPaintColor(color) {
-    paintState.color = color;
+    const nextColor = normalizePaintColor(color);
+    paintState.color = nextColor;
     setPaintTool('pen');
     document.querySelectorAll('#paintSwatches .paint-swatch').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.color === color);
+        btn.classList.toggle('active', (btn.dataset.color || '').toLowerCase() === nextColor);
     });
+    const picker = document.getElementById('paintColorPicker');
+    if (picker && picker.value.toLowerCase() !== nextColor) picker.value = nextColor;
 }
 
 function setPaintSize(size) {
