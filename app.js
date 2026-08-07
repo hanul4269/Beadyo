@@ -168,24 +168,6 @@ const DEFAULT_CALENDAR_NOTICE = {
     sort_order: 0,
 };
 
-// Set this to false when the celebration popup is no longer needed.
-const CALENDAR_CELEBRATION_NOTICE_ENABLED = false;
-const CALENDAR_CELEBRATION_NOTICE = {
-    id: 'gosegu-blue-white-pass-20260703',
-    title: '고세구 청백 가요대전 합격!',
-    message: '',
-    image_url: 'notice-gosegu-pass-20260703-v2.png',
-    link_url: '',
-    link_label: '',
-    button_bg_color: '#4aa3ff',
-    button_text_color: '#ffffff',
-    header_bg_color: '#06172e',
-    header_text_color: '#eaf5ff',
-    fireworks: true,
-    is_active: true,
-    sort_order: -100,
-};
-
 const OPTIMIZED_NOTICE_IMAGES = {
     'notice-bosikham-season2-20260627.png': 'notice-bosikham-season2-20260627.jpg',
 };
@@ -197,7 +179,7 @@ function _ensureDb() {
     if (_dbReady) return _dbReady;
     _dbReady = new Promise((resolve, reject) => {
         const s = document.createElement('script');
-        s.src = 'supabase.min.js?v=supabase-2-108-2';
+        s.src = 'supabase.min.js?v=supabase-2-112-2';
         s.onload = () => { db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); resolve(db); };
         s.onerror = reject;
         document.head.appendChild(s);
@@ -2315,8 +2297,7 @@ async function fetchSoopRankingLiveFresh(bjId, postNo) {
                 }
             }
             lastPage = (d.meta || {}).lastPage || 1;
-        } catch (e) {
-            console.log('SOOP fetch error:', e.message);
+        } catch {
             break;
         }
         page++;
@@ -2973,7 +2954,8 @@ function normalizeNoticeImageInput(value) {
     if (!raw) return null;
     const absolute = normalizeOptionalUrl(raw);
     if (absolute) return absolute;
-    if (/^[./\w-]+(?:\/[./\w-]+)*\.(?:png|jpe?g|webp|gif|avif)(?:\?[\w=&.-]+)?$/i.test(raw)) return raw;
+    if (raw.includes('..') || raw.startsWith('/') || raw.startsWith('//')) return null;
+    if (/^(?:\.\/)?[\w.-]+(?:\/[\w.-]+)*\.(?:png|jpe?g|webp|gif|avif)(?:\?[\w=&.-]+)?$/i.test(raw)) return raw;
     return null;
 }
 
@@ -3028,7 +3010,6 @@ function normalizeCalendarNotice(row) {
         button_text_color: normalizeNoticeColor(row.button_text_color, DEFAULT_CALENDAR_NOTICE.button_text_color),
         header_bg_color: normalizeNoticeColor(row.header_bg_color, DEFAULT_CALENDAR_NOTICE.header_bg_color),
         header_text_color: normalizeNoticeColor(row.header_text_color, DEFAULT_CALENDAR_NOTICE.header_text_color),
-        fireworks: row.fireworks === true,
         is_active: row.is_active !== false,
         sort_order: Number(row.sort_order || 0),
         created_at: row.created_at || null,
@@ -3076,10 +3057,8 @@ function renderNoticePopup(notice) {
     const message = document.getElementById('noticeMessage');
     const link = document.getElementById('noticeLink');
     const linkLabel = document.getElementById('noticeLinkLabel');
-    const modal = document.querySelector('#noticePopup .notice-modal');
     const head = document.querySelector('#noticePopup .notice-head');
     if (title) title.textContent = notice.title || '공지사항';
-    if (modal) modal.classList.toggle('notice-celebration', notice.fireworks === true);
     if (head) {
         head.style.setProperty('--notice-head-bg', notice.header_bg_color);
         head.style.setProperty('--notice-head-bg-light', mixNoticeColor(notice.header_bg_color, 0.18));
@@ -3110,72 +3089,16 @@ function renderNoticePopup(notice) {
     if (linkLabel) linkLabel.textContent = notice.link_label || '공지 보러가기';
 }
 
-let _noticeFireworkInterval = null;
-
-function stopNoticeFireworks() {
-    if (_noticeFireworkInterval) clearInterval(_noticeFireworkInterval);
-    _noticeFireworkInterval = null;
-    const layer = document.getElementById('noticeFireworks');
-    if (layer) {
-        layer.hidden = true;
-        layer.innerHTML = '';
-    }
-}
-
-function launchNoticeFirework() {
-    const layer = document.getElementById('noticeFireworks');
-    if (!layer || layer.hidden) return;
-    const compact = window.matchMedia('(max-width: 480px)').matches;
-    const bigBurst = Math.random() > 0.45;
-    const burst = document.createElement('div');
-    const colors = ['#5ec9ff', '#ffffff', '#9ad6ff', '#ffd76a', '#ff8bd8', '#7df7ff', '#b9f7ff'];
-    const sparkCount = bigBurst ? (compact ? 24 : 34) : (compact ? 18 : 26);
-    burst.className = 'notice-firework-burst';
-    if (bigBurst) burst.classList.add('big');
-    burst.style.left = `${8 + Math.random() * 84}%`;
-    burst.style.top = `${7 + Math.random() * 64}%`;
-    for (let i = 0; i < sparkCount; i++) {
-        const spark = document.createElement('i');
-        const ring = i % 3;
-        const angle = (Math.PI * 2 * i) / sparkCount + Math.random() * 0.16;
-        const distance = (bigBurst ? 88 : 62) + ring * (compact ? 12 : 18) + Math.random() * (compact ? 28 : 44);
-        spark.style.setProperty('--x', `${Math.cos(angle) * distance}px`);
-        spark.style.setProperty('--y', `${Math.sin(angle) * distance}px`);
-        spark.style.setProperty('--angle', `${angle}rad`);
-        spark.style.setProperty('--spark-size', `${(bigBurst ? 8 : 6) + Math.random() * 4}px`);
-        spark.style.setProperty('--spark-delay', `${Math.random() * 80}ms`);
-        spark.style.setProperty('--firework-color', colors[i % colors.length]);
-        burst.appendChild(spark);
-    }
-    layer.appendChild(burst);
-    setTimeout(() => burst.remove(), 1400);
-}
-
-function startNoticeFireworks() {
-    const layer = document.getElementById('noticeFireworks');
-    if (!layer || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    stopNoticeFireworks();
-    layer.hidden = false;
-    for (let i = 0; i < 10; i++) setTimeout(launchNoticeFirework, i * 110);
-    _noticeFireworkInterval = setInterval(() => {
-        launchNoticeFirework();
-        if (Math.random() > 0.35) setTimeout(launchNoticeFirework, 150);
-    }, 620);
-}
-
 function openNoticePopup(notice = _activeCalendarNotice, options = {}) {
     const normalized = notice ? normalizeCalendarNotice(notice) : null;
     if (!normalized || (!options.ignoreHiddenToday && isCalendarNoticeHiddenToday(normalized))) return;
     _activeCalendarNotice = normalized;
     renderNoticePopup(normalized);
     document.getElementById('noticePopup')?.classList.add('open');
-    if (normalized.fireworks) startNoticeFireworks();
-    else stopNoticeFireworks();
 }
 
 function closeNoticePopup() {
     document.getElementById('noticePopup')?.classList.remove('open');
-    stopNoticeFireworks();
 }
 
 function hideNoticeToday() {
@@ -3195,7 +3118,6 @@ async function maybeOpenCalendarNoticeOnStart() {
     } catch (error) {
         console.warn('calendar notice startup:', error);
     }
-    if (CALENDAR_CELEBRATION_NOTICE_ENABLED) openNoticePopup(CALENDAR_CELEBRATION_NOTICE);
 }
 
 function setNoticeColorInputs(colors) {

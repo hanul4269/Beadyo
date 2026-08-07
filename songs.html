@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>구슬요 노래</title>
     <link rel="icon" href="logo-icon.webp">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
@@ -630,7 +631,7 @@
             if (_dbReady) return _dbReady;
             _dbReady = new Promise((resolve, reject) => {
                 const s = document.createElement('script');
-                s.src = 'supabase.min.js?v=supabase-2-108-2';
+                s.src = 'supabase.min.js?v=supabase-2-112-2';
                 s.onload = () => { db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); resolve(db); };
                 s.onerror = reject;
                 document.head.appendChild(s);

@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>구슬요 일정표</title>
     <link rel="icon" href="logo-icon.webp">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
-    <link rel="preload" href="app.js?v=admin-patchnotes-20260808" as="script">
-    <script defer src="app.js?v=admin-patchnotes-20260808"></script>
+    <link rel="preload" href="app.js?v=security-cleanup-20260808" as="script">
+    <script defer src="app.js?v=security-cleanup-20260808"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
@@ -1306,11 +1307,6 @@
             position: relative;
             z-index: 1;
         }
-        #noticePopup .notice-modal.notice-celebration {
-            background: #041224;
-            border-color: rgba(94, 201, 255, 0.46);
-            box-shadow: 0 18px 54px rgba(0,0,0,0.48), 0 0 30px rgba(74, 163, 255, 0.22);
-        }
         .notice-head {
             display: flex;
             align-items: center;
@@ -1426,85 +1422,6 @@
         }
         .notice-link[hidden] {
             display: none;
-        }
-        .notice-fireworks {
-            position: absolute;
-            inset: 0;
-            z-index: 2;
-            overflow: hidden;
-            pointer-events: none;
-            mix-blend-mode: screen;
-        }
-        .notice-fireworks[hidden] {
-            display: none;
-        }
-        .notice-firework-burst {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            transform: translate(-50%, -50%);
-        }
-        .notice-firework-burst::before {
-            content: "";
-            position: absolute;
-            inset: -26px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,255,0.95) 0 8%, rgba(94,201,255,0.42) 18%, transparent 62%);
-            animation: noticeFireworkFlash 0.64s ease-out forwards;
-        }
-        .notice-firework-burst.big::before {
-            inset: -36px;
-        }
-        .notice-firework-burst i {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: var(--spark-size, 9px);
-            height: var(--spark-size, 9px);
-            border-radius: 999px;
-            background: var(--firework-color, #fff);
-            box-shadow: 0 0 16px 3px var(--firework-color, #fff), 0 0 34px rgba(255,255,255,0.42);
-            animation: noticeSpark 1.18s cubic-bezier(.08,.72,.16,1) forwards;
-            animation-delay: var(--spark-delay, 0ms);
-        }
-        .notice-firework-burst i::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 30px;
-            height: 3px;
-            border-radius: 999px;
-            background: linear-gradient(90deg, var(--firework-color, #fff), transparent);
-            opacity: 0.76;
-            transform: translate(-4px, -50%) rotate(var(--angle, 0rad));
-            transform-origin: left center;
-        }
-        @keyframes noticeSpark {
-            0% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(0.45);
-            }
-            68% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(0.16);
-            }
-        }
-        @keyframes noticeFireworkFlash {
-            0% {
-                opacity: 0.95;
-                transform: scale(0.08);
-            }
-            55% {
-                opacity: 0.62;
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1);
-            }
         }
         @media (max-width: 480px) {
             #noticePopup {
@@ -3039,7 +2956,6 @@
 </button>
 
 <div class="modal-overlay" id="noticePopup" onmousedown="if(event.target===this)closeNoticePopup()">
-    <div class="notice-fireworks" id="noticeFireworks" hidden></div>
     <div class="modal notice-modal" role="dialog" aria-modal="true" aria-label="공지사항">
         <div class="notice-head">
             <span id="noticeTitle">공지사항</span>
@@ -3299,6 +3215,9 @@
                 <article class="patch-note-day">
                     <div class="patch-note-head"><span class="patch-note-date">2026.08.08</span><span class="patch-note-tag">개선</span></div>
                     <ul class="patch-note-list">
+                        <li>사이트 보안 점검을 진행하고 Supabase 클라이언트 번들을 2.112.2로 업데이트했습니다.</li>
+                        <li>외부 이동 시 referrer 정책을 강화하고 공지 이미지 상대 경로 검증을 보강했습니다.</li>
+                        <li>현재 사용되지 않는 예전 축하 공지/폭죽 코드와 디버그 로그를 정리했습니다.</li>
                         <li>편집 설정에 최근 2개월 주요 변경점을 모아 보는 패치노트 게시판을 추가했습니다.</li>
                         <li>그림판 색상 팔레트에 진노랑, 진빨강, 주황, 보라, 남색과 직접 색상 선택기를 추가했습니다.</li>
                         <li>시간이 있는 짧은 일정 카드의 제목 위치와 글자 크기를 보정했습니다.</li>
