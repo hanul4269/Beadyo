@@ -2892,7 +2892,7 @@ async function openAdminModal() {
 function closeAdminModal() { document.getElementById('adminModal').classList.remove('open'); }
 
 function switchAdminTab(tab) {
-    const names = ['editors', 'upevents', 'notices', 'patchnotes'];
+    const names = ['editors', 'upevents', 'notices'];
     document.querySelectorAll('.admin-tab-btn').forEach((b, i) => {
         b.classList.toggle('active', names[i] === tab);
     });

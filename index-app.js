@@ -22,7 +22,7 @@ function withFrameAssetVersion(src, assetVersion = APP_ASSET_VERSION) {
 }
 
 const TABS = [
-    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'up-events-source-of-truth-20260723b' },
+    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'patch-notes-json-20260810' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
     { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'songbook-storage-review-20260713' },
     { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'songbook-storage-review-20260713' },
@@ -255,6 +255,19 @@ function openDanceReviewPage() {
     window.location.href = withFrameAssetVersion('dance-archive.html', 'dance-nav-20260628');
 }
 
+function openPatchNotesModal() {
+    closeAuthMenu();
+    document.getElementById('patch-notes-overlay')?.classList.add('open');
+}
+
+function closePatchNotesModal() {
+    document.getElementById('patch-notes-overlay')?.classList.remove('open');
+}
+
+function handlePatchNotesOverlayClick(event) {
+    if (event.target === event.currentTarget) closePatchNotesModal();
+}
+
 async function updateAuthUI() {
     const badge = document.getElementById('auth-badge');
     if (!authUser) {
@@ -271,6 +284,7 @@ async function updateAuthUI() {
         </button>
         <div class="auth-menu" id="auth-menu">
             ${canAdmin ? `<button onclick="openCalendarAdmin()">⚙ 편집 설정</button>` : ''}
+            <button onclick="openPatchNotesModal()">패치노트</button>
             <button onclick="openDanceReviewPage()">춤영상 검토페이지</button>
             <button class="danger" onclick="signOut()">로그아웃</button>
         </div>

@@ -21,7 +21,8 @@
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
     <script defer src="supabase.min.js?v=supabase-2-112-2"></script>
-    <script defer src="index-app.js?v=tractor-ep3-poster-20260808"></script>
+    <script defer src="patch-notes.js?v=patch-notes-json-20260810"></script>
+    <script defer src="index-app.js?v=patch-notes-json-20260810"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         [hidden] { display: none !important; }
@@ -1094,6 +1095,188 @@
             background: #f5f4f0;
         }
 
+        /* ── 패치노트 모달 ── */
+        .patch-notes-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 730;
+            background: rgba(26,31,24,0.42);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .patch-notes-overlay.open { display: flex; }
+
+        .patch-notes-modal {
+            width: min(1040px, 96vw);
+            max-height: min(860px, 92vh);
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 26px 80px rgba(22,28,18,0.28);
+            border: 1px solid rgba(255,255,255,0.75);
+            overflow: hidden;
+            animation: modalIn 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .patch-notes-head {
+            min-height: 58px;
+            padding: 0 14px 0 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--line);
+            background: #fbfcf8;
+            color: var(--ink);
+            flex-shrink: 0;
+        }
+
+        .patch-notes-title {
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 0;
+        }
+
+        .patch-notes-close {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: transparent;
+            color: #777;
+            font-size: 25px;
+            line-height: 1;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .patch-notes-close:hover {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        .patch-notes-body {
+            flex: 1 1 auto;
+            min-height: 0;
+            padding: 18px 22px 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            overflow: hidden;
+        }
+
+        .patch-board-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .patch-note-board {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 2px 4px 2px 0;
+        }
+
+        .patch-note-day {
+            border: 1px solid #ebebeb;
+            border-radius: 12px;
+            background: #fff;
+            padding: 14px 16px;
+        }
+
+        .patch-note-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .patch-note-date {
+            font-size: 15px;
+            font-weight: 900;
+            color: var(--text);
+        }
+
+        .patch-note-tag {
+            padding: 4px 9px;
+            border-radius: 999px;
+            background: var(--accent-light);
+            color: var(--accent-dark);
+            font-size: 11px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .patch-note-list {
+            margin: 0;
+            padding-left: 18px;
+            color: #444;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .patch-note-list li + li {
+            margin-top: 3px;
+        }
+
+        .patch-note-status {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 640px) {
+            .patch-notes-overlay {
+                padding: 10px;
+            }
+
+            .patch-notes-modal {
+                width: 100%;
+                max-height: 92vh;
+                border-radius: 14px;
+            }
+
+            .patch-notes-head {
+                min-height: 52px;
+                padding: 0 10px 0 16px;
+            }
+
+            .patch-notes-title {
+                font-size: 16px;
+            }
+
+            .patch-notes-body {
+                padding: 14px 12px 16px;
+            }
+
+            .patch-board-meta {
+                flex-direction: column;
+                gap: 2px;
+                font-size: 12px;
+            }
+
+            .patch-note-day {
+                padding: 12px 13px;
+            }
+
+            .patch-note-list {
+                font-size: 13px;
+            }
+        }
+
         /* ── 로딩 ── */
         .loading {
             position: absolute;
@@ -1218,6 +1401,24 @@
                 <button class="guide-close-btn" onclick="closeGuideModal()" aria-label="닫기">×</button>
             </div>
             <iframe class="guide-frame" id="guide-frame" title="BEADYO 이용가이드" sandbox=""></iframe>
+        </div>
+    </div>
+
+    <div class="patch-notes-overlay" id="patch-notes-overlay" onclick="handlePatchNotesOverlayClick(event)">
+        <div class="patch-notes-modal" role="dialog" aria-modal="true" aria-label="패치노트">
+            <div class="patch-notes-head">
+                <span class="patch-notes-title">패치노트</span>
+                <button class="patch-notes-close" onclick="closePatchNotesModal()" aria-label="닫기">×</button>
+            </div>
+            <div class="patch-notes-body">
+                <div class="patch-board-meta" data-patch-notes-meta>
+                    <span>최근 2개월 주요 변경점</span>
+                    <span>패치노트를 불러오는 중...</span>
+                </div>
+                <div class="patch-note-board" data-patch-notes-board aria-label="최근 변경 패치노트">
+                    <div class="patch-note-day patch-note-status">패치노트를 불러오는 중...</div>
+                </div>
+            </div>
         </div>
     </div>
 
