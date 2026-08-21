@@ -640,13 +640,14 @@
         }
 
         .site-footer {
-            display: none;
+            display: flex;
             flex-shrink: 0;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 4px;
-            padding: 10px 16px 12px;
+            min-height: 34px;
+            padding: 6px 16px 7px;
             border-top: 1px solid rgba(139,195,74,0.12);
             background: linear-gradient(180deg, rgba(248,251,243,0.96) 0%, rgba(244,248,238,0.98) 100%);
             color: #6b725f;
@@ -654,8 +655,13 @@
         }
 
         .footer-line {
-            font-size: 12px;
-            line-height: 1.45;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 11px;
+            line-height: 1.25;
         }
 
         .footer-contact {
@@ -674,6 +680,26 @@
 
         .footer-contact:hover {
             color: #46601c;
+        }
+
+        .footer-discord {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #5865f2;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .footer-discord:hover {
+            color: #4250d8;
+        }
+
+        .footer-discord svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            fill: currentColor;
         }
 
         .desktop-only { display: none; }
@@ -1827,6 +1853,10 @@
             color: var(--accent-dark);
         }
 
+        html[data-theme="dark"] .footer-discord {
+            color: #aeb6ff;
+        }
+
         html[data-theme="dark"] .quick-menu-overlay,
         html[data-theme="dark"] .login-overlay,
         html[data-theme="dark"] .guide-overlay,
@@ -2204,6 +2234,10 @@
                     <strong>Contact</strong>
                     <span>hanul4269@kakao.com</span>
                     <span>(홈페이지 운영 & 버그 관련 문의)</span>
+                </a>
+                <a class="footer-discord" href="https://discord.gg/KemnCJmHyd" target="_blank" rel="noopener noreferrer" title="BEADYO Discord 서버에서 문의하기" aria-label="BEADYO Discord 서버에서 문의하기">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.3 4.4A18.8 18.8 0 0 0 15.7 3l-.2.3c-.2.4-.4.8-.5 1.2a17.4 17.4 0 0 0-6 0 8.2 8.2 0 0 0-.6-1.2L8.3 3a18.8 18.8 0 0 0-4.6 1.4C.8 8.8.1 13.1.5 17.4A18.9 18.9 0 0 0 6.1 20c.5-.6.9-1.3 1.2-2a11.8 11.8 0 0 1-1.9-.9l.4-.3a13.3 13.3 0 0 0 12.4 0l.4.3c-.6.4-1.2.7-1.9.9.4.7.8 1.4 1.2 2a18.8 18.8 0 0 0 5.6-2.6c.6-5-.9-9.2-3.2-13ZM8.2 14.7c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2Zm7.6 0c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2Z"/></svg>
+                    <span>Discord</span>
                 </a>
             </div>
             <div class="footer-line">© 2026 BEADYO 사이트 모든 저작물의 권리는 원저작자에게 있습니다.</div>
