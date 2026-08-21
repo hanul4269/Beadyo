@@ -2,14 +2,17 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 
 const NOTES_PATH = path.resolve(__dirname, '..', 'patch-notes.json');
+const REPO_ROOT = path.resolve(__dirname, '..');
 
 function usage() {
     return [
         'Usage:',
         '  node scripts/check-patch-note.js',
         '  node scripts/check-patch-note.js --date 2026.08.10',
+        '  node scripts/check-patch-note.js --ref HEAD',
         '',
         'Checks that patch-notes.json has an entry for the target date.',
     ].join('\n');
@@ -31,13 +34,15 @@ function normalizeDate(value) {
 }
 
 function parseArgs(argv) {
-    const options = { date: '' };
+    const options = { date: '', ref: '' };
     for (let i = 0; i < argv.length; i++) {
         const arg = argv[i];
         if (arg === '--help' || arg === '-h') {
             options.help = true;
         } else if (arg === '--date') {
             options.date = argv[++i] || '';
+        } else if (arg === '--ref') {
+            options.ref = argv[++i] || '';
         }
     }
     options.date = normalizeDate(options.date);
@@ -62,8 +67,15 @@ function rangeContains(noteDate, targetDate) {
     return start <= target && target <= end;
 }
 
-function readPatchNotes() {
-    const data = JSON.parse(fs.readFileSync(NOTES_PATH, 'utf8'));
+function readPatchNotes(ref = '') {
+    const raw = ref
+        ? execFileSync('git', ['show', `${ref}:patch-notes.json`], {
+            cwd: REPO_ROOT,
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'pipe'],
+        })
+        : fs.readFileSync(NOTES_PATH, 'utf8');
+    const data = JSON.parse(raw);
     if (!Array.isArray(data.notes)) throw new Error('patch-notes.json의 notes 배열을 찾지 못했습니다.');
     return data;
 }
@@ -84,7 +96,7 @@ function main() {
         return;
     }
 
-    const data = readPatchNotes();
+    const data = readPatchNotes(options.ref);
     data.notes.forEach(validateNote);
 
     const note = data.notes.find(entry => rangeContains(entry.date, options.date));
