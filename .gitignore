@@ -1,1 +1,20 @@
 .DS_Store
+
+# Local secrets and credentials
+.env
+.env.*
+!.env.example
+.envrc
+*.pem
+*.key
+*.p8
+*.p12
+*.crt
+*.secret
+credentials.json
+token.json
+*service-account*.json
+*service_account*.json
+*service-role*
+*service_role*
+supabase-service-key*
