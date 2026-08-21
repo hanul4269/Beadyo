@@ -31,7 +31,7 @@
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
     <script defer src="supabase.min.js?v=supabase-2-112-2"></script>
     <script defer src="patch-notes.js?v=dark-mode-20260821"></script>
-    <script defer src="index-app.js?v=notification-inbox-20260821"></script>
+    <script defer src="index-app.js?v=week-calendar-grow-20260822"></script>
     <script>
         (() => {
             const key = 'beadyo:theme';
@@ -321,21 +321,21 @@
 
         .notification-count {
             position: absolute;
-            top: 3px;
-            right: 3px;
-            min-width: 16px;
-            height: 16px;
-            padding: 0 4px;
+            top: 2px;
+            right: 1px;
+            min-width: 14px;
+            height: 14px;
+            padding: 0 3px;
             border-radius: 999px;
-            background: #f4d06f;
-            border: 1px solid rgba(255,255,255,0.82);
-            color: #4f3b09;
-            font-size: 9px;
+            background: #e9f6d5;
+            border: 1px solid rgba(255,255,255,0.9);
+            color: #37641f;
+            font-size: 8px;
             font-weight: 900;
-            line-height: 15px;
+            line-height: 13px;
             letter-spacing: 0;
             text-align: center;
-            box-shadow: 0 2px 7px rgba(44,34,7,0.22);
+            box-shadow: 0 2px 5px rgba(24,55,14,0.18);
         }
 
         .notification-bell-mobile {
@@ -640,8 +640,8 @@
         }
 
         .site-footer {
+            display: none;
             flex-shrink: 0;
-            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -1917,6 +1917,13 @@
 
         html[data-theme="dark"] .notification-item-title {
             color: var(--ink);
+        }
+
+        html[data-theme="dark"] .notification-count {
+            background: #d9efb9;
+            border-color: rgba(223,238,211,0.82);
+            color: #243f16;
+            box-shadow: 0 2px 7px rgba(0,0,0,0.28);
         }
 
         html[data-theme="dark"] .patch-note-list {

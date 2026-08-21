@@ -480,6 +480,35 @@ function broadcastRows(info) {
 function typeStyle(t) {
     return `background:${t.color};color:${t.text};border-color:${t.border || t.text};`;
 }
+function hexToRgb(hex) {
+    const raw = String(hex || '').trim().replace(/^#/, '');
+    const normalized = raw.length === 3
+        ? raw.split('').map(ch => ch + ch).join('')
+        : raw;
+    if (!/^[0-9a-f]{6}$/i.test(normalized)) return null;
+    return {
+        r: parseInt(normalized.slice(0, 2), 16),
+        g: parseInt(normalized.slice(2, 4), 16),
+        b: parseInt(normalized.slice(4, 6), 16),
+    };
+}
+function blendHex(fgHex, bgHex, fgWeight) {
+    const fg = hexToRgb(fgHex);
+    const bg = hexToRgb(bgHex);
+    if (!fg || !bg) return fgHex || bgHex;
+    const mix = (fgValue, bgValue) => Math.round(fgValue * fgWeight + bgValue * (1 - fgWeight));
+    return `rgb(${mix(fg.r, bg.r)}, ${mix(fg.g, bg.g)}, ${mix(fg.b, bg.b)})`;
+}
+function eventCardStyle(t) {
+    const border = t.border || t.text;
+    return [
+        `--event-bg:${t.color}`,
+        `--event-text:${t.text}`,
+        `--event-border:${border}`,
+        `--event-dark-bg:${blendHex(t.color, '#11170f', 0.34)}`,
+        `--event-dark-border:${blendHex(border, '#263624', 0.58)}`,
+    ].join(';') + ';';
+}
 function esc(s) {
     return String(s ?? '').replace(/[&<>"']/g, c =>
         ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
@@ -1270,7 +1299,7 @@ function renderMobileSchedule() {
                 const restSticker = ev.is_rest || ev.type === 'rest'
                     ? stickerImg(MOOD_STICKERS.fan, 'mobile-event-sticker', '선풍기')
                     : '';
-                return `<button class="mobile-event-pill" style="${typeStyle(t)}" onclick="openDayViewModal('${dateStr}')">
+                return `<button class="mobile-event-pill" style="${eventCardStyle(t)}" onclick="openDayViewModal('${dateStr}')">
                     ${restSticker}
                     <span class="mobile-event-time">${esc(time)}</span>
                     <span class="mobile-event-title">${esc(ev.title)}</span>
@@ -1447,7 +1476,7 @@ function renderCalendar() {
             const timeClass = isStart && ev.start_time ? ' has-time' : '';
 
             return `<button class="event-chip ${titleSizeClass}${subtitleClass}${timeClass}${newlineClass}${restClass}${detailClass}"
-                style="${typeStyle(t)}border-radius:${br};"
+                style="${eventCardStyle(t)}border-radius:${br};"
                 onclick="if(!_dragged)openDayViewModal('${dateStr}')"
                 ${memoAttr} ${memoEvents} ${dragAttrs}
                 title="${esc(ev.title)}">${timeBadge}${chipSticker}<div class="chip-body" style="${bodyStyle}">${vodDot}${esc(ev.title)}</div>${subtitleHtml}${collabHtml}</button>`;
@@ -1951,7 +1980,7 @@ function dayEventCardHtml(ev, dateStr) {
         ? stickerImg(MOOD_STICKERS.fan, 'day-event-sticker', '선풍기')
         : '';
 
-    return `<div class="day-event-card" style="border-color:${t.border};background:${t.color};color:${t.text};">
+    return `<div class="day-event-card" style="${eventCardStyle(t)}">
         ${eventSticker}
         <div class="day-event-main">
             <div class="day-event-head">

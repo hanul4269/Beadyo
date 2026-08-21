@@ -9,8 +9,8 @@
     <meta property="og:url" content="https://beadyo.com/calendar.html">
     <link rel="icon" href="logo-icon.webp">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
-    <link rel="preload" href="app.js?v=dark-mode-20260821" as="script">
-    <script defer src="app.js?v=dark-mode-20260821"></script>
+    <link rel="preload" href="app.js?v=week-calendar-grow-20260822" as="script">
+    <script defer src="app.js?v=week-calendar-grow-20260822"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
@@ -280,10 +280,12 @@
         }
         #mobileTodayBtn { display: none; }
         .cal-area.week-mode .cal-grid {
-            grid-template-rows: 1fr;
+            grid-template-rows: auto;
+            align-items: start;
         }
         .cal-area.week-mode .cal-cell {
             min-height: 520px;
+            height: auto;
         }
         .cal-area.week-mode .cal-cell.other-month {
             display: none;
@@ -293,6 +295,7 @@
             flex-direction: column;
             gap: 5px;
             flex: 1;
+            overflow: visible;
         }
         .cal-area.week-mode .chips-area .event-chip {
             flex: 1 1 0;
@@ -906,6 +909,61 @@
             line-height: 1.2;
         }
 
+        .cal-area.week-mode .chips-area.compact,
+        .cal-area.week-mode .chips-area.packed {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 0 0 auto;
+            align-content: initial;
+        }
+        .cal-area.week-mode .chips-area.compact .event-chip,
+        .cal-area.week-mode .chips-area.packed .event-chip {
+            flex: 0 0 auto;
+            grid-column: auto;
+            min-height: 58px;
+            padding: 6px 9px;
+        }
+        .cal-area.week-mode .chips-area.compact .event-chip.has-time,
+        .cal-area.week-mode .chips-area.packed .event-chip.has-time {
+            min-height: 46px;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 6px;
+        }
+        .cal-area.week-mode .chips-area.compact .event-chip.has-subtitle,
+        .cal-area.week-mode .chips-area.compact .event-chip.has-collab,
+        .cal-area.week-mode .chips-area.packed .event-chip.has-subtitle,
+        .cal-area.week-mode .chips-area.packed .event-chip.has-collab {
+            min-height: 64px;
+            flex-wrap: wrap;
+        }
+        .cal-area.week-mode .chips-area.compact .event-chip.has-time .chip-time-badge,
+        .cal-area.week-mode .chips-area.packed .event-chip.has-time .chip-time-badge {
+            margin: 0;
+            flex-shrink: 0;
+            align-self: center;
+        }
+        .cal-area.week-mode .chips-area.compact .event-chip.has-time .chip-body,
+        .cal-area.week-mode .chips-area.packed .event-chip.has-time .chip-body {
+            flex: 1;
+            min-width: 0;
+            text-align: left !important;
+            transform: none !important;
+            font-size: var(--chip-title-size, clamp(12px, 0.95vw, 15px)) !important;
+            line-height: 1.18;
+            -webkit-line-clamp: 2;
+        }
+        .cal-area.week-mode .chips-area.compact .event-chip.has-time .chip-subtitle,
+        .cal-area.week-mode .chips-area.compact .event-chip.has-time .chip-collab,
+        .cal-area.week-mode .chips-area.packed .event-chip.has-time .chip-subtitle,
+        .cal-area.week-mode .chips-area.packed .event-chip.has-time .chip-collab {
+            flex: 0 0 100%;
+            width: 100%;
+            text-align: center;
+        }
+
         .event-chip {
             display: flex;
             flex-direction: column;
@@ -916,6 +974,9 @@
             cursor: pointer;
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.72);
+            border-color: var(--event-border);
+            background: var(--event-bg);
+            color: var(--event-text);
             width: 100%;
             text-align: center;
             box-shadow: inset 0 -1px 0 rgba(255,255,255,0.62), 0 2px 5px rgba(0,0,0,0.06);
@@ -951,14 +1012,17 @@
         }
         .chip-time-badge {
             display: inline-block;
-            background: rgba(255,255,255,0.55);
+            background: rgba(255,255,255,0.72);
+            border: 1px solid rgba(255,255,255,0.54);
             border-radius: 20px;
             padding: 2px 8px;
+            color: var(--event-text);
             font-size: clamp(12px, 1.1vw, 16px);
-            font-weight: 700;
+            font-weight: 900;
             line-height: 1.5;
             margin-bottom: 3px;
             align-self: flex-start;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.12);
         }
 
         .chip-body {
@@ -1843,6 +1907,9 @@
             align-items: flex-start;
             justify-content: space-between;
             border: 1.5px solid;
+            border-color: var(--event-border);
+            background: var(--event-bg);
+            color: var(--event-text);
             border-radius: 14px;
             padding: 10px 11px;
             position: relative;
@@ -1874,9 +1941,12 @@
             align-items: center;
             border-radius: 999px;
             background: rgba(255,255,255,.68);
+            border: 1px solid rgba(255,255,255,.46);
+            color: var(--event-text);
             padding: 3px 8px;
             font-size: 11px;
             font-weight: 900;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.10);
         }
         .day-event-title {
             font-size: 16px;
@@ -2726,6 +2796,9 @@
                 width: 100%;
                 border-radius: 16px;
                 border: 1px solid transparent;
+                border-color: var(--event-border);
+                background: var(--event-bg);
+                color: var(--event-text);
                 display: grid;
                 grid-template-columns: auto 1fr auto;
                 align-items: center;
@@ -2750,14 +2823,16 @@
             .mobile-event-time {
                 position: relative;
                 z-index: 1;
-                background: #fffefa;
+                background: rgba(255,255,255,0.76);
+                border: 1px solid rgba(255,255,255,0.52);
                 border-radius: 10px;
                 padding: 5px 8px;
-                color: #ff7f35;
+                color: var(--event-text);
                 font-size: 14px;
                 font-weight: 900;
                 min-width: 52px;
                 text-align: center;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.10);
             }
             .mobile-event-title {
                 position: relative;
@@ -3035,11 +3110,41 @@
             color: var(--muted);
         }
 
+        html[data-theme="dark"] .event-chip,
+        html[data-theme="dark"] .day-event-card,
+        html[data-theme="dark"] .mobile-event-pill {
+            background: var(--event-dark-bg, #1f2b1e);
+            border-color: var(--event-dark-border, rgba(139,195,74,0.42));
+            color: #edf7ea;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 2px 8px rgba(0,0,0,0.24);
+        }
+
+        html[data-theme="dark"] .event-chip:hover,
+        html[data-theme="dark"] .mobile-event-pill:hover {
+            filter: brightness(1.08);
+        }
+
         html[data-theme="dark"] .chip-time-badge,
         html[data-theme="dark"] .day-type-chip,
         html[data-theme="dark"] .day-event-time,
+        html[data-theme="dark"] .mobile-event-time {
+            background: rgba(7,14,7,0.70);
+            border-color: rgba(216,244,188,0.24);
+            color: #f6ffd9;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.28);
+        }
+
         html[data-theme="dark"] .day-link {
             background: rgba(18,26,18,0.56);
+        }
+
+        html[data-theme="dark"] .chip-subtitle,
+        html[data-theme="dark"] .chip-collab,
+        html[data-theme="dark"] .day-event-sub,
+        html[data-theme="dark"] .day-event-meta,
+        html[data-theme="dark"] .day-event-memo {
+            color: rgba(237,247,234,0.78);
+            opacity: 1;
         }
 
         html[data-theme="dark"] .day-link.yt {
@@ -3070,11 +3175,6 @@
 
         html[data-theme="dark"] .memo-fab svg {
             stroke: var(--text);
-        }
-
-        html[data-theme="dark"] .mobile-event-time {
-            background: rgba(18,26,18,0.68);
-            color: #ffc36f;
         }
 
         @media (max-width: 640px) {
