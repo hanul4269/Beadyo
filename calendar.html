@@ -9,11 +9,22 @@
     <meta property="og:url" content="https://beadyo.com/calendar.html">
     <link rel="icon" href="logo-icon.webp">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
-    <link rel="preload" href="app.js?v=patch-notes-json-20260810" as="script">
-    <script defer src="app.js?v=patch-notes-json-20260810"></script>
+    <link rel="preload" href="app.js?v=dark-mode-20260821" as="script">
+    <script defer src="app.js?v=dark-mode-20260821"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
+    <script>
+        (() => {
+            const key = 'beadyo:theme';
+            let theme = 'light';
+            try {
+                theme = localStorage.getItem(key) === 'dark' ? 'dark' : 'light';
+            } catch {}
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.style.colorScheme = theme === 'dark' ? 'dark' : 'light';
+        })();
+    </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -2847,6 +2858,238 @@
             color: #fff; border: none; border-radius: 999px;
             padding: 10px 28px; font-size: 14px; font-weight: 800;
             cursor: pointer; font-family: inherit;
+        }
+
+        html[data-theme="dark"] {
+            --accent:       #8bc34a;
+            --accent-dark:  #b7df7f;
+            --accent-light: #21381b;
+            --bg:           #11170f;
+            --surface:      #192119;
+            --border:       rgba(223,238,211,0.14);
+            --text:         #edf5e8;
+            --muted:        #a8b4a1;
+            color-scheme: dark;
+        }
+
+        html[data-theme="dark"] body {
+            background:
+                radial-gradient(circle, rgba(139,195,74,0.08) 1px, transparent 1px),
+                var(--bg);
+            background-size: 24px 24px;
+        }
+
+        html[data-theme="dark"] .auth-chip.owner,
+        html[data-theme="dark"] .user-badge,
+        html[data-theme="dark"] .profile-menu,
+        html[data-theme="dark"] .today-btn,
+        html[data-theme="dark"] .view-toggle,
+        html[data-theme="dark"] .day-label,
+        html[data-theme="dark"] .cal-cell,
+        html[data-theme="dark"] .memo-add-form,
+        html[data-theme="dark"] .memo-card,
+        html[data-theme="dark"] .memo-fab,
+        html[data-theme="dark"] .modal,
+        html[data-theme="dark"] .birthday-card {
+            background: var(--surface);
+            border-color: var(--border);
+            color: var(--text);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.24);
+        }
+
+        html[data-theme="dark"] .profile-menu button,
+        html[data-theme="dark"] .yt-link-item a,
+        html[data-theme="dark"] .memo-modal-card,
+        html[data-theme="dark"] .mobile-date-title,
+        html[data-theme="dark"] .tp-item,
+        html[data-theme="dark"] .tp-sep {
+            color: var(--text);
+        }
+
+        html[data-theme="dark"] .profile-menu button:hover,
+        html[data-theme="dark"] .today-btn:hover,
+        html[data-theme="dark"] .view-toggle button:hover,
+        html[data-theme="dark"] .is-editor .legend-item:hover,
+        html[data-theme="dark"] .memo-modal-card.is-link:hover,
+        html[data-theme="dark"] .up-popup-actions button:hover,
+        html[data-theme="dark"] .broadcast-vod-add:hover,
+        html[data-theme="dark"] .editor-remove-btn:hover {
+            background: var(--accent-light);
+        }
+
+        html[data-theme="dark"] .profile-menu-divider,
+        html[data-theme="dark"] .admin-tabs,
+        html[data-theme="dark"] .editor-list,
+        html[data-theme="dark"] .editor-item,
+        html[data-theme="dark"] .day-modal-section,
+        html[data-theme="dark"] .up-popup-actions {
+            border-color: var(--border);
+        }
+
+        html[data-theme="dark"] .nav-center,
+        html[data-theme="dark"] .mobile-day-card {
+            background: rgba(25,33,25,0.96);
+            border-color: var(--border);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.26);
+        }
+
+        html[data-theme="dark"] .month-label {
+            color: var(--text);
+        }
+
+        html[data-theme="dark"] .nav-btn::after,
+        html[data-theme="dark"] .nav-btn::before {
+            background: #1e281d;
+            border-color: rgba(223,238,211,0.14);
+            color: var(--accent-dark);
+        }
+
+        html[data-theme="dark"] .day-label {
+            background: rgba(25,33,25,0.92);
+            box-shadow: inset 0 -1px 0 rgba(255,255,255,0.06);
+        }
+
+        html[data-theme="dark"] .day-label.sun,
+        html[data-theme="dark"] .date-num.sun,
+        html[data-theme="dark"] .mobile-date-title.sun {
+            color: #ff8f83;
+        }
+
+        html[data-theme="dark"] .day-label.sat,
+        html[data-theme="dark"] .date-num.sat {
+            color: #8dc7ff;
+        }
+
+        html[data-theme="dark"] .cal-cell.other-month {
+            background: rgba(223,238,211,0.05);
+        }
+
+        html[data-theme="dark"] .cal-cell.other-month .date-num,
+        html[data-theme="dark"] .mobile-empty-note,
+        html[data-theme="dark"] .field-help,
+        html[data-theme="dark"] .yt-empty-msg,
+        html[data-theme="dark"] .birthday-card .bd-msg {
+            color: var(--muted);
+        }
+
+        html[data-theme="dark"] .cal-cell.is-rest,
+        html[data-theme="dark"] .memo-modal-card,
+        html[data-theme="dark"] .yt-link-item,
+        html[data-theme="dark"] .day-empty,
+        html[data-theme="dark"] .btn-secondary,
+        html[data-theme="dark"] .tp-toggle-btn,
+        html[data-theme="dark"] .tp-wrap,
+        html[data-theme="dark"] .paint-toolbar,
+        html[data-theme="dark"] .paint-tool-btn,
+        html[data-theme="dark"] .paint-icon-btn,
+        html[data-theme="dark"] .paint-bg-select,
+        html[data-theme="dark"] .up-tab-btn,
+        html[data-theme="dark"] .up-rank-item,
+        html[data-theme="dark"] .up-popup-actions button,
+        html[data-theme="dark"] .broadcast-card,
+        html[data-theme="dark"] .broadcast-vod-add,
+        html[data-theme="dark"] .editor-item,
+        html[data-theme="dark"] .up-order-btn,
+        html[data-theme="dark"] .notice-color-field {
+            background: #202b20;
+            border-color: var(--border);
+            color: var(--text);
+        }
+
+        html[data-theme="dark"] .memo-add-form textarea,
+        html[data-theme="dark"] .memo-add-form input[type="url"],
+        html[data-theme="dark"] .field input,
+        html[data-theme="dark"] .field select,
+        html[data-theme="dark"] .field textarea,
+        html[data-theme="dark"] .broadcast-vod-row input,
+        html[data-theme="dark"] .admin-form-stack input[type="text"],
+        html[data-theme="dark"] .admin-form-stack input[type="url"],
+        html[data-theme="dark"] .admin-form-stack input[type="number"],
+        html[data-theme="dark"] .editor-add-row input,
+        html[data-theme="dark"] .yt-link-add input {
+            background: #121a12;
+            border-color: rgba(223,238,211,0.18);
+            color: var(--text);
+        }
+
+        html[data-theme="dark"] .memo-add-form textarea::placeholder,
+        html[data-theme="dark"] .memo-add-form input::placeholder,
+        html[data-theme="dark"] .field input::placeholder,
+        html[data-theme="dark"] .field textarea::placeholder,
+        html[data-theme="dark"] .broadcast-vod-row input::placeholder,
+        html[data-theme="dark"] .admin-form-stack input::placeholder,
+        html[data-theme="dark"] .editor-add-row input::placeholder,
+        html[data-theme="dark"] .yt-link-add input::placeholder {
+            color: #778371;
+        }
+
+        html[data-theme="dark"] .modal-overlay {
+            background: rgba(5,9,5,0.62);
+        }
+
+        html[data-theme="dark"] .modal-close,
+        html[data-theme="dark"] .memo-card-edit,
+        html[data-theme="dark"] .memo-card-del,
+        html[data-theme="dark"] .memo-drag-handle,
+        html[data-theme="dark"] .yt-link-del {
+            color: var(--muted);
+        }
+
+        html[data-theme="dark"] .chip-time-badge,
+        html[data-theme="dark"] .day-type-chip,
+        html[data-theme="dark"] .day-event-time,
+        html[data-theme="dark"] .day-link {
+            background: rgba(18,26,18,0.56);
+        }
+
+        html[data-theme="dark"] .day-link.yt {
+            background: rgba(255,82,82,0.15);
+            color: #ff9c9c;
+        }
+
+        html[data-theme="dark"] .day-link.hotclip {
+            background: rgba(255,159,28,0.16);
+            color: #ffc36f;
+        }
+
+        html[data-theme="dark"] .up-goto-btn.secondary,
+        html[data-theme="dark"] .up-rank-item.is-highlight {
+            background: #1f351b;
+            border-color: rgba(139,195,74,0.45);
+        }
+
+        html[data-theme="dark"] .up-rank-item:hover {
+            background: #2a3324;
+        }
+
+        html[data-theme="dark"] .paint-canvas-wrap {
+            border-color: rgba(139,195,74,0.34);
+            background: repeating-conic-gradient(#172017 0 25%, #10170f 0 50%) 0 / 24px 24px;
+            box-shadow: 0 12px 34px rgba(0,0,0,0.34);
+        }
+
+        html[data-theme="dark"] .memo-fab svg {
+            stroke: var(--text);
+        }
+
+        html[data-theme="dark"] .mobile-event-time {
+            background: rgba(18,26,18,0.68);
+            color: #ffc36f;
+        }
+
+        @media (max-width: 640px) {
+            html[data-theme="dark"] body {
+                background: var(--bg);
+            }
+            html[data-theme="dark"] .header {
+                background: transparent;
+            }
+            html[data-theme="dark"] .auth-chip,
+            html[data-theme="dark"] .user-badge {
+                background: var(--surface);
+                border-color: var(--border);
+                color: var(--text);
+            }
         }
     </style>
 </head>

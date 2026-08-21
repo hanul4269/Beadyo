@@ -8,7 +8,14 @@
     <title>구슬요모아보기</title>
     <link rel="canonical" href="https://beadyo.com/">
     <meta property="og:url" content="https://beadyo.com/">
+    <meta name="theme-color" content="#76ad39" id="theme-color-meta">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="구슬요">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="manifest" href="/manifest.webmanifest">
     <link rel="icon" type="image/webp" href="logo-icon.webp">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="dns-prefetch" href="https://docs.google.com">
     <link rel="dns-prefetch" href="https://sheets.googleapis.com">
     <link rel="dns-prefetch" href="https://accounts.google.com">
@@ -23,25 +30,56 @@
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
     <script defer src="supabase.min.js?v=supabase-2-112-2"></script>
-    <script defer src="patch-notes.js?v=patch-notes-json-20260810"></script>
-    <script defer src="index-app.js?v=patch-notes-json-20260810"></script>
+    <script defer src="patch-notes.js?v=dark-mode-20260821"></script>
+    <script defer src="index-app.js?v=notification-inbox-20260821"></script>
+    <script>
+        (() => {
+            const key = 'beadyo:theme';
+            let theme = 'light';
+            try {
+                theme = localStorage.getItem(key) === 'dark' ? 'dark' : 'light';
+            } catch {}
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.style.colorScheme = theme === 'dark' ? 'dark' : 'light';
+        })();
+    </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         [hidden] { display: none !important; }
 
         :root {
             --accent: #7fb83f;
+            --accent-dark: #4f7f25;
             --accent-light: #eef7e4;
             --header-bg: #76ad39;
             --tab-hover: rgba(255,255,255,0.12);
             --bg: #f4f5f1;
+            --surface: #ffffff;
+            --surface-2: #fbfcf8;
             --ink: #222720;
+            --muted: #6b725f;
             --line: rgba(34,39,32,0.09);
+        }
+
+        html[data-theme="dark"] {
+            --accent: #8bc34a;
+            --accent-dark: #b4dc7b;
+            --accent-light: #21381b;
+            --header-bg: #4f7d2b;
+            --tab-hover: rgba(255,255,255,0.13);
+            --bg: #11170f;
+            --surface: #192119;
+            --surface-2: #202b20;
+            --ink: #edf5e8;
+            --muted: #a8b4a1;
+            --line: rgba(223,238,211,0.14);
+            color-scheme: dark;
         }
 
         body {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: var(--bg);
+            color: var(--ink);
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -212,6 +250,100 @@
             color: #fff;
             border-color: var(--accent);
             background: rgba(139,195,74,0.15);
+        }
+
+        .theme-toggle {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .theme-toggle svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .theme-icon-sun { display: none; }
+        html[data-theme="dark"] .theme-icon-moon { display: none; }
+        html[data-theme="dark"] .theme-icon-sun { display: block; }
+
+        .theme-toggle-mobile {
+            width: 38px;
+            height: 34px;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .guide-link-btn {
+            position: relative;
+            overflow: visible;
+        }
+
+        .guide-new-badge {
+            position: absolute;
+            top: -4px;
+            right: -2px;
+            min-width: 30px;
+            height: 16px;
+            padding: 0 5px;
+            border-radius: 999px;
+            background: #f4d06f;
+            border: 1px solid rgba(255,255,255,0.78);
+            color: #4f3b09;
+            font-size: 9px;
+            font-weight: 900;
+            line-height: 15px;
+            letter-spacing: 0;
+            text-align: center;
+            pointer-events: none;
+            box-shadow: 0 2px 7px rgba(44,34,7,0.2);
+        }
+
+        .notification-bell-btn {
+            position: relative;
+            overflow: visible;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .notification-bell-btn svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            border-radius: 999px;
+            background: #f4d06f;
+            border: 1px solid rgba(255,255,255,0.82);
+            color: #4f3b09;
+            font-size: 9px;
+            font-weight: 900;
+            line-height: 15px;
+            letter-spacing: 0;
+            text-align: center;
+            box-shadow: 0 2px 7px rgba(44,34,7,0.22);
+        }
+
+        .notification-bell-mobile {
+            width: 38px;
+            height: 34px;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
         }
 
         #auth-badge {
@@ -856,6 +988,8 @@
             display: flex;
             gap: 8px;
             flex-shrink: 0;
+            flex-wrap: wrap;
+            justify-content: flex-end;
         }
 
         .qm-header-btn {
@@ -878,6 +1012,17 @@
         }
 
         .qm-header-btn:hover { background: var(--accent-light); }
+
+        .qm-header-btn .guide-new-badge {
+            position: static;
+            min-width: 28px;
+            height: 17px;
+            margin-left: 1px;
+            padding: 0 5px;
+            line-height: 16px;
+            font-size: 9px;
+            box-shadow: none;
+        }
 
         .qm-section { margin-bottom: 14px; }
 
@@ -1240,6 +1385,261 @@
             line-height: 1.5;
         }
 
+        /* ── 사이트 내부 알림함 ── */
+        .notification-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 735;
+            background: rgba(26,31,24,0.22);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            align-items: flex-start;
+            justify-content: flex-end;
+            padding: 68px 20px 18px;
+        }
+
+        .notification-overlay.open { display: flex; }
+
+        .notification-panel {
+            width: min(410px, calc(100vw - 24px));
+            max-height: min(660px, calc(100vh - 86px));
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-radius: 16px;
+            background: #fff;
+            border: 1px solid rgba(255,255,255,0.75);
+            box-shadow: 0 22px 70px rgba(22,28,18,0.24);
+            color: var(--ink);
+            animation: modalIn 0.18s ease;
+        }
+
+        .notification-head {
+            min-height: 58px;
+            padding: 0 10px 0 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border-bottom: 1px solid var(--line);
+            background: #fbfcf8;
+        }
+
+        .notification-title {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .notification-title strong {
+            font-size: 17px;
+            font-weight: 900;
+            letter-spacing: 0;
+        }
+
+        .notification-summary {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .notification-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .notification-ghost-btn,
+        .notification-close {
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .notification-ghost-btn {
+            min-height: 32px;
+            padding: 0 9px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .notification-ghost-btn:hover {
+            background: var(--accent-light);
+            color: var(--accent-dark);
+        }
+
+        .notification-close {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .notification-close:hover {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        .notification-filters {
+            display: flex;
+            gap: 6px;
+            padding: 12px 14px 8px;
+            border-bottom: 1px solid var(--line);
+            overflow-x: auto;
+        }
+
+        .notification-filters::-webkit-scrollbar { display: none; }
+
+        .notification-filter {
+            height: 30px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 1px solid #e2ead9;
+            background: #fff;
+            color: #5d6c42;
+            font: inherit;
+            font-size: 12px;
+            font-weight: 850;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+
+        .notification-filter:hover,
+        .notification-filter.is-active {
+            border-color: rgba(127,184,63,0.52);
+            background: var(--accent-light);
+            color: var(--accent-dark);
+        }
+
+        .notification-list {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            padding: 10px 12px 14px;
+            background: #fff;
+        }
+
+        .notification-item {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 8px 1fr auto;
+            gap: 10px;
+            align-items: start;
+            padding: 13px 11px;
+            border: 1px solid #edf1e8;
+            border-radius: 12px;
+            background: #fff;
+            color: inherit;
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, transform 0.12s;
+        }
+
+        .notification-item + .notification-item {
+            margin-top: 8px;
+        }
+
+        .notification-item:hover {
+            border-color: rgba(127,184,63,0.45);
+            background: #fbfdf7;
+            transform: translateY(-1px);
+        }
+
+        .notification-item.is-read {
+            opacity: 0.78;
+        }
+
+        .notification-item.is-passive {
+            cursor: default;
+        }
+
+        .notification-dot {
+            width: 8px;
+            height: 8px;
+            margin-top: 7px;
+            border-radius: 50%;
+            background: #c7d5bd;
+        }
+
+        .notification-item:not(.is-read) .notification-dot {
+            background: #f4d06f;
+            box-shadow: 0 0 0 3px rgba(244,208,111,0.22);
+        }
+
+        .notification-main {
+            min-width: 0;
+        }
+
+        .notification-item-head {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 5px;
+        }
+
+        .notification-kind {
+            flex-shrink: 0;
+            padding: 3px 7px;
+            border-radius: 999px;
+            background: #eef7e4;
+            color: #4f7f25;
+            font-size: 10px;
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        .notification-kind.notice { background: #e8f4e0; color: #3f7925; }
+        .notification-kind.patch { background: #fff4d4; color: #806211; }
+        .notification-kind.live { background: #ffe4e4; color: #b13d3d; }
+        .notification-kind.up { background: #e8f3ff; color: #326a9d; }
+
+        .notification-item-title {
+            min-width: 0;
+            color: var(--ink);
+            font-size: 14px;
+            font-weight: 900;
+            line-height: 1.3;
+            word-break: keep-all;
+        }
+
+        .notification-body {
+            color: #555f4b;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.45;
+            word-break: keep-all;
+        }
+
+        .notification-meta {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+            padding-top: 2px;
+        }
+
+        .notification-empty {
+            padding: 28px 14px;
+            border: 1px dashed #dce8d4;
+            border-radius: 12px;
+            background: #fbfdf8;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.5;
+            text-align: center;
+        }
+
         @media (max-width: 640px) {
             .patch-notes-overlay {
                 padding: 10px;
@@ -1277,6 +1677,60 @@
             .patch-note-list {
                 font-size: 13px;
             }
+
+            .qm-header {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .qm-header-btns {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .qm-header-btn {
+                padding: 7px 11px;
+            }
+
+            .notification-overlay {
+                justify-content: center;
+                padding: 84px 10px 10px;
+            }
+
+            .notification-panel {
+                width: 100%;
+                max-height: calc(100vh - 94px);
+                border-radius: 14px;
+            }
+
+            .notification-head {
+                min-height: 54px;
+                padding-left: 14px;
+            }
+
+            .notification-actions {
+                gap: 2px;
+            }
+
+            .notification-ghost-btn {
+                padding: 0 7px;
+                font-size: 11px;
+            }
+
+            .notification-filter {
+                height: 29px;
+                padding: 0 10px;
+            }
+
+            .notification-item {
+                grid-template-columns: 8px 1fr;
+            }
+
+            .notification-meta {
+                grid-column: 2;
+                padding-top: 0;
+            }
         }
 
         /* ── 로딩 ── */
@@ -1311,6 +1765,174 @@
             animation: dots 1.5s steps(4, end) infinite;
         }
 
+        html[data-theme="dark"] .header {
+            box-shadow: 0 1px 0 rgba(255,255,255,0.07);
+        }
+
+        html[data-theme="dark"] .header-top {
+            border-bottom-color: rgba(235,248,224,0.22);
+        }
+
+        html[data-theme="dark"] .header-links {
+            border-color: rgba(235,248,224,0.16);
+            background: rgba(15,22,14,0.22);
+        }
+
+        html[data-theme="dark"] .soft-link-icon {
+            color: #d9f1c9;
+        }
+
+        html[data-theme="dark"] .soft-link-icon .icon-bg {
+            fill: rgba(28,43,25,0.86);
+            stroke: rgba(220,238,208,0.26);
+        }
+
+        html[data-theme="dark"] .auth-trigger {
+            background: rgba(19,26,18,0.38);
+            border-color: rgba(235,248,224,0.28);
+        }
+
+        html[data-theme="dark"] .auth-menu {
+            background: var(--surface);
+            border-color: var(--line);
+            box-shadow: 0 16px 34px rgba(0,0,0,0.38);
+        }
+
+        html[data-theme="dark"] .auth-menu button {
+            color: var(--ink);
+        }
+
+        html[data-theme="dark"] .auth-menu button:hover {
+            background: var(--accent-light);
+        }
+
+        html[data-theme="dark"] .content,
+        html[data-theme="dark"] .loading,
+        html[data-theme="dark"] .calendar-frame-host,
+        html[data-theme="dark"] .guide-frame {
+            background: var(--bg);
+        }
+
+        html[data-theme="dark"] .site-footer {
+            border-top-color: var(--line);
+            background: linear-gradient(180deg, rgba(25,33,25,0.98), rgba(18,25,17,0.99));
+            color: var(--muted);
+        }
+
+        html[data-theme="dark"] .footer-contact {
+            color: #bfd4b2;
+        }
+
+        html[data-theme="dark"] .footer-contact strong {
+            color: var(--accent-dark);
+        }
+
+        html[data-theme="dark"] .quick-menu-overlay,
+        html[data-theme="dark"] .login-overlay,
+        html[data-theme="dark"] .guide-overlay,
+        html[data-theme="dark"] .patch-notes-overlay,
+        html[data-theme="dark"] .notification-overlay {
+            background: rgba(5,9,5,0.62);
+        }
+
+        html[data-theme="dark"] .quick-menu-panel,
+        html[data-theme="dark"] .login-modal,
+        html[data-theme="dark"] .guide-modal,
+        html[data-theme="dark"] .patch-notes-modal,
+        html[data-theme="dark"] .notification-panel {
+            background: var(--surface);
+            color: var(--ink);
+            border-color: var(--line);
+            box-shadow: 0 24px 70px rgba(0,0,0,0.46);
+        }
+
+        html[data-theme="dark"] .qm-handle {
+            background: #394535;
+        }
+
+        html[data-theme="dark"] .qm-title,
+        html[data-theme="dark"] .qm-item svg,
+        html[data-theme="dark"] .qm-header-btn {
+            color: var(--accent-dark);
+        }
+
+        html[data-theme="dark"] .qm-section-label,
+        html[data-theme="dark"] .patch-board-meta,
+        html[data-theme="dark"] .patch-note-status,
+        html[data-theme="dark"] .loading-text {
+            color: var(--muted);
+        }
+
+        html[data-theme="dark"] .qm-header-btn,
+        html[data-theme="dark"] .qm-section-card,
+        html[data-theme="dark"] .qm-item,
+        html[data-theme="dark"] .notification-filter,
+        html[data-theme="dark"] .notification-item,
+        html[data-theme="dark"] .notification-list,
+        html[data-theme="dark"] .notification-empty,
+        html[data-theme="dark"] .patch-note-day,
+        html[data-theme="dark"] .login-google-btn,
+        html[data-theme="dark"] .login-back-btn {
+            background: var(--surface-2);
+            border-color: var(--line);
+            color: var(--ink);
+        }
+
+        html[data-theme="dark"] .qm-header-btn:hover,
+        html[data-theme="dark"] .qm-item:hover,
+        html[data-theme="dark"] .login-google-btn:hover,
+        html[data-theme="dark"] .login-back-btn:hover {
+            background: var(--accent-light);
+            border-color: rgba(139,195,74,0.42);
+        }
+
+        html[data-theme="dark"] .guide-modal-head,
+        html[data-theme="dark"] .patch-notes-head,
+        html[data-theme="dark"] .notification-head {
+            background: var(--surface-2);
+            border-bottom-color: var(--line);
+            color: var(--ink);
+        }
+
+        html[data-theme="dark"] .guide-close-btn,
+        html[data-theme="dark"] .patch-notes-close,
+        html[data-theme="dark"] .notification-close,
+        html[data-theme="dark"] .notification-ghost-btn,
+        html[data-theme="dark"] .notification-body {
+            color: var(--muted);
+        }
+
+        html[data-theme="dark"] .notification-filters,
+        html[data-theme="dark"] .notification-item {
+            border-color: var(--line);
+        }
+
+        html[data-theme="dark"] .notification-filter:hover,
+        html[data-theme="dark"] .notification-filter.is-active,
+        html[data-theme="dark"] .notification-ghost-btn:hover,
+        html[data-theme="dark"] .notification-item:hover {
+            background: var(--accent-light);
+            border-color: rgba(139,195,74,0.42);
+        }
+
+        html[data-theme="dark"] .notification-item-title {
+            color: var(--ink);
+        }
+
+        html[data-theme="dark"] .patch-note-list {
+            color: #d8e3d1;
+        }
+
+        html[data-theme="dark"] .patch-note-tag {
+            background: var(--accent-light);
+            color: var(--accent-dark);
+        }
+
+        html[data-theme="dark"] .login-modal-title,
+        html[data-theme="dark"] .login-modal-subtitle {
+            color: var(--ink);
+        }
+
         @keyframes breathe {
             0%, 100% { transform: scale(1); }
             50%       { transform: scale(1.06); }
@@ -1334,6 +1956,14 @@
                 </div>
                 <div class="logo-sub">
                     <a class="live-badge" id="live-badge" href="https://www.sooplive.co.kr/station/beadyo97" target="_blank" rel="noopener noreferrer"><span class="live-dot"></span>LIVE</a>
+                    <button class="quick-menu-btn theme-toggle theme-toggle-mobile mobile-only" id="theme-toggle-mobile" type="button" onclick="toggleThemeMode()" title="밤 모드 켜기" aria-label="밤 모드 켜기" aria-pressed="false">
+                        <svg class="theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 15.4A8.5 8.5 0 0 1 8.6 3.6 7.2 7.2 0 1 0 20.4 15.4Z"/></svg>
+                        <svg class="theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+                    </button>
+                    <button class="quick-menu-btn notification-bell-btn notification-bell-mobile mobile-only" type="button" onclick="openNotificationPanel()" title="알림함" aria-label="알림함 열기">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
+                        <span class="notification-count" data-notification-count hidden>0</span>
+                    </button>
                     <button class="quick-menu-btn mobile-only" id="quick-menu-toggle" onclick="toggleQuickMenu()">☰</button>
                 </div>
             </div>
@@ -1345,7 +1975,15 @@
                 <a class="header-link desktop-only icon-only" href="https://fancim.me/celeb/profile.aspx?url=851033" target="_blank" rel="noopener noreferrer" title="팬심"><svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><path class="icon-fill" d="M8.4 21 11.7 7h9.1l-.8 3.3h-5.2l-.5 2.2H19l-.8 3.2h-4.7L12.3 21z"/></svg></a>
                 <a class="header-link desktop-only icon-only" href="https://www.instagram.com/bead.yo?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" title="인스타그램"><svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><rect class="icon-line" x="7.5" y="7.5" width="13" height="13" rx="4" fill="none" stroke-width="2.4"/><circle class="icon-line" cx="14" cy="14" r="3.2" fill="none" stroke-width="2.2"/><circle class="icon-fill" cx="18.1" cy="9.9" r="1.1"/></svg></a>
                 <a class="header-link desktop-only icon-only" href="https://www.tiktok.com/@beadyo97?_r=1&_t=ZS-96UX4UbmWnd" target="_blank" rel="noopener noreferrer" title="틱톡"><svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><path class="icon-line" d="M16.5 7.5v9.2a4 4 0 1 1-4-4" fill="none" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/><path class="icon-line" d="M16.5 8.2c1 2.2 2.4 3.4 4.5 3.7" fill="none" stroke-width="2.4" stroke-linecap="round"/></svg></a>
-                <button class="header-link desktop-only icon-only" onclick="openGuideModal()" title="이용가이드" aria-label="이용가이드 열기"><svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><path class="icon-line" d="M11.1 10.7a3.1 3.1 0 0 1 5.8 1.6c0 2.3-3.1 2.5-3.1 4.6" fill="none" stroke-width="2.5"/><circle class="guide-dot" cx="13.8" cy="20.3" r="1.2"/></svg></button>
+                <button class="header-link desktop-only icon-only theme-toggle" id="theme-toggle" type="button" onclick="toggleThemeMode()" title="밤 모드 켜기" aria-label="밤 모드 켜기" aria-pressed="false">
+                    <svg class="theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 15.4A8.5 8.5 0 0 1 8.6 3.6 7.2 7.2 0 1 0 20.4 15.4Z"/></svg>
+                    <svg class="theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+                </button>
+                <button class="header-link desktop-only icon-only notification-bell-btn" type="button" onclick="openNotificationPanel()" title="알림함" aria-label="알림함 열기">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
+                    <span class="notification-count" data-notification-count hidden>0</span>
+                </button>
+                <button class="header-link desktop-only icon-only guide-link-btn" onclick="openGuideModal()" title="이용가이드" aria-label="이용가이드 열기"><svg class="soft-link-icon" viewBox="0 0 28 28" aria-hidden="true"><rect class="icon-bg" x="1" y="1" width="26" height="26" rx="7"/><path class="icon-line" d="M11.1 10.7a3.1 3.1 0 0 1 5.8 1.6c0 2.3-3.1 2.5-3.1 4.6" fill="none" stroke-width="2.5"/><circle class="guide-dot" cx="13.8" cy="20.3" r="1.2"/></svg><span class="guide-new-badge" data-guide-new-badge aria-hidden="true">NEW</span></button>
                 <span id="auth-badge">✏️ 편집 모드 <button id="signout-btn" onclick="signOut()">로그아웃</button></span>
                 <button class="header-link desktop-only login-btn" onclick="openLoginModal()">로그인</button>
                 <button class="header-link desktop-only" id="mobile-restore-btn" onclick="viewMobile()" style="display:none">← 모바일</button>
@@ -1424,6 +2062,32 @@
         </div>
     </div>
 
+    <div class="notification-overlay" id="notification-overlay" onclick="handleNotificationOverlayClick(event)">
+        <div class="notification-panel" role="dialog" aria-modal="true" aria-label="알림함">
+            <div class="notification-head">
+                <span class="notification-title">
+                    <strong>알림함</strong>
+                    <span class="notification-summary" id="notification-summary">알림을 확인하는 중...</span>
+                </span>
+                <span class="notification-actions">
+                    <button class="notification-ghost-btn" type="button" onclick="refreshNotificationInbox({ force: true })">새로고침</button>
+                    <button class="notification-ghost-btn" type="button" onclick="markAllNotificationsRead()">모두 읽음</button>
+                    <button class="notification-close" type="button" onclick="closeNotificationPanel()" aria-label="닫기">×</button>
+                </span>
+            </div>
+            <div class="notification-filters" aria-label="알림 필터">
+                <button class="notification-filter is-active" type="button" data-notification-filter="all" onclick="setNotificationFilter('all')">전체</button>
+                <button class="notification-filter" type="button" data-notification-filter="notice" onclick="setNotificationFilter('notice')">공지</button>
+                <button class="notification-filter" type="button" data-notification-filter="patch" onclick="setNotificationFilter('patch')">패치</button>
+                <button class="notification-filter" type="button" data-notification-filter="live" onclick="setNotificationFilter('live')">LIVE</button>
+                <button class="notification-filter" type="button" data-notification-filter="up" onclick="setNotificationFilter('up')">UP</button>
+            </div>
+            <div class="notification-list" id="notification-list" aria-live="polite">
+                <div class="notification-empty">알림을 확인하는 중...</div>
+            </div>
+        </div>
+    </div>
+
     <div class="quick-menu-overlay" id="quick-menu-overlay" onclick="closeQuickMenu()"></div>
     <div class="quick-menu-panel" id="quick-menu-panel">
         <div class="qm-handle"></div>
@@ -1433,6 +2097,10 @@
                 <button class="qm-header-btn" onclick="viewDesktop()">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
                     PC버전
+                </button>
+                <button class="qm-header-btn guide-link-btn" onclick="openGuideModal()">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.3 9a3 3 0 1 1 5.4 1.8c-.9.7-1.7 1.3-1.7 2.7"/><circle cx="12" cy="17.5" r="0.8" fill="currentColor" stroke="none"/></svg>
+                    이용가이드 <span class="guide-new-badge" data-guide-new-badge aria-hidden="true">NEW</span>
                 </button>
                 <button class="qm-header-btn login-btn" onclick="openLoginModal(); closeQuickMenu()">
                     <img src="login-icon.png" width="13" height="13" style="border-radius:50%" loading="lazy" decoding="async"> 로그인

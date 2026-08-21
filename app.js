@@ -1,6 +1,38 @@
 const SUPABASE_URL      = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL       = 'riosniper12@gmail.com';
+const BEADYO_THEME_STORAGE_KEY = 'beadyo:theme';
+
+function beadyoAllowedMessageOrigin(origin) {
+    return ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'].includes(origin) ||
+        origin === window.location.origin;
+}
+
+function normalizeBeadyoTheme(value) {
+    return value === 'dark' ? 'dark' : 'light';
+}
+
+function applyBeadyoTheme(theme, persist = false) {
+    const next = normalizeBeadyoTheme(theme);
+    document.documentElement.dataset.theme = next;
+    document.documentElement.style.colorScheme = next === 'dark' ? 'dark' : 'light';
+    if (persist) {
+        try {
+            localStorage.setItem(BEADYO_THEME_STORAGE_KEY, next);
+        } catch {}
+    }
+}
+
+window.addEventListener('message', event => {
+    if (!beadyoAllowedMessageOrigin(event.origin)) return;
+    if (event.data?.type === 'beadyo-theme-sync') {
+        applyBeadyoTheme(event.data.theme, true);
+    }
+});
+
+window.addEventListener('storage', event => {
+    if (event.key === BEADYO_THEME_STORAGE_KEY) applyBeadyoTheme(event.newValue);
+});
 
 const EVENT_TYPES = [
     { key: 'chat',    label: '소통',        icon: '☘', color: '#c8f5bc', text: '#2e6e22', border: '#8fd878' },
@@ -3586,8 +3618,7 @@ async function initAuth() {
     });
 
     window.addEventListener('message', event => {
-        const allowed = ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'];
-        if (!allowed.includes(event.origin) && event.origin !== window.location.origin) return;
+        if (!beadyoAllowedMessageOrigin(event.origin)) return;
         const { data } = event;
         if (!data) return;
         if (data.type === 'beadyo-auth-sync') {
