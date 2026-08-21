@@ -8,11 +8,18 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: live-status
+  cancel-in-progress: true
+
 jobs:
   check-live:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Fetch SOOP live status
         env:

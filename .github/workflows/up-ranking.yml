@@ -8,11 +8,18 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: up-ranking
+  cancel-in-progress: true
+
 jobs:
   update-ranking:
     runs-on: ubuntu-latest
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Fetch UP ranking from SOOP
         env:
