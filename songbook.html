@@ -1776,6 +1776,7 @@
             font-size: 23px;
             font-weight: 800;
             letter-spacing: .12em;
+            fill: currentColor;
         }
         .wc-random-face {
             position: absolute;
@@ -2774,6 +2775,26 @@
             background: var(--surface);
             color: var(--text);
             border-color: var(--border);
+        }
+
+        html[data-theme="dark"] .wc-title {
+            color: #f1faec;
+            text-shadow:
+                0 2px 0 rgba(7,14,7,0.72),
+                0 8px 18px rgba(0,0,0,0.28);
+        }
+
+        html[data-theme="dark"] .wc-title-sub {
+            color: #b7df7f;
+        }
+
+        html[data-theme="dark"] .wc-random-btn {
+            color: #dff0d4;
+        }
+
+        html[data-theme="dark"] .wc-random-arc text {
+            fill: currentColor;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.45));
         }
 
         html[data-theme="dark"] .wc-photo-panel,
