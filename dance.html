@@ -11,6 +11,32 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
+    <script>
+        (() => {
+            const key = 'beadyo:theme';
+            const allowedOrigin = origin => ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'].includes(origin) ||
+                origin === window.location.origin;
+            const normalize = value => value === 'dark' ? 'dark' : 'light';
+            function applyTheme(theme, persist = false) {
+                const next = normalize(theme);
+                document.documentElement.dataset.theme = next;
+                document.documentElement.style.colorScheme = next === 'dark' ? 'dark' : 'light';
+                if (persist) {
+                    try { localStorage.setItem(key, next); } catch {}
+                }
+            }
+            let stored = 'light';
+            try { stored = localStorage.getItem(key) === 'dark' ? 'dark' : 'light'; } catch {}
+            applyTheme(stored);
+            window.addEventListener('message', event => {
+                if (!allowedOrigin(event.origin)) return;
+                if (event.data?.type === 'beadyo-theme-sync') applyTheme(event.data.theme, true);
+            });
+            window.addEventListener('storage', event => {
+                if (event.key === key) applyTheme(event.newValue);
+            });
+        })();
+    </script>
     <style>
         * { box-sizing: border-box; }
 
@@ -27,6 +53,22 @@
             --clip: #316fd0;
             --catch: #c67f31;
             --youtube: #d94135;
+        }
+
+        html[data-theme="dark"] {
+            --accent: #8bc34a;
+            --accent-dark: #b7df7f;
+            --accent-soft: #21381b;
+            --ink: #edf5e8;
+            --muted: #a8b4a1;
+            --line: rgba(223,238,211,.14);
+            --surface: #192119;
+            --bg: #11170f;
+            --soop: #64c795;
+            --clip: #7fb0ff;
+            --catch: #e5a85c;
+            --youtube: #ff7d72;
+            color-scheme: dark;
         }
 
         body {
@@ -444,6 +486,59 @@
             .video-modal-title {
                 white-space: normal;
             }
+        }
+
+        html[data-theme="dark"] body {
+            background:
+                linear-gradient(180deg, rgba(17,23,15,.88), rgba(17,23,15,.97) 320px),
+                url("banner.jpg") top center / 1600px auto no-repeat,
+                var(--bg);
+        }
+        html[data-theme="dark"] .hero-copy {
+            color: var(--muted);
+        }
+        html[data-theme="dark"] .tools,
+        html[data-theme="dark"] .video-card,
+        html[data-theme="dark"] .empty {
+            background: rgba(25,33,25,.94);
+            border-color: var(--line);
+            box-shadow: 0 10px 28px rgba(0,0,0,.24);
+        }
+        html[data-theme="dark"] .source-tabs {
+            background: #202b20;
+            border-color: var(--line);
+        }
+        html[data-theme="dark"] .source-tab.active,
+        html[data-theme="dark"] .search input {
+            background: #202b20;
+            border-color: var(--line);
+            color: var(--ink);
+        }
+        html[data-theme="dark"] .search input::placeholder {
+            color: #778371;
+        }
+        html[data-theme="dark"] .thumb {
+            background:
+                linear-gradient(135deg, rgba(34,39,32,.38), rgba(139,195,74,.16)),
+                #202b20;
+        }
+        html[data-theme="dark"] .source-badge,
+        html[data-theme="dark"] .duration,
+        html[data-theme="dark"] .play-mark {
+            background: rgba(237,245,232,.9);
+            color: #1b2618;
+        }
+        html[data-theme="dark"] .card-action {
+            background: var(--accent-soft);
+            color: var(--accent-dark);
+        }
+        html[data-theme="dark"] .card-action.primary {
+            background: var(--accent);
+            color: #10220b;
+        }
+        html[data-theme="dark"] .video-modal-panel {
+            border-color: rgba(223,238,211,.18);
+            background: #10170f;
         }
     </style>
 </head>

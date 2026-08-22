@@ -2693,6 +2693,16 @@
             border-color: var(--border);
         }
 
+        html[data-theme="dark"] .song-table tbody td.col-title {
+            color: #f1faec;
+            font-weight: 850;
+        }
+
+        html[data-theme="dark"] .song-table tbody td.col-artist {
+            color: #d7e7cf;
+            font-weight: 800;
+        }
+
         html[data-theme="dark"] .song-table tbody tr:hover td {
             background: var(--row-hover) !important;
         }
@@ -3392,26 +3402,30 @@ async function loadSongbook() {
 async function loadLive(year) {
     const key = year === 'all' ? 'all' : year;
     if (S.liveCache[key] !== undefined) return;
-    if (S.liveLoading[key]) return;
-    S.liveLoading[key] = true;
+    if (S.liveLoading[key]) return S.liveLoading[key];
 
-    if (year === 'all') {
-        // 각 연도 로드 후 병합
-        renderSkeleton('live-list');
-        const years = [2022, 2023, 2024, 2025, 2026];
-        await Promise.all(years.map(y => loadLive(y)));
-        S.liveCache['all'] = years.flatMap(y => S.liveCache[y] || [])
-            .sort((a, b) => (b.performed_date || '').localeCompare(a.performed_date || ''));
-    } else {
-        if (S.liveCache[year] === undefined) {
-            S.liveCache[year] = await fetchAll(
-                'live_songs',
-                { year },
-                [['performed_date', false], ['id', false]]
-            );
+    S.liveLoading[key] = (async () => {
+        try {
+            if (year === 'all') {
+                // 각 연도 로드 후 병합
+                renderSkeleton('live-list');
+                const years = [2022, 2023, 2024, 2025, 2026];
+                await Promise.all(years.map(y => loadLive(y)));
+                S.liveCache['all'] = years.flatMap(y => S.liveCache[y] || [])
+                    .sort((a, b) => (b.performed_date || '').localeCompare(a.performed_date || ''));
+            } else if (S.liveCache[year] === undefined) {
+                S.liveCache[year] = await fetchAll(
+                    'live_songs',
+                    { year },
+                    [['performed_date', false], ['id', false]]
+                );
+            }
+        } finally {
+            delete S.liveLoading[key];
         }
-    }
-    delete S.liveLoading[key];
+    })();
+
+    return S.liveLoading[key];
 }
 
 // ── 초성 검색 ────────────────────────────────────

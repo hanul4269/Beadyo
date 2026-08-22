@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL = 'riosniper12@gmail.com';
-const FALLBACK_ASSET_VERSION = 'week-calendar-grow-20260822';
+const FALLBACK_ASSET_VERSION = 'songbook-live-load-20260822';
 const IS_LOCAL_HOST = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
 const APP_ASSET_VERSION = (() => {
     try {
@@ -132,9 +132,9 @@ function markPwaGuideSeen() {
 const TABS = [
     { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'week-calendar-grow-20260822' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
-    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'dark-mode-20260821' },
-    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'dark-mode-20260821' },
-    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'security-review-20260630' },
+    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'songbook-live-load-20260822' },
+    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'songbook-live-load-20260822' },
+    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'music-dark-mode-20260822' },
     { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'gacha-wall-hit-20260614' },
 ];
 
@@ -142,10 +142,10 @@ const GAME_TAB_INDEX = 5;
 const TAB_ROUTES = ['calendar', 'schedule', 'songbook', 'live', 'music', 'games'];
 const MUSIC_TAB_INDEX = 4;
 const MUSIC_PAGES = {
-    songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'security-review-20260630' },
-    dance: { src: 'dance.html', directUrl: 'dance.html', assetVersion: 'security-review-20260630' },
-    gembox: { src: 'gembox.html', directUrl: 'gembox.html', assetVersion: 'security-review-20260630' },
-    tractor: { src: 'tractor-service.html', directUrl: 'tractor-service.html', assetVersion: 'tractor-ep3-poster-20260808' },
+    songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'music-dark-mode-20260822' },
+    dance: { src: 'dance.html', directUrl: 'dance.html', assetVersion: 'music-dark-mode-20260822' },
+    gembox: { src: 'gembox.html', directUrl: 'gembox.html', assetVersion: 'music-dark-mode-20260822' },
+    tractor: { src: 'tractor-service.html', directUrl: 'tractor-service.html', assetVersion: 'music-dark-mode-20260822' },
 };
 let currentMusicPage = 'songs';
 

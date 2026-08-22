@@ -12,6 +12,32 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
+    <script>
+        (() => {
+            const key = 'beadyo:theme';
+            const allowedOrigin = origin => ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'].includes(origin) ||
+                origin === window.location.origin;
+            const normalize = value => value === 'dark' ? 'dark' : 'light';
+            function applyTheme(theme, persist = false) {
+                const next = normalize(theme);
+                document.documentElement.dataset.theme = next;
+                document.documentElement.style.colorScheme = next === 'dark' ? 'dark' : 'light';
+                if (persist) {
+                    try { localStorage.setItem(key, next); } catch {}
+                }
+            }
+            let stored = 'light';
+            try { stored = localStorage.getItem(key) === 'dark' ? 'dark' : 'light'; } catch {}
+            applyTheme(stored);
+            window.addEventListener('message', event => {
+                if (!allowedOrigin(event.origin)) return;
+                if (event.data?.type === 'beadyo-theme-sync') applyTheme(event.data.theme, true);
+            });
+            window.addEventListener('storage', event => {
+                if (event.key === key) applyTheme(event.newValue);
+            });
+        })();
+    </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -31,6 +57,22 @@
             --music-title-width: 150px;
             --music-gap: 12px;
             --music-action-width: 88px;
+        }
+
+        html[data-theme="dark"] {
+            --accent:       #8bc34a;
+            --accent-dark:  #b7df7f;
+            --accent-light: #21381b;
+            --accent-soft:  #172017;
+            --bg:           #11170f;
+            --surface:      #192119;
+            --surface-2:    #202b20;
+            --border:       rgba(223,238,211,0.14);
+            --text:         #edf5e8;
+            --muted:        #a8b4a1;
+            --coral:        #ff9c8f;
+            --gold:         #e3c05f;
+            color-scheme: dark;
         }
 
         body {
@@ -539,6 +581,64 @@
         .skeleton-title { height: 13px; margin-bottom: 8px; }
         .skeleton-title2 { height: 13px; width: 70%; margin-bottom: 8px; }
         .skeleton-date { height: 11px; width: 50%; }
+
+        html[data-theme="dark"] .songs-header {
+            background: rgba(25,33,25,0.96);
+            border-bottom-color: var(--border);
+            box-shadow: 0 1px 0 rgba(255,255,255,0.05);
+        }
+        html[data-theme="dark"] .filter-tabs,
+        html[data-theme="dark"] .source-tabs {
+            background: #202b20;
+            border-color: var(--border);
+        }
+        html[data-theme="dark"] .filter-tab.active,
+        html[data-theme="dark"] .sort-select,
+        html[data-theme="dark"] #search-input,
+        html[data-theme="dark"] .field input,
+        html[data-theme="dark"] .field select,
+        html[data-theme="dark"] .date-pick-btn {
+            background: var(--surface-2);
+            border-color: var(--border);
+            color: var(--text);
+        }
+        html[data-theme="dark"] #search-input::placeholder,
+        html[data-theme="dark"] .field input::placeholder {
+            color: #778371;
+        }
+        html[data-theme="dark"] .song-tile,
+        html[data-theme="dark"] .modal,
+        html[data-theme="dark"] .skeleton-tile {
+            background: var(--surface);
+            border-color: var(--border);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.24);
+        }
+        html[data-theme="dark"] .song-tile:hover {
+            border-color: rgba(139,195,74,0.44);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.32);
+        }
+        html[data-theme="dark"] .song-thumb-wrap,
+        html[data-theme="dark"] .song-thumb-fallback,
+        html[data-theme="dark"] .url-preview {
+            background: #202b20;
+        }
+        html[data-theme="dark"] .play-icon {
+            background: rgba(237,245,232,0.92);
+        }
+        html[data-theme="dark"] .empty-state {
+            color: var(--muted);
+        }
+        html[data-theme="dark"] .btn-cancel {
+            color: var(--text);
+            border-color: var(--border);
+        }
+        html[data-theme="dark"] .date-pick-btn:hover {
+            background: var(--accent-light);
+        }
+        html[data-theme="dark"] .skeleton {
+            background: linear-gradient(90deg, #202b20 25%, #2a3628 50%, #202b20 75%);
+            background-size: 200% 100%;
+        }
     </style>
 </head>
 <body>
