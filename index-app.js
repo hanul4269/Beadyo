@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL = 'riosniper12@gmail.com';
-const FALLBACK_ASSET_VERSION = 'songbook-welcome-contrast-20260822';
+const FALLBACK_ASSET_VERSION = 'auth-session-recovery-20260828';
 const IS_LOCAL_HOST = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
 const APP_ASSET_VERSION = (() => {
     try {
@@ -130,10 +130,10 @@ function markPwaGuideSeen() {
 }
 
 const TABS = [
-    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'week-calendar-grow-20260822' },
+    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'auth-session-recovery-20260828' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
-    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'songbook-welcome-contrast-20260822' },
-    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'songbook-welcome-contrast-20260822' },
+    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'auth-session-recovery-20260828' },
+    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'auth-session-recovery-20260828' },
     { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'music-dark-mode-20260822' },
     { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'gacha-wall-hit-20260614' },
 ];
@@ -215,12 +215,54 @@ const authDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 });
 let authUser = null;
 
+function beadyoAllowedMessageOrigin(origin) {
+    return origin === window.location.origin || [
+        'https://beadyo.com',
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+    ].includes(origin);
+}
+
+function isJwtIssuedAtFutureError(error) {
+    const message = String(error?.message || error?.error_description || error || '');
+    return /jwt.*issued.*future|issued at future/i.test(message);
+}
+
+function supabaseAuthStorageKeys() {
+    const keys = [];
+    try {
+        const projectRef = new URL(SUPABASE_URL).hostname.split('.')[0];
+        if (projectRef) keys.push(`sb-${projectRef}-auth-token`);
+    } catch {}
+    try {
+        for (let i = 0; i < localStorage.length; i += 1) {
+            const key = localStorage.key(i);
+            if (/^sb-.+-auth-token$/.test(key || '')) keys.push(key);
+        }
+    } catch {}
+    return [...new Set(keys)];
+}
+
+async function clearInvalidRootAuthSession() {
+    try { await authDb.auth.signOut({ scope: 'local' }); } catch {}
+    supabaseAuthStorageKeys().forEach(key => {
+        try { localStorage.removeItem(key); } catch {}
+    });
+    authUser = null;
+    updateAuthUI();
+    syncCalendarAuth();
+}
+
 async function isEditorUser(user) {
     if (!user) return false;
     const email = (user.email || '').toLowerCase();
     if (email === OWNER_EMAIL.toLowerCase()) return true;
     try {
-        const { data } = await authDb.from('editors').select('email').eq('email', email).maybeSingle();
+        const { data, error } = await authDb.from('editors').select('email').eq('email', email).maybeSingle();
+        if (error) {
+            if (isJwtIssuedAtFutureError(error)) await clearInvalidRootAuthSession();
+            return false;
+        }
         return !!data;
     } catch { return false; }
 }
@@ -782,8 +824,10 @@ async function updateAuthUI() {
         return;
     }
 
-    const picture = safeImageUrl(authUser.user_metadata?.avatar_url || authUser.user_metadata?.picture || '');
-    const canAdmin = await isEditorUser(authUser);
+    const currentUser = authUser;
+    const picture = safeImageUrl(currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture || '');
+    const canAdmin = await isEditorUser(currentUser);
+    if (authUser !== currentUser) return;
     badge.innerHTML = `<div class="auth-menu-wrap">
         <button class="auth-trigger" onclick="toggleAuthMenu(event)" aria-label="계정 메뉴">
             ${picture ? `<img src="${escAttr(picture)}" alt="">` : `<img src="login-icon.png" alt="">`}
@@ -1057,6 +1101,7 @@ async function initAuth() {
             const { data, error } = await authDb.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
             if (error) {
                 console.error('setSession error:', error.message, error);
+                if (isJwtIssuedAtFutureError(error)) await clearInvalidRootAuthSession();
             } else if (data.session) {
                 authUser = data.session.user ?? null;
                 updateAuthUI();
@@ -1084,6 +1129,7 @@ async function initAuth() {
         const { data, error } = await authDb.auth.exchangeCodeForSession(authCode);
         if (error) {
             console.error('exchangeCodeForSession error:', error.message, error);
+            if (isJwtIssuedAtFutureError(error)) await clearInvalidRootAuthSession();
         } else if (data.session) {
             authUser = data.session.user ?? null;
             updateAuthUI();
@@ -1092,7 +1138,11 @@ async function initAuth() {
         }
     }
 
-    const { data: { session } } = await authDb.auth.getSession();
+    const { data: { session } = {}, error } = await authDb.auth.getSession();
+    if (error && isJwtIssuedAtFutureError(error)) {
+        await clearInvalidRootAuthSession();
+        return;
+    }
     authUser = session?.user ?? null;
     updateAuthUI();
     syncCalendarAuth();
@@ -1129,5 +1179,12 @@ async function signOut() {
     updateAuthUI();
     syncCalendarAuth();
 }
+
+window.addEventListener('message', event => {
+    if (!beadyoAllowedMessageOrigin(event.origin)) return;
+    if (event.data?.type === 'beadyo-auth-invalid') {
+        void clearInvalidRootAuthSession();
+    }
+});
 
 initAuth();

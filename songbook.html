@@ -3395,12 +3395,22 @@ async function fetchAll(table, filters = {}, order = []) {
     await ensureDb();
     const PAGE = 1000;
     let all = [], from = 0;
+    let retriedAfterAuthReset = false;
     while (true) {
         let q = db.from(table).select('*').range(from, from + PAGE - 1);
         for (const [k, v] of Object.entries(filters)) q = q.eq(k, v);
         for (const [col, asc] of order) q = q.order(col, { ascending: asc });
         const { data, error } = await q;
-        if (error) { showToast('데이터 로드 실패: ' + error.message); break; }
+        if (error) {
+            if (!retriedAfterAuthReset && await recoverSupabaseReadError(error)) {
+                retriedAfterAuthReset = true;
+                all = [];
+                from = 0;
+                continue;
+            }
+            showToast('데이터 로드 실패: ' + error.message);
+            break;
+        }
         if (!data || data.length === 0) break;
         all.push(...data);
         if (data.length < PAGE) break;
@@ -5247,8 +5257,66 @@ function showToast(msg) {
     _toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
+function isJwtIssuedAtFutureError(error) {
+    const message = String(error?.message || error?.error_description || error || '');
+    return /jwt.*issued.*future|issued at future/i.test(message);
+}
+
+function supabaseAuthStorageKeys() {
+    const keys = [];
+    try {
+        const projectRef = new URL(SUPABASE_URL).hostname.split('.')[0];
+        if (projectRef) keys.push(`sb-${projectRef}-auth-token`);
+    } catch {}
+    try {
+        for (let i = 0; i < localStorage.length; i += 1) {
+            const key = localStorage.key(i);
+            if (/^sb-.+-auth-token$/.test(key || '')) keys.push(key);
+        }
+    } catch {}
+    return [...new Set(keys)];
+}
+
+async function clearInvalidSupabaseSession() {
+    try { await db?.auth?.signOut?.({ scope: 'local' }); } catch {}
+    supabaseAuthStorageKeys().forEach(key => {
+        try { localStorage.removeItem(key); } catch {}
+    });
+    if (window.supabase?.createClient) {
+        db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { detectSessionInUrl: false }
+        });
+        _dbReady = Promise.resolve(db);
+    }
+    S.session = null;
+    updateAuthUI();
+    try {
+        const origin = window.location.origin === 'null' ? '*' : window.location.origin;
+        window.parent?.postMessage({ type: 'beadyo-auth-invalid', reason: 'jwt-issued-at-future' }, origin);
+    } catch {}
+}
+
+async function recoverSupabaseReadError(error) {
+    if (!isJwtIssuedAtFutureError(error)) return false;
+    await clearInvalidSupabaseSession();
+    showToast('로그인 세션을 정리하고 데이터를 다시 불러왔어요.');
+    return true;
+}
+
+async function handleSongbookMutationError(error, fallbackMessage) {
+    if (isJwtIssuedAtFutureError(error)) {
+        await clearInvalidSupabaseSession();
+        showToast('로그인 세션 시간이 맞지 않아 로그아웃했어요. 다시 로그인 후 저장해주세요.');
+        return;
+    }
+    showToast(fallbackMessage || songbookSaveErrorMessage(error));
+}
+
 function songbookSaveErrorMessage(error) {
     const message = error?.message || '';
+    if (isJwtIssuedAtFutureError(error)) {
+        return '저장 실패: 로그인 세션 시간이 맞지 않습니다. 다시 로그인해주세요';
+    }
     if (/row-level security|RLS/i.test(message)) {
         return '저장 실패: 노래책 쓰기 권한 정책을 확인해주세요';
     }
@@ -5285,7 +5353,11 @@ function updateFab() {
 
 // ── 인증 ─────────────────────────────────────────
 async function initAuth() {
-    const { data: { session } } = await db.auth.getSession();
+    const { data: { session } = {}, error } = await db.auth.getSession();
+    if (error && isJwtIssuedAtFutureError(error)) {
+        await clearInvalidSupabaseSession();
+        return;
+    }
     S.session = session;
     updateAuthUI();
     db.auth.onAuthStateChange((_, sess) => { S.session = sess; updateAuthUI(); });
@@ -5304,7 +5376,11 @@ window.addEventListener('message', (e) => {
         return;
     }
     if (e.data?.type === 'beadyo-auth-sync' && db) {
-        db.auth.getSession().then(({ data: { session } }) => {
+        db.auth.getSession().then(async ({ data: { session } = {}, error }) => {
+            if (error && isJwtIssuedAtFutureError(error)) {
+                await clearInvalidSupabaseSession();
+                return;
+            }
             S.session = session;
             updateAuthUI();
         });
@@ -5501,7 +5577,7 @@ async function saveCoverReviewCandidate(groupIndex, candidateIndex) {
     await ensureDb();
     const { error } = await db.from('songbook').update({ cover_url: candidate.coverUrl }).eq('id', group.songId);
     if (error) {
-        showToast(`커버 저장 실패: ${error.message}`);
+        await handleSongbookMutationError(error, `커버 저장 실패: ${error.message}`);
         return;
     }
     const song = (S.songbookData || []).find(item => item.id === group.songId);
@@ -6074,6 +6150,7 @@ async function startCoverBackfill(scope) {
     }
     let itunesHit = 0, youtubeHit = 0, saved = 0, miss = 0, failed = 0;
     let review = 0;
+    let authStopped = false;
     const missedSongs = [];
     _lastCoverBackfillSaved = [];
     _coverReviewCandidates = [];
@@ -6134,6 +6211,11 @@ async function startCoverBackfill(scope) {
         if (error) {
             failed++;
             appendCoverLog(`FAIL ${label} / ${error.message}`);
+            if (isJwtIssuedAtFutureError(error)) {
+                authStopped = true;
+                await handleSongbookMutationError(error, `커버 저장 실패: ${error.message}`);
+                break;
+            }
         } else {
             saved++;
             song.cover_url = match.coverUrl;
@@ -6150,11 +6232,14 @@ async function startCoverBackfill(scope) {
         missedSongs.slice(0, 80).forEach(label => appendCoverLog(`- ${label}`));
         if (missedSongs.length > 80) appendCoverLog(`... 외 ${missedSongs.length - 80}곡`);
     }
-    document.getElementById('cover-status').textContent = `완료: 저장 ${saved}곡 / 선택대기 ${review}곡 / iTunes ${itunesHit}곡 / YouTube ${youtubeHit}곡 / 실패 ${miss}곡${failed ? ` / 오류 ${failed}건` : ''}`;
+    document.getElementById('cover-status').textContent = authStopped
+        ? `중단: 로그인 세션 오류 / 저장 ${saved}곡 / 선택대기 ${review}곡 / 실패 ${miss}곡${failed ? ` / 오류 ${failed}건` : ''}`
+        : `완료: 저장 ${saved}곡 / 선택대기 ${review}곡 / iTunes ${itunesHit}곡 / YouTube ${youtubeHit}곡 / 실패 ${miss}곡${failed ? ` / 오류 ${failed}건` : ''}`;
     setCoverBackfillRunning(false);
     updateCoverRunActions();
     updateCoverBackfillCounts();
     renderSongbook(!!S.query);
+    if (authStopped) return;
     showToast(review ? `커버 ${saved}곡 저장, ${review}곡 선택 대기` : `커버 ${saved}곡 저장 완료`);
 }
 
@@ -6170,7 +6255,7 @@ async function undoLastCoverBackfill() {
     await ensureDb();
     const { error } = await db.from('songbook').update({ cover_url: null }).in('id', ids);
     if (error) {
-        showToast('커버 되돌리기 실패: ' + error.message);
+        await handleSongbookMutationError(error, '커버 되돌리기 실패: ' + error.message);
         updateCoverRunActions();
         return;
     }
@@ -6536,7 +6621,7 @@ async function clearEditingSongCover() {
     if (!confirm('이 곡의 커버만 삭제할까요? 노래 정보는 유지됩니다.')) return;
     await ensureDb();
     const { error } = await db.from('songbook').update({ cover_url: null }).eq('id', id);
-    if (error) { showToast('커버 삭제 실패: ' + error.message); return; }
+    if (error) { await handleSongbookMutationError(error, '커버 삭제 실패: ' + error.message); return; }
     const song = S.songbookData?.find(x => x.id === id);
     if (song) song.cover_url = null;
     document.getElementById('ef-cover').value = '';
@@ -6623,7 +6708,7 @@ async function saveSong() {
         : await db.from('songbook').insert(payload);
 
     btn.disabled = false; btn.textContent = '저장';
-    if (error) { showToast(songbookSaveErrorMessage(error)); return; }
+    if (error) { await handleSongbookMutationError(error, songbookSaveErrorMessage(error)); return; }
     showToast(id ? '수정 완료 ✓' : '추가 완료 ✓');
     closeSongModal();
     S.songbookData = null;
@@ -6636,7 +6721,7 @@ async function deleteSong() {
     if (!id || !confirm('이 곡을 삭제할까요?')) return;
     await ensureDb();
     const { error } = await db.from('songbook').delete().eq('id', id);
-    if (error) { showToast('삭제 실패: ' + error.message); return; }
+    if (error) { await handleSongbookMutationError(error, '삭제 실패: ' + error.message); return; }
     showToast('삭제 완료');
     closeSongModal();
     S.songbookData = null;
@@ -6738,7 +6823,7 @@ async function saveLiveBulk() {
     const { error } = await db.from('live_songs').insert(records);
     btn.disabled = false; btn.textContent = '추가';
 
-    if (error) { showToast(songbookSaveErrorMessage(error)); return; }
+    if (error) { await handleSongbookMutationError(error, songbookSaveErrorMessage(error)); return; }
     showToast(`${records.length}곡 추가 완료 ✓`);
     closeLiveBulkModal();
     S.liveCache = {};
@@ -6818,7 +6903,7 @@ async function saveLiveRecord() {
         : await db.from('live_songs').insert(payload);
 
     btn.disabled = false; btn.textContent = '저장';
-    if (error) { showToast(songbookSaveErrorMessage(error)); return; }
+    if (error) { await handleSongbookMutationError(error, songbookSaveErrorMessage(error)); return; }
     showToast(id ? '수정 완료 ✓' : '추가 완료 ✓');
     closeLiveModal();
     delete S.liveCache[year]; delete S.liveCache['all'];
@@ -6831,7 +6916,7 @@ async function deleteLiveRecord() {
     if (!id || !confirm('이 기록을 삭제할까요?')) return;
     await ensureDb();
     const { error } = await db.from('live_songs').delete().eq('id', id);
-    if (error) { showToast('삭제 실패: ' + error.message); return; }
+    if (error) { await handleSongbookMutationError(error, '삭제 실패: ' + error.message); return; }
     showToast('삭제 완료');
     closeLiveModal();
     delete S.liveCache[year]; delete S.liveCache['all'];

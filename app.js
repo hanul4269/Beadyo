@@ -662,6 +662,51 @@ function showToast(msg) {
     toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
+function isJwtIssuedAtFutureError(error) {
+    const message = String(error?.message || error?.error_description || error || '');
+    return /jwt.*issued.*future|issued at future/i.test(message);
+}
+
+function supabaseAuthStorageKeys() {
+    const keys = [];
+    try {
+        const projectRef = new URL(SUPABASE_URL).hostname.split('.')[0];
+        if (projectRef) keys.push(`sb-${projectRef}-auth-token`);
+    } catch {}
+    try {
+        for (let i = 0; i < localStorage.length; i += 1) {
+            const key = localStorage.key(i);
+            if (/^sb-.+-auth-token$/.test(key || '')) keys.push(key);
+        }
+    } catch {}
+    return [...new Set(keys)];
+}
+
+async function clearInvalidSupabaseSession() {
+    try { await db?.auth?.signOut?.({ scope: 'local' }); } catch {}
+    supabaseAuthStorageKeys().forEach(key => {
+        try { localStorage.removeItem(key); } catch {}
+    });
+    if (window.supabase?.createClient) {
+        db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        _dbReady = Promise.resolve(db);
+    }
+    try {
+        const origin = window.location.origin === 'null' ? '*' : window.location.origin;
+        window.parent?.postMessage({ type: 'beadyo-auth-invalid', reason: 'jwt-issued-at-future' }, origin);
+    } catch {}
+    await setSessionUser(null);
+}
+
+async function handleSupabaseMutationError(error, fallbackMessage) {
+    if (isJwtIssuedAtFutureError(error)) {
+        await clearInvalidSupabaseSession();
+        showToast('로그인 세션 시간이 맞지 않아 로그아웃했어요. 다시 로그인 후 저장해주세요.');
+        return;
+    }
+    showToast(fallbackMessage || '요청 실패: ' + (error?.message || '알 수 없는 오류'));
+}
+
 // ─── 그림판 ───
 const paintState = {
     canvas: null,
@@ -1029,7 +1074,7 @@ async function saveDateOrder(dateStr, orderedEvents) {
     const results = await Promise.all(updates);
     const failed = results.find(res => res.error);
     if (failed) {
-        showToast('순서 저장 실패: ' + failed.error.message);
+        await handleSupabaseMutationError(failed.error, '순서 저장 실패: ' + failed.error.message);
         return false;
     }
     return true;
@@ -1112,7 +1157,7 @@ async function moveEventToDate(eventId, srcDate, targetDate) {
         payload.end_date = toDateStr(newEnd.getFullYear(), newEnd.getMonth(), newEnd.getDate());
     }
     const { error } = await db.from('schedules').update(payload).eq('id', eventId);
-    if (error) { showToast('이동 실패: ' + error.message); return; }
+    if (error) { await handleSupabaseMutationError(error, '이동 실패: ' + error.message); return; }
     showToast('일정이 이동되었습니다');
     await loadEvents();
 }
@@ -1200,6 +1245,7 @@ async function loadEditors() {
     const { data, error } = await db.from('editors').select('id,email,created_at').order('created_at');
     if (error) {
         console.error('loadEditors:', error);
+        if (isJwtIssuedAtFutureError(error)) await clearInvalidSupabaseSession();
         state.editors = [];
         return;
     }
@@ -1640,7 +1686,7 @@ async function addMemoCard(source = 'sidebar') {
             .update({ content, url: normalizedUrl || null })
             .eq('id', _memoEditingId)
             .select();
-        if (error) { showToast('수정 실패: ' + error.message); return; }
+        if (error) { await handleSupabaseMutationError(error, '수정 실패: ' + error.message); return; }
         const updated = data?.[0];
         state.memoCards = state.memoCards.map(card => card.id === _memoEditingId ? { ...card, ...(updated || { content, url: normalizedUrl || null }) } : card);
         _resetMemoForm(source);
@@ -1656,7 +1702,7 @@ async function addMemoCard(source = 'sidebar') {
     const { data, error } = await db.from('memo_cards')
         .insert({ content, url: normalizedUrl || null, sort_order: maxOrder + 1, year_month: ym })
         .select();
-    if (error) { showToast('저장 실패: ' + error.message); return; }
+    if (error) { await handleSupabaseMutationError(error, '저장 실패: ' + error.message); return; }
     state.memoCards.push(data[0]);
     _resetMemoForm(source);
     renderMemoSidebar();
@@ -1684,7 +1730,7 @@ function cancelMemoEdit(source = 'sidebar') {
 async function deleteMemoCard(id) {
     await _ensureDb();
     const { error } = await db.from('memo_cards').delete().eq('id', id);
-    if (error) { showToast('삭제 실패: ' + error.message); return; }
+    if (error) { await handleSupabaseMutationError(error, '삭제 실패: ' + error.message); return; }
     state.memoCards = state.memoCards.filter(c => c.id !== id);
     renderMemoSidebar();
     renderMemoModalList();
@@ -1810,7 +1856,7 @@ async function saveYtLink() {
     if (existing.length >= 3) { showToast('날짜당 최대 3개까지 등록할 수 있어요'); return; }
     await _ensureDb();
     const { data, error } = await db.from('youtube_links').insert({ date: _ytModalDate, url }).select();
-    if (error) { showToast('저장 실패: ' + error.message); return; }
+    if (error) { await handleSupabaseMutationError(error, '저장 실패: ' + error.message); return; }
     state.ytLinks.push(data[0]);
     document.getElementById('ytLinkInput').value = '';
     renderYtLinkList();
@@ -1820,7 +1866,7 @@ async function saveYtLink() {
 async function deleteYtLink(id) {
     await _ensureDb();
     const { error } = await db.from('youtube_links').delete().eq('id', id);
-    if (error) { showToast('삭제 실패: ' + error.message); return; }
+    if (error) { await handleSupabaseMutationError(error, '삭제 실패: ' + error.message); return; }
     state.ytLinks = state.ytLinks.filter(yl => yl.id !== id);
     renderYtLinkList();
     renderCalendar();
@@ -1933,7 +1979,7 @@ async function saveBroadcastInfo() {
         .from('broadcast_infos')
         .upsert(payload, { onConflict: 'date' })
         .select();
-    if (error) { showToast('저장 실패: ' + error.message); return; }
+    if (error) { await handleSupabaseMutationError(error, '저장 실패: ' + error.message); return; }
 
     const saved = data?.[0] || payload;
     const idx = state.broadcastInfos.findIndex(info => info.date === _broadcastModalDate);
@@ -1951,7 +1997,7 @@ async function deleteBroadcastInfo() {
     if (!confirm('이 날짜의 방송정보를 삭제할까요?')) return;
     await _ensureDb();
     const { error } = await db.from('broadcast_infos').delete().eq('date', _broadcastModalDate);
-    if (error) { showToast('삭제 실패: ' + error.message); return; }
+    if (error) { await handleSupabaseMutationError(error, '삭제 실패: ' + error.message); return; }
     const dateStr = _broadcastModalDate;
     state.broadcastInfos = state.broadcastInfos.filter(info => info.date !== dateStr);
     showToast('방송정보가 삭제되었습니다');
@@ -2878,7 +2924,7 @@ async function repeatWeekly(id) {
         return payload;
     });
     const { error } = await db.from('schedules').insert(payloads);
-    if (error) { showToast('반복 생성 실패: ' + error.message); return; }
+    if (error) { await handleSupabaseMutationError(error, '반복 생성 실패: ' + error.message); return; }
     showToast(`${count}개 반복 일정이 생성되었습니다`);
     closeViewModal();
     await loadEvents();
@@ -2922,7 +2968,7 @@ async function saveEvent() {
         ? await db.from('schedules').update(payload).eq('id', id)
         : await db.from('schedules').insert(payload);
 
-    if (error) { showToast('저장 실패: ' + error.message); return; }
+    if (error) { await handleSupabaseMutationError(error, '저장 실패: ' + error.message); return; }
     showToast(id ? '수정되었습니다' : '추가되었습니다');
     const returnContext = id ? _editReturnContext : null;
     closeEditModal({ reopenView: false });
@@ -2934,7 +2980,7 @@ async function deleteEvent(id) {
     await _ensureDb();
     if (!confirm('이 일정을 삭제하시겠습니까?')) return;
     const { error } = await db.from('schedules').delete().eq('id', id);
-    if (error) { showToast('삭제 실패'); return; }
+    if (error) { await handleSupabaseMutationError(error, '삭제 실패: ' + error.message); return; }
     showToast('삭제되었습니다');
     closeViewModal();
     await loadEvents();
@@ -3319,7 +3365,10 @@ async function addCalendarNotice() {
         created_by: state.user?.email || null,
     });
     if (error) {
-        showToast(isMissingNoticeTable(error) ? 'DB에 calendar_notices 테이블을 먼저 추가해주세요' : '공지 추가 실패: ' + error.message);
+        await handleSupabaseMutationError(
+            error,
+            isMissingNoticeTable(error) ? 'DB에 calendar_notices 테이블을 먼저 추가해주세요' : '공지 추가 실패: ' + error.message
+        );
         return;
     }
     ['newNoticeImageUrl','newNoticeLinkUrl','newNoticeOrder'].forEach(id => {
@@ -3467,7 +3516,7 @@ async function saveUpEventOrder() {
     ));
     const failed = results.find(result => result.error);
     if (failed) {
-        showToast('순서 저장 실패: ' + failed.error.message);
+        await handleSupabaseMutationError(failed.error, '순서 저장 실패: ' + failed.error.message);
         await loadUpEvents();
         renderUpEventList();
         return false;
@@ -3530,7 +3579,7 @@ async function addUpEvent() {
     const { error } = await db.from('up_events').insert({
         tab_name: tabName, title, soop_url: normalizedSoopUrl, sort_order: sortOrder, is_active: true,
     });
-    if (error) { showToast('추가 실패: ' + error.message); return; }
+    if (error) { await handleSupabaseMutationError(error, '추가 실패: ' + error.message); return; }
     await loadUpEvents();
     const inserted = [...upEvents].reverse().find(e =>
         e.tab_name === tabName && e.title === title && e.soop_url === normalizedSoopUrl
@@ -3640,7 +3689,11 @@ function normalizeAuthUser(userLike) {
 
 async function initAuth() {
     await _ensureDb();
-    const { data: { session } } = await db.auth.getSession();
+    const { data: { session } = {}, error } = await db.auth.getSession();
+    if (error && isJwtIssuedAtFutureError(error)) {
+        await clearInvalidSupabaseSession();
+        return;
+    }
     await setSessionUser(normalizeAuthUser(session?.user));
     db.auth.onAuthStateChange((_event, session) => {
         setSessionUser(normalizeAuthUser(session?.user));
@@ -3673,6 +3726,10 @@ async function setSessionUser(user) {
     }
     state.isOwner = state.user.email.toLowerCase() === OWNER_EMAIL.toLowerCase();
     await loadEditors();
+    if (!state.user) {
+        renderCalendar();
+        return;
+    }
     state.isEditor = state.isOwner || state.editors.some(e => e.email.toLowerCase() === state.user.email.toLowerCase());
     document.body.classList.toggle('is-editor', state.isEditor);
     renderCalendar();
