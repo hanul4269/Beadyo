@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL = 'riosniper12@gmail.com';
-const FALLBACK_ASSET_VERSION = 'auth-session-recovery-20260828';
+const FALLBACK_ASSET_VERSION = 'auth-session-retry-20260828';
 const IS_LOCAL_HOST = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
 const APP_ASSET_VERSION = (() => {
     try {
@@ -16,6 +16,7 @@ const THEME_STORAGE_KEY = 'beadyo:theme';
 const PWA_GUIDE_SEEN_STORAGE_KEY = 'beadyo:pwa-guide-seen:v1';
 const NOTIFICATION_READ_STORAGE_KEY = 'beadyo:notification-read:v1';
 const NOTIFICATION_REFRESH_INTERVAL_MS = 2 * 60 * 1000;
+const JWT_FUTURE_RETRY_DELAYS_MS = [800, 2000, 5000];
 const THEME_META_COLORS = {
     light: '#76ad39',
     dark: '#4f7d2b',
@@ -130,10 +131,10 @@ function markPwaGuideSeen() {
 }
 
 const TABS = [
-    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'auth-session-recovery-20260828' },
+    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'auth-session-retry-20260828' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
-    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'auth-session-recovery-20260828' },
-    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'auth-session-recovery-20260828' },
+    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'auth-session-retry-20260828' },
+    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'auth-session-retry-20260828' },
     { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'music-dark-mode-20260822' },
     { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'gacha-wall-hit-20260614' },
 ];
@@ -211,7 +212,8 @@ const authDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: {
         detectSessionInUrl: false,
         flowType: 'pkce',
-    }
+    },
+    global: { fetch: fetchWithJwtFutureRetry },
 });
 let authUser = null;
 
@@ -228,29 +230,27 @@ function isJwtIssuedAtFutureError(error) {
     return /jwt.*issued.*future|issued at future/i.test(message);
 }
 
-function supabaseAuthStorageKeys() {
-    const keys = [];
+async function responseHasJwtIssuedAtFuture(response) {
+    if (response?.ok) return false;
     try {
-        const projectRef = new URL(SUPABASE_URL).hostname.split('.')[0];
-        if (projectRef) keys.push(`sb-${projectRef}-auth-token`);
-    } catch {}
-    try {
-        for (let i = 0; i < localStorage.length; i += 1) {
-            const key = localStorage.key(i);
-            if (/^sb-.+-auth-token$/.test(key || '')) keys.push(key);
-        }
-    } catch {}
-    return [...new Set(keys)];
+        return isJwtIssuedAtFutureError(await response.clone().text());
+    } catch {
+        return false;
+    }
 }
 
-async function clearInvalidRootAuthSession() {
-    try { await authDb.auth.signOut({ scope: 'local' }); } catch {}
-    supabaseAuthStorageKeys().forEach(key => {
-        try { localStorage.removeItem(key); } catch {}
-    });
-    authUser = null;
-    updateAuthUI();
-    syncCalendarAuth();
+async function fetchWithJwtFutureRetry(input, init) {
+    const requestTemplate = typeof Request !== 'undefined' && input instanceof Request
+        ? input.clone()
+        : null;
+    const send = () => window.fetch(requestTemplate ? requestTemplate.clone() : input, init);
+    let response = await send();
+    for (const delayMs of JWT_FUTURE_RETRY_DELAYS_MS) {
+        if (!await responseHasJwtIssuedAtFuture(response)) return response;
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+        response = await send();
+    }
+    return response;
 }
 
 async function isEditorUser(user) {
@@ -260,7 +260,9 @@ async function isEditorUser(user) {
     try {
         const { data, error } = await authDb.from('editors').select('email').eq('email', email).maybeSingle();
         if (error) {
-            if (isJwtIssuedAtFutureError(error)) await clearInvalidRootAuthSession();
+            if (isJwtIssuedAtFutureError(error)) {
+                console.warn('편집 권한 확인이 지연되고 있지만 로그인 상태는 유지합니다.');
+            }
             return false;
         }
         return !!data;
@@ -1101,7 +1103,6 @@ async function initAuth() {
             const { data, error } = await authDb.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
             if (error) {
                 console.error('setSession error:', error.message, error);
-                if (isJwtIssuedAtFutureError(error)) await clearInvalidRootAuthSession();
             } else if (data.session) {
                 authUser = data.session.user ?? null;
                 updateAuthUI();
@@ -1129,7 +1130,6 @@ async function initAuth() {
         const { data, error } = await authDb.auth.exchangeCodeForSession(authCode);
         if (error) {
             console.error('exchangeCodeForSession error:', error.message, error);
-            if (isJwtIssuedAtFutureError(error)) await clearInvalidRootAuthSession();
         } else if (data.session) {
             authUser = data.session.user ?? null;
             updateAuthUI();
@@ -1140,7 +1140,7 @@ async function initAuth() {
 
     const { data: { session } = {}, error } = await authDb.auth.getSession();
     if (error && isJwtIssuedAtFutureError(error)) {
-        await clearInvalidRootAuthSession();
+        console.warn('세션 시각 확인이 지연되고 있습니다. 저장된 로그인 정보는 유지합니다.');
         return;
     }
     authUser = session?.user ?? null;
@@ -1179,12 +1179,5 @@ async function signOut() {
     updateAuthUI();
     syncCalendarAuth();
 }
-
-window.addEventListener('message', event => {
-    if (!beadyoAllowedMessageOrigin(event.origin)) return;
-    if (event.data?.type === 'beadyo-auth-invalid') {
-        void clearInvalidRootAuthSession();
-    }
-});
 
 initAuth();

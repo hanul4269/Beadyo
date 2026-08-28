@@ -2,6 +2,7 @@ const SUPABASE_URL      = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL       = 'riosniper12@gmail.com';
 const BEADYO_THEME_STORAGE_KEY = 'beadyo:theme';
+const JWT_FUTURE_RETRY_DELAYS_MS = [800, 2000, 5000];
 
 function beadyoAllowedMessageOrigin(origin) {
     return ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'].includes(origin) ||
@@ -212,7 +213,12 @@ function _ensureDb() {
     _dbReady = new Promise((resolve, reject) => {
         const s = document.createElement('script');
         s.src = 'supabase.min.js?v=supabase-2-112-2';
-        s.onload = () => { db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); resolve(db); };
+        s.onload = () => {
+            db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                global: { fetch: fetchWithJwtFutureRetry },
+            });
+            resolve(db);
+        };
         s.onerror = reject;
         document.head.appendChild(s);
     });
@@ -667,41 +673,32 @@ function isJwtIssuedAtFutureError(error) {
     return /jwt.*issued.*future|issued at future/i.test(message);
 }
 
-function supabaseAuthStorageKeys() {
-    const keys = [];
+async function responseHasJwtIssuedAtFuture(response) {
+    if (response?.ok) return false;
     try {
-        const projectRef = new URL(SUPABASE_URL).hostname.split('.')[0];
-        if (projectRef) keys.push(`sb-${projectRef}-auth-token`);
-    } catch {}
-    try {
-        for (let i = 0; i < localStorage.length; i += 1) {
-            const key = localStorage.key(i);
-            if (/^sb-.+-auth-token$/.test(key || '')) keys.push(key);
-        }
-    } catch {}
-    return [...new Set(keys)];
+        return isJwtIssuedAtFutureError(await response.clone().text());
+    } catch {
+        return false;
+    }
 }
 
-async function clearInvalidSupabaseSession() {
-    try { await db?.auth?.signOut?.({ scope: 'local' }); } catch {}
-    supabaseAuthStorageKeys().forEach(key => {
-        try { localStorage.removeItem(key); } catch {}
-    });
-    if (window.supabase?.createClient) {
-        db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        _dbReady = Promise.resolve(db);
+async function fetchWithJwtFutureRetry(input, init) {
+    const requestTemplate = typeof Request !== 'undefined' && input instanceof Request
+        ? input.clone()
+        : null;
+    const send = () => window.fetch(requestTemplate ? requestTemplate.clone() : input, init);
+    let response = await send();
+    for (const delayMs of JWT_FUTURE_RETRY_DELAYS_MS) {
+        if (!await responseHasJwtIssuedAtFuture(response)) return response;
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+        response = await send();
     }
-    try {
-        const origin = window.location.origin === 'null' ? '*' : window.location.origin;
-        window.parent?.postMessage({ type: 'beadyo-auth-invalid', reason: 'jwt-issued-at-future' }, origin);
-    } catch {}
-    await setSessionUser(null);
+    return response;
 }
 
 async function handleSupabaseMutationError(error, fallbackMessage) {
     if (isJwtIssuedAtFutureError(error)) {
-        await clearInvalidSupabaseSession();
-        showToast('로그인 세션 시간이 맞지 않아 로그아웃했어요. 다시 로그인 후 저장해주세요.');
+        showToast('로그인은 유지되고 있어요. 잠시 후 다시 저장해주세요.');
         return;
     }
     showToast(fallbackMessage || '요청 실패: ' + (error?.message || '알 수 없는 오류'));
@@ -1245,7 +1242,6 @@ async function loadEditors() {
     const { data, error } = await db.from('editors').select('id,email,created_at').order('created_at');
     if (error) {
         console.error('loadEditors:', error);
-        if (isJwtIssuedAtFutureError(error)) await clearInvalidSupabaseSession();
         state.editors = [];
         return;
     }
@@ -3691,7 +3687,7 @@ async function initAuth() {
     await _ensureDb();
     const { data: { session } = {}, error } = await db.auth.getSession();
     if (error && isJwtIssuedAtFutureError(error)) {
-        await clearInvalidSupabaseSession();
+        console.warn('세션 시각 확인이 지연되고 있습니다. 저장된 로그인 정보는 유지합니다.');
         return;
     }
     await setSessionUser(normalizeAuthUser(session?.user));
