@@ -3272,7 +3272,8 @@ const SHEET_LINKS = {
 };
 const BEADYO_THEME_STORAGE_KEY = 'beadyo:theme';
 const SONGBOOK_FAVORITES_STORAGE_KEY = 'beadyo:songbook:favorites:v1';
-const JWT_FUTURE_RETRY_DELAYS_MS = [800, 2000, 5000];
+const JWT_FUTURE_FINAL_RETRY_DELAYS_MS = [2000, 5000];
+const JWT_FUTURE_MAX_WAIT_MS = 90000;
 
 function beadyoAllowedMessageOrigin(origin) {
     return ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'].includes(origin) ||
@@ -5266,16 +5267,66 @@ async function responseHasJwtIssuedAtFuture(response) {
     }
 }
 
+function createRetryableRequest(input, init) {
+    if (typeof Request === 'undefined') return null;
+    try {
+        return new Request(input instanceof Request ? input.clone() : input, init);
+    } catch {
+        return null;
+    }
+}
+
+function isSupabaseRestRequest(request) {
+    if (!request) return false;
+    try {
+        const url = new URL(request.url);
+        return url.origin === SUPABASE_URL && url.pathname.startsWith('/rest/v1/');
+    } catch {
+        return false;
+    }
+}
+
+function anonymousSupabaseReadRequest(request) {
+    const clone = request.clone();
+    const headers = new Headers(clone.headers);
+    headers.set('Authorization', `Bearer ${SUPABASE_ANON_KEY}`);
+    return new Request(clone, { headers });
+}
+
+function jwtFutureWaitMs(request, response) {
+    try {
+        const token = (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '');
+        const part = token.split('.')[1];
+        if (!part) return 1000;
+        const base64 = part.replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(part.length / 4) * 4, '=');
+        const issuedAtMs = Number(JSON.parse(atob(base64)).iat) * 1000;
+        const responseDateMs = Date.parse(response.headers.get('Date') || '');
+        const referenceMs = Number.isFinite(responseDateMs) ? responseDateMs : Date.now();
+        if (!Number.isFinite(issuedAtMs)) return 1000;
+        return Math.max(1000, Math.min(JWT_FUTURE_MAX_WAIT_MS, issuedAtMs - referenceMs + 1200));
+    } catch {
+        return 1000;
+    }
+}
+
 async function fetchWithJwtFutureRetry(input, init) {
-    const requestTemplate = typeof Request !== 'undefined' && input instanceof Request
-        ? input.clone()
-        : null;
+    const requestTemplate = createRetryableRequest(input, init);
     const send = () => window.fetch(requestTemplate ? requestTemplate.clone() : input, init);
     let response = await send();
-    for (const delayMs of JWT_FUTURE_RETRY_DELAYS_MS) {
-        if (!await responseHasJwtIssuedAtFuture(response)) return response;
+    if (!await responseHasJwtIssuedAtFuture(response) || !isSupabaseRestRequest(requestTemplate)) return response;
+
+    if (['GET', 'HEAD'].includes(requestTemplate.method)) {
+        return window.fetch(anonymousSupabaseReadRequest(requestTemplate));
+    }
+
+    const firstWaitMs = jwtFutureWaitMs(requestTemplate, response);
+    if (typeof showToast === 'function') {
+        showToast(`로그인 서버 시간을 맞추는 중이에요. 최대 ${Math.ceil(firstWaitMs / 1000)}초만 기다려주세요.`);
+    }
+    for (const delayMs of [firstWaitMs, ...JWT_FUTURE_FINAL_RETRY_DELAYS_MS]) {
         await new Promise(resolve => setTimeout(resolve, delayMs));
         response = await send();
+        if (!await responseHasJwtIssuedAtFuture(response)) return response;
     }
     return response;
 }

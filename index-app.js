@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL = 'riosniper12@gmail.com';
-const FALLBACK_ASSET_VERSION = 'auth-session-retry-20260828';
+const FALLBACK_ASSET_VERSION = 'auth-session-clock-skew-20260828';
 const IS_LOCAL_HOST = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
 const APP_ASSET_VERSION = (() => {
     try {
@@ -16,7 +16,8 @@ const THEME_STORAGE_KEY = 'beadyo:theme';
 const PWA_GUIDE_SEEN_STORAGE_KEY = 'beadyo:pwa-guide-seen:v1';
 const NOTIFICATION_READ_STORAGE_KEY = 'beadyo:notification-read:v1';
 const NOTIFICATION_REFRESH_INTERVAL_MS = 2 * 60 * 1000;
-const JWT_FUTURE_RETRY_DELAYS_MS = [800, 2000, 5000];
+const JWT_FUTURE_FINAL_RETRY_DELAYS_MS = [2000, 5000];
+const JWT_FUTURE_MAX_WAIT_MS = 90000;
 const THEME_META_COLORS = {
     light: '#76ad39',
     dark: '#4f7d2b',
@@ -131,10 +132,10 @@ function markPwaGuideSeen() {
 }
 
 const TABS = [
-    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'auth-session-retry-20260828' },
+    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'auth-session-clock-skew-20260828' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
-    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'auth-session-retry-20260828' },
-    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'auth-session-retry-20260828' },
+    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'auth-session-clock-skew-20260828' },
+    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'auth-session-clock-skew-20260828' },
     { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'music-dark-mode-20260822' },
     { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'gacha-wall-hit-20260614' },
 ];
@@ -239,16 +240,63 @@ async function responseHasJwtIssuedAtFuture(response) {
     }
 }
 
+function createRetryableRequest(input, init) {
+    if (typeof Request === 'undefined') return null;
+    try {
+        return new Request(input instanceof Request ? input.clone() : input, init);
+    } catch {
+        return null;
+    }
+}
+
+function isSupabaseRestRequest(request) {
+    if (!request) return false;
+    try {
+        const url = new URL(request.url);
+        return url.origin === SUPABASE_URL && url.pathname.startsWith('/rest/v1/');
+    } catch {
+        return false;
+    }
+}
+
+function anonymousSupabaseReadRequest(request) {
+    const clone = request.clone();
+    const headers = new Headers(clone.headers);
+    headers.set('Authorization', `Bearer ${SUPABASE_ANON_KEY}`);
+    return new Request(clone, { headers });
+}
+
+function jwtFutureWaitMs(request, response) {
+    try {
+        const token = (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '');
+        const part = token.split('.')[1];
+        if (!part) return 1000;
+        const base64 = part.replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(part.length / 4) * 4, '=');
+        const issuedAtMs = Number(JSON.parse(atob(base64)).iat) * 1000;
+        const responseDateMs = Date.parse(response.headers.get('Date') || '');
+        const referenceMs = Number.isFinite(responseDateMs) ? responseDateMs : Date.now();
+        if (!Number.isFinite(issuedAtMs)) return 1000;
+        return Math.max(1000, Math.min(JWT_FUTURE_MAX_WAIT_MS, issuedAtMs - referenceMs + 1200));
+    } catch {
+        return 1000;
+    }
+}
+
 async function fetchWithJwtFutureRetry(input, init) {
-    const requestTemplate = typeof Request !== 'undefined' && input instanceof Request
-        ? input.clone()
-        : null;
+    const requestTemplate = createRetryableRequest(input, init);
     const send = () => window.fetch(requestTemplate ? requestTemplate.clone() : input, init);
     let response = await send();
-    for (const delayMs of JWT_FUTURE_RETRY_DELAYS_MS) {
-        if (!await responseHasJwtIssuedAtFuture(response)) return response;
+    if (!await responseHasJwtIssuedAtFuture(response) || !isSupabaseRestRequest(requestTemplate)) return response;
+
+    if (['GET', 'HEAD'].includes(requestTemplate.method)) {
+        return window.fetch(anonymousSupabaseReadRequest(requestTemplate));
+    }
+
+    const firstWaitMs = jwtFutureWaitMs(requestTemplate, response);
+    for (const delayMs of [firstWaitMs, ...JWT_FUTURE_FINAL_RETRY_DELAYS_MS]) {
         await new Promise(resolve => setTimeout(resolve, delayMs));
         response = await send();
+        if (!await responseHasJwtIssuedAtFuture(response)) return response;
     }
     return response;
 }
