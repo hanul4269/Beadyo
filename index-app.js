@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL = 'riosniper12@gmail.com';
-const FALLBACK_ASSET_VERSION = 'auth-session-clock-skew-20260828';
+const FALLBACK_ASSET_VERSION = 'development-requests-20260901';
 const IS_LOCAL_HOST = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
 const APP_ASSET_VERSION = (() => {
     try {
@@ -853,6 +853,11 @@ function openDanceReviewPage() {
     window.location.href = withFrameAssetVersion('dance-archive.html', 'dance-nav-20260628');
 }
 
+function openDevelopmentRequestsPage() {
+    closeAuthMenu();
+    window.location.href = withFrameAssetVersion('development-requests.html', 'development-requests-20260901');
+}
+
 function openPatchNotesModal() {
     closeAuthMenu();
     document.getElementById('patch-notes-overlay')?.classList.add('open');
@@ -886,6 +891,7 @@ async function updateAuthUI() {
             ${canAdmin ? `<button onclick="openCalendarAdmin()">⚙ 편집 설정</button>` : ''}
             <button onclick="openPatchNotesModal()">패치노트</button>
             <button onclick="openDanceReviewPage()">춤영상 검토페이지</button>
+            <button onclick="openDevelopmentRequestsPage()">개발요청란</button>
             <button class="danger" onclick="signOut()">로그아웃</button>
         </div>
     </div>`;

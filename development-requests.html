@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#76ad39">
+    <meta name="robots" content="noindex, nofollow">
+    <title>개발요청란 | BEADYO</title>
+    <link rel="icon" href="logo-icon.webp">
+    <script src="supabase.min.js"></script>
+    <style>
+        :root {
+            color-scheme: light;
+            --green-900: #25451b;
+            --green-800: #315d22;
+            --green-700: #4c812d;
+            --green-600: #679d36;
+            --green-100: #ecf7df;
+            --ink: #25311f;
+            --muted: #718066;
+            --line: #dce8d1;
+            --surface: #ffffff;
+            --surface-soft: #f7fbf2;
+            --page: #eef6e7;
+            --shadow: 0 14px 40px rgba(39, 73, 25, 0.11);
+        }
+
+        html[data-theme="dark"] {
+            color-scheme: dark;
+            --ink: #edf5e7;
+            --muted: #a9bba0;
+            --line: #354830;
+            --surface: #182218;
+            --surface-soft: #121b12;
+            --page: #0d150e;
+            --green-100: #263b20;
+            --shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 10% 8%, rgba(126, 180, 66, 0.18), transparent 26rem),
+                var(--page);
+            color: var(--ink);
+            font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        button, textarea, select { font: inherit; }
+        button { -webkit-tap-highlight-color: transparent; }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: rgba(76, 129, 45, 0.94);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+        }
+
+        .topbar-inner {
+            width: min(940px, calc(100% - 32px));
+            height: 64px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+        }
+
+        .brand img { width: 34px; height: 34px; object-fit: contain; }
+
+        .back-link {
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            border-radius: 999px;
+            padding: 8px 13px;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.12);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        main {
+            width: min(940px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 42px 0 72px;
+        }
+
+        .hero {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 22px;
+        }
+
+        .eyebrow {
+            margin: 0 0 7px;
+            color: var(--green-700);
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(30px, 5vw, 45px);
+            line-height: 1.08;
+            letter-spacing: -0.045em;
+        }
+
+        .hero-copy {
+            margin: 12px 0 0;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.65;
+        }
+
+        .user-chip {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            min-height: 44px;
+            max-width: 230px;
+            padding: 6px 12px 6px 7px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: var(--surface);
+            box-shadow: 0 6px 18px rgba(39, 73, 25, 0.07);
+        }
+
+        .user-chip img {
+            width: 31px;
+            height: 31px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--green-100);
+        }
+
+        .user-chip-name {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .admin-mark {
+            padding: 3px 7px;
+            border-radius: 999px;
+            background: var(--green-100);
+            color: var(--green-700);
+            font-size: 10px;
+            font-weight: 900;
+        }
+
+        .panel {
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            background: var(--surface);
+            box-shadow: var(--shadow);
+        }
+
+        .composer {
+            padding: 22px;
+            margin-bottom: 26px;
+        }
+
+        .composer-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 13px;
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .composer-help {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 128px;
+            resize: vertical;
+            border: 1px solid var(--line);
+            border-radius: 17px;
+            padding: 15px 16px;
+            background: var(--surface-soft);
+            color: var(--ink);
+            outline: none;
+            line-height: 1.6;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        textarea:focus {
+            border-color: var(--green-600);
+            box-shadow: 0 0 0 3px rgba(103, 157, 54, 0.14);
+        }
+
+        textarea::placeholder { color: #9aaa90; }
+
+        .composer-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .character-count { color: var(--muted); font-size: 12px; }
+
+        .primary-btn {
+            border: none;
+            border-radius: 13px;
+            padding: 11px 18px;
+            background: var(--green-700);
+            color: #fff;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 7px 16px rgba(76, 129, 45, 0.2);
+        }
+
+        .primary-btn:hover { background: var(--green-800); }
+        .primary-btn:disabled { opacity: 0.55; cursor: wait; }
+
+        .board-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .board-title { font-size: 19px; font-weight: 900; }
+
+        .filters {
+            display: flex;
+            gap: 7px;
+            overflow-x: auto;
+            padding: 2px;
+            scrollbar-width: none;
+        }
+
+        .filters::-webkit-scrollbar { display: none; }
+
+        .filter-btn {
+            flex: 0 0 auto;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 7px 11px;
+            background: var(--surface);
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .filter-btn.active {
+            border-color: var(--green-700);
+            background: var(--green-700);
+            color: #fff;
+        }
+
+        .request-list { display: grid; gap: 12px; }
+
+        .request-card {
+            padding: 20px;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            background: var(--surface);
+            box-shadow: 0 8px 24px rgba(39, 73, 25, 0.06);
+        }
+
+        .request-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .request-user {
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .request-user img {
+            flex: 0 0 auto;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--green-100);
+        }
+
+        .request-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .request-date { margin-top: 3px; color: var(--muted); font-size: 11px; }
+
+        .status-pill {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 30px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .status-pill::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .status-received { background: #fff2cf; color: #a86600; }
+        .status-in_progress { background: #e4efff; color: #2d66aa; }
+        .status-completed { background: #e4f5dc; color: #397627; }
+
+        .request-content {
+            margin: 17px 0 0;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .admin-controls {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 17px;
+            padding-top: 14px;
+            border-top: 1px solid var(--line);
+        }
+
+        .admin-controls label { color: var(--muted); font-size: 11px; font-weight: 800; }
+
+        .status-select {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 7px 28px 7px 10px;
+            background: var(--surface-soft);
+            color: var(--ink);
+            font-size: 12px;
+            font-weight: 800;
+            outline: none;
+        }
+
+        .empty, .auth-gate, .loading {
+            padding: 42px 20px;
+            border: 1px dashed var(--line);
+            border-radius: 20px;
+            background: var(--surface);
+            color: var(--muted);
+            text-align: center;
+            line-height: 1.7;
+        }
+
+        .auth-gate { margin-top: 20px; }
+        .auth-gate strong { display: block; margin-bottom: 5px; color: var(--ink); font-size: 18px; }
+        .auth-gate a { color: var(--green-700); font-weight: 900; }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: max(24px, env(safe-area-inset-bottom));
+            z-index: 100;
+            transform: translate(-50%, 20px);
+            max-width: calc(100% - 32px);
+            padding: 11px 16px;
+            border-radius: 13px;
+            background: #24321f;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 800;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.18s, transform 0.18s;
+        }
+
+        .toast.show { opacity: 1; transform: translate(-50%, 0); }
+        .toast.error { background: #9b3535; }
+        [hidden] { display: none !important; }
+
+        @media (max-width: 640px) {
+            .topbar-inner, main { width: min(100% - 24px, 940px); }
+            main { padding-top: 28px; }
+            .hero { align-items: flex-start; flex-direction: column; gap: 16px; }
+            .user-chip { max-width: 100%; }
+            .composer { padding: 17px; border-radius: 20px; }
+            .composer-title { align-items: flex-start; flex-direction: column; gap: 4px; }
+            .board-head { align-items: flex-start; flex-direction: column; }
+            .filters { width: 100%; }
+            .request-card { padding: 16px; }
+            .request-top { gap: 9px; }
+            .brand span { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-inner">
+            <div class="brand"><img src="logo-icon.webp" alt=""><span>BEADYO 개발요청란</span></div>
+            <a class="back-link" href="index.html">← 메인으로</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div>
+                <p class="eyebrow">DEVELOPMENT REQUEST</p>
+                <h1>개발요청란</h1>
+                <p class="hero-copy">방송에 필요한 기능이나 수정 사항을 편하게 남겨주세요.<br>요청 상태는 접수 → 진행중 → 완료 순서로 표시됩니다.</p>
+            </div>
+            <div class="user-chip" id="user-chip" hidden></div>
+        </section>
+
+        <section class="auth-gate" id="auth-gate" hidden>
+            <strong>로그인이 필요한 게시판이에요.</strong>
+            요청 작성과 확인은 <a href="index.html">메인 페이지에서 로그인</a>한 뒤 이용할 수 있습니다.
+        </section>
+
+        <div id="board-app" hidden>
+            <form class="panel composer" id="request-form">
+                <div class="composer-title">
+                    <span>새 요청 남기기</span>
+                    <span class="composer-help">필요한 내용과 참고 링크를 함께 적어주세요.</span>
+                </div>
+                <textarea id="request-content" maxlength="2000" required placeholder="예) 룰렛 결과를 방송 화면에 크게 띄울 수 있는 기능이 필요해요.&#10;참고 링크: https://..."></textarea>
+                <div class="composer-bottom">
+                    <span class="character-count"><span id="character-count">0</span> / 2000</span>
+                    <button class="primary-btn" id="submit-btn" type="submit">요청 등록</button>
+                </div>
+            </form>
+
+            <section>
+                <div class="board-head">
+                    <div class="board-title">요청 목록 <span id="request-count"></span></div>
+                    <div class="filters" id="filters" aria-label="요청 상태 필터">
+                        <button class="filter-btn active" type="button" data-filter="all">전체</button>
+                        <button class="filter-btn" type="button" data-filter="received">접수</button>
+                        <button class="filter-btn" type="button" data-filter="in_progress">진행중</button>
+                        <button class="filter-btn" type="button" data-filter="completed">완료</button>
+                    </div>
+                </div>
+                <div class="request-list" id="request-list">
+                    <div class="loading">요청 목록을 불러오는 중이에요.</div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+        const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
+        const OWNER_EMAIL = 'riosniper12@gmail.com';
+        const THEME_STORAGE_KEY = 'beadyo:theme';
+        const STATUS_LABELS = {
+            received: '접수',
+            in_progress: '진행중',
+            completed: '완료',
+        };
+        const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { detectSessionInUrl: false, flowType: 'pkce' },
+        });
+
+        const state = {
+            user: null,
+            isAdmin: false,
+            requests: [],
+            filter: 'all',
+        };
+        let toastTimer = null;
+
+        function applyStoredTheme() {
+            let theme = 'light';
+            try { theme = localStorage.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light'; } catch {}
+            document.documentElement.dataset.theme = theme;
+            document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#4f7d2b' : '#76ad39';
+        }
+
+        function safeImageUrl(value) {
+            try {
+                const url = new URL(String(value || '').trim());
+                return ['http:', 'https:'].includes(url.protocol) ? url.toString() : '';
+            } catch { return ''; }
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function currentUserName() {
+            const metadata = state.user?.user_metadata || {};
+            return String(metadata.full_name || metadata.name || state.user?.email?.split('@')[0] || '스트리머').slice(0, 80);
+        }
+
+        function currentUserAvatar() {
+            const metadata = state.user?.user_metadata || {};
+            return safeImageUrl(metadata.avatar_url || metadata.picture || '');
+        }
+
+        function showToast(message, type = '') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`.trim();
+            requestAnimationFrame(() => toast.classList.add('show'));
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+        }
+
+        async function checkAdmin(user) {
+            if (!user) return false;
+            const email = String(user.email || '').toLowerCase();
+            if (email === OWNER_EMAIL.toLowerCase()) return true;
+            const { data, error } = await db.from('editors').select('email').eq('email', email).maybeSingle();
+            return !error && !!data;
+        }
+
+        function renderUserChip() {
+            const chip = document.getElementById('user-chip');
+            const avatar = currentUserAvatar() || 'login-icon.png';
+            chip.innerHTML = `
+                <img src="${escapeHtml(avatar)}" alt="">
+                <span class="user-chip-name">${escapeHtml(currentUserName())}</span>
+                ${state.isAdmin ? '<span class="admin-mark">관리자</span>' : ''}
+            `;
+            chip.hidden = false;
+        }
+
+        function formatDate(value) {
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return '';
+            return new Intl.DateTimeFormat('ko-KR', {
+                year: 'numeric', month: 'short', day: 'numeric',
+                hour: '2-digit', minute: '2-digit',
+            }).format(date);
+        }
+
+        function statusSelect(request) {
+            if (!state.isAdmin) return '';
+            return `
+                <div class="admin-controls">
+                    <label for="status-${request.id}">처리 상태</label>
+                    <select class="status-select" id="status-${request.id}" data-request-id="${request.id}">
+                        ${Object.entries(STATUS_LABELS).map(([value, label]) =>
+                            `<option value="${value}" ${request.status === value ? 'selected' : ''}>${label}</option>`
+                        ).join('')}
+                    </select>
+                </div>
+            `;
+        }
+
+        function requestCard(request) {
+            const status = STATUS_LABELS[request.status] ? request.status : 'received';
+            const avatar = safeImageUrl(request.requester_avatar) || 'login-icon.png';
+            return `
+                <article class="request-card">
+                    <div class="request-top">
+                        <div class="request-user">
+                            <img src="${escapeHtml(avatar)}" alt="">
+                            <div>
+                                <div class="request-name">${escapeHtml(request.requester_name || '스트리머')}</div>
+                                <div class="request-date">${escapeHtml(formatDate(request.created_at))}</div>
+                            </div>
+                        </div>
+                        <span class="status-pill status-${status}">${STATUS_LABELS[status]}</span>
+                    </div>
+                    <p class="request-content">${escapeHtml(request.content)}</p>
+                    ${statusSelect({ ...request, status })}
+                </article>
+            `;
+        }
+
+        function renderRequests() {
+            const list = document.getElementById('request-list');
+            const filtered = state.filter === 'all'
+                ? state.requests
+                : state.requests.filter(request => request.status === state.filter);
+            document.getElementById('request-count').textContent = `(${state.requests.length})`;
+            if (!filtered.length) {
+                list.innerHTML = `<div class="empty">${state.filter === 'all' ? '아직 등록된 요청이 없어요.<br>첫 요청을 남겨주세요!' : '이 상태의 요청이 없어요.'}</div>`;
+                return;
+            }
+            list.innerHTML = filtered.map(requestCard).join('');
+        }
+
+        async function loadRequests() {
+            const { data, error } = await db
+                .from('development_requests')
+                .select('id,requester_name,requester_avatar,content,status,created_at,updated_at')
+                .order('created_at', { ascending: false });
+            if (error) {
+                console.error(error);
+                document.getElementById('request-list').innerHTML = '<div class="empty">요청 목록을 불러오지 못했어요.<br>게시판 설정이 완료되었는지 확인해주세요.</div>';
+                return;
+            }
+            state.requests = data || [];
+            renderRequests();
+        }
+
+        async function submitRequest(event) {
+            event.preventDefault();
+            const textarea = document.getElementById('request-content');
+            const submitButton = document.getElementById('submit-btn');
+            const content = textarea.value.trim();
+            if (!content) {
+                showToast('요청 내용을 적어주세요.', 'error');
+                textarea.focus();
+                return;
+            }
+
+            submitButton.disabled = true;
+            submitButton.textContent = '등록 중...';
+            const { error } = await db.from('development_requests').insert({
+                requester_name: currentUserName(),
+                requester_avatar: currentUserAvatar() || null,
+                content,
+            });
+            submitButton.disabled = false;
+            submitButton.textContent = '요청 등록';
+
+            if (error) {
+                console.error(error);
+                showToast('요청을 등록하지 못했어요. 잠시 후 다시 시도해주세요.', 'error');
+                return;
+            }
+
+            textarea.value = '';
+            document.getElementById('character-count').textContent = '0';
+            state.filter = 'all';
+            document.querySelectorAll('.filter-btn').forEach(button => button.classList.toggle('active', button.dataset.filter === 'all'));
+            await loadRequests();
+            showToast('요청을 접수했어요.');
+        }
+
+        async function changeStatus(select) {
+            const id = Number(select.dataset.requestId);
+            const status = select.value;
+            const current = state.requests.find(request => request.id === id);
+            if (!state.isAdmin || !current || !STATUS_LABELS[status]) return;
+            const previous = current.status;
+            select.disabled = true;
+            const { error } = await db.from('development_requests').update({ status }).eq('id', id);
+            select.disabled = false;
+            if (error) {
+                console.error(error);
+                select.value = previous;
+                showToast('상태를 변경하지 못했어요.', 'error');
+                return;
+            }
+            current.status = status;
+            renderRequests();
+            showToast(`상태를 ${STATUS_LABELS[status]}로 변경했어요.`);
+        }
+
+        function bindEvents() {
+            const textarea = document.getElementById('request-content');
+            textarea.addEventListener('input', () => {
+                document.getElementById('character-count').textContent = String(textarea.value.length);
+            });
+            document.getElementById('request-form').addEventListener('submit', submitRequest);
+            document.getElementById('filters').addEventListener('click', event => {
+                const button = event.target.closest('[data-filter]');
+                if (!button) return;
+                state.filter = button.dataset.filter;
+                document.querySelectorAll('.filter-btn').forEach(item => item.classList.toggle('active', item === button));
+                renderRequests();
+            });
+            document.getElementById('request-list').addEventListener('change', event => {
+                const select = event.target.closest('.status-select');
+                if (select) changeStatus(select);
+            });
+            window.addEventListener('storage', event => {
+                if (event.key === THEME_STORAGE_KEY) applyStoredTheme();
+            });
+        }
+
+        async function init() {
+            applyStoredTheme();
+            bindEvents();
+            const { data: { session } = {}, error } = await db.auth.getSession();
+            if (error || !session?.user) {
+                document.getElementById('auth-gate').hidden = false;
+                return;
+            }
+            state.user = session.user;
+            state.isAdmin = await checkAdmin(state.user);
+            renderUserChip();
+            document.getElementById('board-app').hidden = false;
+            await loadRequests();
+        }
+
+        init();
+    </script>
+</body>
+</html>
