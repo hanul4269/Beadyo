@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const OWNER_EMAIL = 'riosniper12@gmail.com';
-const FALLBACK_ASSET_VERSION = 'development-requests-20260901';
+const FALLBACK_ASSET_VERSION = 'development-request-comments-20260902';
 const IS_LOCAL_HOST = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
 const APP_ASSET_VERSION = (() => {
     try {
@@ -855,7 +855,7 @@ function openDanceReviewPage() {
 
 function openDevelopmentRequestsPage() {
     closeAuthMenu();
-    window.location.href = withFrameAssetVersion('development-requests.html', 'development-requests-20260901');
+    window.location.href = withFrameAssetVersion('development-requests.html', 'development-request-comments-20260902');
 }
 
 function openPatchNotesModal() {

@@ -355,15 +355,25 @@
             line-height: 1.7;
         }
 
-        .admin-controls {
+        .request-footer {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: space-between;
+            flex-wrap: wrap;
             gap: 8px;
             margin-top: 17px;
             padding-top: 14px;
             border-top: 1px solid var(--line);
         }
+
+        .admin-controls,
+        .request-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .request-footer .request-actions { margin-left: auto; }
 
         .admin-controls label { color: var(--muted); font-size: 11px; font-weight: 800; }
 
@@ -377,6 +387,150 @@
             font-weight: 800;
             outline: none;
         }
+
+        .request-action-btn {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 7px 11px;
+            background: var(--surface-soft);
+            color: var(--ink);
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .request-action-btn:hover { border-color: var(--green-600); }
+        .request-action-btn.danger { color: #c44747; }
+        .request-action-btn.danger:hover { border-color: #dc8d8d; background: #fff3f3; }
+        .request-action-btn.primary { border-color: var(--green-700); background: var(--green-700); color: #fff; }
+        .request-action-btn:disabled { opacity: 0.55; cursor: wait; }
+
+        .request-edit-form { margin-top: 16px; }
+        .request-edit-form textarea { min-height: 118px; }
+        .request-edit-form .request-actions { justify-content: flex-end; margin-top: 9px; }
+
+        .comments-section {
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px solid var(--line);
+        }
+
+        .comments-title {
+            margin-bottom: 12px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .comment-list { display: grid; gap: 10px; }
+
+        .comment-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+        }
+
+        .comment-avatar {
+            flex: 0 0 auto;
+            width: 29px;
+            height: 29px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--green-100);
+        }
+
+        .comment-bubble {
+            min-width: 0;
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 5px 14px 14px 14px;
+            background: var(--surface-soft);
+        }
+
+        .comment-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .comment-author {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .comment-date { color: var(--muted); font-size: 10px; font-weight: 600; }
+
+        .comment-text {
+            margin: 6px 0 0;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .comment-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 7px;
+            margin-top: 7px;
+        }
+
+        .comment-action-btn {
+            border: 0;
+            padding: 0;
+            background: transparent;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .comment-action-btn:hover { color: var(--green-700); }
+        .comment-action-btn.danger:hover { color: #c44747; }
+
+        .comment-edit-form textarea {
+            min-height: 72px;
+            padding: 10px 11px;
+            border-radius: 11px;
+            font-size: 13px;
+        }
+
+        .comment-form {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .comment-form textarea {
+            min-height: 42px;
+            max-height: 120px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            resize: vertical;
+            font-size: 13px;
+        }
+
+        .comment-submit-btn {
+            flex: 0 0 auto;
+            min-height: 42px;
+            border: none;
+            border-radius: 11px;
+            padding: 0 14px;
+            background: var(--green-700);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .comment-submit-btn:disabled { opacity: 0.55; cursor: wait; }
+        .comment-empty { color: var(--muted); font-size: 12px; }
 
         .empty, .auth-gate, .loading {
             padding: 42px 20px;
@@ -426,6 +580,8 @@
             .filters { width: 100%; }
             .request-card { padding: 16px; }
             .request-top { gap: 9px; }
+            .comment-form { align-items: stretch; flex-direction: column; }
+            .comment-submit-btn { align-self: flex-end; min-height: 38px; }
             .brand span { font-size: 14px; }
         }
     </style>
@@ -503,7 +659,11 @@
             user: null,
             isAdmin: false,
             requests: [],
+            comments: {},
+            commentsError: false,
             filter: 'all',
+            editingId: null,
+            editingCommentId: null,
         };
         let toastTimer = null;
 
@@ -577,6 +737,10 @@
             }).format(date);
         }
 
+        function canManageRequest(request) {
+            return state.isAdmin || request.requester_id === state.user?.id;
+        }
+
         function statusSelect(request) {
             if (!state.isAdmin) return '';
             return `
@@ -591,11 +755,111 @@
             `;
         }
 
+        function requestActions(request) {
+            if (!canManageRequest(request)) return '';
+            return `
+                <div class="request-actions">
+                    <button class="request-action-btn" type="button" data-action="edit" data-request-id="${request.id}">수정</button>
+                    <button class="request-action-btn danger" type="button" data-action="delete" data-request-id="${request.id}">삭제</button>
+                </div>
+            `;
+        }
+
+        function requestEditor(request) {
+            return `
+                <div class="request-edit-form">
+                    <textarea class="edit-content" maxlength="2000" aria-label="요청 내용 수정">${escapeHtml(request.content)}</textarea>
+                    <div class="request-actions">
+                        <button class="request-action-btn" type="button" data-action="cancel-edit" data-request-id="${request.id}">취소</button>
+                        <button class="request-action-btn primary" type="button" data-action="save-edit" data-request-id="${request.id}">저장</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function commentsForRequest(requestId) {
+            return state.comments[requestId] || [];
+        }
+
+        function findComment(commentId) {
+            for (const comments of Object.values(state.comments)) {
+                const comment = comments.find(item => item.id === commentId);
+                if (comment) return comment;
+            }
+            return null;
+        }
+
+        function canManageComment(comment) {
+            return state.isAdmin || comment.author_id === state.user?.id;
+        }
+
+        function commentActions(comment) {
+            if (!canManageComment(comment)) return '';
+            return `
+                <div class="comment-actions">
+                    <button class="comment-action-btn" type="button" data-action="edit-comment" data-comment-id="${comment.id}">수정</button>
+                    <button class="comment-action-btn danger" type="button" data-action="delete-comment" data-comment-id="${comment.id}">삭제</button>
+                </div>
+            `;
+        }
+
+        function commentEditor(comment) {
+            return `
+                <div class="comment-edit-form">
+                    <textarea class="comment-edit-content" maxlength="1000" aria-label="댓글 내용 수정">${escapeHtml(comment.content)}</textarea>
+                    <div class="comment-actions">
+                        <button class="comment-action-btn" type="button" data-action="cancel-comment-edit" data-comment-id="${comment.id}">취소</button>
+                        <button class="comment-action-btn" type="button" data-action="save-comment-edit" data-comment-id="${comment.id}">저장</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function commentItem(comment) {
+            const avatar = safeImageUrl(comment.author_avatar) || 'login-icon.png';
+            const isEditing = state.editingCommentId === comment.id;
+            return `
+                <div class="comment-item" data-comment-id="${comment.id}">
+                    <img class="comment-avatar" src="${escapeHtml(avatar)}" alt="">
+                    <div class="comment-bubble">
+                        <div class="comment-head">
+                            <span class="comment-author">${escapeHtml(comment.author_name || '사용자')}</span>
+                            <span class="comment-date">${escapeHtml(formatDate(comment.created_at))}</span>
+                        </div>
+                        ${isEditing ? commentEditor(comment) : `<p class="comment-text">${escapeHtml(comment.content)}</p>${commentActions(comment)}`}
+                    </div>
+                </div>
+            `;
+        }
+
+        function commentSection(request) {
+            const comments = commentsForRequest(request.id);
+            if (state.commentsError) {
+                return '<div class="comments-section"><div class="comment-empty">댓글 기능을 준비 중이에요.</div></div>';
+            }
+            return `
+                <section class="comments-section" aria-label="댓글">
+                    <div class="comments-title">댓글 ${comments.length}</div>
+                    <div class="comment-list">
+                        ${comments.length ? comments.map(commentItem).join('') : '<div class="comment-empty">아직 댓글이 없어요.</div>'}
+                    </div>
+                    <form class="comment-form" data-request-id="${request.id}">
+                        <textarea class="comment-content" maxlength="1000" required aria-label="댓글 내용" placeholder="댓글을 남겨주세요."></textarea>
+                        <button class="comment-submit-btn" type="submit">등록</button>
+                    </form>
+                </section>
+            `;
+        }
+
         function requestCard(request) {
             const status = STATUS_LABELS[request.status] ? request.status : 'received';
             const avatar = safeImageUrl(request.requester_avatar) || 'login-icon.png';
+            const isEditing = state.editingId === request.id;
+            const footer = !isEditing && (state.isAdmin || canManageRequest(request))
+                ? `<div class="request-footer">${statusSelect({ ...request, status })}${requestActions(request)}</div>`
+                : '';
             return `
-                <article class="request-card">
+                <article class="request-card" data-request-id="${request.id}">
                     <div class="request-top">
                         <div class="request-user">
                             <img src="${escapeHtml(avatar)}" alt="">
@@ -606,8 +870,9 @@
                         </div>
                         <span class="status-pill status-${status}">${STATUS_LABELS[status]}</span>
                     </div>
-                    <p class="request-content">${escapeHtml(request.content)}</p>
-                    ${statusSelect({ ...request, status })}
+                    ${isEditing ? requestEditor(request) : `<p class="request-content">${escapeHtml(request.content)}</p>`}
+                    ${footer}
+                    ${commentSection(request)}
                 </article>
             `;
         }
@@ -628,7 +893,7 @@
         async function loadRequests() {
             const { data, error } = await db
                 .from('development_requests')
-                .select('id,requester_name,requester_avatar,content,status,created_at,updated_at')
+                .select('id,requester_id,requester_name,requester_avatar,content,status,created_at,updated_at')
                 .order('created_at', { ascending: false });
             if (error) {
                 console.error(error);
@@ -636,7 +901,30 @@
                 return;
             }
             state.requests = data || [];
+            await loadComments();
             renderRequests();
+        }
+
+        async function loadComments() {
+            const requestIds = state.requests.map(request => request.id);
+            state.comments = Object.fromEntries(requestIds.map(id => [id, []]));
+            state.commentsError = false;
+            if (!requestIds.length) return;
+
+            const { data, error } = await db
+                .from('development_request_comments')
+                .select('id,request_id,author_id,author_name,author_avatar,content,created_at,updated_at')
+                .in('request_id', requestIds)
+                .order('created_at', { ascending: true });
+            if (error) {
+                console.error(error);
+                state.commentsError = true;
+                return;
+            }
+            for (const comment of data || []) {
+                if (!state.comments[comment.request_id]) state.comments[comment.request_id] = [];
+                state.comments[comment.request_id].push(comment);
+            }
         }
 
         async function submitRequest(event) {
@@ -694,6 +982,186 @@
             showToast(`상태를 ${STATUS_LABELS[status]}로 변경했어요.`);
         }
 
+        function startRequestEdit(id) {
+            const request = state.requests.find(item => item.id === id);
+            if (!request || !canManageRequest(request)) return;
+            state.editingId = id;
+            renderRequests();
+            const textarea = document.querySelector(`[data-request-id="${id}"] .edit-content`);
+            textarea?.focus();
+            textarea?.setSelectionRange(textarea.value.length, textarea.value.length);
+        }
+
+        function cancelRequestEdit() {
+            state.editingId = null;
+            renderRequests();
+        }
+
+        async function saveRequestEdit(button) {
+            const id = Number(button.dataset.requestId);
+            const request = state.requests.find(item => item.id === id);
+            if (!request || !canManageRequest(request)) return;
+            const textarea = button.closest('.request-card')?.querySelector('.edit-content');
+            const content = textarea?.value.trim() || '';
+            if (!content) {
+                showToast('요청 내용을 적어주세요.', 'error');
+                textarea?.focus();
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = '저장 중...';
+            let query = db.from('development_requests').update({ content }).eq('id', id);
+            if (!state.isAdmin) query = query.eq('requester_id', state.user.id);
+            const { error } = await query;
+            if (error) {
+                console.error(error);
+                button.disabled = false;
+                button.textContent = '저장';
+                showToast('요청을 수정하지 못했어요.', 'error');
+                return;
+            }
+
+            request.content = content;
+            state.editingId = null;
+            renderRequests();
+            showToast('요청 내용을 수정했어요.');
+        }
+
+        async function deleteRequest(button) {
+            const id = Number(button.dataset.requestId);
+            const request = state.requests.find(item => item.id === id);
+            if (!request || !canManageRequest(request)) return;
+            if (!window.confirm('이 요청을 삭제할까요? 삭제한 요청은 복구할 수 없어요.')) return;
+
+            button.disabled = true;
+            button.textContent = '삭제 중...';
+            let query = db.from('development_requests').delete().eq('id', id);
+            if (!state.isAdmin) query = query.eq('requester_id', state.user.id);
+            const { error } = await query;
+            if (error) {
+                console.error(error);
+                button.disabled = false;
+                button.textContent = '삭제';
+                showToast('요청을 삭제하지 못했어요.', 'error');
+                return;
+            }
+
+            state.requests = state.requests.filter(item => item.id !== id);
+            delete state.comments[id];
+            if (state.editingId === id) state.editingId = null;
+            renderRequests();
+            showToast('요청을 삭제했어요.');
+        }
+
+        async function submitComment(form) {
+            const requestId = Number(form.dataset.requestId);
+            const textarea = form.querySelector('.comment-content');
+            const submitButton = form.querySelector('.comment-submit-btn');
+            const content = textarea.value.trim();
+            if (!content) {
+                showToast('댓글 내용을 적어주세요.', 'error');
+                textarea.focus();
+                return;
+            }
+
+            submitButton.disabled = true;
+            submitButton.textContent = '등록 중...';
+            const { data, error } = await db
+                .from('development_request_comments')
+                .insert({
+                    request_id: requestId,
+                    author_name: currentUserName(),
+                    author_avatar: currentUserAvatar() || null,
+                    content,
+                })
+                .select('id,request_id,author_id,author_name,author_avatar,content,created_at,updated_at')
+                .single();
+            if (error) {
+                console.error(error);
+                submitButton.disabled = false;
+                submitButton.textContent = '등록';
+                showToast('댓글을 등록하지 못했어요.', 'error');
+                return;
+            }
+
+            if (!state.comments[requestId]) state.comments[requestId] = [];
+            state.comments[requestId].push(data);
+            renderRequests();
+            showToast('댓글을 등록했어요.');
+        }
+
+        function startCommentEdit(commentId) {
+            const comment = findComment(commentId);
+            if (!comment || !canManageComment(comment)) return;
+            state.editingCommentId = commentId;
+            renderRequests();
+            const textarea = document.querySelector(`[data-comment-id="${commentId}"] .comment-edit-content`);
+            textarea?.focus();
+            textarea?.setSelectionRange(textarea.value.length, textarea.value.length);
+        }
+
+        function cancelCommentEdit() {
+            state.editingCommentId = null;
+            renderRequests();
+        }
+
+        async function saveCommentEdit(button) {
+            const commentId = Number(button.dataset.commentId);
+            const comment = findComment(commentId);
+            if (!comment || !canManageComment(comment)) return;
+            const textarea = button.closest('.comment-item')?.querySelector('.comment-edit-content');
+            const content = textarea?.value.trim() || '';
+            if (!content) {
+                showToast('댓글 내용을 적어주세요.', 'error');
+                textarea?.focus();
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = '저장 중...';
+            let query = db.from('development_request_comments').update({ content }).eq('id', commentId);
+            if (!state.isAdmin) query = query.eq('author_id', state.user.id);
+            const { error } = await query;
+            if (error) {
+                console.error(error);
+                button.disabled = false;
+                button.textContent = '저장';
+                showToast('댓글을 수정하지 못했어요.', 'error');
+                return;
+            }
+
+            comment.content = content;
+            state.editingCommentId = null;
+            renderRequests();
+            showToast('댓글을 수정했어요.');
+        }
+
+        async function deleteComment(button) {
+            const commentId = Number(button.dataset.commentId);
+            const comment = findComment(commentId);
+            if (!comment || !canManageComment(comment)) return;
+            if (!window.confirm('이 댓글을 삭제할까요?')) return;
+
+            button.disabled = true;
+            button.textContent = '삭제 중...';
+            let query = db.from('development_request_comments').delete().eq('id', commentId);
+            if (!state.isAdmin) query = query.eq('author_id', state.user.id);
+            const { error } = await query;
+            if (error) {
+                console.error(error);
+                button.disabled = false;
+                button.textContent = '삭제';
+                showToast('댓글을 삭제하지 못했어요.', 'error');
+                return;
+            }
+
+            state.comments[comment.request_id] = commentsForRequest(comment.request_id).filter(item => item.id !== commentId);
+            if (state.editingCommentId === commentId) state.editingCommentId = null;
+            renderRequests();
+            showToast('댓글을 삭제했어요.');
+        }
+
         function bindEvents() {
             const textarea = document.getElementById('request-content');
             textarea.addEventListener('input', () => {
@@ -710,6 +1178,25 @@
             document.getElementById('request-list').addEventListener('change', event => {
                 const select = event.target.closest('.status-select');
                 if (select) changeStatus(select);
+            });
+            document.getElementById('request-list').addEventListener('click', event => {
+                const button = event.target.closest('[data-action]');
+                if (!button) return;
+                const id = Number(button.dataset.requestId);
+                if (button.dataset.action === 'edit') startRequestEdit(id);
+                if (button.dataset.action === 'cancel-edit') cancelRequestEdit();
+                if (button.dataset.action === 'save-edit') saveRequestEdit(button);
+                if (button.dataset.action === 'delete') deleteRequest(button);
+                if (button.dataset.action === 'edit-comment') startCommentEdit(Number(button.dataset.commentId));
+                if (button.dataset.action === 'cancel-comment-edit') cancelCommentEdit();
+                if (button.dataset.action === 'save-comment-edit') saveCommentEdit(button);
+                if (button.dataset.action === 'delete-comment') deleteComment(button);
+            });
+            document.getElementById('request-list').addEventListener('submit', event => {
+                const form = event.target.closest('.comment-form');
+                if (!form) return;
+                event.preventDefault();
+                submitComment(form);
             });
             window.addEventListener('storage', event => {
                 if (event.key === THEME_STORAGE_KEY) applyStoredTheme();
