@@ -99,7 +99,7 @@ function applyTheme(theme, options = {}) {
 function syncThemeToFrames() {
     const origin = window.location.origin === 'null' ? '*' : window.location.origin;
     const msg = { type: 'beadyo-theme-sync', theme: currentTheme };
-    for (const id of ['frame-0', 'frame-2', 'frame-3', 'frame-4', 'frame-5', 'guide-frame']) {
+    for (const id of ['frame-0', 'frame-2', 'frame-3', 'frame-4', 'frame-5', 'frame-6', 'guide-frame']) {
         const frame = document.getElementById(id);
         if (frame?.contentWindow) frame.contentWindow.postMessage(msg, origin);
     }
@@ -132,16 +132,18 @@ function markPwaGuideSeen() {
 }
 
 const TABS = [
-    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'auth-session-clock-skew-20260828' },
+    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'responsive-calendar-20260903' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
     { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'auth-session-clock-skew-20260828' },
     { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'auth-session-clock-skew-20260828' },
     { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'music-dark-mode-20260822' },
+    { type: 'content', src: 'content.html', directUrl: 'content.html', assetVersion: 'content-archive-20260902-5' },
     { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'gacha-wall-hit-20260614' },
 ];
 
-const GAME_TAB_INDEX = 5;
-const TAB_ROUTES = ['calendar', 'schedule', 'songbook', 'live', 'music', 'games'];
+const CONTENT_TAB_INDEX = 5;
+const GAME_TAB_INDEX = 6;
+const TAB_ROUTES = ['calendar', 'schedule', 'songbook', 'live', 'music', 'content', 'games'];
 const MUSIC_TAB_INDEX = 4;
 const MUSIC_PAGES = {
     songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'music-dark-mode-20260822' },
@@ -317,7 +319,7 @@ async function isEditorUser(user) {
     } catch { return false; }
 }
 
-const isMobile = window.matchMedia('(max-width: 640px)').matches;
+const mobileLayoutQuery = window.matchMedia('(max-width: 768px)');
 
 function getFrameUrl(index) {
     if (index === MUSIC_TAB_INDEX) {
@@ -325,7 +327,7 @@ function getFrameUrl(index) {
         return withFrameAssetVersion(musicPage.src, musicPage.assetVersion);
     }
     const tab = TABS[index];
-    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'games') {
+    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'content' || tab.type === 'games') {
         return withFrameAssetVersion(tab.src, tab.assetVersion);
     }
     if (tab.type === 'schedule') return scheduleUrl(tab);
@@ -338,7 +340,7 @@ function getSheetDirectUrl(index) {
         return (MUSIC_PAGES[currentMusicPage] || MUSIC_PAGES.songs).directUrl;
     }
     const tab = TABS[index];
-    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'games') return tab.directUrl;
+    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'content' || tab.type === 'games') return tab.directUrl;
     if (tab.type === 'schedule') return scheduleUrl(tab);
     return `https://docs.google.com/spreadsheets/d/${tab.id}/edit#gid=${tab.gid}`;
 }
@@ -370,14 +372,29 @@ function resetFrameScrollAfterLoad(index) {
 
 function updateMobileFab(index) {
     const fab = document.getElementById('mobile-fab');
-    if (!isMobile) return;
+    if (!mobileLayoutQuery.matches) {
+        fab.classList.remove('show');
+        return;
+    }
     const type = TABS[index]?.type;
-    if (type === 'calendar' || type === 'songs' || type === 'songbook' || type === 'games') {
+    if (type === 'calendar' || type === 'songs' || type === 'songbook' || type === 'content' || type === 'games') {
         fab.classList.remove('show');
         return;
     }
     fab.classList.add('show');
     fab.href = getSheetDirectUrl(index);
+}
+
+function handleMobileLayoutChange() {
+    const activeIndex = [...document.querySelectorAll('.tab')]
+        .findIndex(tab => tab.classList.contains('active'));
+    updateMobileFab(activeIndex < 0 ? 0 : activeIndex);
+}
+
+if (typeof mobileLayoutQuery.addEventListener === 'function') {
+    mobileLayoutQuery.addEventListener('change', handleMobileLayoutChange);
+} else {
+    mobileLayoutQuery.addListener(handleMobileLayoutChange);
 }
 
 function getSerializableAuthUser(user = authUser) {
@@ -392,7 +409,7 @@ function getSerializableAuthUser(user = authUser) {
 function syncCalendarAuth() {
     const origin = window.location.origin === 'null' ? '*' : window.location.origin;
     const msg = { type: 'beadyo-auth-sync', user: getSerializableAuthUser() };
-    for (const id of ['frame-0', 'frame-2', 'frame-3', 'frame-4']) {
+    for (const id of ['frame-0', 'frame-2', 'frame-3', 'frame-4', 'frame-5']) {
         const frame = document.getElementById(id);
         if (frame?.contentWindow) frame.contentWindow.postMessage(msg, origin);
     }
@@ -912,14 +929,14 @@ function switchTab(index, options = {}) {
 
     if (loaded.has(index) && index !== 1) {
         hideLoading(index);
-        if (index === 0 || index === 2 || index === 3 || index === 4) syncCalendarAuth();
+        if (index === 0 || index === 2 || index === 3 || index === 4 || index === CONTENT_TAB_INDEX) syncCalendarAuth();
         syncThemeToFrames();
     } else {
         document.getElementById('loading').style.display = 'flex';
         frame.onload = () => {
             resetFrameScrollAfterLoad(index);
             hideLoading(index);
-            if (index === 0 || index === 2 || index === 3 || index === 4) syncCalendarAuth();
+            if (index === 0 || index === 2 || index === 3 || index === 4 || index === CONTENT_TAB_INDEX) syncCalendarAuth();
             syncThemeToFrames();
         };
         frame.src = getFrameUrl(index);

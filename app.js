@@ -1412,8 +1412,20 @@ function renderMobileSchedule() {
     wrap.innerHTML = cards.join('');
 }
 
+const mobileScheduleQuery = window.matchMedia('(max-width: 768px)');
+
 function renderSecondaryViews() {
-    if (window.innerWidth <= 640) renderMobileSchedule();
+    if (mobileScheduleQuery.matches) renderMobileSchedule();
+}
+
+function handleMobileScheduleLayoutChange(event) {
+    if (event.matches) renderMobileSchedule();
+}
+
+if (typeof mobileScheduleQuery.addEventListener === 'function') {
+    mobileScheduleQuery.addEventListener('change', handleMobileScheduleLayoutChange);
+} else {
+    mobileScheduleQuery.addListener(handleMobileScheduleLayoutChange);
 }
 
 // ─── 캘린더 렌더링 ───
@@ -3789,7 +3801,7 @@ document.addEventListener('touchstart', e => { touchStartX = e.touches[0].client
 document.addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - touchStartX;
     if (Math.abs(dx) > 60) {
-        if (window.innerWidth <= 640) {
+        if (mobileScheduleQuery.matches) {
             navigateMobileDays(dx < 0 ? 3 : -3);
         } else {
             changeMonth(dx < 0 ? 1 : -1);

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="description" content="구슬요가 직접 또는 공동으로 기획한 방송 콘텐츠 기록을 살펴보세요.">
+    <title>구슬요 CONTENT 아카이브</title>
+    <link rel="canonical" href="https://beadyo.com/content.html">
+    <meta property="og:title" content="구슬요 CONTENT 아카이브">
+    <meta property="og:description" content="구슬요가 직접 또는 공동으로 기획한 방송 콘텐츠 기록">
+    <meta property="og:url" content="https://beadyo.com/content.html">
+    <link rel="icon" href="logo-icon.webp">
+    <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
+    <script>
+        (() => {
+            const key = 'beadyo:theme';
+            const allowedOrigin = origin => ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'].includes(origin) || origin === window.location.origin;
+            const apply = (theme, persist = false) => {
+                const next = theme === 'dark' ? 'dark' : 'light';
+                document.documentElement.dataset.theme = next;
+                document.documentElement.style.colorScheme = next === 'dark' ? 'dark' : 'light';
+                if (persist) try { localStorage.setItem(key, next); } catch {}
+            };
+            let stored = 'light';
+            try { stored = localStorage.getItem(key) === 'dark' ? 'dark' : 'light'; } catch {}
+            apply(stored);
+            window.addEventListener('message', event => {
+                if (!allowedOrigin(event.origin)) return;
+                if (event.data?.type === 'beadyo-theme-sync') apply(event.data.theme, true);
+            });
+            window.addEventListener('storage', event => { if (event.key === key) apply(event.newValue); });
+        })();
+    </script>
+    <link rel="stylesheet" href="content.css?v=content-archive-20260902-5">
+    <script defer src="supabase.min.js?v=supabase-2-112-2"></script>
+    <script defer src="content.js?v=content-archive-20260902-5"></script>
+</head>
+<body>
+    <header class="archive-header">
+        <div class="archive-heading">
+            <div>
+                <p class="eyebrow">BEADYO CONTENT ARCHIVE</p>
+                <h1>CONTENT</h1>
+                <p class="archive-lead">구슬요가 직접 기획하고 함께 만들어 온 방송 콘텐츠 기록</p>
+            </div>
+            <button class="primary-btn add-content-btn" id="add-content-btn" type="button" hidden>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                콘텐츠 추가
+            </button>
+        </div>
+        <div class="archive-tools" aria-label="콘텐츠 검색과 필터">
+            <label class="search-box">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+                <span class="sr-only">콘텐츠 통합 검색</span>
+                <input id="content-search" type="search" autocomplete="off" placeholder="콘텐츠명, 설명, 출연자, 태그 검색">
+            </label>
+            <div class="select-row">
+                <label><span class="sr-only">연도</span><select id="year-filter"><option value="">전체 연도</option></select></label>
+                <label><span class="sr-only">콘텐츠 분류</span><select id="category-filter"><option value="">전체 분류</option></select></label>
+                <label><span class="sr-only">기획 형태</span><select id="planning-filter"><option value="">전체 기획 형태</option></select></label>
+                <label><span class="sr-only">정렬</span><select id="sort-filter">
+                    <option value="newest">최신순</option>
+                    <option value="oldest">오래된순</option>
+                    <option value="title">이름순</option>
+                </select></label>
+                <button class="reset-btn" id="filter-reset" type="button">필터 초기화</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="archive-main">
+        <div class="result-line" aria-live="polite">
+            <strong id="result-count">콘텐츠를 불러오는 중입니다</strong>
+            <span id="active-filter-summary"></span>
+        </div>
+        <section class="content-grid" id="content-grid" aria-label="콘텐츠 목록"></section>
+    </main>
+
+    <div class="modal-layer" id="detail-layer" hidden>
+        <div class="modal-backdrop" data-close-modal></div>
+        <section class="modal detail-modal" id="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-title" tabindex="-1">
+            <button class="modal-close" type="button" data-close-modal aria-label="상세 닫기">×</button>
+            <div id="detail-content"></div>
+        </section>
+    </div>
+
+    <div class="modal-layer" id="form-layer" hidden>
+        <div class="modal-backdrop" data-close-form></div>
+        <section class="modal form-modal" id="form-modal" role="dialog" aria-modal="true" aria-labelledby="form-title" tabindex="-1">
+            <header class="form-modal-head">
+                <div>
+                    <p class="eyebrow">CONTENT EDITOR</p>
+                    <h2 id="form-title">콘텐츠 추가</h2>
+                </div>
+                <button class="modal-close inline" type="button" data-close-form aria-label="편집 닫기">×</button>
+            </header>
+            <form id="content-form" novalidate>
+                <div class="form-grid two-col">
+                    <label class="field required"><span>방송 날짜</span><input id="field-date" name="broadcast_date" type="date" required></label>
+                    <label class="field required"><span>콘텐츠명</span><input id="field-title" name="title" type="text" maxlength="200" required placeholder="콘텐츠 이름"></label>
+                </div>
+                <p class="duplicate-warning" id="duplicate-warning" hidden></p>
+
+                <label class="field"><span>한 줄 소개</span><input id="field-summary" name="summary" type="text" maxlength="300" placeholder="카드에 표시할 짧은 소개"></label>
+                <label class="field"><span>상세 설명</span><textarea id="field-description" name="description" rows="5" placeholder="콘텐츠의 배경과 내용을 자세히 기록해 주세요"></textarea></label>
+
+                <fieldset class="field category-field">
+                    <legend>콘텐츠 분류 <small>복수 선택</small></legend>
+                    <div class="choice-grid" id="category-choices"></div>
+                    <label class="inline-add"><span class="sr-only">새 분류</span><input id="custom-category" type="text" placeholder="직접 입력"><button type="button" id="add-category-btn">추가</button></label>
+                </fieldset>
+
+                <label class="field"><span>기획 형태</span><input id="field-planning-type" name="planning_type" type="text" list="planning-type-list" placeholder="예: 공동 기획">
+                    <datalist id="planning-type-list">
+                        <option value="단독 기획"><option value="공동 기획"><option value="시리즈"><option value="정기 콘텐츠"><option value="특별 콘텐츠">
+                    </datalist>
+                </label>
+
+                <div class="form-grid two-col repeat-grid">
+                    <section class="repeat-section" data-list-field="planners"><div class="repeat-title">기획자</div><div class="repeat-list"></div><button class="small-add" type="button" data-add-list>+ 항목 추가</button></section>
+                    <section class="repeat-section" data-list-field="hosts"><div class="repeat-title">진행자</div><div class="repeat-list"></div><button class="small-add" type="button" data-add-list>+ 항목 추가</button></section>
+                    <section class="repeat-section" data-list-field="cast_members"><div class="repeat-title">출연자</div><div class="repeat-list"></div><button class="small-add" type="button" data-add-list>+ 항목 추가</button></section>
+                    <section class="repeat-section" data-list-field="tags"><div class="repeat-title">태그</div><div class="repeat-list"></div><button class="small-add" type="button" data-add-list>+ 항목 추가</button></section>
+                </div>
+
+                <section class="image-editor">
+                    <div class="image-editor-copy">
+                        <h3>썸네일 또는 포스터</h3>
+                        <p>JPG, PNG, WebP, GIF · 최대 8MB</p>
+                        <label class="field"><span>이미지 URL</span><input id="field-thumbnail-url" type="url" placeholder="https://..."></label>
+                        <div class="image-buttons">
+                            <label class="file-btn">파일 선택<input id="field-thumbnail-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label>
+                            <button class="ghost-btn" id="remove-image-btn" type="button">이미지 제거</button>
+                        </div>
+                    </div>
+                    <div class="image-preview" id="image-preview"><span>미리보기</span></div>
+                </section>
+
+                <label class="field"><span>비고</span><textarea id="field-notes" rows="3" placeholder="추가로 남길 기록"></textarea></label>
+
+                <section class="replay-editor">
+                    <div class="section-heading-row"><div><h3>다시보기 링크</h3><p>여러 플랫폼과 영상 종류를 순서대로 등록할 수 있습니다.</p></div><button class="small-add" id="add-replay-btn" type="button">+ 다시보기 추가</button></div>
+                    <div class="replay-form-list" id="replay-form-list"></div>
+                </section>
+
+                <div class="form-actions">
+                    <button class="danger-btn" id="form-delete-btn" type="button" hidden>삭제</button>
+                    <span class="form-action-spacer"></span>
+                    <button class="ghost-btn" type="button" data-close-form>취소</button>
+                    <button class="secondary-save-btn" id="save-and-add-content-btn" type="submit" data-after-save="add">저장 후 추가하기</button>
+                    <button class="primary-btn" id="save-content-btn" type="submit">저장</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <template id="repeat-row-template">
+        <div class="repeat-row"><textarea rows="1" data-repeat-input></textarea><button type="button" data-remove-list aria-label="항목 삭제">×</button></div>
+    </template>
+    <template id="replay-row-template">
+        <fieldset class="replay-row">
+            <legend>다시보기</legend>
+            <div class="replay-row-head"><span data-replay-number>다시보기</span><button type="button" data-remove-replay>삭제</button></div>
+            <div class="form-grid replay-grid">
+                <label class="field"><span>플랫폼</span><select data-replay-field="platform"><option>SOOP</option><option>YouTube</option><option>기타</option></select></label>
+                <label class="field"><span>버튼 이름</span><input data-replay-field="label" type="text" placeholder="다시보기"></label>
+                <label class="field replay-url-field"><span>URL</span><input data-replay-field="url" type="url" placeholder="https://www.youtube.com/..." autocomplete="off"></label>
+                <label class="field"><span>영상 종류</span><select data-replay-field="video_type"><option>전체</option><option>1부</option><option>2부</option><option>하이라이트</option><option>쇼츠</option><option>관련 영상</option></select></label>
+                <label class="field"><span>링크 상태</span><select data-replay-field="status"><option>정상</option><option>비공개</option><option>삭제됨</option><option>확인 중</option></select></label>
+                <label class="field"><span>표시 순서</span><input data-replay-field="sort_order" type="number" min="0" step="1" value="0"></label>
+            </div>
+        </fieldset>
+    </template>
+</body>
+</html>
