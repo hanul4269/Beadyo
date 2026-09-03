@@ -132,7 +132,7 @@ function markPwaGuideSeen() {
 }
 
 const TABS = [
-    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'calendar-size-rollback-20260903' },
+    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'calendar-full-rollback-20260903' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
     { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'auth-session-clock-skew-20260828' },
     { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'auth-session-clock-skew-20260828' },
@@ -319,7 +319,7 @@ async function isEditorUser(user) {
     } catch { return false; }
 }
 
-const mobileLayoutQuery = window.matchMedia('(max-width: 768px)');
+const isMobile = window.matchMedia('(max-width: 640px)').matches;
 
 function getFrameUrl(index) {
     if (index === MUSIC_TAB_INDEX) {
@@ -372,10 +372,7 @@ function resetFrameScrollAfterLoad(index) {
 
 function updateMobileFab(index) {
     const fab = document.getElementById('mobile-fab');
-    if (!mobileLayoutQuery.matches) {
-        fab.classList.remove('show');
-        return;
-    }
+    if (!isMobile) return;
     const type = TABS[index]?.type;
     if (type === 'calendar' || type === 'songs' || type === 'songbook' || type === 'content' || type === 'games') {
         fab.classList.remove('show');
@@ -383,18 +380,6 @@ function updateMobileFab(index) {
     }
     fab.classList.add('show');
     fab.href = getSheetDirectUrl(index);
-}
-
-function handleMobileLayoutChange() {
-    const activeIndex = [...document.querySelectorAll('.tab')]
-        .findIndex(tab => tab.classList.contains('active'));
-    updateMobileFab(activeIndex < 0 ? 0 : activeIndex);
-}
-
-if (typeof mobileLayoutQuery.addEventListener === 'function') {
-    mobileLayoutQuery.addEventListener('change', handleMobileLayoutChange);
-} else {
-    mobileLayoutQuery.addListener(handleMobileLayoutChange);
 }
 
 function getSerializableAuthUser(user = authUser) {

@@ -9,8 +9,8 @@
     <meta property="og:url" content="https://beadyo.com/calendar.html">
     <link rel="icon" href="logo-icon.webp">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
-    <link rel="preload" href="app.js?v=responsive-calendar-20260903" as="script">
-    <script defer src="app.js?v=responsive-calendar-20260903"></script>
+    <link rel="preload" href="app.js?v=auth-session-clock-skew-20260828" as="script">
+    <script defer src="app.js?v=auth-session-clock-skew-20260828"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
@@ -796,12 +796,12 @@
         }
         .chips-area.stable-list .event-chip.short-title.has-time .chip-body {
             text-align: center !important;
-            transform: none;
+            transform: translateX(-26px);
             font-size: clamp(16px, 1.55vw, 22px) !important;
             line-height: 1.08;
         }
         .chips-area.stable-list.count-3 .event-chip.short-title.has-time .chip-body {
-            transform: none;
+            transform: translateX(-23px);
         }
         .chips-area.stable-list .event-chip.detail-one:not(.has-time) .chip-body,
         .chips-area.stable-list .event-chip.detail-two:not(.has-time) .chip-body {
@@ -1206,7 +1206,7 @@
             z-index: 100;
         }
         .memo-fab svg { width: 20px; height: 20px; }
-        @media (max-width: 1799px) {
+        @media (max-width: 900px) {
             .memo-fab { display: flex; }
         }
         /* ── 메모 모달 ── */
@@ -2404,7 +2404,7 @@
             touch-action: none;
             cursor: crosshair;
         }
-        @media (max-width: 768px) {
+        @media (max-width: 640px) {
             #paintModal .modal {
                 max-width: 100vw;
                 height: 100dvh;
@@ -2655,7 +2655,7 @@
         }
 
         /* JS 실행 전 즉시 로딩 메시지 (빈 화면 방지) */
-        @media (max-width: 768px) {
+        @media (max-width: 640px) {
             #mobileScheduleView:empty::before {
                 content: '일정 불러오는 중...';
                 display: block;
@@ -2668,11 +2668,11 @@
         }
 
         /* ── 반응형 ── */
-        @media (max-width: 1799px) {
+        @media (max-width: 900px) {
             .legend-sidebar { display: none; }
             .memo-sidebar   { display: none; }
         }
-        @media (max-width: 768px) {
+        @media (max-width: 640px) {
             body {
                 background: #f6f6f6;
                 background-image: none;
@@ -3177,7 +3177,7 @@
             stroke: var(--text);
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 640px) {
             html[data-theme="dark"] body {
                 background: var(--bg);
             }
