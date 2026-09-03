@@ -580,6 +580,8 @@
             flex-direction: column;
             gap: 3px;
             flex: 1;
+            container-type: inline-size;
+            container-name: event-stack;
         }
         .chips-area.single {
             flex: 1;
@@ -771,20 +773,34 @@
             min-height: 50px;
         }
         .chips-area.stable-list .event-chip.has-time {
-            flex-direction: row;
-            flex-wrap: wrap;
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            grid-auto-rows: auto;
+            align-content: center;
             align-items: center;
             gap: 2px 5px;
         }
         .chips-area.stable-list .event-chip.has-time .chip-time-badge {
+            position: static;
+            grid-column: 1;
+            grid-row: 1;
+            justify-self: start;
+            z-index: 2;
+            transform: none;
             margin-bottom: 0;
             flex-shrink: 0;
             align-self: center;
         }
         .chips-area.stable-list .event-chip.has-time .chip-body {
-            flex: 1;
-            text-align: left !important;
-            min-width: 80px;
+            grid-column: 1 / -1;
+            grid-row: 1;
+            justify-self: stretch;
+            flex: 0 1 auto;
+            width: 100%;
+            min-width: 0;
+            text-align: center !important;
+            transform: none !important;
         }
         .chips-area.stable-list .event-chip.detail-none:not(.has-time) .chip-body {
             -webkit-line-clamp: 3;
@@ -796,12 +812,12 @@
         }
         .chips-area.stable-list .event-chip.short-title.has-time .chip-body {
             text-align: center !important;
-            transform: translateX(-26px);
+            transform: none;
             font-size: clamp(16px, 1.55vw, 22px) !important;
             line-height: 1.08;
         }
         .chips-area.stable-list.count-3 .event-chip.short-title.has-time .chip-body {
-            transform: translateX(-23px);
+            transform: none;
         }
         .chips-area.stable-list .event-chip.detail-one:not(.has-time) .chip-body,
         .chips-area.stable-list .event-chip.detail-two:not(.has-time) .chip-body {
@@ -809,12 +825,92 @@
         }
         .chips-area.stable-list .event-chip.has-time .chip-collab,
         .chips-area.stable-list .event-chip.has-time .chip-subtitle {
+            grid-column: 1 / -1;
             width: 100%;
-            flex: 0 0 100%;
+            min-height: 0;
+            flex: 0 0 auto;
             text-align: center;
         }
         .chips-area.stable-list .event-chip.has-newline .chip-body {
             white-space: pre-line;
+        }
+
+        /* 긴 제목은 시간표를 좌측 상단으로 올리고 제목을 다음 줄 중앙에 둔다. */
+        .chips-area.stable-list .event-chip.long-title.has-time {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            padding-top: 5px;
+        }
+        .chips-area.stable-list .event-chip.long-title.has-time .chip-time-badge {
+            position: static;
+            align-self: flex-start;
+            transform: none;
+        }
+
+        /* 달력 자체 크기는 바꾸지 않고 실제 카드 폭이 좁을 때만 내부 정보를 정리한다. */
+        @container event-stack (max-width: 200px) {
+            .event-chip.has-time {
+                display: flex !important;
+                flex-direction: column;
+                flex-wrap: nowrap;
+                justify-content: flex-start !important;
+                padding-top: 5px !important;
+                gap: 3px !important;
+            }
+            .event-chip.has-time .chip-time-badge {
+                position: static !important;
+                align-self: flex-start !important;
+                max-width: 100%;
+                padding: 1px 4px;
+                font-size: clamp(8px, 5.2cqw, 11px);
+                white-space: nowrap;
+                transform: none !important;
+            }
+            #calGrid .event-chip.has-time .chip-body {
+                flex: 0 1 auto;
+                width: 100%;
+                min-width: 0;
+                text-align: center !important;
+                transform: none !important;
+            }
+            #calGrid .event-chip.short-title.has-time .chip-body {
+                font-size: clamp(14px, 9cqw, 18px) !important;
+            }
+            .event-chip.has-time .chip-subtitle,
+            .event-chip.has-time .chip-collab {
+                flex: 0 0 auto;
+                width: 100%;
+                min-height: 0;
+            }
+        }
+        @container event-stack (max-width: 80px) {
+            .event-chip {
+                justify-content: center !important;
+                padding: 4px !important;
+            }
+            .event-chip .chip-time-badge,
+            .event-chip .chip-subtitle,
+            .event-chip .chip-collab,
+            .event-chip .event-chip-sticker,
+            .event-chip .vod-dot {
+                display: none !important;
+            }
+            #calGrid .event-chip .chip-body {
+                display: block !important;
+                flex: 0 1 auto !important;
+                width: 100%;
+                min-width: 0 !important;
+                max-height: 100%;
+                font-size: clamp(10px, 18cqw, 14px) !important;
+                line-height: 1.15 !important;
+                text-align: center !important;
+                transform: none !important;
+                white-space: normal !important;
+                overflow: hidden;
+                overflow-wrap: anywhere;
+            }
         }
 
         .chips-area.packed {
