@@ -28,12 +28,6 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html {
-            width: 100%;
-            max-width: 100%;
-            overflow-x: clip;
-        }
-
         :root {
             --accent:       #8bc34a;
             --accent-dark:  #6d9c32;
@@ -50,10 +44,7 @@
             background: var(--bg);
             background-image: radial-gradient(circle, rgba(139,195,74,0.10) 1px, transparent 1px);
             background-size: 22px 22px;
-            width: 100%;
-            max-width: 100%;
             min-height: 100vh;
-            overflow-x: clip;
             color: var(--text);
         }
 
@@ -349,8 +340,6 @@
         .outer-layout {
             display: flex;
             gap: 16px;
-            width: 100%;
-            max-width: 2080px;
             margin: 0 auto;
             padding: 0 12px 48px;
             align-items: flex-start;
@@ -1238,14 +1227,9 @@
 
         /* ── 범례 사이드바 ── */
         .legend-sidebar {
-            /* 왼쪽 메모(240px)와 같은 폭을 예약해 달력 자체를 화면 중앙에 둔다. */
-            width: 240px;
+            width: 112px;
             flex-shrink: 0;
             padding-top: 28px;
-        }
-        .legend-sidebar > * {
-            width: 112px;
-            max-width: 100%;
         }
         .up-launcher {
             width: 100%;
@@ -2685,8 +2669,8 @@
 
         /* ── 반응형 ── */
         @media (max-width: 1799px) {
-            .legend-sidebar { display: none !important; }
-            .memo-sidebar   { display: none !important; }
+            .legend-sidebar { display: none; }
+            .memo-sidebar   { display: none; }
         }
         @media (max-width: 768px) {
             body {

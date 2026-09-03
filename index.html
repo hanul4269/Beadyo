@@ -31,7 +31,7 @@
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
     <script defer src="supabase.min.js?v=supabase-2-112-2"></script>
     <script defer src="patch-notes.js?v=dark-mode-20260821"></script>
-    <script defer src="index-app.js?v=responsive-calendar-20260903-3"></script>
+    <script defer src="index-app.js?v=calendar-size-rollback-20260903"></script>
     <script>
         (() => {
             const key = 'beadyo:theme';
@@ -46,12 +46,6 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         [hidden] { display: none !important; }
-
-        html {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
 
         :root {
             --accent: #7fb83f;
@@ -86,8 +80,6 @@
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: var(--bg);
             color: var(--ink);
-            width: 100%;
-            max-width: 100%;
             height: 100vh;
             display: flex;
             flex-direction: column;
