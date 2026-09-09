@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>티어표 · NIKKE</title>
+    <link rel="stylesheet" href="archive.css">
+    <link rel="stylesheet" href="tier.css?v=4">
+</head>
+<body>
+    <main class="archive-shell tier-archive">
+        <p class="archive-eyebrow">TACTICAL TIER DATABASE</p>
+
+        <header class="tier-hero">
+            <div>
+                <h1 class="page-title">티어표</h1>
+                <p>Prydwen의 최신 평가를 참고해 스토리·보스전·PVP 성능을 버스트 단계별로 다시 구성했습니다.</p>
+            </div>
+            <div class="tier-updated">
+                <span>REFERENCE UPDATED</span>
+                <strong>2026. 09. 08</strong>
+            </div>
+        </header>
+
+        <section class="tier-control-panel" aria-label="티어표 보기 설정">
+            <div class="mode-switch" role="tablist" aria-label="콘텐츠 모드">
+                <button class="mode-button active" type="button" role="tab" aria-selected="true" data-mode="story">스토리</button>
+                <button class="mode-button" type="button" role="tab" aria-selected="false" data-mode="bossing">보스전</button>
+                <button class="mode-button" type="button" role="tab" aria-selected="false" data-mode="pvp">PVP</button>
+            </div>
+            <p class="mode-description" id="mode-description"></p>
+
+            <div class="tier-filters">
+                <label class="tier-search">
+                    <span>SEARCH</span>
+                    <input id="tier-search" type="search" placeholder="니케 이름 검색" autocomplete="off">
+                </label>
+                <div class="burst-filter" role="group" aria-label="버스트 단계 필터">
+                    <button class="burst-button active" type="button" data-burst="all">ALL</button>
+                    <button class="burst-button" type="button" data-burst="0">BURST I</button>
+                    <button class="burst-button" type="button" data-burst="1">BURST II</button>
+                    <button class="burst-button" type="button" data-burst="2">BURST III</button>
+                </div>
+            </div>
+        </section>
+
+        <div class="tier-summary">
+            <div class="tier-scale" aria-label="티어 등급 순서">
+                <span class="scale-sss">SSS</span><span>SS</span><span>S</span><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span>
+            </div>
+            <strong id="result-count"></strong>
+        </div>
+
+        <section class="tier-list" id="tier-list" aria-live="polite"></section>
+
+        <footer class="tier-source">
+            <div>
+                <strong>REFERENCE</strong>
+                <p>배치는 Prydwen NIKKE Tier List의 2026년 9월 8일 자료를 참고했습니다. 게임 업데이트와 평가 기준에 따라 달라질 수 있습니다.</p>
+            </div>
+            <a href="https://www.prydwen.gg/nikke/tier-list" target="_blank" rel="noopener noreferrer">Prydwen 원문 보기 ↗</a>
+        </footer>
+    </main>
+
+    <dialog class="lightbox" id="lightbox" aria-label="이미지 크게 보기">
+        <button class="lightbox-close" type="button" aria-label="닫기">×</button>
+        <img alt="확대 이미지">
+    </dialog>
+    <script src="tier-data.js?v=1"></script>
+    <script src="tier.js?v=2"></script>
+    <script src="archive.js?v=3"></script>
+</body>
+</html>

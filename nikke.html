@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>NIKKE Archive | BEADYO</title>
+    <link rel="icon" href="logo-icon.webp">
+    <style>
+        * { box-sizing: border-box; }
+
+        :root {
+            --bg: #080a0f;
+            --panel: #10131a;
+            --panel-2: #151923;
+            --line: rgba(255,255,255,.11);
+            --line-strong: rgba(255,255,255,.19);
+            --text: #f6f7f9;
+            --muted: #979eaa;
+            --signal: #f5d553;
+            --signal-soft: rgba(245,213,83,.14);
+            --cyan: #74e6f5;
+            --cyan-soft: rgba(116,230,245,.12);
+        }
+
+        html {
+            color-scheme: dark;
+            background: var(--bg);
+        }
+
+        body {
+            margin: 0;
+            min-width: 320px;
+            min-height: 100vh;
+            color: var(--text);
+            font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at 86% -10%, rgba(116,230,245,.13), transparent 34rem),
+                radial-gradient(circle at 6% 8%, rgba(245,213,83,.1), transparent 28rem),
+                var(--bg);
+        }
+
+        button,
+        a { font: inherit; }
+
+        a { color: inherit; }
+
+        button { cursor: pointer; }
+
+        .skip-link {
+            position: fixed;
+            left: 12px;
+            top: -60px;
+            z-index: 100;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: var(--signal);
+            color: #17150a;
+            font-weight: 900;
+        }
+
+        .skip-link:focus { top: 12px; }
+
+        .shell {
+            width: min(1580px, 100%);
+            margin: 0 auto;
+            padding: 24px clamp(14px, 3vw, 46px) 44px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 22px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            min-width: 0;
+        }
+
+        .brand-mark {
+            position: relative;
+            display: grid;
+            place-items: center;
+            width: 54px;
+            height: 54px;
+            flex: 0 0 auto;
+            border: 1px solid rgba(245,213,83,.45);
+            background: linear-gradient(145deg, rgba(245,213,83,.18), rgba(245,213,83,.03));
+            color: var(--signal);
+            font-size: 27px;
+            font-weight: 950;
+            box-shadow: inset 0 0 24px rgba(245,213,83,.08);
+            clip-path: polygon(10% 0, 100% 0, 100% 78%, 78% 100%, 0 100%, 0 10%);
+        }
+
+        .brand-mark::after {
+            content: "";
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
+            width: 8px;
+            height: 8px;
+            border-right: 2px solid var(--signal);
+            border-bottom: 2px solid var(--signal);
+        }
+
+        .kicker {
+            margin: 0 0 4px;
+            color: var(--cyan);
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: .22em;
+        }
+
+        h1 {
+            margin: 0;
+            font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+            font-size: clamp(38px, 5vw, 62px);
+            line-height: .88;
+            letter-spacing: .055em;
+            transform: scaleX(.94);
+            transform-origin: left center;
+        }
+
+        .tagline {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .view-tabs {
+            display: inline-flex;
+            gap: 5px;
+            padding: 5px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: rgba(16,19,26,.82);
+            box-shadow: 0 16px 40px rgba(0,0,0,.24);
+        }
+
+        .view-tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            min-height: 42px;
+            padding: 0 17px;
+            border: 0;
+            border-radius: 7px;
+            background: transparent;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .view-tab::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border: 1px solid currentColor;
+            transform: rotate(45deg);
+        }
+
+        .view-tab.active {
+            background: var(--signal);
+            color: #18160b;
+            box-shadow: 0 8px 22px rgba(245,213,83,.18);
+        }
+
+        .view { display: none; }
+        .view.active { display: block; }
+
+        .story-layout {
+            display: grid;
+            grid-template-columns: 260px minmax(0, 1fr);
+            gap: 14px;
+            align-items: start;
+        }
+
+        .briefing,
+        .viewer,
+        .guide-card {
+            border: 1px solid var(--line);
+            background: linear-gradient(160deg, rgba(21,25,35,.96), rgba(12,14,20,.98));
+            box-shadow: 0 20px 50px rgba(0,0,0,.22);
+        }
+
+        .briefing {
+            position: sticky;
+            top: 16px;
+            padding: 22px;
+            clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+        }
+
+        .briefing-index {
+            margin-bottom: 28px;
+            color: rgba(255,255,255,.18);
+            font-family: Impact, sans-serif;
+            font-size: 66px;
+            line-height: .8;
+            letter-spacing: .04em;
+        }
+
+        .briefing h2,
+        .guide-head h2 {
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: -.03em;
+        }
+
+        .briefing p,
+        .guide-head p {
+            margin: 9px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        .story-types {
+            display: grid;
+            gap: 8px;
+            margin: 22px 0;
+        }
+
+        .story-type {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--line);
+            color: #d8dbe1;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .story-type span:last-child {
+            color: var(--cyan);
+            font-size: 10px;
+            letter-spacing: .1em;
+        }
+
+        .source-link,
+        .external-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 40px;
+            border: 1px solid var(--line-strong);
+            border-radius: 7px;
+            color: #e7e9ed;
+            font-size: 12px;
+            font-weight: 900;
+            text-decoration: none;
+        }
+
+        .source-link {
+            width: 100%;
+            background: rgba(255,255,255,.035);
+        }
+
+        .source-link:hover,
+        .external-link:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .viewer {
+            min-width: 0;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+
+        .viewer-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            min-height: 54px;
+            padding: 8px 12px 8px 16px;
+            border-bottom: 1px solid var(--line);
+            background: #11141b;
+        }
+
+        .viewer-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            color: #dfe2e7;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: .03em;
+        }
+
+        .status-light {
+            width: 7px;
+            height: 7px;
+            flex: 0 0 auto;
+            border-radius: 50%;
+            background: #72e292;
+            box-shadow: 0 0 12px rgba(114,226,146,.8);
+        }
+
+        .external-link {
+            min-height: 34px;
+            padding: 0 12px;
+        }
+
+        .frame-wrap {
+            position: relative;
+            background: #f7f7f7;
+            overflow: hidden;
+        }
+
+        .content-frame {
+            display: block;
+            width: 100%;
+            height: 10250px;
+            border: 0;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .frame-loader {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            display: grid;
+            place-items: center;
+            background: #0e1117;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            transition: opacity .25s ease, visibility .25s ease;
+        }
+
+        .frame-loader::before {
+            content: "";
+            width: 28px;
+            height: 28px;
+            margin-right: 10px;
+            border: 2px solid rgba(255,255,255,.12);
+            border-top-color: var(--signal);
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+        }
+
+        .frame-loader.done {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .guide-head {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 24px;
+            margin: 2px 0 15px;
+            padding: 18px 20px;
+            border-left: 3px solid var(--cyan);
+            background: linear-gradient(90deg, var(--cyan-soft), transparent 65%);
+        }
+
+        .archive-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border: 1px solid rgba(116,230,245,.25);
+            border-radius: 999px;
+            background: var(--cyan-soft);
+            color: #c9f8ff;
+            font-size: 12px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(130px, 1fr));
+            gap: 9px;
+            margin-bottom: 14px;
+        }
+
+        .guide-card {
+            position: relative;
+            min-width: 0;
+            min-height: 142px;
+            padding: 16px;
+            border-radius: 2px;
+            color: var(--text);
+            text-align: left;
+            overflow: hidden;
+        }
+
+        .guide-card::after {
+            content: "";
+            position: absolute;
+            right: -22px;
+            bottom: -28px;
+            width: 76px;
+            height: 76px;
+            border: 1px solid rgba(255,255,255,.08);
+            transform: rotate(45deg);
+        }
+
+        .guide-card:hover {
+            border-color: rgba(116,230,245,.5);
+            transform: translateY(-2px);
+        }
+
+        .guide-card.active {
+            border-color: var(--signal);
+            background: linear-gradient(160deg, rgba(245,213,83,.16), rgba(12,14,20,.98));
+            box-shadow: inset 0 0 0 1px rgba(245,213,83,.1), 0 18px 42px rgba(0,0,0,.26);
+        }
+
+        .guide-number {
+            display: block;
+            margin-bottom: 25px;
+            color: var(--cyan);
+            font-family: Impact, sans-serif;
+            font-size: 13px;
+            letter-spacing: .1em;
+        }
+
+        .guide-card.active .guide-number { color: var(--signal); }
+
+        .guide-name {
+            display: block;
+            font-size: 15px;
+            font-weight: 950;
+            line-height: 1.2;
+        }
+
+        .guide-desc {
+            display: block;
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+
+        .guide-frame-wrap {
+            position: relative;
+            min-height: 620px;
+            background: #0b0f16;
+            overflow: hidden;
+        }
+
+        .guide-content-frame {
+            display: block;
+            width: 100%;
+            height: 620px;
+            border: 0;
+            background: #0b0f16;
+            overflow: hidden;
+        }
+
+        @media (max-width: 1180px) {
+            .guide-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 780px) {
+            .shell { padding-top: 16px; }
+            .topbar { align-items: stretch; flex-direction: column; gap: 17px; }
+            .view-tabs { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+            .view-tab { justify-content: center; padding: 0 10px; }
+            .story-layout { grid-template-columns: 1fr; }
+            .briefing { position: relative; top: 0; padding: 17px; }
+            .briefing-index { display: none; }
+            .story-types { grid-template-columns: repeat(2, 1fr); margin: 15px 0; }
+            .story-type { padding: 7px 0; }
+            .guide-head { align-items: flex-start; flex-direction: column; gap: 10px; }
+            .guide-grid { grid-template-columns: repeat(2, 1fr); }
+            .archive-badge { font-size: 11px; }
+        }
+
+        @media (max-width: 470px) {
+            .brand-mark { width: 46px; height: 46px; }
+            .tagline { font-size: 12px; }
+            .view-tab { font-size: 12px; }
+            .guide-grid { grid-template-columns: 1fr 1fr; }
+            .guide-card { min-height: 126px; padding: 13px; }
+            .guide-number { margin-bottom: 17px; }
+            .guide-name { font-size: 14px; }
+            .external-link span { display: none; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">본문으로 이동</a>
+    <main class="shell" id="main-content">
+        <header class="topbar">
+            <div class="brand">
+                <div class="brand-mark" aria-hidden="true">N</div>
+                <div>
+                    <p class="kicker">COMMANDER'S ARCHIVE</p>
+                    <h1>NIKKE</h1>
+                    <p class="tagline">스토리 감상 동선과 한울의 플레이 자료를 한곳에서 확인하세요.</p>
+                </div>
+            </div>
+            <nav class="view-tabs" aria-label="NIKKE 자료 선택">
+                <button class="view-tab active" type="button" data-view="story" aria-selected="true">스토리 감상 순서</button>
+                <button class="view-tab" type="button" data-view="guide" aria-selected="false">NIKKE 가이드</button>
+            </nav>
+        </header>
+
+        <section class="view active" id="story-view">
+            <div class="story-layout">
+                <aside class="briefing">
+                    <div class="briefing-index">01</div>
+                    <h2>STORYLINE</h2>
+                    <p>메인·이벤트·사이드·호감도 스토리를 이야기 흐름에 맞춰 살펴볼 수 있는 감상 순서 가이드입니다.</p>
+                    <div class="story-types" aria-label="스토리 분류">
+                        <div class="story-type"><span>메인 스토리</span><span>MAIN</span></div>
+                        <div class="story-type"><span>이벤트 스토리</span><span>EVENT</span></div>
+                        <div class="story-type"><span>사이드 스토리</span><span>SIDE</span></div>
+                        <div class="story-type"><span>호감도 스토리</span><span>BOND</span></div>
+                    </div>
+                    <a class="source-link" href="https://ssissun.github.io/nikke-storyline/" target="_blank" rel="noopener noreferrer">원본 사이트에서 보기 ↗</a>
+                </aside>
+
+                <div class="viewer">
+                    <div class="viewer-bar">
+                        <div class="viewer-title"><span class="status-light"></span>NIKKE 스토리 감상 순서 가이드</div>
+                        <a class="external-link" href="https://ssissun.github.io/nikke-storyline/" target="_blank" rel="noopener noreferrer"><span>새 창으로</span> ↗</a>
+                    </div>
+                    <div class="frame-wrap">
+                        <div class="frame-loader">STORY DATA LOADING</div>
+                        <iframe
+                            class="content-frame"
+                            id="story-frame"
+                            src="https://ssissun.github.io/nikke-storyline/"
+                            title="NIKKE 스토리 감상 순서"
+                            loading="eager"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allow="fullscreen"
+                            scrolling="no"
+                        ></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="view" id="guide-view">
+            <div class="guide-head">
+                <div>
+                    <h2>NIKKE 가이드</h2>
+                </div>
+                <span class="archive-badge">HANUL GAME ARCHIVE</span>
+            </div>
+
+            <div class="guide-grid" role="tablist" aria-label="NIKKE 가이드 목차">
+                <button class="guide-card active" type="button" role="tab" aria-selected="true" data-guide="tier">
+                    <span class="guide-number">FILE 01</span>
+                    <span class="guide-name">티어표</span>
+                    <span class="guide-desc">스토리 · 보스전 · PVP</span>
+                </button>
+                <button class="guide-card" type="button" role="tab" aria-selected="false" data-guide="skill">
+                    <span class="guide-number">FILE 02</span>
+                    <span class="guide-name">스킬작</span>
+                    <span class="guide-desc">버스트별 투자 가이드</span>
+                </button>
+                <button class="guide-card" type="button" role="tab" aria-selected="false" data-guide="wish">
+                    <span class="guide-number">FILE 03</span>
+                    <span class="guide-name">위시</span>
+                    <span class="guide-desc">기업별 위시리스트</span>
+                </button>
+                <button class="guide-card" type="button" role="tab" aria-selected="false" data-guide="growth">
+                    <span class="guide-number">FILE 04</span>
+                    <span class="guide-name">육성 추천</span>
+                    <span class="guide-desc">범용 솔레 · 속성 파티</span>
+                </button>
+                <button class="guide-card" type="button" role="tab" aria-selected="false" data-guide="raid">
+                    <span class="guide-number">FILE 05</span>
+                    <span class="guide-name">솔로레이드 뮤지엄</span>
+                    <span class="guide-desc">보스 공략 영상 모음</span>
+                </button>
+                <button class="guide-card" type="button" role="tab" aria-selected="false" data-guide="order">
+                    <span class="guide-number">FILE 06</span>
+                    <span class="guide-name">스토리 순서</span>
+                    <span class="guide-desc">플레이 순서 메모</span>
+                </button>
+            </div>
+
+            <div class="viewer guide-viewer">
+                <div class="viewer-bar">
+                    <div class="viewer-title"><span class="status-light"></span><span id="guide-title">티어표</span></div>
+                    <span class="archive-badge">사이트에서 바로 보기</span>
+                </div>
+                <div class="guide-frame-wrap">
+                    <div class="frame-loader" id="guide-loader">ARCHIVE LOADING</div>
+                    <iframe
+                        class="guide-content-frame"
+                        id="notion-frame"
+                        src="nikke-notion/tier.html?v=3"
+                        title="NIKKE 티어표"
+                        loading="eager"
+                        scrolling="no"
+                    ></iframe>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const guides = {
+            tier: {
+                title: '티어표',
+                page: 'nikke-notion/tier.html?v=3'
+            },
+            skill: {
+                title: '스킬작',
+                page: 'nikke-notion/skill.html'
+            },
+            wish: {
+                title: '위시',
+                page: 'nikke-notion/wish.html'
+            },
+            growth: {
+                title: '육성 추천 가이드',
+                page: 'nikke-notion/growth.html'
+            },
+            raid: {
+                title: '솔로레이드 뮤지엄',
+                page: 'nikke-notion/raid.html'
+            },
+            order: {
+                title: '스토리 순서',
+                page: 'nikke-notion/order.html'
+            }
+        };
+
+        const storyFrame = document.getElementById('story-frame');
+        const notionFrame = document.getElementById('notion-frame');
+
+        function getStoryFrameHeight(width) {
+            if (width >= 1200) return 9800;
+            if (width >= 1000) return 9950;
+            if (width >= 850) return 10250;
+            if (width >= 700) return 10600;
+            if (width >= 520) return 11100;
+            if (width >= 390) return 11700;
+            return 12550;
+        }
+
+        function resizeStoryFrame() {
+            const width = storyFrame.getBoundingClientRect().width;
+            if (width < 1) return;
+            storyFrame.style.height = `${getStoryFrameHeight(width)}px`;
+        }
+
+        let layoutSyncFrame = 0;
+
+        function reportPageHeight() {
+            if (window.parent === window) return;
+            const content = document.querySelector('.shell');
+            window.parent.postMessage({
+                type: 'nikke:height',
+                height: Math.ceil(content.getBoundingClientRect().bottom)
+            }, window.location.origin);
+        }
+
+        function scheduleLayoutSync() {
+            cancelAnimationFrame(layoutSyncFrame);
+            layoutSyncFrame = requestAnimationFrame(() => {
+                resizeStoryFrame();
+                requestAnimationFrame(reportPageHeight);
+            });
+        }
+
+        function finishLoading(frame) {
+            frame.parentElement?.querySelector('.frame-loader')?.classList.add('done');
+        }
+
+        storyFrame.addEventListener('load', () => {
+            finishLoading(storyFrame);
+            scheduleLayoutSync();
+        });
+
+        notionFrame.addEventListener('load', () => {
+            finishLoading(notionFrame);
+            scheduleLayoutSync();
+        });
+
+        window.addEventListener('message', event => {
+            const expectedPath = new URL(notionFrame.src, window.location.href).pathname;
+            if (
+                event.origin !== window.location.origin ||
+                event.source !== notionFrame.contentWindow ||
+                event.data?.type !== 'nikke:notion-height' ||
+                event.data.path !== expectedPath
+            ) return;
+
+            const height = Math.min(Math.max(Number(event.data.height) || 0, 420), 100000);
+            notionFrame.style.height = `${height}px`;
+            scheduleLayoutSync();
+        });
+
+        document.querySelectorAll('.view-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const view = tab.dataset.view;
+                document.querySelectorAll('.view-tab').forEach(item => {
+                    const active = item === tab;
+                    item.classList.toggle('active', active);
+                    item.setAttribute('aria-selected', String(active));
+                });
+                document.querySelectorAll('.view').forEach(section => {
+                    section.classList.toggle('active', section.id === `${view}-view`);
+                });
+                history.replaceState(null, '', view === 'guide' ? '#guide' : '#story');
+                scheduleLayoutSync();
+            });
+        });
+
+        document.querySelectorAll('.guide-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const guideKey = card.dataset.guide;
+                const guide = guides[guideKey];
+                if (!guide) return;
+                document.querySelectorAll('.guide-card').forEach(item => {
+                    const active = item === card;
+                    item.classList.toggle('active', active);
+                    item.setAttribute('aria-selected', String(active));
+                });
+                document.getElementById('guide-title').textContent = guide.title;
+                notionFrame.title = `NIKKE ${guide.title}`;
+                if (notionFrame.dataset.guide !== guideKey) {
+                    document.getElementById('guide-loader').classList.remove('done');
+                    notionFrame.style.height = '620px';
+                    notionFrame.dataset.guide = guideKey;
+                    notionFrame.src = guide.page;
+                }
+                scheduleLayoutSync();
+            });
+        });
+
+        if (location.hash === '#guide') {
+            document.querySelector('[data-view="guide"]')?.click();
+        }
+
+        window.addEventListener('resize', scheduleLayoutSync);
+        new ResizeObserver(scheduleLayoutSync).observe(document.querySelector('.shell'));
+        scheduleLayoutSync();
+    </script>
+</body>
+</html>

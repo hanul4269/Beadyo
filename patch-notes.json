@@ -1,8 +1,15 @@
 {
   "schemaVersion": 1,
   "rangeLabel": "최근 2개월 주요 변경점",
-  "updatedAt": "2026.09.04",
+  "updatedAt": "2026.09.09",
   "notes": [
+    {
+      "date": "2026.09.09",
+      "tag": "관리",
+      "items": [
+        "게임 탭에 NIKKE 스토리 및 티어표 가이드 추가"
+      ]
+    },
     {
       "date": "2026.09.04",
       "tag": "관리",
