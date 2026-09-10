@@ -1,8 +1,15 @@
 {
   "schemaVersion": 1,
   "rangeLabel": "최근 2개월 주요 변경점",
-  "updatedAt": "2026.09.09",
+  "updatedAt": "2026.09.10",
   "notes": [
+    {
+      "date": "2026.09.10",
+      "tag": "관리",
+      "items": [
+        "NIKKE 가이드의 중복 소개 문구와 스토리 순서 자료 제거"
+      ]
+    },
     {
       "date": "2026.09.09",
       "tag": "관리",

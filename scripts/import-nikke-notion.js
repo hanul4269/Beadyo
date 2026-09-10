@@ -14,8 +14,7 @@ const pages = [
     { slug: 'skill', id: '38091420541980609838c6367eefc082', label: '스킬작', eyebrow: 'SKILL ARCHIVE' },
     { slug: 'wish', id: '381914205419802a84fec5025cb88e5e', label: '위시', eyebrow: 'WISHLIST ARCHIVE' },
     { slug: 'growth', id: '3889142054198042b4dad5aeb0cab396', label: '육성 추천 가이드', eyebrow: 'GROWTH ARCHIVE' },
-    { slug: 'raid', id: '3a3914205419805580f8e531694cd8ec', label: '솔로레이드 뮤지엄', eyebrow: 'RAID MUSEUM' },
-    { slug: 'order', id: '3bf91420541980e89089d07b5e1987d8', label: '스토리 순서', eyebrow: 'STORY NOTE' }
+    { slug: 'raid', id: '3a3914205419805580f8e531694cd8ec', label: '솔로레이드 뮤지엄', eyebrow: 'RAID MUSEUM' }
 ];
 
 function findExportedPage(id) {
