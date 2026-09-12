@@ -1880,6 +1880,15 @@ function closeYtModal() {
 function renderYtLinkList() {
     const list = document.getElementById('ytLinkList');
     const links = state.ytLinks.filter(yl => yl.date === _ytModalDate);
+    const atLimit = links.length >= MAX_YT_LINKS_PER_DATE;
+    const addForm = document.querySelector('#ytLinkModal .yt-link-add');
+    addForm.hidden = atLimit;
+    // Update the help text from the same limit used when saving, including cached HTML.
+    const help = addForm.nextElementSibling;
+    help.textContent = atLimit
+        ? `${links.length}/${MAX_YT_LINKS_PER_DATE}개 등록 완료 · 더 이상 등록할 수 없어요. 기존 링크를 삭제하면 추가할 수 있어요.`
+        : `${links.length}/${MAX_YT_LINKS_PER_DATE}개 등록 · 날짜당 최대 ${MAX_YT_LINKS_PER_DATE}개까지 등록 가능 · 쇼츠는 /shorts/ URL을 넣어 주세요`;
+    addForm.style.display = atLimit ? 'none' : '';
     if (!links.length) {
         list.innerHTML = '<div class="yt-empty-msg">등록된 링크가 없어요</div>';
         return;
