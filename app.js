@@ -1861,6 +1861,7 @@ function renderMemoModalForm() {
 
 // ─── YouTube 링크 모달 ───
 let _ytModalDate = null;
+const MAX_YT_LINKS_PER_DATE = 5;
 
 function openYtModal(dateStr) {
     _ytModalDate = dateStr;
@@ -1900,7 +1901,10 @@ async function saveYtLink() {
     const url = normalizeOptionalUrl(urlInput);
     if (!url || !ytLinkType(url)) { showToast('유효한 YouTube URL을 입력해 주세요'); return; }
     const existing = state.ytLinks.filter(yl => yl.date === _ytModalDate);
-    if (existing.length >= 3) { showToast('날짜당 최대 3개까지 등록할 수 있어요'); return; }
+    if (existing.length >= MAX_YT_LINKS_PER_DATE) {
+        showToast(`날짜당 최대 ${MAX_YT_LINKS_PER_DATE}개까지 등록할 수 있어요`);
+        return;
+    }
     await _ensureDb();
     const { data, error } = await db.from('youtube_links').insert({ date: _ytModalDate, url }).select();
     if (error) { await handleSupabaseMutationError(error, '저장 실패: ' + error.message); return; }

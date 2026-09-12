@@ -1,8 +1,15 @@
 {
   "schemaVersion": 1,
   "rangeLabel": "최근 2개월 주요 변경점",
-  "updatedAt": "2026.09.10",
+  "updatedAt": "2026.09.12",
   "notes": [
+    {
+      "date": "2026.09.12",
+      "tag": "관리",
+      "items": [
+        "캘린더 날짜별 YouTube 링크 등록 한도를 5개로 확대"
+      ]
+    },
     {
       "date": "2026.09.10",
       "tag": "관리",
