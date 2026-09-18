@@ -10,21 +10,22 @@
         * { box-sizing: border-box; }
 
         :root {
-            --bg: #080a0f;
-            --panel: #10131a;
-            --panel-2: #151923;
-            --line: rgba(255,255,255,.11);
-            --line-strong: rgba(255,255,255,.19);
-            --text: #f6f7f9;
-            --muted: #979eaa;
-            --signal: #f5d553;
-            --signal-soft: rgba(245,213,83,.14);
-            --cyan: #74e6f5;
-            --cyan-soft: rgba(116,230,245,.12);
+            --bg: #edf2e8;
+            --panel: #ffffff;
+            --panel-2: #f6f8f3;
+            --line: rgba(42,47,41,.1);
+            --line-strong: rgba(79,127,37,.24);
+            --text: #2b2f29;
+            --muted: #74796f;
+            --signal: #7fb83f;
+            --signal-dark: #4f7f25;
+            --signal-soft: #eef7e4;
+            --gold: #c69c3a;
+            --gold-soft: #fff8e6;
         }
 
         html {
-            color-scheme: dark;
+            color-scheme: light;
             background: var(--bg);
         }
 
@@ -35,8 +36,8 @@
             color: var(--text);
             font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background:
-                radial-gradient(circle at 86% -10%, rgba(116,230,245,.13), transparent 34rem),
-                radial-gradient(circle at 6% 8%, rgba(245,213,83,.1), transparent 28rem),
+                radial-gradient(circle at 8% -10%, rgba(127,184,63,.15), transparent 28rem),
+                linear-gradient(180deg, rgba(255,255,255,.3), transparent 240px),
                 var(--bg);
         }
 
@@ -55,7 +56,7 @@
             padding: 10px 14px;
             border-radius: 8px;
             background: var(--signal);
-            color: #17150a;
+            color: #fff;
             font-weight: 900;
         }
 
@@ -64,15 +65,15 @@
         .shell {
             width: min(1580px, 100%);
             margin: 0 auto;
-            padding: 24px clamp(14px, 3vw, 46px) 44px;
+            padding: 22px clamp(18px, 3vw, 40px) 40px;
         }
 
         .topbar {
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             justify-content: space-between;
             gap: 24px;
-            margin-bottom: 22px;
+            margin-bottom: 18px;
         }
 
         .brand {
@@ -89,13 +90,13 @@
             width: 54px;
             height: 54px;
             flex: 0 0 auto;
-            border: 1px solid rgba(245,213,83,.45);
-            background: linear-gradient(145deg, rgba(245,213,83,.18), rgba(245,213,83,.03));
-            color: var(--signal);
+            border: 1px solid rgba(127,184,63,.28);
+            border-radius: 12px;
+            background: linear-gradient(145deg, #fff, var(--signal-soft));
+            color: var(--signal-dark);
             font-size: 27px;
             font-weight: 950;
-            box-shadow: inset 0 0 24px rgba(245,213,83,.08);
-            clip-path: polygon(10% 0, 100% 0, 100% 78%, 78% 100%, 0 100%, 0 10%);
+            box-shadow: 0 7px 18px rgba(42,47,41,.08);
         }
 
         .brand-mark::after {
@@ -105,13 +106,13 @@
             bottom: 5px;
             width: 8px;
             height: 8px;
-            border-right: 2px solid var(--signal);
-            border-bottom: 2px solid var(--signal);
+            border-right: 2px solid var(--gold);
+            border-bottom: 2px solid var(--gold);
         }
 
         .kicker {
             margin: 0 0 4px;
-            color: var(--cyan);
+            color: var(--signal-dark);
             font-size: 11px;
             font-weight: 900;
             letter-spacing: .22em;
@@ -139,9 +140,9 @@
             gap: 5px;
             padding: 5px;
             border: 1px solid var(--line);
-            border-radius: 10px;
-            background: rgba(16,19,26,.82);
-            box-shadow: 0 16px 40px rgba(0,0,0,.24);
+            border-radius: 9px;
+            background: rgba(255,255,255,.82);
+            box-shadow: 0 5px 16px rgba(42,47,41,.06);
         }
 
         .view-tab {
@@ -169,8 +170,8 @@
 
         .view-tab.active {
             background: var(--signal);
-            color: #18160b;
-            box-shadow: 0 8px 22px rgba(245,213,83,.18);
+            color: #fff;
+            box-shadow: 0 7px 18px rgba(127,184,63,.22);
         }
 
         .view { display: none; }
@@ -178,39 +179,45 @@
 
         .story-layout {
             display: grid;
-            grid-template-columns: 260px minmax(0, 1fr);
-            gap: 14px;
-            align-items: start;
+            gap: 12px;
         }
 
         .briefing,
         .viewer,
         .guide-card {
             border: 1px solid var(--line);
-            background: linear-gradient(160deg, rgba(21,25,35,.96), rgba(12,14,20,.98));
-            box-shadow: 0 20px 50px rgba(0,0,0,.22);
+            background: var(--panel);
+            box-shadow: 0 10px 28px rgba(42,47,41,.06);
         }
 
         .briefing {
-            position: sticky;
-            top: 16px;
-            padding: 22px;
-            clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+            display: grid;
+            grid-template-columns: minmax(250px, .9fr) minmax(440px, 1.5fr) auto;
+            align-items: center;
+            gap: 24px;
+            padding: 18px 20px;
+            border-radius: 12px;
         }
 
         .briefing-index {
-            margin-bottom: 28px;
-            color: rgba(255,255,255,.18);
-            font-family: Impact, sans-serif;
-            font-size: 66px;
-            line-height: .8;
-            letter-spacing: .04em;
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            min-height: 25px;
+            margin-bottom: 8px;
+            padding: 0 9px;
+            border-radius: 999px;
+            background: var(--signal-soft);
+            color: var(--signal-dark);
+            font-size: 10px;
+            font-weight: 950;
+            letter-spacing: .12em;
         }
 
         .briefing h2,
         .guide-head h2 {
             margin: 0;
-            font-size: 22px;
+            font-size: 20px;
             letter-spacing: -.03em;
         }
 
@@ -224,23 +231,26 @@
 
         .story-types {
             display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 8px;
-            margin: 22px 0;
+            margin: 0;
         }
 
         .story-type {
             display: flex;
             justify-content: space-between;
             gap: 12px;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--line);
-            color: #d8dbe1;
+            padding: 10px 12px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel-2);
+            color: #4d5549;
             font-size: 12px;
             font-weight: 800;
         }
 
         .story-type span:last-child {
-            color: var(--cyan);
+            color: var(--signal-dark);
             font-size: 10px;
             letter-spacing: .1em;
         }
@@ -254,27 +264,29 @@
             min-height: 40px;
             border: 1px solid var(--line-strong);
             border-radius: 7px;
-            color: #e7e9ed;
+            color: #4d5549;
             font-size: 12px;
             font-weight: 900;
             text-decoration: none;
         }
 
         .source-link {
-            width: 100%;
-            background: rgba(255,255,255,.035);
+            min-width: 156px;
+            padding: 0 14px;
+            background: var(--signal-soft);
+            color: var(--signal-dark);
         }
 
         .source-link:hover,
         .external-link:hover {
-            border-color: var(--cyan);
-            color: var(--cyan);
+            border-color: var(--signal);
+            color: var(--signal-dark);
         }
 
         .viewer {
             min-width: 0;
             overflow: hidden;
-            border-radius: 2px;
+            border-radius: 12px;
         }
 
         .viewer-bar {
@@ -285,7 +297,7 @@
             min-height: 54px;
             padding: 8px 12px 8px 16px;
             border-bottom: 1px solid var(--line);
-            background: #11141b;
+            background: #fff;
         }
 
         .viewer-title {
@@ -293,7 +305,7 @@
             align-items: center;
             gap: 10px;
             min-width: 0;
-            color: #dfe2e7;
+            color: #4d5549;
             font-size: 12px;
             font-weight: 900;
             letter-spacing: .03em;
@@ -304,8 +316,8 @@
             height: 7px;
             flex: 0 0 auto;
             border-radius: 50%;
-            background: #72e292;
-            box-shadow: 0 0 12px rgba(114,226,146,.8);
+            background: var(--signal);
+            box-shadow: 0 0 0 4px var(--signal-soft);
         }
 
         .external-link {
@@ -315,7 +327,8 @@
 
         .frame-wrap {
             position: relative;
-            background: #f7f7f7;
+            padding: 10px;
+            background: #e5ebdf;
             overflow: hidden;
         }
 
@@ -324,8 +337,10 @@
             width: 100%;
             height: 10250px;
             border: 0;
-            background: #fff;
+            border-radius: 8px;
+            background: #f5eee3;
             overflow: hidden;
+            color-scheme: light;
         }
 
         .frame-loader {
@@ -334,7 +349,7 @@
             z-index: 2;
             display: grid;
             place-items: center;
-            background: #0e1117;
+            background: var(--panel-2);
             color: var(--muted);
             font-size: 12px;
             font-weight: 800;
@@ -347,7 +362,7 @@
             width: 28px;
             height: 28px;
             margin-right: 10px;
-            border: 2px solid rgba(255,255,255,.12);
+            border: 2px solid rgba(42,47,41,.12);
             border-top-color: var(--signal);
             border-radius: 50%;
             animation: spin .8s linear infinite;
@@ -367,8 +382,8 @@
             gap: 24px;
             margin: 2px 0 15px;
             padding: 18px 20px;
-            border-left: 3px solid var(--cyan);
-            background: linear-gradient(90deg, var(--cyan-soft), transparent 65%);
+            border-left: 3px solid var(--signal);
+            background: linear-gradient(90deg, var(--signal-soft), transparent 65%);
         }
 
         .archive-badge {
@@ -376,10 +391,10 @@
             align-items: center;
             min-height: 34px;
             padding: 0 12px;
-            border: 1px solid rgba(116,230,245,.25);
+            border: 1px solid rgba(127,184,63,.25);
             border-radius: 999px;
-            background: var(--cyan-soft);
-            color: #c9f8ff;
+            background: var(--signal-soft);
+            color: var(--signal-dark);
             font-size: 12px;
             font-weight: 900;
             white-space: nowrap;
@@ -397,7 +412,7 @@
             min-width: 0;
             min-height: 142px;
             padding: 16px;
-            border-radius: 2px;
+            border-radius: 9px;
             color: var(--text);
             text-align: left;
             overflow: hidden;
@@ -410,31 +425,31 @@
             bottom: -28px;
             width: 76px;
             height: 76px;
-            border: 1px solid rgba(255,255,255,.08);
+            border: 1px solid rgba(42,47,41,.08);
             transform: rotate(45deg);
         }
 
         .guide-card:hover {
-            border-color: rgba(116,230,245,.5);
+            border-color: rgba(127,184,63,.5);
             transform: translateY(-2px);
         }
 
         .guide-card.active {
             border-color: var(--signal);
-            background: linear-gradient(160deg, rgba(245,213,83,.16), rgba(12,14,20,.98));
-            box-shadow: inset 0 0 0 1px rgba(245,213,83,.1), 0 18px 42px rgba(0,0,0,.26);
+            background: linear-gradient(160deg, var(--signal-soft), #fff);
+            box-shadow: inset 0 0 0 1px rgba(127,184,63,.08), 0 10px 24px rgba(42,47,41,.08);
         }
 
         .guide-number {
             display: block;
             margin-bottom: 25px;
-            color: var(--cyan);
+            color: var(--signal-dark);
             font-family: Impact, sans-serif;
             font-size: 13px;
             letter-spacing: .1em;
         }
 
-        .guide-card.active .guide-number { color: var(--signal); }
+        .guide-card.active .guide-number { color: var(--gold); }
 
         .guide-name {
             display: block;
@@ -477,11 +492,10 @@
             .topbar { align-items: stretch; flex-direction: column; gap: 17px; }
             .view-tabs { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
             .view-tab { justify-content: center; padding: 0 10px; }
-            .story-layout { grid-template-columns: 1fr; }
-            .briefing { position: relative; top: 0; padding: 17px; }
-            .briefing-index { display: none; }
+            .briefing { grid-template-columns: 1fr; gap: 15px; padding: 17px; }
             .story-types { grid-template-columns: repeat(2, 1fr); margin: 15px 0; }
             .story-type { padding: 7px 0; }
+            .source-link { width: 100%; }
             .guide-head { align-items: flex-start; flex-direction: column; gap: 10px; }
             .guide-grid { grid-template-columns: repeat(2, 1fr); }
             .archive-badge { font-size: 11px; }
@@ -496,6 +510,9 @@
             .guide-number { margin-bottom: 17px; }
             .guide-name { font-size: 14px; }
             .external-link span { display: none; }
+            .story-types { grid-template-columns: 1fr; margin: 0; }
+            .story-type { padding: 9px 10px; }
+            .frame-wrap { padding: 5px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -528,16 +545,18 @@
         <section class="view active" id="story-view">
             <div class="story-layout">
                 <aside class="briefing">
-                    <div class="briefing-index">01</div>
-                    <h2>STORYLINE</h2>
-                    <p>메인·이벤트·사이드·호감도 스토리를 이야기 흐름에 맞춰 살펴볼 수 있는 감상 순서 가이드입니다.</p>
+                    <div class="briefing-copy">
+                        <div class="briefing-index">NIKKE STORY GUIDE</div>
+                        <h2>스토리 감상 순서</h2>
+                        <p>메인·이벤트·사이드·호감도 스토리를 이야기 흐름에 맞춰 살펴보세요.</p>
+                    </div>
                     <div class="story-types" aria-label="스토리 분류">
                         <div class="story-type"><span>메인 스토리</span><span>MAIN</span></div>
                         <div class="story-type"><span>이벤트 스토리</span><span>EVENT</span></div>
                         <div class="story-type"><span>사이드 스토리</span><span>SIDE</span></div>
                         <div class="story-type"><span>호감도 스토리</span><span>BOND</span></div>
                     </div>
-                    <a class="source-link" href="https://ssissun.github.io/nikke-storyline/" target="_blank" rel="noopener noreferrer">원본 사이트에서 보기 ↗</a>
+                    <a class="source-link" href="https://ssissun.github.io/nikke-storyline/" target="_blank" rel="noopener noreferrer">원본에서 크게 보기 ↗</a>
                 </aside>
 
                 <div class="viewer">

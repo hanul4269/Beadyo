@@ -1,8 +1,15 @@
 {
   "schemaVersion": 1,
   "rangeLabel": "최근 2개월 주요 변경점",
-  "updatedAt": "2026.09.12",
+  "updatedAt": "2026.09.18",
   "notes": [
+    {
+      "date": "2026.09.18",
+      "tag": "관리",
+      "items": [
+        "NIKKE 스토리 감상 순서 UI를 사이트 분위기에 맞게 개선"
+      ]
+    },
     {
       "date": "2026.09.12",
       "tag": "관리",
