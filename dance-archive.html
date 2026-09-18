@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-page="dance-archive">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,28 +7,12 @@
     <meta name="robots" content="noindex, nofollow">
     <title>구슬요 춤영상 검토페이지</title>
     <link rel="icon" href="logo-icon.webp">
+    <link rel="stylesheet" href="tokens.css?v=20260918">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
     <style>
         * { box-sizing: border-box; }
-
-        :root {
-            --accent: #7fb83f;
-            --accent-dark: #456f24;
-            --accent-soft: #edf7e4;
-            --ink: #222720;
-            --muted: #737b70;
-            --line: rgba(34,39,32,.1);
-            --surface: #ffffff;
-            --surface-2: #f8faf5;
-            --bg: #eef1ea;
-            --soop: #2d8b5f;
-            --clip: #316fd0;
-            --catch: #c67f31;
-            --youtube: #d94135;
-            --gold: #c49a34;
-        }
 
         body {
             margin: 0;
@@ -918,6 +902,7 @@
     </div>
 
     <script src="supabase.min.js?v=supabase-2-112-2"></script>
+    <script src="beadyo-common.js?v=20260918"></script>
     <script src="dance-data.js?v=status-20260628"></script>
     <script src="dance-thumbnail-backfill.js?v=thumbs-20260628"></script>
     <script>
@@ -941,11 +926,9 @@
             youtube: 'var(--youtube)',
         };
 
-        const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
         const DANCE_STATUS_TABLE = 'dance_video_statuses';
         const DANCE_STATUS_COLUMNS = 'video_id,status,title,source,song,url,thumbnail';
-        const PLACEHOLDER_THUMBNAILS = new Set(['', 'banner.png', 'banner.jpg', 'loading-img.png', 'songbook-char.png']);
+        const PLACEHOLDER_THUMBNAILS = new Set(['', 'banner.jpg', 'loading-img.png', 'songbook-char.png']);
         let videos = loadVideos();
         let db = null;
         let sharedStatusMode = 'loading';
@@ -1073,8 +1056,7 @@
 
         async function ensureDb() {
             if (db) return db;
-            if (!window.supabase?.createClient) throw new Error('Supabase 클라이언트를 불러오지 못했습니다.');
-            db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            db = getBeadyoSupabaseClient({
                 auth: { detectSessionInUrl: false },
             });
             return db;
@@ -1152,16 +1134,6 @@
 
         function updateImportStatus(message) {
             importStatus.textContent = `${localStatusLabel()} · ${message || formatImportTime(lastImportAt)}`;
-        }
-
-        function esc(value) {
-            return String(value ?? '').replace(/[&<>"']/g, ch => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;',
-            }[ch]));
         }
 
         function getVideoEmbedUrl(video) {

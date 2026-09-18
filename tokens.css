@@ -1,0 +1,345 @@
+/* Shared design tokens. Page-specific values are preserved intentionally. */
+
+html[data-page="index"] {
+    --accent: #7fb83f;
+    --accent-dark: #4f7f25;
+    --accent-light: #eef7e4;
+    --header-bg: #76ad39;
+    --tab-hover: rgba(255,255,255,0.12);
+    --bg: #f4f5f1;
+    --surface: #ffffff;
+    --surface-2: #fbfcf8;
+    --ink: #222720;
+    --muted: #6b725f;
+    --line: rgba(34,39,32,0.09);
+}
+
+html[data-page="index"][data-theme="dark"] {
+    --accent: #8bc34a;
+    --accent-dark: #b4dc7b;
+    --accent-light: #21381b;
+    --header-bg: #4f7d2b;
+    --tab-hover: rgba(255,255,255,0.13);
+    --bg: #11170f;
+    --surface: #192119;
+    --surface-2: #202b20;
+    --ink: #edf5e8;
+    --muted: #a8b4a1;
+    --line: rgba(223,238,211,0.14);
+    color-scheme: dark;
+}
+
+html[data-page="calendar"] {
+    --accent: #8bc34a;
+    --accent-dark: #6d9c32;
+    --accent-light: #f1f8e9;
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --border: rgba(0,0,0,0.07);
+    --text: #222222;
+    --muted: #888888;
+}
+
+html[data-page="calendar"][data-theme="dark"] {
+    --accent: #8bc34a;
+    --accent-dark: #b7df7f;
+    --accent-light: #21381b;
+    --bg: #11170f;
+    --surface: #192119;
+    --border: rgba(223,238,211,0.14);
+    --text: #edf5e8;
+    --muted: #a8b4a1;
+    color-scheme: dark;
+}
+
+html[data-page="songbook"] {
+    --accent: #7fb83f;
+    --accent-dark: #4f7f25;
+    --accent-light: #eef7e4;
+    --accent-soft: #f8fbf2;
+    --bg: #f4f5f1;
+    --surface: #ffffff;
+    --surface-2: #fbfcf8;
+    --border: rgba(34,39,32,0.09);
+    --text: #222720;
+    --muted: #737b70;
+    --row-hover: #f2f8ea;
+    --row-alt: rgba(127,184,63,0.045);
+    --blue-soft: #eaf3fb;
+    --blue: #3f78a8;
+}
+
+html[data-page="songbook"][data-theme="dark"] {
+    --accent: #8bc34a;
+    --accent-dark: #b7df7f;
+    --accent-light: #21381b;
+    --accent-soft: #172115;
+    --bg: #11170f;
+    --surface: #192119;
+    --surface-2: #202b20;
+    --border: rgba(223,238,211,0.14);
+    --text: #edf5e8;
+    --muted: #a8b4a1;
+    --row-hover: #24351f;
+    --row-alt: rgba(139,195,74,0.08);
+    --blue-soft: #1d3141;
+    --blue: #92c9f4;
+    color-scheme: dark;
+}
+
+html[data-page="songs"] {
+    --accent: #7fb83f;
+    --accent-dark: #4f7f25;
+    --accent-light: #eef7e4;
+    --accent-soft: #f7fbf1;
+    --bg: #f4f5f1;
+    --surface: #ffffff;
+    --surface-2: #fbfcf8;
+    --border: rgba(34,39,32,0.09);
+    --text: #222720;
+    --muted: #737b70;
+    --coral: #db7b62;
+    --gold: #c49a34;
+    --music-title-width: 150px;
+    --music-gap: 12px;
+    --music-action-width: 88px;
+}
+
+html[data-page="songs"][data-theme="dark"] {
+    --accent: #8bc34a;
+    --accent-dark: #b7df7f;
+    --accent-light: #21381b;
+    --accent-soft: #172017;
+    --bg: #11170f;
+    --surface: #192119;
+    --surface-2: #202b20;
+    --border: rgba(223,238,211,0.14);
+    --text: #edf5e8;
+    --muted: #a8b4a1;
+    --coral: #ff9c8f;
+    --gold: #e3c05f;
+    color-scheme: dark;
+}
+
+html[data-page="dance"] {
+    --accent: #7fb83f;
+    --accent-dark: #456f24;
+    --accent-soft: #eef7e4;
+    --ink: #222720;
+    --muted: #737b70;
+    --line: rgba(34,39,32,.1);
+    --surface: #ffffff;
+    --bg: #f2f4ef;
+    --soop: #2d8b5f;
+    --clip: #316fd0;
+    --catch: #c67f31;
+    --youtube: #d94135;
+}
+
+html[data-page="dance"][data-theme="dark"] {
+    --accent: #8bc34a;
+    --accent-dark: #b7df7f;
+    --accent-soft: #21381b;
+    --ink: #edf5e8;
+    --muted: #a8b4a1;
+    --line: rgba(223,238,211,.14);
+    --surface: #192119;
+    --bg: #11170f;
+    --soop: #64c795;
+    --clip: #7fb0ff;
+    --catch: #e5a85c;
+    --youtube: #ff7d72;
+    color-scheme: dark;
+}
+
+html[data-page="dance-archive"] {
+    --accent: #7fb83f;
+    --accent-dark: #456f24;
+    --accent-soft: #edf7e4;
+    --ink: #222720;
+    --muted: #737b70;
+    --line: rgba(34,39,32,.1);
+    --surface: #ffffff;
+    --surface-2: #f8faf5;
+    --bg: #eef1ea;
+    --soop: #2d8b5f;
+    --clip: #316fd0;
+    --catch: #c67f31;
+    --youtube: #d94135;
+    --gold: #c49a34;
+}
+
+html[data-page="games"] {
+    --accent: #7fb83f;
+    --accent-dark: #4f7f25;
+    --accent-soft: #eef7e4;
+    --ink: #2b2f29;
+    --muted: #74796f;
+    --line: rgba(42, 47, 41, .1);
+    --bg: #d8e0d2;
+    --stage: #edf2e8;
+    --rail: #6f776b;
+    --rail-soft: #8b947f;
+    --highlight: #c69c3a;
+    --highlight-soft: #fff8e6;
+    --blue: #5b8fc7;
+    --gold: #c69c3a;
+}
+
+html[data-page="games"][data-theme="dark"] {
+    --accent: #91c956;
+    --accent-dark: #b8dc8f;
+    --accent-soft: #293821;
+    --ink: #edf3e9;
+    --muted: #aab5a4;
+    --line: rgba(232, 241, 226, .13);
+    --bg: #10150f;
+    --stage: #182018;
+    --rail: #9aa594;
+    --rail-soft: #7f8b79;
+    --highlight: #e0bd64;
+    --highlight-soft: #332d1d;
+    --blue: #82add6;
+    --gold: #e0bd64;
+}
+
+html[data-page="gembox"] {
+    --accent: #7fb83f;
+    --accent-dark: #4f7f25;
+    --accent-light: #eef7e4;
+    --bg: #f4f5f1;
+    --surface: #ffffff;
+    --surface-2: #fbfcf8;
+    --border: rgba(34,39,32,0.09);
+    --text: #222720;
+    --muted: #737b70;
+    --gold: #c49a34;
+    --coral: #db7b62;
+}
+
+html[data-page="gembox"][data-theme="dark"] {
+    --accent: #8bc34a;
+    --accent-dark: #b7df7f;
+    --accent-light: #21381b;
+    --bg: #11170f;
+    --surface: #192119;
+    --surface-2: #202b20;
+    --border: rgba(223,238,211,0.14);
+    --text: #edf5e8;
+    --muted: #a8b4a1;
+    --gold: #e3c05f;
+    --coral: #ff9c8f;
+    color-scheme: dark;
+}
+
+html[data-page="guide"] {
+    --accent: #7fb83f;
+    --accent-dark: #4f7f25;
+    --accent-soft: #eef7e4;
+    --bg: #f4f5f1;
+    --surface: #ffffff;
+    --surface-2: #fbfcf8;
+    --border: rgba(34,39,32,0.09);
+    --text: #222720;
+    --muted: #737b70;
+    --coral: #db7b62;
+    --gold: #c49a34;
+}
+
+html[data-page="nikke"] {
+    --bg: #edf2e8;
+    --panel: #ffffff;
+    --panel-2: #f6f8f3;
+    --line: rgba(42,47,41,.1);
+    --line-strong: rgba(79,127,37,.24);
+    --text: #2b2f29;
+    --muted: #74796f;
+    --signal: #7fb83f;
+    --signal-dark: #4f7f25;
+    --signal-soft: #eef7e4;
+    --gold: #c69c3a;
+    --gold-soft: #fff8e6;
+    --body-glow: rgba(127,184,63,.15);
+    --body-wash: rgba(255,255,255,.3);
+    --panel-glass: rgba(255,255,255,.82);
+    --surface-text: #4d5549;
+    --frame-edge: #e5ebdf;
+    --frame-bg: #f5f7f2;
+}
+
+html[data-page="nikke"][data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #111711;
+    --panel: #1b231a;
+    --panel-2: #202a1f;
+    --line: rgba(234,242,229,.13);
+    --line-strong: rgba(145,201,86,.32);
+    --text: #edf3e9;
+    --muted: #aab5a4;
+    --signal: #91c956;
+    --signal-dark: #b8dc8f;
+    --signal-soft: #293821;
+    --gold: #e0bd64;
+    --gold-soft: #332d1d;
+    --body-glow: rgba(127,184,63,.13);
+    --body-wash: rgba(47,61,42,.45);
+    --panel-glass: rgba(27,35,26,.9);
+    --surface-text: #cbd5c5;
+    --frame-edge: #151c15;
+    --frame-bg: #131a13;
+}
+
+html[data-page="development-requests"] {
+    color-scheme: light;
+    --green-900: #25451b;
+    --green-800: #315d22;
+    --green-700: #4c812d;
+    --green-600: #679d36;
+    --green-100: #ecf7df;
+    --ink: #25311f;
+    --muted: #718066;
+    --line: #dce8d1;
+    --surface: #ffffff;
+    --surface-soft: #f7fbf2;
+    --page: #eef6e7;
+    --shadow: 0 14px 40px rgba(39, 73, 25, 0.11);
+}
+
+html[data-page="development-requests"][data-theme="dark"] {
+    color-scheme: dark;
+    --ink: #edf5e7;
+    --muted: #a9bba0;
+    --line: #354830;
+    --surface: #182218;
+    --surface-soft: #121b12;
+    --page: #0d150e;
+    --green-100: #263b20;
+    --shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+}
+
+html[data-page="tractor-service"] {
+    --field: #f7f0e9;
+    --soil: #3b2d29;
+    --ink: #201918;
+    --muted: #806f68;
+    --cream: #fffaf2;
+    --line: rgba(59,45,41,0.12);
+    --coral: #e87364;
+    --mint: #5ac6bd;
+    --leaf: #5c8f3f;
+    --gold: #d99b3d;
+}
+
+html[data-page="tractor-service"][data-theme="dark"] {
+    --field: #11170f;
+    --soil: #3d302b;
+    --ink: #f7efe5;
+    --muted: #b8aaa0;
+    --cream: #201a17;
+    --line: rgba(255,250,242,0.14);
+    --coral: #ff9385;
+    --mint: #83d6ce;
+    --leaf: #b7df7f;
+    --gold: #f0c16d;
+    color-scheme: dark;
+}

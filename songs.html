@@ -1,13 +1,23 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-page="songs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>구슬요 노래</title>
+    <meta name="description" content="구슬요의 오리지널 곡, 커버곡과 라이브 영상을 한곳에서 찾아보세요.">
+    <title>구슬요 음악 — 오리지널·커버·라이브 모음</title>
     <link rel="canonical" href="https://beadyo.com/songs.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="구슬요모아보기">
+    <meta property="og:title" content="구슬요 음악 — 오리지널·커버·라이브 모음">
+    <meta property="og:description" content="구슬요의 오리지널 곡, 커버곡과 라이브 영상을 한곳에서 찾아보세요.">
     <meta property="og:url" content="https://beadyo.com/songs.html">
+    <meta property="og:image" content="https://beadyo.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
+    <link rel="stylesheet" href="tokens.css?v=20260918">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
@@ -15,8 +25,6 @@
     <script>
         (() => {
             const key = 'beadyo:theme';
-            const allowedOrigin = origin => ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'].includes(origin) ||
-                origin === window.location.origin;
             const normalize = value => value === 'dark' ? 'dark' : 'light';
             function applyTheme(theme, persist = false) {
                 const next = normalize(theme);
@@ -30,7 +38,7 @@
             try { stored = localStorage.getItem(key) === 'dark' ? 'dark' : 'light'; } catch {}
             applyTheme(stored);
             window.addEventListener('message', event => {
-                if (!allowedOrigin(event.origin)) return;
+                if (!beadyoAllowedMessageOrigin(event.origin)) return;
                 if (event.data?.type === 'beadyo-theme-sync') applyTheme(event.data.theme, true);
             });
             window.addEventListener('storage', event => {
@@ -40,40 +48,6 @@
     </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --accent:       #7fb83f;
-            --accent-dark:  #4f7f25;
-            --accent-light: #eef7e4;
-            --accent-soft:  #f7fbf1;
-            --bg:           #f4f5f1;
-            --surface:      #ffffff;
-            --surface-2:    #fbfcf8;
-            --border:       rgba(34,39,32,0.09);
-            --text:         #222720;
-            --muted:        #737b70;
-            --coral:        #db7b62;
-            --gold:         #c49a34;
-            --music-title-width: 150px;
-            --music-gap: 12px;
-            --music-action-width: 88px;
-        }
-
-        html[data-theme="dark"] {
-            --accent:       #8bc34a;
-            --accent-dark:  #b7df7f;
-            --accent-light: #21381b;
-            --accent-soft:  #172017;
-            --bg:           #11170f;
-            --surface:      #192119;
-            --surface-2:    #202b20;
-            --border:       rgba(223,238,211,0.14);
-            --text:         #edf5e8;
-            --muted:        #a8b4a1;
-            --coral:        #ff9c8f;
-            --gold:         #e3c05f;
-            color-scheme: dark;
-        }
 
         body {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -721,22 +695,17 @@
 
     <div class="toast" id="toast"></div>
 
+    <script src="supabase.min.js?v=supabase-2-112-2"></script>
+    <script src="beadyo-common.js?v=20260918"></script>
     <script>
-        const SUPABASE_URL      = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
-        const OWNER_EMAIL       = 'riosniper12@gmail.com';
-
         let db = null;
         let _dbReady = null;
         function ensureDb() {
             if (db) return Promise.resolve(db);
             if (_dbReady) return _dbReady;
-            _dbReady = new Promise((resolve, reject) => {
-                const s = document.createElement('script');
-                s.src = 'supabase.min.js?v=supabase-2-112-2';
-                s.onload = () => { db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); resolve(db); };
-                s.onerror = reject;
-                document.head.appendChild(s);
+            _dbReady = Promise.resolve().then(() => {
+                db = getBeadyoSupabaseClient();
+                return db;
             });
             return _dbReady;
         }
@@ -902,9 +871,6 @@
                 </div>`).join('');
         }
 
-        function esc(str) {
-            return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-        }
         function jsArg(value) {
             return esc(JSON.stringify(String(value ?? '')));
         }
@@ -1051,13 +1017,13 @@
         // ─── 인증 동기화 (부모 iframe) ───
         async function checkEditor(user) {
             if (!user) return false;
-            const email = (user.email || '').toLowerCase();
-            if (email === OWNER_EMAIL.toLowerCase()) return true;
             await ensureDb();
-            try {
-                const { data } = await db.from('editors').select('email').eq('email', email).maybeSingle();
-                return !!data;
-            } catch { return false; }
+            const { data, error } = await db.rpc('is_beadyo_editor');
+            if (error) {
+                console.error('is_beadyo_editor:', error);
+                return false;
+            }
+            return data === true;
         }
 
         window.addEventListener('message', async event => {

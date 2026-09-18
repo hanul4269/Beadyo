@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-page="development-requests">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -7,36 +7,10 @@
     <meta name="robots" content="noindex, nofollow">
     <title>개발요청란 | BEADYO</title>
     <link rel="icon" href="logo-icon.webp">
+    <link rel="stylesheet" href="tokens.css?v=20260918">
     <script src="supabase.min.js"></script>
+    <script src="beadyo-common.js?v=20260918"></script>
     <style>
-        :root {
-            color-scheme: light;
-            --green-900: #25451b;
-            --green-800: #315d22;
-            --green-700: #4c812d;
-            --green-600: #679d36;
-            --green-100: #ecf7df;
-            --ink: #25311f;
-            --muted: #718066;
-            --line: #dce8d1;
-            --surface: #ffffff;
-            --surface-soft: #f7fbf2;
-            --page: #eef6e7;
-            --shadow: 0 14px 40px rgba(39, 73, 25, 0.11);
-        }
-
-        html[data-theme="dark"] {
-            color-scheme: dark;
-            --ink: #edf5e7;
-            --muted: #a9bba0;
-            --line: #354830;
-            --surface: #182218;
-            --surface-soft: #121b12;
-            --page: #0d150e;
-            --green-100: #263b20;
-            --shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
-        }
-
         * { box-sizing: border-box; }
 
         body {
@@ -642,16 +616,13 @@
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script>
-        const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
-        const OWNER_EMAIL = 'riosniper12@gmail.com';
         const THEME_STORAGE_KEY = 'beadyo:theme';
         const STATUS_LABELS = {
             received: '접수',
             in_progress: '진행중',
             completed: '완료',
         };
-        const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        const db = getBeadyoSupabaseClient({
             auth: { detectSessionInUrl: false, flowType: 'pkce' },
         });
 
@@ -672,13 +643,6 @@
             try { theme = localStorage.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light'; } catch {}
             document.documentElement.dataset.theme = theme;
             document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#4f7d2b' : '#76ad39';
-        }
-
-        function safeImageUrl(value) {
-            try {
-                const url = new URL(String(value || '').trim());
-                return ['http:', 'https:'].includes(url.protocol) ? url.toString() : '';
-            } catch { return ''; }
         }
 
         function escapeHtml(value) {
@@ -711,10 +675,12 @@
 
         async function checkAdmin(user) {
             if (!user) return false;
-            const email = String(user.email || '').toLowerCase();
-            if (email === OWNER_EMAIL.toLowerCase()) return true;
-            const { data, error } = await db.from('editors').select('email').eq('email', email).maybeSingle();
-            return !error && !!data;
+            const { data, error } = await db.rpc('is_beadyo_editor');
+            if (error) {
+                console.error('is_beadyo_editor:', error);
+                return false;
+            }
+            return data === true;
         }
 
         function renderUserChip() {

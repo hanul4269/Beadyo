@@ -1,13 +1,24 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-page="gembox">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>구슬요의 보석함</title>
+    <meta name="description" content="구슬요의 보석함 시즌별 출연진과 커버곡 영상을 모아보세요.">
+    <title>구슬요의 보석함 — 시즌별 출연진과 커버곡</title>
     <link rel="canonical" href="https://beadyo.com/gembox.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="구슬요모아보기">
+    <meta property="og:title" content="구슬요의 보석함 — 시즌별 출연진과 커버곡">
+    <meta property="og:description" content="구슬요의 보석함 시즌별 출연진과 커버곡 영상을 모아보세요.">
     <meta property="og:url" content="https://beadyo.com/gembox.html">
+    <meta property="og:image" content="https://beadyo.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
+    <link rel="stylesheet" href="tokens.css?v=20260918">
+    <script src="beadyo-common.js?v=20260918"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,8 +31,6 @@
     <script>
         (() => {
             const key = 'beadyo:theme';
-            const allowedOrigin = origin => ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'].includes(origin) ||
-                origin === window.location.origin;
             const normalize = value => value === 'dark' ? 'dark' : 'light';
             function applyTheme(theme, persist = false) {
                 const next = normalize(theme);
@@ -35,7 +44,7 @@
             try { stored = localStorage.getItem(key) === 'dark' ? 'dark' : 'light'; } catch {}
             applyTheme(stored);
             window.addEventListener('message', event => {
-                if (!allowedOrigin(event.origin)) return;
+                if (!beadyoAllowedMessageOrigin(event.origin)) return;
                 if (event.data?.type === 'beadyo-theme-sync') applyTheme(event.data.theme, true);
             });
             window.addEventListener('storage', event => {
@@ -45,33 +54,6 @@
     </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --accent: #7fb83f;
-            --accent-dark: #4f7f25;
-            --accent-light: #eef7e4;
-            --bg: #f4f5f1;
-            --surface: #ffffff;
-            --surface-2: #fbfcf8;
-            --border: rgba(34,39,32,0.09);
-            --text: #222720;
-            --muted: #737b70;
-            --gold: #c49a34;
-            --coral: #db7b62;
-        }
-        html[data-theme="dark"] {
-            --accent: #8bc34a;
-            --accent-dark: #b7df7f;
-            --accent-light: #21381b;
-            --bg: #11170f;
-            --surface: #192119;
-            --surface-2: #202b20;
-            --border: rgba(223,238,211,0.14);
-            --text: #edf5e8;
-            --muted: #a8b4a1;
-            --gold: #e3c05f;
-            --coral: #ff9c8f;
-            color-scheme: dark;
-        }
         body {
             min-height: 100vh;
             background: var(--bg);
@@ -988,28 +970,14 @@
         const state = { season: 2 };
         const seasons = [2, 1];
 
-        function esc(value) {
-            return String(value ?? '').replace(/[&<>"']/g, ch =>
-                ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])
-            );
-        }
-
         function jsArg(value) {
             return esc(JSON.stringify(String(value ?? '')));
         }
 
-        function safeUrl(value) {
-            const raw = String(value || '').trim();
-            if (!raw) return '';
-            try {
-                const url = new URL(raw, location.href);
-                if (url.protocol === 'http:' || url.protocol === 'https:') return url.toString();
-            } catch {}
-            return '';
-        }
+        const gemboxSafeUrl = value => BeadyoCommon.safeUrl(value, '', true);
 
         function youtubeId(url) {
-            const href = safeUrl(url);
+            const href = gemboxSafeUrl(url);
             if (!href) return '';
             try {
                 const parsed = new URL(href);
@@ -1041,7 +1009,7 @@
         }
 
         function memberProfileImage(member) {
-            return safeUrl(member?.profileImage) || soopProfileImage(member?.stationId);
+            return gemboxSafeUrl(member?.profileImage) || soopProfileImage(member?.stationId);
         }
 
         function renderSeasonTabs() {
@@ -1084,13 +1052,13 @@
             }
 
             grid.innerHTML = items.map(cast => {
-                const stationUrl = safeUrl(cast.stationUrl);
+                const stationUrl = gemboxSafeUrl(cast.stationUrl);
                 const members = Array.isArray(cast.members)
                     ? cast.members.map(member => {
                         const name = String(member?.name || '').trim() || '출연진';
                         return {
                             name,
-                            stationUrl: safeUrl(member?.stationUrl),
+                            stationUrl: gemboxSafeUrl(member?.stationUrl),
                             profileUrl: memberProfileImage(member),
                             initial: esc(name.slice(0, 1) || '?')
                         };
@@ -1100,8 +1068,8 @@
                 const songs = Array.isArray(cast.songs) ? cast.songs : [];
                 const primarySong = songs[0] || null;
                 const videoUrl = youtubeEmbedUrl(primarySong?.url || '');
-                const profileUrl = safeUrl(cast.profileImage) || soopProfileImage(cast.stationId);
-                const imageUrl = safeUrl(cast.image) || youtubeThumb(primarySong?.url || '') || profileUrl;
+                const profileUrl = gemboxSafeUrl(cast.profileImage) || soopProfileImage(cast.stationId);
+                const imageUrl = gemboxSafeUrl(cast.image) || youtubeThumb(primarySong?.url || '') || profileUrl;
                 const initial = esc(String(cast.name || '?').trim().slice(0, 1) || '?');
                 const duetCoverHtml = isDuet ? `<div class="duet-cover-inner">
                     ${members.map(member => {
@@ -1118,7 +1086,7 @@
                     : (isDuet ? duetCoverHtml : `<div class="cast-fallback">${initial}</div>`);
                 const songHtml = songs.length
                     ? songs.map(song => {
-                        const href = safeUrl(song.url);
+                        const href = gemboxSafeUrl(song.url);
                         if (!href) return '';
                         return `<a class="song-link" href="${esc(href)}" target="_blank" rel="noopener noreferrer">
                             <span>${esc(song.title || '개인곡')}</span>
@@ -1156,7 +1124,7 @@
                             ${stationUrl ? `<a class="action-link" href="${esc(stationUrl)}" target="_blank" rel="noopener noreferrer">방송국</a>` : ''}
                             ${memberActionHtml}
                             ${(cast.links || []).map(link => {
-                                const href = safeUrl(link.url);
+                                const href = gemboxSafeUrl(link.url);
                                 return href ? `<a class="action-link secondary" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(link.label || '링크')}</a>` : '';
                             }).join('')}
                         </div>
@@ -1169,7 +1137,7 @@
             const modal = document.getElementById('videoModal');
             const titleEl = document.getElementById('videoTitle');
             const frameWrap = document.getElementById('videoFrameWrap');
-            const safeSrc = safeUrl(src);
+            const safeSrc = gemboxSafeUrl(src);
             if (!modal || !frameWrap || !safeSrc) return;
             titleEl.textContent = title || '영상';
             frameWrap.innerHTML = `<iframe src="${esc(safeSrc)}" title="${esc(title || 'YouTube 영상')}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation" allowfullscreen></iframe>`;

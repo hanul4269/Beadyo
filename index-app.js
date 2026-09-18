@@ -1,6 +1,3 @@
-const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
-const OWNER_EMAIL = 'riosniper12@gmail.com';
 const FALLBACK_ASSET_VERSION = 'development-request-comments-20260902';
 const IS_LOCAL_HOST = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
 const APP_ASSET_VERSION = (() => {
@@ -96,12 +93,18 @@ function applyTheme(theme, options = {}) {
     if (options.broadcast) syncThemeToFrames();
 }
 
-function syncThemeToFrames() {
-    const origin = window.location.origin === 'null' ? '*' : window.location.origin;
+function syncThemeToFrames(targetFrame = null) {
     const msg = { type: 'beadyo-theme-sync', theme: currentTheme };
-    for (const id of ['frame-0', 'frame-2', 'frame-3', 'frame-4', 'frame-5', 'frame-6', 'guide-frame']) {
-        const frame = document.getElementById(id);
-        if (frame?.contentWindow) frame.contentWindow.postMessage(msg, origin);
+    const ids = ['frame-0', 'frame-2', 'frame-3', 'frame-4', 'frame-5', 'frame-6', 'guide-frame'];
+    const frames = targetFrame
+        ? (ids.includes(targetFrame.id) ? [targetFrame] : [])
+        : ids.map(id => document.getElementById(id));
+    for (const frame of frames) {
+        if (!isFrameReadyForMessage(frame)) continue;
+        const origin = window.location.origin === 'null' || frame.id === 'guide-frame'
+            ? '*'
+            : window.location.origin;
+        frame.contentWindow.postMessage(msg, origin);
     }
 }
 
@@ -132,12 +135,12 @@ function markPwaGuideSeen() {
 }
 
 const TABS = [
-    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'calendar-yt-limit-ui-20260912' },
+    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'editor-rpc-20260918' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
     { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'auth-session-clock-skew-20260828' },
     { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'auth-session-clock-skew-20260828' },
-    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'music-dark-mode-20260822' },
-    { type: 'content', src: 'content.html', directUrl: 'content.html', assetVersion: 'content-archive-20260902-5' },
+    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'editor-rpc-20260918' },
+    { type: 'content', src: 'content.html', directUrl: 'content.html', assetVersion: 'editor-rpc-20260918' },
     { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'gacha-wall-hit-20260614' },
 ];
 
@@ -146,7 +149,7 @@ const GAME_TAB_INDEX = 6;
 const TAB_ROUTES = ['calendar', 'schedule', 'songbook', 'live', 'music', 'content', 'games'];
 const MUSIC_TAB_INDEX = 4;
 const MUSIC_PAGES = {
-    songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'music-dark-mode-20260822' },
+    songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'editor-rpc-20260918' },
     dance: { src: 'dance.html', directUrl: 'dance.html', assetVersion: 'music-dark-mode-20260822' },
     gembox: { src: 'gembox.html', directUrl: 'gembox.html', assetVersion: 'music-dark-mode-20260822' },
     tractor: { src: 'tractor-service.html', directUrl: 'tractor-service.html', assetVersion: 'music-dark-mode-20260822' },
@@ -211,7 +214,7 @@ function scheduleUrl(tab) {
 }
 
 const loaded = new Set();
-const authDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+const authDb = getBeadyoSupabaseClient({
     auth: {
         detectSessionInUrl: false,
         flowType: 'pkce',
@@ -219,14 +222,6 @@ const authDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     global: { fetch: fetchWithJwtFutureRetry },
 });
 let authUser = null;
-
-function beadyoAllowedMessageOrigin(origin) {
-    return origin === window.location.origin || [
-        'https://beadyo.com',
-        'http://localhost:3000',
-        'http://127.0.0.1:3000',
-    ].includes(origin);
-}
 
 function isJwtIssuedAtFutureError(error) {
     const message = String(error?.message || error?.error_description || error || '');
@@ -305,17 +300,15 @@ async function fetchWithJwtFutureRetry(input, init) {
 
 async function isEditorUser(user) {
     if (!user) return false;
-    const email = (user.email || '').toLowerCase();
-    if (email === OWNER_EMAIL.toLowerCase()) return true;
     try {
-        const { data, error } = await authDb.from('editors').select('email').eq('email', email).maybeSingle();
+        const { data, error } = await authDb.rpc('is_beadyo_editor');
         if (error) {
             if (isJwtIssuedAtFutureError(error)) {
                 console.warn('편집 권한 확인이 지연되고 있지만 로그인 상태는 유지합니다.');
             }
             return false;
         }
-        return !!data;
+        return data === true;
     } catch { return false; }
 }
 
@@ -391,12 +384,23 @@ function getSerializableAuthUser(user = authUser) {
     };
 }
 
-function syncCalendarAuth() {
+function isFrameReadyForMessage(frame) {
+    return !!(
+        frame?.contentWindow &&
+        frame.dataset.messageReady === 'true' &&
+        frame.getAttribute('src')
+    );
+}
+
+function syncCalendarAuth(targetFrame = null) {
     const origin = window.location.origin === 'null' ? '*' : window.location.origin;
     const msg = { type: 'beadyo-auth-sync', user: getSerializableAuthUser() };
-    for (const id of ['frame-0', 'frame-2', 'frame-3', 'frame-4', 'frame-5']) {
-        const frame = document.getElementById(id);
-        if (frame?.contentWindow) frame.contentWindow.postMessage(msg, origin);
+    const frames = targetFrame
+        ? [targetFrame]
+        : ['frame-0', 'frame-2', 'frame-3', 'frame-4', 'frame-5'].map(id => document.getElementById(id));
+    for (const frame of frames) {
+        if (!isFrameReadyForMessage(frame)) continue;
+        frame.contentWindow.postMessage(msg, origin);
     }
 }
 
@@ -436,14 +440,6 @@ function escAttr(value) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
-}
-
-function safeImageUrl(value) {
-    try {
-        const u = new URL(String(value || '').trim());
-        if (u.protocol === 'http:' || u.protocol === 'https:') return u.toString();
-    } catch {}
-    return '';
 }
 
 function normalizeNotificationFilter(filter) {
@@ -857,7 +853,7 @@ function openDanceReviewPage() {
 
 function openDevelopmentRequestsPage() {
     closeAuthMenu();
-    window.location.href = withFrameAssetVersion('development-requests.html', 'development-request-comments-20260902');
+    window.location.href = withFrameAssetVersion('development-requests.html', 'editor-rpc-20260918');
 }
 
 function openPatchNotesModal() {
@@ -918,11 +914,13 @@ function switchTab(index, options = {}) {
         syncThemeToFrames();
     } else {
         document.getElementById('loading').style.display = 'flex';
+        frame.dataset.messageReady = 'false';
         frame.onload = () => {
+            frame.dataset.messageReady = 'true';
             resetFrameScrollAfterLoad(index);
             hideLoading(index);
-            if (index === 0 || index === 2 || index === 3 || index === 4 || index === CONTENT_TAB_INDEX) syncCalendarAuth();
-            syncThemeToFrames();
+            if (index === 0 || index === 2 || index === 3 || index === 4 || index === CONTENT_TAB_INDEX) syncCalendarAuth(frame);
+            syncThemeToFrames(frame);
         };
         frame.src = getFrameUrl(index);
         loaded.add(index);
@@ -944,11 +942,13 @@ function switchMusicPage(page) {
     }
 
     document.getElementById('loading').style.display = 'flex';
+    frame.dataset.messageReady = 'false';
     frame.onload = () => {
+        frame.dataset.messageReady = 'true';
         resetFrameScrollAfterLoad(MUSIC_TAB_INDEX);
         hideLoading(MUSIC_TAB_INDEX);
-        syncCalendarAuth();
-        syncThemeToFrames();
+        syncCalendarAuth(frame);
+        syncThemeToFrames(frame);
     };
     frame.src = getFrameUrl(MUSIC_TAB_INDEX);
     loaded.add(MUSIC_TAB_INDEX);
@@ -1001,19 +1001,6 @@ initNotificationInbox();
 // ── 라이브 상태 체크 ──
 const PROXY = 'https://clever-rhino-36.hanul4269.deno.net';
 
-async function fetchWithTimeout(url, ms, options = {}) {
-    const ctrl = new AbortController();
-    const tid = setTimeout(() => ctrl.abort(), ms);
-    try {
-        const res = await fetch(url, { ...options, signal: ctrl.signal });
-        clearTimeout(tid);
-        return res;
-    } catch (e) {
-        clearTimeout(tid);
-        throw e;
-    }
-}
-
 async function fetchRuntimeCache(cacheKey, ms = 4000) {
     const url = `${SUPABASE_URL}/rest/v1/site_runtime_cache?select=payload,updated_at&cache_key=eq.${encodeURIComponent(cacheKey)}&limit=1`;
     const res = await fetchWithTimeout(url, ms, {
@@ -1064,16 +1051,6 @@ async function checkLiveStatus(force = false) {
         }
     } catch {}
 
-    // 3) 기존 JSON fallback
-    for (const url of ['live.json?t=' + Date.now(), 'https://beadyo.com/live.json?t=' + Date.now()]) {
-        try {
-            const res = await fetchWithTimeout(url, 5000);
-            if (!res.ok) continue;
-            const data = await res.json();
-            badge.classList.toggle('is-live', !!data.live);
-            return;
-        } catch {}
-    }
 }
 
 checkLiveStatus(true);
@@ -1100,7 +1077,14 @@ function handleLoginOverlayClick(e) {
 function openGuideModal() {
     const overlay = document.getElementById('guide-overlay');
     const frame = document.getElementById('guide-frame');
-    if (frame && !frame.src) frame.src = withFrameAssetVersion('guide.html');
+    if (frame && !frame.getAttribute('src')) {
+        frame.dataset.messageReady = 'false';
+        frame.onload = () => {
+            frame.dataset.messageReady = 'true';
+            syncThemeToFrames(frame);
+        };
+        frame.src = withFrameAssetVersion('guide.html');
+    }
     markPwaGuideSeen();
     if (!overlay) return;
     overlay.classList.add('open');

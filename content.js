@@ -1,18 +1,14 @@
 (() => {
     'use strict';
 
-    const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
-    const OWNER_EMAIL = 'riosniper12@gmail.com';
     const IMAGE_BUCKET = 'content-images';
     const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
     const IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
     const DEFAULT_CATEGORIES = ['토크', '음악', '게임', '합방', '경연', '특집', '참여형', '기타'];
     const LIST_FIELDS = ['planners', 'hosts', 'cast_members', 'tags'];
-    const ALLOWED_ORIGINS = new Set(['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000']);
     const SOOP_READER_URL = 'https://r.jina.ai/';
 
-    const db = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    const db = getBeadyoSupabaseClient({
         auth: { detectSessionInUrl: false, flowType: 'pkce' },
     });
 
@@ -42,26 +38,7 @@
     const $ = selector => document.querySelector(selector);
     const $$ = selector => [...document.querySelectorAll(selector)];
 
-    function esc(value) {
-        return String(value ?? '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-    }
-
-    function safeUrl(value) {
-        try {
-            const raw = String(value || '').trim();
-            if (!raw) return '';
-            const url = new URL(raw);
-            if (!['http:', 'https:'].includes(url.protocol)) return '';
-            return url.toString();
-        } catch {
-            return '';
-        }
-    }
+    const contentSafeUrl = value => BeadyoCommon.safeUrl(value, '');
 
     function stringValue(value, max = 10000) {
         return typeof value === 'string' ? value.trim().slice(0, max) : '';
@@ -87,7 +64,7 @@
         return {
             platform: stringValue(value.platform, 40) || '기타',
             label: stringValue(value.label, 120) || '다시보기',
-            url: rawUrl ? safeUrl(rawUrl) : '',
+            url: rawUrl ? contentSafeUrl(rawUrl) : '',
             video_type: stringValue(value.video_type, 40) || '전체',
             status: ['정상', '비공개', '삭제됨', '확인 중'].includes(value.status) ? value.status : '확인 중',
             sort_order: Number.isFinite(Number(value.sort_order)) ? Number(value.sort_order) : index,
@@ -108,7 +85,7 @@
             hosts: stringList(row?.hosts),
             cast_members: stringList(row?.cast_members),
             tags: stringList(row?.tags),
-            thumbnail_url: safeUrl(row?.thumbnail_url),
+            thumbnail_url: contentSafeUrl(row?.thumbnail_url),
             notes: stringValue(row?.notes, 10000),
             replays: replaysSource.map(normalizeReplay).filter(Boolean).sort((a, b) => a.sort_order - b.sort_order),
             created_at: stringValue(row?.created_at, 64),
@@ -136,7 +113,7 @@
     }
 
     function youtubeVideoId(value) {
-        const normalized = safeUrl(value);
+        const normalized = contentSafeUrl(value);
         if (!normalized) return '';
         try {
             const url = new URL(normalized);
@@ -155,7 +132,7 @@
     }
 
     function soopVideoId(value) {
-        const normalized = safeUrl(value);
+        const normalized = contentSafeUrl(value);
         if (!normalized) return '';
         try {
             const url = new URL(normalized);
@@ -175,7 +152,7 @@
         if (!videoId) return '';
         if (state.soopThumbnails.has(videoId)) return state.soopThumbnails.get(videoId);
         let thumbnail = '';
-        try { thumbnail = safeUrl(sessionStorage.getItem(soopCacheKey(videoId))); } catch {}
+        try { thumbnail = contentSafeUrl(sessionStorage.getItem(soopCacheKey(videoId))); } catch {}
         if (thumbnail) state.soopThumbnails.set(videoId, thumbnail);
         return thumbnail;
     }
@@ -190,7 +167,7 @@
             return '';
         }
         const candidate = Array.isArray(value.thumbnailUrl) ? value.thumbnailUrl[0] : value.thumbnailUrl;
-        const direct = safeUrl(candidate);
+        const direct = contentSafeUrl(candidate);
         if (direct) return direct;
         const graph = Array.isArray(value['@graph']) ? value['@graph'] : [];
         for (const entry of graph) {
@@ -212,7 +189,7 @@
     }
 
     async function fetchSoopThumbnail(replayUrl) {
-        const normalized = safeUrl(replayUrl);
+        const normalized = contentSafeUrl(replayUrl);
         const videoId = soopVideoId(normalized);
         if (!videoId) return '';
         const cached = cachedSoopThumbnail(videoId);
@@ -257,7 +234,7 @@
 
     async function resolveSoopThumbnails(items = state.items) {
         const replayUrls = [...new Set(items.flatMap(item => {
-            if (safeUrl(item.thumbnail_url) || replayThumbnailUrl(item)) return [];
+            if (contentSafeUrl(item.thumbnail_url) || replayThumbnailUrl(item)) return [];
             const replay = (item.replays || []).find(candidate => soopVideoId(candidate.url));
             return replay ? [replay.url] : [];
         }))];
@@ -278,7 +255,7 @@
     }
 
     function displayThumbnailUrl(item) {
-        return safeUrl(item.thumbnail_url) || replayThumbnailUrl(item);
+        return contentSafeUrl(item.thumbnail_url) || replayThumbnailUrl(item);
     }
 
     function imageMarkup(item, className) {
@@ -549,7 +526,7 @@
             return {
                 platform: get('platform') || '기타',
                 label: get('label') || '다시보기',
-                url: urlRaw ? safeUrl(urlRaw) : '',
+                url: urlRaw ? contentSafeUrl(urlRaw) : '',
                 video_type: get('video_type') || '전체',
                 status: get('status') || '확인 중',
                 sort_order: Number.isFinite(Number(get('sort_order'))) ? Number(get('sort_order')) : index,
@@ -633,7 +610,7 @@
     }
 
     function renderImagePreview(src) {
-        const url = src && src === state.previewObjectUrl ? src : safeUrl(src);
+        const url = src && src === state.previewObjectUrl ? src : contentSafeUrl(src);
         $('#image-preview').innerHTML = url ? `<img src="${esc(url)}" alt="포스터 미리보기" onerror="this.parentElement.innerHTML='<span>이미지를 불러올 수 없어요</span>'">` : '<span>미리보기</span>';
     }
 
@@ -687,7 +664,7 @@
         if (!title) return showToast('콘텐츠명을 입력해 주세요', true);
         if (title.length > 200) return showToast('콘텐츠명은 200자 이하로 입력해 주세요', true);
         const urlInput = $('#field-thumbnail-url').value.trim();
-        if (urlInput && !safeUrl(urlInput)) return showToast('이미지 URL을 확인해 주세요', true);
+        if (urlInput && !contentSafeUrl(urlInput)) return showToast('이미지 URL을 확인해 주세요', true);
         const replays = readReplays();
         if (replays.some(replay => replay._rawUrl && !replay.url)) return showToast('다시보기 URL을 확인해 주세요', true);
         checkDuplicate();
@@ -701,7 +678,7 @@
         button.textContent = state.pendingImageFile ? '이미지 업로드 중…' : '저장 중…';
         addNextButton.textContent = state.pendingImageFile ? '이미지 업로드 중…' : '저장 중…';
         try {
-            let thumbnailUrl = state.removeImage ? '' : safeUrl(urlInput) || currentFormItem()?.thumbnail_url || '';
+            let thumbnailUrl = state.removeImage ? '' : contentSafeUrl(urlInput) || currentFormItem()?.thumbnail_url || '';
             if (state.pendingImageFile) thumbnailUrl = await uploadPendingImage();
             if (!thumbnailUrl && !replays.some(replay => youtubeVideoId(replay.url))) {
                 const soopReplay = replays.find(replay => soopVideoId(replay.url));
@@ -792,11 +769,13 @@
 
     async function checkEditor(user) {
         if (!user) return false;
-        const email = stringValue(user.email, 320).toLowerCase();
-        if (email === OWNER_EMAIL.toLowerCase()) return true;
         try {
-            const { data, error } = await db.from('editors').select('email').eq('email', email).maybeSingle();
-            return !error && Boolean(data);
+            const { data, error } = await db.rpc('is_beadyo_editor');
+            if (error) {
+                console.error('is_beadyo_editor:', error);
+                return false;
+            }
+            return data === true;
         } catch {
             return false;
         }
@@ -814,10 +793,6 @@
         const { data: { session } = {} } = await db.auth.getSession();
         await setEditorFromUser(session?.user || null);
         db.auth.onAuthStateChange((_event, nextSession) => setEditorFromUser(nextSession?.user || null));
-    }
-
-    function allowedMessageOrigin(origin) {
-        return origin === window.location.origin || ALLOWED_ORIGINS.has(origin);
     }
 
     function handleKeydown(event) {
@@ -902,7 +877,7 @@
             event.returnValue = '';
         });
         window.addEventListener('message', event => {
-            if (!allowedMessageOrigin(event.origin) || event.data?.type !== 'beadyo-auth-sync') return;
+            if (!beadyoAllowedMessageOrigin(event.origin) || event.data?.type !== 'beadyo-auth-sync') return;
             setEditorFromUser(event.data.user || null);
         });
         window.addEventListener('popstate', () => {

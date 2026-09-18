@@ -1,21 +1,30 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-page="dance">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>구슬요 춤영상</title>
+    <meta name="description" content="구슬요의 채택된 춤영상과 댄스 클립을 출처, 제목, 곡명과 태그로 찾아보세요.">
+    <title>구슬요 춤영상 — 댄스 클립 모음</title>
     <link rel="canonical" href="https://beadyo.com/dance.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="구슬요모아보기">
+    <meta property="og:title" content="구슬요 춤영상 — 댄스 클립 모음">
+    <meta property="og:description" content="구슬요의 채택된 춤영상과 댄스 클립을 출처, 제목, 곡명과 태그로 찾아보세요.">
     <meta property="og:url" content="https://beadyo.com/dance.html">
+    <meta property="og:image" content="https://beadyo.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
+    <link rel="stylesheet" href="tokens.css?v=20260918">
+    <script src="beadyo-common.js?v=20260918"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
     <script>
         (() => {
             const key = 'beadyo:theme';
-            const allowedOrigin = origin => ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'].includes(origin) ||
-                origin === window.location.origin;
             const normalize = value => value === 'dark' ? 'dark' : 'light';
             function applyTheme(theme, persist = false) {
                 const next = normalize(theme);
@@ -29,7 +38,7 @@
             try { stored = localStorage.getItem(key) === 'dark' ? 'dark' : 'light'; } catch {}
             applyTheme(stored);
             window.addEventListener('message', event => {
-                if (!allowedOrigin(event.origin)) return;
+                if (!beadyoAllowedMessageOrigin(event.origin)) return;
                 if (event.data?.type === 'beadyo-theme-sync') applyTheme(event.data.theme, true);
             });
             window.addEventListener('storage', event => {
@@ -39,37 +48,6 @@
     </script>
     <style>
         * { box-sizing: border-box; }
-
-        :root {
-            --accent: #7fb83f;
-            --accent-dark: #456f24;
-            --accent-soft: #eef7e4;
-            --ink: #222720;
-            --muted: #737b70;
-            --line: rgba(34,39,32,.1);
-            --surface: #ffffff;
-            --bg: #f2f4ef;
-            --soop: #2d8b5f;
-            --clip: #316fd0;
-            --catch: #c67f31;
-            --youtube: #d94135;
-        }
-
-        html[data-theme="dark"] {
-            --accent: #8bc34a;
-            --accent-dark: #b7df7f;
-            --accent-soft: #21381b;
-            --ink: #edf5e8;
-            --muted: #a8b4a1;
-            --line: rgba(223,238,211,.14);
-            --surface: #192119;
-            --bg: #11170f;
-            --soop: #64c795;
-            --clip: #7fb0ff;
-            --catch: #e5a85c;
-            --youtube: #ff7d72;
-            color-scheme: dark;
-        }
 
         body {
             margin: 0;
@@ -609,11 +587,9 @@
             youtube: 'var(--youtube)',
         };
 
-        const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
         const DANCE_STATUS_TABLE = 'dance_video_statuses';
         const DANCE_STATUS_COLUMNS = 'video_id,status,title,source,song,url,thumbnail';
-        const PLACEHOLDER_THUMBNAILS = new Set(['', 'banner.png', 'banner.jpg', 'loading-img.png', 'songbook-char.png']);
+        const PLACEHOLDER_THUMBNAILS = new Set(['', 'banner.jpg', 'loading-img.png', 'songbook-char.png']);
 
         function getYouTubeId(urlValue) {
             try {
@@ -675,24 +651,6 @@
         const searchInput = document.getElementById('searchInput');
         const resultMeta = document.getElementById('resultMeta');
 
-        function esc(value) {
-            return String(value ?? '').replace(/[&<>"']/g, ch => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;',
-            }[ch]));
-        }
-
-        function safeExternalUrl(value) {
-            try {
-                const url = new URL(String(value || '').trim());
-                if (url.protocol === 'http:' || url.protocol === 'https:') return url.toString();
-            } catch {}
-            return '#';
-        }
-
         function normalizeSharedStatus(value, fallback = 'review') {
             return ['review', 'approved', 'hidden'].includes(value) ? value : fallback;
         }
@@ -737,7 +695,7 @@
 
         function getVideoEmbedUrl(video) {
             try {
-                const url = new URL(safeExternalUrl(video.url));
+                const url = new URL(safeUrl(video.url));
                 const host = url.hostname.toLowerCase();
                 if (host === 'youtube.com' || host.endsWith('.youtube.com') || host === 'youtu.be') {
                     const id = url.pathname.includes('/shorts/')
@@ -766,7 +724,7 @@
             modal.classList.remove('soop-crop');
             resetVideoFrame();
             frame.src = getVideoEmbedUrl(video);
-            document.getElementById('videoModalOriginal').href = safeExternalUrl(video.url);
+            document.getElementById('videoModalOriginal').href = safeUrl(video.url);
             modal.hidden = false;
         }
 
@@ -804,7 +762,7 @@
                         <div class="card-line"><span>${esc(video.date)}</span><span>${esc(video.song)}</span></div>
                         <div class="tags">${video.tags.map(tag => `<span class="tag">${esc(tag)}</span>`).join('')}</div>
                         <div class="card-actions">
-                            <a class="card-action primary" href="${esc(safeExternalUrl(video.url))}" target="_blank" rel="noopener noreferrer">원본 열기</a>
+                            <a class="card-action primary" href="${esc(safeUrl(video.url))}" target="_blank" rel="noopener noreferrer">원본 열기</a>
                             <button class="card-action" type="button" data-url="${esc(video.url)}">링크 복사</button>
                         </div>
                     </div>

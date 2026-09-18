@@ -1,13 +1,23 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-page="songbook">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>구슬요 노래 검색</title>
+    <meta name="description" content="구슬요가 부른 곡 목록을 살펴보고 제목과 가수로 원하는 노래를 검색하세요.">
+    <title>구슬요 노래책 — 부른 곡 목록과 검색</title>
     <link rel="canonical" href="https://beadyo.com/songbook.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="구슬요모아보기">
+    <meta property="og:title" content="구슬요 노래책 — 부른 곡 목록과 검색">
+    <meta property="og:description" content="구슬요가 부른 곡 목록을 살펴보고 제목과 가수로 원하는 노래를 검색하세요.">
     <meta property="og:url" content="https://beadyo.com/songbook.html">
+    <meta property="og:image" content="https://beadyo.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
+    <link rel="stylesheet" href="tokens.css?v=20260918">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
@@ -25,23 +35,6 @@
     </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --accent:       #7fb83f;
-            --accent-dark:  #4f7f25;
-            --accent-light: #eef7e4;
-            --accent-soft:  #f8fbf2;
-            --bg:           #f4f5f1;
-            --surface:      #ffffff;
-            --surface-2:    #fbfcf8;
-            --border:       rgba(34,39,32,0.09);
-            --text:         #222720;
-            --muted:        #737b70;
-            --row-hover:    #f2f8ea;
-            --row-alt:      rgba(127,184,63,0.045);
-            --blue-soft:    #eaf3fb;
-            --blue:         #3f78a8;
-        }
 
         body {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -2592,24 +2585,6 @@
             }
         }
 
-        html[data-theme="dark"] {
-            --accent:       #8bc34a;
-            --accent-dark:  #b7df7f;
-            --accent-light: #21381b;
-            --accent-soft:  #172115;
-            --bg:           #11170f;
-            --surface:      #192119;
-            --surface-2:    #202b20;
-            --border:       rgba(223,238,211,0.14);
-            --text:         #edf5e8;
-            --muted:        #a8b4a1;
-            --row-hover:    #24351f;
-            --row-alt:      rgba(139,195,74,0.08);
-            --blue-soft:    #1d3141;
-            --blue:         #92c9f4;
-            color-scheme: dark;
-        }
-
         html[data-theme="dark"] body {
             background: var(--bg);
             color: var(--text);
@@ -3262,9 +3237,9 @@
     </div>
 </div>
 
+<script src="supabase.min.js?v=supabase-2-112-2"></script>
+<script src="beadyo-common.js?v=20260918"></script>
 <script>
-const SUPABASE_URL      = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
 const INITIAL_VIEW = new URLSearchParams(location.search).get('view') === 'live' ? 'live' : 'songbook';
 const SHEET_LINKS = {
     songbook: 'https://docs.google.com/spreadsheets/d/1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw/edit#gid=1451717792',
@@ -3274,11 +3249,6 @@ const BEADYO_THEME_STORAGE_KEY = 'beadyo:theme';
 const SONGBOOK_FAVORITES_STORAGE_KEY = 'beadyo:songbook:favorites:v1';
 const JWT_FUTURE_FINAL_RETRY_DELAYS_MS = [2000, 5000];
 const JWT_FUTURE_MAX_WAIT_MS = 90000;
-
-function beadyoAllowedMessageOrigin(origin) {
-    return ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'].includes(origin) ||
-        origin === window.location.origin;
-}
 
 function normalizeBeadyoTheme(value) {
     return value === 'dark' ? 'dark' : 'light';
@@ -3349,19 +3319,13 @@ let db = null, _dbReady = null;
 function ensureDb() {
     if (db) return Promise.resolve(db);
     if (_dbReady) return _dbReady;
-    _dbReady = new Promise((res, rej) => {
-        const s = document.createElement('script');
-        s.src = 'supabase.min.js?v=supabase-2-112-2';
-        s.onload = () => {
-                db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-                    auth: { detectSessionInUrl: false },
-                    global: { fetch: fetchWithJwtFutureRetry },
-                });
-                initAuth();
-                res(db);
-            };
-        s.onerror = rej;
-        document.head.appendChild(s);
+    _dbReady = Promise.resolve().then(() => {
+        db = getBeadyoSupabaseClient({
+            auth: { detectSessionInUrl: false },
+            global: { fetch: fetchWithJwtFutureRetry },
+        });
+        initAuth();
+        return db;
     });
     return _dbReady;
 }
@@ -3760,16 +3724,6 @@ function filteredSongbookItems({
 }
 
 // ── 유틸 ─────────────────────────────────────────
-function esc(s) {
-    return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function safeUrl(s) {
-    try {
-        const u = new URL(String(s || '').trim());
-        if (u.protocol === 'http:' || u.protocol === 'https:') return u.toString();
-    } catch {}
-    return '#';
-}
 function normalizeOptionalUrl(s) {
     const raw = String(s ?? '').trim();
     if (!raw) return '';

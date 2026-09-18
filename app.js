@@ -1,14 +1,6 @@
-const SUPABASE_URL      = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
-const OWNER_EMAIL       = 'riosniper12@gmail.com';
 const BEADYO_THEME_STORAGE_KEY = 'beadyo:theme';
 const JWT_FUTURE_FINAL_RETRY_DELAYS_MS = [2000, 5000];
 const JWT_FUTURE_MAX_WAIT_MS = 90000;
-
-function beadyoAllowedMessageOrigin(origin) {
-    return ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'].includes(origin) ||
-        origin === window.location.origin;
-}
 
 function normalizeBeadyoTheme(value) {
     return value === 'dark' ? 'dark' : 'light';
@@ -180,7 +172,6 @@ const state = {
     memoCards: [],
     user: null,
     isEditor: false,
-    isOwner: false,
     editors: [],
     calendarNotices: [],
     viewMode: 'month',
@@ -211,17 +202,11 @@ let _dbReady = null;
 function _ensureDb() {
     if (db) return Promise.resolve(db);
     if (_dbReady) return _dbReady;
-    _dbReady = new Promise((resolve, reject) => {
-        const s = document.createElement('script');
-        s.src = 'supabase.min.js?v=supabase-2-112-2';
-        s.onload = () => {
-            db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-                global: { fetch: fetchWithJwtFutureRetry },
-            });
-            resolve(db);
-        };
-        s.onerror = reject;
-        document.head.appendChild(s);
+    _dbReady = Promise.resolve().then(() => {
+        db = getBeadyoSupabaseClient({
+            global: { fetch: fetchWithJwtFutureRetry },
+        });
+        return db;
     });
     return _dbReady;
 }
@@ -516,24 +501,8 @@ function eventCardStyle(t) {
         `--event-dark-border:${blendHex(border, '#263624', 0.58)}`,
     ].join(';') + ';';
 }
-function esc(s) {
-    return String(s ?? '').replace(/[&<>"']/g, c =>
-        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
-    );
-}
 function jsArg(s) {
     return esc(JSON.stringify(String(s ?? '')));
-}
-function safeUrl(s) {
-    try {
-        const u = new URL(String(s));
-        if (u.protocol === 'http:' || u.protocol === 'https:') return u.toString();
-    } catch {}
-    return '#';
-}
-function safeImageUrl(s, fallback = '') {
-    const url = safeUrl(s);
-    return url === '#' ? fallback : url;
 }
 function normalizeOptionalUrl(s) {
     const raw = String(s ?? '').trim();
@@ -1297,6 +1266,16 @@ async function loadEditors() {
         return;
     }
     state.editors = data ?? [];
+}
+
+async function checkEditorAccess() {
+    await _ensureDb();
+    const { data, error } = await db.rpc('is_beadyo_editor');
+    if (error) {
+        console.error('is_beadyo_editor:', error);
+        return false;
+    }
+    return data === true;
 }
 
 async function loadYtLinks() {
@@ -2365,10 +2344,6 @@ function parseSoopUrl(url) {
     return m ? [m[1], m[2]] : [null, null];
 }
 
-function upJsonCacheUrl() {
-    return 'up.json';
-}
-
 function normalizeUpCachePayload(payload) {
     if (!payload || !Array.isArray(payload.events)) return null;
     return {
@@ -2379,14 +2354,6 @@ function normalizeUpCachePayload(payload) {
 }
 
 async function loadUpRankingCache() {
-    try {
-        const res = await fetch(upJsonCacheUrl(), { cache: 'force-cache' });
-        if (res.ok) {
-            const cached = normalizeUpCachePayload(await res.json());
-            if (cached) return cached;
-        }
-    } catch {}
-
     try {
         const cached = normalizeUpCachePayload(await fetchRuntimeCache('up_ranking'));
         if (cached) return cached;
@@ -3048,6 +3015,7 @@ async function deleteEvent(id) {
 
 // ─── 편집자 관리 ───
 async function openAdminModal() {
+    if (!state.isEditor) return;
     await loadEditors();
     await loadUpEvents();
     await loadCalendarNotices({ includeInactive: true, fallback: false });
@@ -3777,20 +3745,18 @@ async function setSessionUser(user) {
         name: user.name || user.email,
         picture: safeImageUrl(user.picture || ''),
     } : null;
+    state.isEditor = false;
+    state.editors = [];
+    document.body.classList.remove('is-editor');
     if (!state.user) {
-        state.isEditor = false;
-        state.isOwner = false;
-        document.body.classList.remove('is-editor');
+        document.getElementById('adminModal')?.classList.remove('open');
         renderCalendar();
         return;
     }
-    state.isOwner = state.user.email.toLowerCase() === OWNER_EMAIL.toLowerCase();
-    await loadEditors();
-    if (!state.user) {
-        renderCalendar();
-        return;
-    }
-    state.isEditor = state.isOwner || state.editors.some(e => e.email.toLowerCase() === state.user.email.toLowerCase());
+    const expectedEmail = state.user.email.toLowerCase();
+    const canEdit = await checkEditorAccess();
+    if (state.user?.email.toLowerCase() !== expectedEmail) return;
+    state.isEditor = canEdit;
     document.body.classList.toggle('is-editor', state.isEditor);
     renderCalendar();
     renderMemoSidebar();

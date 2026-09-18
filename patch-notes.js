@@ -4,12 +4,6 @@
     let patchNotesCache = null;
     let patchNotesPromise = null;
 
-    function esc(value) {
-        return String(value ?? '').replace(/[&<>"']/g, c =>
-            ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
-        );
-    }
-
     function renderStatus(board, message) {
         if (!board) return;
         board.innerHTML = `<div class="patch-note-day patch-note-status">${esc(message)}</div>`;

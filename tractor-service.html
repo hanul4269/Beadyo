@@ -1,13 +1,24 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-page="tractor-service">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>트랙터서비스</title>
+    <meta name="description" content="구슬요의 음악 토크쇼 트랙터서비스 에피소드와 출연진, 관련 영상을 확인하세요.">
+    <title>트랙터서비스 — 구슬요 음악 토크쇼</title>
     <link rel="canonical" href="https://beadyo.com/tractor-service.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="구슬요모아보기">
+    <meta property="og:title" content="트랙터서비스 — 구슬요 음악 토크쇼">
+    <meta property="og:description" content="구슬요의 음악 토크쇼 트랙터서비스 에피소드와 출연진, 관련 영상을 확인하세요.">
     <meta property="og:url" content="https://beadyo.com/tractor-service.html">
+    <meta property="og:image" content="https://beadyo.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
+    <link rel="stylesheet" href="tokens.css?v=20260918">
+    <script src="beadyo-common.js?v=20260918"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://www.youtube.com">
     <link rel="preconnect" href="https://i.ytimg.com">
@@ -16,8 +27,6 @@
     <script>
         (() => {
             const key = 'beadyo:theme';
-            const allowedOrigin = origin => ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'].includes(origin) ||
-                origin === window.location.origin;
             const normalize = value => value === 'dark' ? 'dark' : 'light';
             function applyTheme(theme, persist = false) {
                 const next = normalize(theme);
@@ -31,7 +40,7 @@
             try { stored = localStorage.getItem(key) === 'dark' ? 'dark' : 'light'; } catch {}
             applyTheme(stored);
             window.addEventListener('message', event => {
-                if (!allowedOrigin(event.origin)) return;
+                if (!beadyoAllowedMessageOrigin(event.origin)) return;
                 if (event.data?.type === 'beadyo-theme-sync') applyTheme(event.data.theme, true);
             });
             window.addEventListener('storage', event => {
@@ -41,31 +50,6 @@
     </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --field: #f7f0e9;
-            --soil: #3b2d29;
-            --ink: #201918;
-            --muted: #806f68;
-            --cream: #fffaf2;
-            --line: rgba(59,45,41,0.12);
-            --coral: #e87364;
-            --mint: #5ac6bd;
-            --leaf: #5c8f3f;
-            --gold: #d99b3d;
-        }
-        html[data-theme="dark"] {
-            --field: #11170f;
-            --soil: #3d302b;
-            --ink: #f7efe5;
-            --muted: #b8aaa0;
-            --cream: #201a17;
-            --line: rgba(255,250,242,0.14);
-            --coral: #ff9385;
-            --mint: #83d6ce;
-            --leaf: #b7df7f;
-            --gold: #f0c16d;
-            color-scheme: dark;
-        }
         body {
             min-height: 100vh;
             background:
@@ -972,12 +956,6 @@
         </div>
     </div>
     <script>
-        function esc(value) {
-            return String(value ?? '').replace(/[&<>"']/g, ch =>
-                ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])
-            );
-        }
-
         function openVideoModal(videoId, title) {
             if (!/^[A-Za-z0-9_-]{11}$/.test(String(videoId || ''))) return;
             const modal = document.getElementById('videoModal');

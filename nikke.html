@@ -1,28 +1,25 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-page="nikke">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
+    <script>
+        (() => {
+            let theme = 'light';
+            try {
+                theme = localStorage.getItem('beadyo:theme') === 'dark' ? 'dark' : 'light';
+            } catch {}
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.style.colorScheme = theme;
+        })();
+    </script>
     <title>NIKKE Archive | BEADYO</title>
     <link rel="icon" href="logo-icon.webp">
+    <link rel="stylesheet" href="tokens.css?v=20260918">
+    <script src="beadyo-common.js?v=20260918"></script>
     <style>
         * { box-sizing: border-box; }
-
-        :root {
-            --bg: #edf2e8;
-            --panel: #ffffff;
-            --panel-2: #f6f8f3;
-            --line: rgba(42,47,41,.1);
-            --line-strong: rgba(79,127,37,.24);
-            --text: #2b2f29;
-            --muted: #74796f;
-            --signal: #7fb83f;
-            --signal-dark: #4f7f25;
-            --signal-soft: #eef7e4;
-            --gold: #c69c3a;
-            --gold-soft: #fff8e6;
-        }
 
         html {
             color-scheme: light;
@@ -36,8 +33,8 @@
             color: var(--text);
             font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background:
-                radial-gradient(circle at 8% -10%, rgba(127,184,63,.15), transparent 28rem),
-                linear-gradient(180deg, rgba(255,255,255,.3), transparent 240px),
+                radial-gradient(circle at 8% -10%, var(--body-glow), transparent 28rem),
+                linear-gradient(180deg, var(--body-wash), transparent 240px),
                 var(--bg);
         }
 
@@ -92,7 +89,7 @@
             flex: 0 0 auto;
             border: 1px solid rgba(127,184,63,.28);
             border-radius: 12px;
-            background: linear-gradient(145deg, #fff, var(--signal-soft));
+            background: linear-gradient(145deg, var(--panel), var(--signal-soft));
             color: var(--signal-dark);
             font-size: 27px;
             font-weight: 950;
@@ -141,7 +138,7 @@
             padding: 5px;
             border: 1px solid var(--line);
             border-radius: 9px;
-            background: rgba(255,255,255,.82);
+            background: var(--panel-glass);
             box-shadow: 0 5px 16px rgba(42,47,41,.06);
         }
 
@@ -179,7 +176,9 @@
 
         .story-layout {
             display: grid;
-            gap: 12px;
+            grid-template-columns: clamp(240px, 17vw, 270px) minmax(0, 1fr);
+            align-items: start;
+            gap: 14px;
         }
 
         .briefing,
@@ -191,12 +190,26 @@
         }
 
         .briefing {
-            display: grid;
-            grid-template-columns: minmax(250px, .9fr) minmax(440px, 1.5fr) auto;
-            align-items: center;
-            gap: 24px;
-            padding: 18px 20px;
+            position: sticky;
+            top: 18px;
+            display: flex;
+            flex-direction: column;
+            align-self: start;
+            min-height: 560px;
+            padding: 28px 26px;
             border-radius: 12px;
+        }
+
+        .briefing::before {
+            content: "01";
+            margin-bottom: 22px;
+            color: var(--signal);
+            font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+            font-size: 72px;
+            font-weight: 950;
+            line-height: .82;
+            letter-spacing: .02em;
+            opacity: .18;
         }
 
         .briefing-index {
@@ -221,6 +234,10 @@
             letter-spacing: -.03em;
         }
 
+        .briefing h2 {
+            font-size: 25px;
+        }
+
         .briefing p,
         .guide-head p {
             margin: 9px 0 0;
@@ -231,20 +248,22 @@
 
         .story-types {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 8px;
-            margin: 0;
+            grid-template-columns: 1fr;
+            gap: 0;
+            margin: 30px 0 24px;
+            border-top: 1px solid var(--line);
         }
 
         .story-type {
             display: flex;
             justify-content: space-between;
             gap: 12px;
-            padding: 10px 12px;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            background: var(--panel-2);
-            color: #4d5549;
+            padding: 15px 2px;
+            border: 0;
+            border-bottom: 1px solid var(--line);
+            border-radius: 0;
+            background: transparent;
+            color: var(--surface-text);
             font-size: 12px;
             font-weight: 800;
         }
@@ -264,14 +283,17 @@
             min-height: 40px;
             border: 1px solid var(--line-strong);
             border-radius: 7px;
-            color: #4d5549;
+            color: var(--surface-text);
             font-size: 12px;
             font-weight: 900;
             text-decoration: none;
         }
 
         .source-link {
-            min-width: 156px;
+            width: 100%;
+            min-width: 0;
+            min-height: 46px;
+            margin-top: auto;
             padding: 0 14px;
             background: var(--signal-soft);
             color: var(--signal-dark);
@@ -297,7 +319,7 @@
             min-height: 54px;
             padding: 8px 12px 8px 16px;
             border-bottom: 1px solid var(--line);
-            background: #fff;
+            background: var(--panel);
         }
 
         .viewer-title {
@@ -305,7 +327,7 @@
             align-items: center;
             gap: 10px;
             min-width: 0;
-            color: #4d5549;
+            color: var(--surface-text);
             font-size: 12px;
             font-weight: 900;
             letter-spacing: .03em;
@@ -328,7 +350,7 @@
         .frame-wrap {
             position: relative;
             padding: 10px;
-            background: #e5ebdf;
+            background: var(--frame-edge);
             overflow: hidden;
         }
 
@@ -338,9 +360,9 @@
             height: 10250px;
             border: 0;
             border-radius: 8px;
-            background: #f5eee3;
+            background: var(--frame-bg);
             overflow: hidden;
-            color-scheme: light;
+            color-scheme: inherit;
         }
 
         .frame-loader {
@@ -436,7 +458,7 @@
 
         .guide-card.active {
             border-color: var(--signal);
-            background: linear-gradient(160deg, var(--signal-soft), #fff);
+            background: linear-gradient(160deg, var(--signal-soft), var(--panel));
             box-shadow: inset 0 0 0 1px rgba(127,184,63,.08), 0 10px 24px rgba(42,47,41,.08);
         }
 
@@ -485,6 +507,40 @@
 
         @media (max-width: 1180px) {
             .guide-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 980px) {
+            .story-layout { grid-template-columns: 1fr; }
+            .briefing {
+                position: relative;
+                top: auto;
+                display: grid;
+                grid-template-columns: minmax(220px, .9fr) minmax(360px, 1.5fr) auto;
+                align-items: center;
+                min-height: 0;
+                gap: 20px;
+                padding: 18px 20px;
+            }
+            .briefing::before { display: none; }
+            .briefing h2 { font-size: 20px; }
+            .story-types {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+                margin: 0;
+                border-top: 0;
+            }
+            .story-type {
+                padding: 10px 12px;
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                background: var(--panel-2);
+            }
+            .source-link {
+                width: auto;
+                min-width: 156px;
+                min-height: 40px;
+                margin-top: 0;
+            }
         }
 
         @media (max-width: 780px) {
@@ -569,7 +625,7 @@
                         <iframe
                             class="content-frame"
                             id="story-frame"
-                            src="https://ssissun.github.io/nikke-storyline/"
+                            src="nikke-storyline/index.html?v=3"
                             title="NIKKE 스토리 감상 순서"
                             loading="eager"
                             referrerpolicy="strict-origin-when-cross-origin"
@@ -663,21 +719,49 @@
 
         const storyFrame = document.getElementById('story-frame');
         const notionFrame = document.getElementById('notion-frame');
+        const BEADYO_THEME_STORAGE_KEY = 'beadyo:theme';
+        let currentNikkeTheme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+        let storyFrameAutoHeight = 0;
+        let storyContentObserver = null;
+
+        function syncEmbeddedThemes() {
+            const message = { type: 'beadyo-theme-sync', theme: currentNikkeTheme };
+            const origin = window.location.origin === 'null' ? '*' : window.location.origin;
+            [storyFrame, notionFrame].forEach(frame => {
+                if (!frame?.contentWindow) return;
+                try {
+                    frame.contentDocument.documentElement.dataset.theme = currentNikkeTheme;
+                    frame.contentDocument.documentElement.style.colorScheme = currentNikkeTheme;
+                } catch {}
+                frame.contentWindow.postMessage(message, origin);
+            });
+        }
+
+        function applyNikkeTheme(theme, persist = false) {
+            currentNikkeTheme = theme === 'dark' ? 'dark' : 'light';
+            document.documentElement.dataset.theme = currentNikkeTheme;
+            document.documentElement.style.colorScheme = currentNikkeTheme;
+            if (persist) {
+                try {
+                    localStorage.setItem(BEADYO_THEME_STORAGE_KEY, currentNikkeTheme);
+                } catch {}
+            }
+            syncEmbeddedThemes();
+        }
 
         function getStoryFrameHeight(width) {
-            if (width >= 1200) return 9800;
-            if (width >= 1000) return 9950;
-            if (width >= 850) return 10250;
-            if (width >= 700) return 10600;
-            if (width >= 520) return 11100;
-            if (width >= 390) return 11700;
-            return 12550;
+            if (width >= 1100) return 9700;
+            if (width >= 850) return 10000;
+            if (width >= 700) return 11400;
+            if (width >= 520) return 11800;
+            if (width >= 390) return 12300;
+            return 13000;
         }
 
         function resizeStoryFrame() {
             const width = storyFrame.getBoundingClientRect().width;
             if (width < 1) return;
-            storyFrame.style.height = `${getStoryFrameHeight(width)}px`;
+            storyFrame.style.height = `${storyFrameAutoHeight || getStoryFrameHeight(width)}px`;
         }
 
         let layoutSyncFrame = 0;
@@ -703,17 +787,58 @@
             frame.parentElement?.querySelector('.frame-loader')?.classList.add('done');
         }
 
+        function syncStoryContentHeight() {
+            try {
+                const root = storyFrame.contentDocument?.documentElement;
+                if (!root) return;
+                const height = Math.min(Math.max(Math.ceil(root.scrollHeight), 700), 30000);
+                storyFrameAutoHeight = height;
+                storyFrame.style.height = `${height}px`;
+                requestAnimationFrame(reportPageHeight);
+            } catch (_) {
+                // 외부 원본으로 되돌릴 경우에는 기존 반응형 높이를 사용합니다.
+            }
+        }
+
         storyFrame.addEventListener('load', () => {
             finishLoading(storyFrame);
+            syncEmbeddedThemes();
+            storyContentObserver?.disconnect();
+            const root = storyFrame.contentDocument?.documentElement;
+            if (root) {
+                storyContentObserver = new ResizeObserver(syncStoryContentHeight);
+                storyContentObserver.observe(root);
+                syncStoryContentHeight();
+            }
             scheduleLayoutSync();
         });
 
         notionFrame.addEventListener('load', () => {
             finishLoading(notionFrame);
+            syncEmbeddedThemes();
             scheduleLayoutSync();
         });
 
         window.addEventListener('message', event => {
+            if (event.origin === window.location.origin && event.data?.type === 'beadyo-theme-sync') {
+                applyNikkeTheme(event.data.theme, true);
+                return;
+            }
+
+            const storyPath = new URL(storyFrame.src, window.location.href).pathname;
+            if (
+                event.origin === window.location.origin &&
+                event.source === storyFrame.contentWindow &&
+                event.data?.type === 'nikke:story-height' &&
+                event.data.path === storyPath
+            ) {
+                const height = Math.min(Math.max(Number(event.data.height) || 0, 700), 30000);
+                storyFrameAutoHeight = height;
+                storyFrame.style.height = `${height}px`;
+                requestAnimationFrame(reportPageHeight);
+                return;
+            }
+
             const expectedPath = new URL(notionFrame.src, window.location.href).pathname;
             if (
                 event.origin !== window.location.origin ||
@@ -725,6 +850,10 @@
             const height = Math.min(Math.max(Number(event.data.height) || 0, 420), 100000);
             notionFrame.style.height = `${height}px`;
             scheduleLayoutSync();
+        });
+
+        window.addEventListener('storage', event => {
+            if (event.key === BEADYO_THEME_STORAGE_KEY) applyNikkeTheme(event.newValue);
         });
 
         document.querySelectorAll('.view-tab').forEach(tab => {

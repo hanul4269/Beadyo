@@ -1,35 +1,39 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-page="games">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <title>BEADYO Games</title>
+    <script>
+        (() => {
+            let theme = 'light';
+            try {
+                theme = localStorage.getItem('beadyo:theme') === 'dark' ? 'dark' : 'light';
+            } catch {}
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.style.colorScheme = theme;
+        })();
+    </script>
+    <meta name="description" content="사다리, 룰렛, 뽑기, 핀볼과 NIKKE 가이드를 한곳에서 이용하세요.">
+    <title>BEADYO Games — 사다리·룰렛·뽑기·핀볼</title>
     <link rel="canonical" href="https://beadyo.com/games.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="구슬요모아보기">
+    <meta property="og:title" content="BEADYO Games — 사다리·룰렛·뽑기·핀볼">
+    <meta property="og:description" content="사다리, 룰렛, 뽑기, 핀볼과 NIKKE 가이드를 한곳에서 이용하세요.">
     <meta property="og:url" content="https://beadyo.com/games.html">
+    <meta property="og:image" content="https://beadyo.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
+    <link rel="stylesheet" href="tokens.css?v=20260918">
+    <script src="beadyo-common.js?v=20260918"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
     <style>
         * { box-sizing: border-box; }
-
-        :root {
-            --accent: #7fb83f;
-            --accent-dark: #4f7f25;
-            --accent-soft: #eef7e4;
-            --ink: #2b2f29;
-            --muted: #74796f;
-            --line: rgba(42, 47, 41, .1);
-            --bg: #d8e0d2;
-            --stage: #edf2e8;
-            --rail: #6f776b;
-            --rail-soft: #8b947f;
-            --highlight: #c69c3a;
-            --highlight-soft: #fff8e6;
-            --blue: #5b8fc7;
-            --gold: #c69c3a;
-        }
 
         body {
             margin: 0;
@@ -40,6 +44,13 @@
                 var(--bg);
             color: var(--ink);
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        html[data-theme="dark"] body {
+            background:
+                radial-gradient(circle at 18% 0%, rgba(127,184,63,.13) 0 260px, transparent 261px),
+                linear-gradient(180deg, rgba(42,55,37,.65) 0%, rgba(16,21,15,0) 260px),
+                var(--bg);
         }
 
         button,
@@ -1153,7 +1164,7 @@
             min-height: 720px;
             border: 1px solid rgba(127,184,63,.2);
             border-radius: 14px;
-            background: #edf2e8;
+            background: var(--stage);
             box-shadow: 0 16px 36px rgba(42,47,41,.14);
             overflow: hidden;
         }
@@ -1164,13 +1175,131 @@
             height: 720px;
             min-height: 720px;
             border: 0;
-            background: #edf2e8;
+            background: var(--stage);
             overflow: hidden;
         }
 
         #nikke-panel .play-stage {
             padding: 0;
-            background: #edf2e8;
+            background: var(--stage);
+        }
+
+        html[data-theme="dark"] .mode-tabs {
+            background: rgba(25, 33, 24, .92);
+        }
+
+        html[data-theme="dark"] .mode-btn:not(.active) {
+            color: var(--muted);
+        }
+
+        html[data-theme="dark"] .mode-btn.active {
+            color: #14200e;
+        }
+
+        html[data-theme="dark"] .play-stage {
+            background: linear-gradient(180deg, rgba(35, 46, 32, .82), var(--stage));
+            box-shadow: 0 10px 28px rgba(0, 0, 0, .24);
+        }
+
+        html[data-theme="dark"] .counter,
+        html[data-theme="dark"] .action-btn,
+        html[data-theme="dark"] .slot-card,
+        html[data-theme="dark"] .chip {
+            border-color: var(--line);
+            background: #222c21;
+            color: var(--ink);
+            box-shadow: 0 5px 16px rgba(0, 0, 0, .2);
+        }
+
+        html[data-theme="dark"] .action-btn.green {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: #14200e;
+            box-shadow: 0 8px 20px rgba(145, 201, 86, .24);
+        }
+
+        html[data-theme="dark"] .action-btn.reset {
+            border-color: var(--line);
+            background: #1d261c;
+            color: #c3cdbd;
+        }
+
+        html[data-theme="dark"] .slot-card[contenteditable="true"]:focus {
+            border-color: rgba(145, 201, 86, .65);
+            background: #263224;
+            box-shadow: 0 0 0 3px rgba(145, 201, 86, .15), 0 5px 16px rgba(0, 0, 0, .2);
+        }
+
+        html[data-theme="dark"] .slot-card[contenteditable="true"]:empty::before {
+            color: #aab5a4;
+        }
+
+        html[data-theme="dark"] .bottom .slot-card {
+            color: #c7e6a7;
+        }
+
+        html[data-theme="dark"] .winner-box {
+            border-color: var(--line);
+            background: linear-gradient(180deg, #222c21 0%, #1a2219 100%);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, .2);
+        }
+
+        html[data-theme="dark"] .winner-label {
+            color: #c7e6a7;
+        }
+
+        html[data-theme="dark"] .gacha-info-card {
+            border-color: var(--line);
+            background: linear-gradient(180deg, #222c21 0%, #1a2219 100%);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .035), 0 12px 24px rgba(0, 0, 0, .22);
+        }
+
+        html[data-theme="dark"] .gacha-info-title,
+        html[data-theme="dark"] .gacha-copy {
+            color: #c7e6a7;
+        }
+
+        html[data-theme="dark"] .gacha-info-list,
+        html[data-theme="dark"] .gacha-status-row {
+            color: #d2dbcd;
+        }
+
+        html[data-theme="dark"] .gacha-info-list b {
+            color: #14200e;
+        }
+
+        html[data-theme="dark"] .gacha-status {
+            background: rgba(255, 255, 255, .055);
+        }
+
+        html[data-theme="dark"] .gacha-prize-card {
+            background:
+                repeating-conic-gradient(from 0deg, rgba(255,255,255,.025) 0 10deg, rgba(145,201,86,.07) 10deg 20deg),
+                radial-gradient(circle, #293625 0%, #202b1e 68%, #182117 100%);
+            box-shadow: 0 20px 55px rgba(0,0,0,.45), inset 0 0 0 8px rgba(145,201,86,.08);
+        }
+
+        html[data-theme="dark"] .gacha-confirm {
+            background: #34452f;
+            color: #edf3e9;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, .28);
+        }
+
+        html[data-theme="dark"] .nikke-frame {
+            border-color: var(--line);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, .28);
+        }
+
+        html[data-theme="dark"] .modal,
+        html[data-theme="dark"] textarea {
+            border-color: var(--line);
+            background: #1b231a;
+            color: var(--ink);
+        }
+
+        html[data-theme="dark"] .field label,
+        html[data-theme="dark"] .result-item {
+            color: #d2dbcd;
         }
 
         .modal-backdrop {
@@ -1756,7 +1885,7 @@
         <section class="game-panel" id="nikke-panel">
             <div class="play-stage">
                 <div class="nikke-frame">
-                    <iframe data-src="nikke.html?v=5" title="NIKKE 가이드" loading="lazy" scrolling="no"></iframe>
+                    <iframe data-src="nikke.html?v=7" title="NIKKE 가이드" loading="lazy" scrolling="no"></iframe>
                 </div>
             </div>
         </section>
@@ -1806,6 +1935,47 @@
     </div>
 
     <script>
+        const BEADYO_THEME_STORAGE_KEY = 'beadyo:theme';
+        const GAME_MODE_STORAGE_KEY = 'beadyo:game-mode';
+        const GAME_MODES = new Set(['ladder', 'roulette', 'gacha', 'pinball', 'nikke']);
+        let currentGameTheme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+
+        function syncNikkeTheme() {
+            const frame = document.querySelector('#nikke-panel iframe');
+            if (!frame?.contentWindow) return;
+            frame.contentWindow.postMessage({
+                type: 'beadyo-theme-sync',
+                theme: currentGameTheme
+            }, window.location.origin === 'null' ? '*' : window.location.origin);
+        }
+
+        function applyGameTheme(theme, persist = false) {
+            currentGameTheme = theme === 'dark' ? 'dark' : 'light';
+            document.documentElement.dataset.theme = currentGameTheme;
+            document.documentElement.style.colorScheme = currentGameTheme;
+            if (persist) {
+                try {
+                    localStorage.setItem(BEADYO_THEME_STORAGE_KEY, currentGameTheme);
+                } catch {}
+            }
+            syncNikkeTheme();
+        }
+
+        function readStoredGameMode() {
+            try {
+                const mode = localStorage.getItem(GAME_MODE_STORAGE_KEY);
+                return GAME_MODES.has(mode) ? mode : 'ladder';
+            } catch {
+                return 'ladder';
+            }
+        }
+
+        function persistGameMode(mode) {
+            try {
+                localStorage.setItem(GAME_MODE_STORAGE_KEY, mode);
+            } catch {}
+        }
+
         const ASSETS = Array.from({ length: 19 }, (_, i) => `game-assets/gobookticon/gobook-${String(i + 1).padStart(2, '0')}.png`);
         const colors = ['#7fb83f', '#5b8fc7', '#c69c3a', '#54a99f', '#9a7bc2', '#8ea65d', '#6f776b', '#9aa26f'];
         const rouletteColors = ['#a9d96b', '#8cc7ee', '#f4ce73', '#8fdbc9', '#c9a7e8', '#f2a58f', '#b9dc86', '#95d0a8'];
@@ -1848,16 +2018,20 @@
             return next;
         }
 
-        function switchMode(mode) {
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
-            document.querySelectorAll('.game-panel').forEach(panel => panel.classList.toggle('active', panel.id === `${mode}-panel`));
-            document.querySelector(`.mode-btn[data-mode="${mode}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-            if (mode === 'pinball') loadPinballFrame();
-            if (mode === 'nikke') loadNikkeFrame();
+        function switchMode(mode, options = {}) {
+            const nextMode = GAME_MODES.has(mode) ? mode : 'ladder';
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === nextMode));
+            document.querySelectorAll('.game-panel').forEach(panel => panel.classList.toggle('active', panel.id === `${nextMode}-panel`));
+            if (options.scroll !== false) {
+                document.querySelector(`.mode-btn[data-mode="${nextMode}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+            if (options.persist !== false) persistGameMode(nextMode);
+            if (nextMode === 'pinball') loadPinballFrame();
+            if (nextMode === 'nikke') loadNikkeFrame();
             requestAnimationFrame(() => {
-                if (mode === 'ladder') drawLadder();
-                if (mode === 'roulette') drawRoulette();
-                if (mode === 'gacha') renderGacha();
+                if (nextMode === 'ladder') drawLadder();
+                if (nextMode === 'roulette') drawRoulette();
+                if (nextMode === 'gacha') renderGacha();
             });
         }
 
@@ -1870,7 +2044,10 @@
 
         function loadNikkeFrame() {
             const frame = document.querySelector('#nikke-panel iframe[data-src]');
-            if (!frame) return;
+            if (!frame) {
+                syncNikkeTheme();
+                return;
+            }
             frame.src = frame.dataset.src;
             frame.removeAttribute('data-src');
         }
@@ -1883,9 +2060,19 @@
         }
 
         window.addEventListener('message', event => {
-            if (event.origin !== window.location.origin || event.data?.type !== 'nikke:height') return;
-            resizeNikkeFrame(event.data.height);
+            if (event.origin !== window.location.origin) return;
+            if (event.data?.type === 'beadyo-theme-sync') {
+                applyGameTheme(event.data.theme, true);
+                return;
+            }
+            if (event.data?.type === 'nikke:height') resizeNikkeFrame(event.data.height);
         });
+
+        window.addEventListener('storage', event => {
+            if (event.key === BEADYO_THEME_STORAGE_KEY) applyGameTheme(event.newValue);
+        });
+
+        document.querySelector('#nikke-panel iframe')?.addEventListener('load', syncNikkeTheme);
 
         function visibleNames() {
             ensureListSize(ladder.names, defaultLadderNames);
@@ -2823,6 +3010,7 @@
         resetLadder();
         updateRoulette();
         updateGacha();
+        switchMode(readStoredGameMode(), { persist: false, scroll: false });
         window.addEventListener('resize', () => {
             drawLadder();
             drawRoulette();

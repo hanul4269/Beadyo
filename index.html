@@ -1,13 +1,26 @@
 <!DOCTYPE html>
 <!-- Deployment marker: 2026-07-03T02:18+09:00 -->
-<html lang="ko">
+<html lang="ko" data-page="index">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="description" content="구슬요 방송 일정, 노래책, 라이브 기록, 음악, 기획 콘텐츠와 게임을 모아 보는 사이트입니다.">
     <title>구슬요모아보기</title>
     <link rel="canonical" href="https://beadyo.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="구슬요모아보기">
+    <meta property="og:title" content="구슬요모아보기 — 방송 일정·노래·콘텐츠·게임">
+    <meta property="og:description" content="구슬요 방송 일정, 노래책, 라이브 기록, 음악, 기획 콘텐츠와 게임을 모아 보는 사이트입니다.">
     <meta property="og:url" content="https://beadyo.com/">
+    <meta property="og:image" content="https://beadyo.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ko_KR">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="구슬요모아보기 — 방송 일정·노래·콘텐츠·게임">
+    <meta name="twitter:description" content="구슬요 방송 일정, 노래책, 라이브 기록, 음악, 기획 콘텐츠와 게임을 모아 보는 사이트입니다.">
+    <meta name="twitter:image" content="https://beadyo.com/og-image.jpg">
     <meta name="theme-color" content="#76ad39" id="theme-color-meta">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,6 +28,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="manifest" href="/manifest.webmanifest">
     <link rel="icon" type="image/webp" href="logo-icon.webp">
+    <link rel="stylesheet" href="tokens.css?v=20260918">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="dns-prefetch" href="https://docs.google.com">
     <link rel="dns-prefetch" href="https://sheets.googleapis.com">
@@ -23,15 +37,16 @@
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://ssl.gstatic.com">
     <link rel="dns-prefetch" href="https://www.gstatic.com">
-    <link rel="preload" href="logo-icon.webp" as="image">
+    <link rel="preload" href="stickers/kyabuki.gif" as="image" type="image/gif">
     <link rel="preload" href="loading-img.png" as="image">
     <link rel="preload" href="supabase.min.js?v=supabase-2-112-2" as="script">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
     <script defer src="supabase.min.js?v=supabase-2-112-2"></script>
-    <script defer src="patch-notes.js?v=dark-mode-20260821"></script>
-    <script defer src="index-app.js?v=calendar-yt-limit-ui-20260912"></script>
+    <script defer src="beadyo-common.js?v=20260918"></script>
+    <script defer src="patch-notes.js?v=common-20260918"></script>
+    <script defer src="index-app.js?v=common-20260918"></script>
     <script>
         (() => {
             const key = 'beadyo:theme';
@@ -46,35 +61,6 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         [hidden] { display: none !important; }
-
-        :root {
-            --accent: #7fb83f;
-            --accent-dark: #4f7f25;
-            --accent-light: #eef7e4;
-            --header-bg: #76ad39;
-            --tab-hover: rgba(255,255,255,0.12);
-            --bg: #f4f5f1;
-            --surface: #ffffff;
-            --surface-2: #fbfcf8;
-            --ink: #222720;
-            --muted: #6b725f;
-            --line: rgba(34,39,32,0.09);
-        }
-
-        html[data-theme="dark"] {
-            --accent: #8bc34a;
-            --accent-dark: #b4dc7b;
-            --accent-light: #21381b;
-            --header-bg: #4f7d2b;
-            --tab-hover: rgba(255,255,255,0.13);
-            --bg: #11170f;
-            --surface: #192119;
-            --surface-2: #202b20;
-            --ink: #edf5e8;
-            --muted: #a8b4a1;
-            --line: rgba(223,238,211,0.14);
-            color-scheme: dark;
-        }
 
         body {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
