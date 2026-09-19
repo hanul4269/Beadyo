@@ -1015,14 +1015,44 @@ let dragState = { id: null, dateStr: null };
 let _dragged = false;
 let _eventsLoaded = false;
 let _retryTimer = null;
+let _loadRetryAttempt = 0;
+let _loadFailureNoticeShown = false;
+let _loadRequestSequence = 0;
 let _calendarRealtimeChannel = null;
 let _calendarRealtimeReloadTimer = null;
 let _calendarFallbackPollTimer = null;
 var renderUpTab;
 
-function _scheduleLoadRetry(delay = 3000) {
+const LOAD_RETRY_BASE_DELAY_MS = 1000;
+const LOAD_RETRY_MAX_DELAY_MS = 30000;
+const LOAD_RETRY_MAX_ATTEMPTS = 6;
+
+function _showLoadFailureNoticeOnce() {
+    if (_loadFailureNoticeShown) return;
+    _loadFailureNoticeShown = true;
+    showToast('일정을 불러오지 못했어요 · 새로고침');
+}
+
+function _scheduleLoadRetry() {
     clearTimeout(_retryTimer);
-    _retryTimer = setTimeout(() => { if (!_eventsLoaded) loadEvents(); }, delay);
+    _retryTimer = null;
+    if (_eventsLoaded) return;
+    if (_loadRetryAttempt >= LOAD_RETRY_MAX_ATTEMPTS) {
+        _showLoadFailureNoticeOnce();
+        return;
+    }
+    const delay = Math.min(
+        LOAD_RETRY_BASE_DELAY_MS * (2 ** _loadRetryAttempt),
+        LOAD_RETRY_MAX_DELAY_MS,
+    );
+    _loadRetryAttempt += 1;
+    _retryTimer = setTimeout(() => {
+        _retryTimer = null;
+        if (!_eventsLoaded) loadEvents({ isRetry: true }).catch(error => {
+            console.error('loadEvents retry:', error);
+            _scheduleLoadRetry();
+        });
+    }, delay);
 }
 
 function scheduleCalendarReload(delay = 350) {
@@ -1180,10 +1210,12 @@ async function moveEventToDate(eventId, srcDate, targetDate) {
 }
 
 // ─── 데이터 로드 ───
-async function loadEvents() {
+async function loadEvents({ isRetry = false } = {}) {
+    const requestSequence = ++_loadRequestSequence;
     _eventsLoaded = false;
     clearTimeout(_retryTimer);
     _retryTimer = null;
+    if (!isRetry) _loadRetryAttempt = 0;
 
     const first = toDateStr(state.year, state.month, 1);
     let   last  = toDateStr(state.year, state.month, new Date(state.year, state.month + 1, 0).getDate());
@@ -1200,12 +1232,6 @@ async function loadEvents() {
 
     // 빈 상태라도 즉시 렌더 (모바일 무한 빈 화면 방지)
     if (state.events.length === 0) renderCalendar();
-
-    // 페이지가 hidden이면 fetch 건너뜀 — visibilitychange 복귀 시 재시도
-    if (document.visibilityState !== 'visible') {
-        _scheduleLoadRetry(1000);
-        return;
-    }
 
     // Supabase 클라이언트 초기화 행 방지 — REST API 직접 호출
     const baseCols = 'id,date,end_date,start_time,duration,title,type,collab,subtitle,vod_url,memo,is_rest,youtube_links';
@@ -1244,15 +1270,20 @@ async function loadEvents() {
         data = await res.json();
     } catch (e) {
         clearTimeout(tid);
+        if (requestSequence !== _loadRequestSequence) return;
         state.events = [];
         renderCalendar();
         _scheduleLoadRetry();
         return;
     }
 
+    if (requestSequence !== _loadRequestSequence) return;
     state.events = Array.isArray(data) ? data : [];
     await loadBroadcastInfos(extFirst, last);
+    if (requestSequence !== _loadRequestSequence) return;
     _eventsLoaded = true;
+    _loadRetryAttempt = 0;
+    _loadFailureNoticeShown = false;
     renderCalendar();
     loadYtLinks().catch(() => {});
 }
@@ -3783,7 +3814,11 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 // iOS bfcache 복원 대응 (뒤로가기/탭전환 후 페이지 재표시)
-window.addEventListener('pageshow', () => {
+window.addEventListener('pageshow', event => {
+    if (event.persisted) loadEvents();
+});
+// 오프라인 상태에서 재시도를 모두 소진했어도 연결 복구 즉시 다시 불러옴
+window.addEventListener('online', () => {
     loadEvents();
 });
 
