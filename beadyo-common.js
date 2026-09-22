@@ -130,7 +130,7 @@
         const brandName = document.createElement('strong');
         brandName.textContent = 'BEADYO';
         const brandDescription = document.createElement('span');
-        brandDescription.textContent = '구슬요모아보기';
+        brandDescription.textContent = '비드요닷컴 — OFFICIAL';
         brandCopy.append(brandName, brandDescription);
         home.append(mascot, brandCopy);
 
