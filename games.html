@@ -1142,7 +1142,9 @@
 
         .marble-roulette-frame {
             position: relative;
-            min-height: calc(100vh - 205px);
+            width: 100%;
+            height: calc(100vh - 230px);
+            min-height: 620px;
             border: 1px solid rgba(127,184,63,.24);
             border-radius: 14px;
             background: #070907;
@@ -1153,10 +1155,81 @@
         .marble-roulette-frame iframe {
             display: block;
             width: 100%;
-            height: calc(100vh - 205px);
-            min-height: 620px;
+            height: 100%;
             border: 0;
             background: #070907;
+        }
+
+        .pinball-fullscreen-btn {
+            position: absolute;
+            right: 16px;
+            bottom: 16px;
+            z-index: 10;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            padding: 0;
+            border: 1px solid rgba(255,255,255,.34);
+            border-radius: 10px;
+            background: rgba(16,21,15,.76);
+            color: #fff;
+            box-shadow: 0 8px 22px rgba(0,0,0,.32);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: background .16s ease, transform .16s ease;
+        }
+
+        .pinball-fullscreen-btn:hover {
+            background: rgba(127,184,63,.92);
+            transform: translateY(-1px);
+        }
+
+        .pinball-fullscreen-btn:focus-visible {
+            outline: 3px solid rgba(169,217,107,.88);
+            outline-offset: 3px;
+        }
+
+        .pinball-fullscreen-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 2;
+        }
+
+        .pinball-fullscreen-btn .fullscreen-exit-icon {
+            display: none;
+        }
+
+        .pinball-fullscreen-btn[aria-pressed="true"] .fullscreen-enter-icon {
+            display: none;
+        }
+
+        .pinball-fullscreen-btn[aria-pressed="true"] .fullscreen-exit-icon {
+            display: block;
+        }
+
+        .marble-roulette-frame:fullscreen,
+        .marble-roulette-frame:-webkit-full-screen {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            min-height: 0;
+            aspect-ratio: auto;
+            border: 0;
+            border-radius: 0;
+            background: #070907;
+            box-shadow: none;
+        }
+
+        .marble-roulette-frame:fullscreen iframe,
+        .marble-roulette-frame:-webkit-full-screen iframe {
+            height: 100%;
+            min-height: 0;
         }
 
         .nikke-frame {
@@ -1589,6 +1662,14 @@
             }
         }
 
+        @media (max-width: 750px) {
+            .pinball-fullscreen-btn {
+                top: 12px;
+                right: 12px;
+                bottom: auto;
+            }
+        }
+
         @media (max-width: 560px) {
             h1 { font-size: 28px; }
 
@@ -1877,7 +1958,11 @@
         <section class="game-panel" id="pinball-panel">
             <div class="play-stage">
                 <div class="marble-roulette-frame">
-                    <iframe data-src="marble-roulette/index.html?names=%EA%B5%AC%EC%8A%AC%EC%9A%94,%EB%94%B0%EB%A6%B0,%EB%83%90%EB%83%90,%EC%97%98%EC%8B%9C,%ED%82%A4%EB%A7%88,%EB%A7%88%EB%83%A5,%EC%9C%A0%EB%82%98%EA%B8%B0,%EC%8B%9C%EB%AA%BD,%EB%82%9C%EC%B4%88" title="Marble Roulette" loading="lazy"></iframe>
+                    <iframe data-src="marble-roulette/index.html?names=%EA%B5%AC%EC%8A%AC%EC%9A%94,%EB%94%B0%EB%A6%B0,%EB%83%90%EB%83%90,%EC%97%98%EC%8B%9C,%ED%82%A4%EB%A7%88,%EB%A7%88%EB%83%A5,%EC%9C%A0%EB%82%98%EA%B8%B0,%EC%8B%9C%EB%AA%BD,%EB%82%9C%EC%B4%88" title="Marble Roulette" loading="lazy" allow="fullscreen" allowfullscreen></iframe>
+                    <button class="pinball-fullscreen-btn" type="button" aria-label="핀볼 전체화면으로 보기" aria-pressed="false" title="전체화면" onclick="togglePinballFullscreen()">
+                        <svg class="fullscreen-enter-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>
+                        <svg class="fullscreen-exit-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h5V3M21 8h-5V3M3 16h5v5M21 16h-5v5"/></svg>
+                    </button>
                 </div>
             </div>
         </section>
@@ -2041,6 +2126,44 @@
             frame.src = frame.dataset.src;
             frame.removeAttribute('data-src');
         }
+
+        function pinballFullscreenElement() {
+            return document.fullscreenElement || document.webkitFullscreenElement || null;
+        }
+
+        async function togglePinballFullscreen() {
+            const container = document.querySelector('.marble-roulette-frame');
+            if (!container) return;
+            try {
+                if (pinballFullscreenElement() === container) {
+                    const exitFullscreen = document.exitFullscreen || document.webkitExitFullscreen;
+                    if (exitFullscreen) await exitFullscreen.call(document);
+                    return;
+                }
+                const requestFullscreen = container.requestFullscreen || container.webkitRequestFullscreen;
+                if (!requestFullscreen) {
+                    showGameToast('이 브라우저에서는 전체화면을 지원하지 않아요');
+                    return;
+                }
+                await requestFullscreen.call(container);
+            } catch {
+                showGameToast('전체화면으로 전환하지 못했어요');
+            }
+        }
+
+        function syncPinballFullscreenButton() {
+            const container = document.querySelector('.marble-roulette-frame');
+            const button = document.querySelector('.pinball-fullscreen-btn');
+            if (!container || !button) return;
+            const isFullscreen = pinballFullscreenElement() === container;
+            const label = isFullscreen ? '핀볼 전체화면 종료' : '핀볼 전체화면으로 보기';
+            button.setAttribute('aria-pressed', String(isFullscreen));
+            button.setAttribute('aria-label', label);
+            button.title = isFullscreen ? '전체화면 종료' : '전체화면';
+        }
+
+        document.addEventListener('fullscreenchange', syncPinballFullscreenButton);
+        document.addEventListener('webkitfullscreenchange', syncPinballFullscreenButton);
 
         function loadNikkeFrame() {
             const frame = document.querySelector('#nikke-panel iframe[data-src]');

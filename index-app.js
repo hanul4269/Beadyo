@@ -141,7 +141,7 @@ const TABS = [
     { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'auth-session-clock-skew-20260828' },
     { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'editor-rpc-20260918' },
     { type: 'content', src: 'content.html', directUrl: 'content.html', assetVersion: 'editor-rpc-20260918' },
-    { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'gacha-wall-hit-20260614' },
+    { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'pinball-fullscreen-20260923' },
 ];
 
 const CONTENT_TAB_INDEX = 5;
