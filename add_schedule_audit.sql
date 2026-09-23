@@ -39,14 +39,31 @@ create trigger schedules_set_updated_at
 
 create table if not exists public.schedule_audit (
   id bigint generated always as identity primary key,
-  -- text로 보관하면 schedules.id가 uuid/bigint 중 어느 쪽이어도 삭제 이력이 유지됩니다.
-  schedule_id text not null,
+  -- schedules.id와 같은 uuid 타입을 쓰되 외래 키는 걸지 않아 삭제 이력을 영구 보존합니다.
+  schedule_id uuid not null,
   action text not null check (action in ('insert', 'update', 'delete')),
   changed_by_email text,
   changed_at timestamptz not null default now(),
   old_values jsonb,
   new_values jsonb
 );
+
+-- 초기 버전에서 schedule_id를 text로 만든 경우에도 재실행만으로 uuid로 정리됩니다.
+do $$
+begin
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'schedule_audit'
+      and column_name = 'schedule_id'
+      and data_type <> 'uuid'
+  ) then
+    alter table public.schedule_audit
+      alter column schedule_id type uuid using schedule_id::uuid;
+  end if;
+end;
+$$;
 
 comment on table public.schedule_audit is
   'schedules의 insert/update/delete 변경 이력. 클라이언트 직접 쓰기는 금지합니다.';
@@ -67,21 +84,21 @@ begin
     insert into public.schedule_audit (
       schedule_id, action, changed_by_email, old_values, new_values
     ) values (
-      new.id::text, 'insert', actor_email, null, to_jsonb(new)
+      new.id, 'insert', actor_email, null, to_jsonb(new)
     );
     return new;
   elsif tg_op = 'UPDATE' then
     insert into public.schedule_audit (
       schedule_id, action, changed_by_email, old_values, new_values
     ) values (
-      new.id::text, 'update', actor_email, to_jsonb(old), to_jsonb(new)
+      new.id, 'update', actor_email, to_jsonb(old), to_jsonb(new)
     );
     return new;
   elsif tg_op = 'DELETE' then
     insert into public.schedule_audit (
       schedule_id, action, changed_by_email, old_values, new_values
     ) values (
-      old.id::text, 'delete', actor_email, to_jsonb(old), null
+      old.id, 'delete', actor_email, to_jsonb(old), null
     );
     return old;
   end if;
@@ -101,17 +118,17 @@ create trigger schedules_write_audit
 
 alter table public.schedule_audit enable row level security;
 
--- 기본 권한을 먼저 모두 제거한 뒤 오너 조회에 필요한 SELECT만 돌려줍니다.
+-- 기본 권한을 먼저 모두 제거한 뒤 로그인한 편집자 조회에 필요한 SELECT만 돌려줍니다.
 revoke all on table public.schedule_audit from public, anon, authenticated;
 grant select on table public.schedule_audit to authenticated;
 
 drop policy if exists "schedule_audit editor read" on public.schedule_audit;
 drop policy if exists "schedule_audit owner read" on public.schedule_audit;
-create policy "schedule_audit owner read"
+create policy "schedule_audit editor read"
   on public.schedule_audit
   for select
   to authenticated
-  using (lower(coalesce((select auth.jwt()) ->> 'email', '')) = 'riosniper12@gmail.com');
+  using ((select public.is_beadyo_editor()));
 
 -- 확인용 쿼리(설치 후 필요할 때 별도로 실행):
 -- select id, schedule_id, action, changed_by_email, changed_at

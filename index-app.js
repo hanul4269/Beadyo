@@ -883,7 +883,8 @@ async function updateAuthUI() {
     if (authUser !== currentUser) return;
     badge.innerHTML = `<div class="auth-menu-wrap">
         <button class="auth-trigger" onclick="toggleAuthMenu(event)" aria-label="계정 메뉴">
-            ${picture ? `<img src="${escAttr(picture)}" alt="">` : `<img src="login-icon.png" alt="">`}
+            <img class="auth-avatar" src="${escAttr(picture || 'login-icon.png')}" alt=""
+                referrerpolicy="no-referrer" decoding="async">
         </button>
         <div class="auth-menu" id="auth-menu">
             ${canAdmin ? `<button onclick="openCalendarAdmin()">⚙ 편집 설정</button>` : ''}
@@ -893,6 +894,15 @@ async function updateAuthUI() {
             <button class="danger" onclick="signOut()">로그아웃</button>
         </div>
     </div>`;
+    const avatar = badge.querySelector('.auth-avatar');
+    avatar?.addEventListener('error', () => {
+        if (avatar.dataset.fallbackApplied === 'true') {
+            avatar.hidden = true;
+            return;
+        }
+        avatar.dataset.fallbackApplied = 'true';
+        avatar.src = 'login-icon.png';
+    });
     document.querySelectorAll('.login-btn').forEach(b => b.style.display = 'none');
     badge.classList.add('show');
 }
