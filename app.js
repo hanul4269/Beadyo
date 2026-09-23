@@ -172,7 +172,10 @@ const state = {
     memoCards: [],
     user: null,
     isEditor: false,
+    isOwner: false,
     editors: [],
+    scheduleAudit: [],
+    scheduleAuditError: null,
     calendarNotices: [],
     viewMode: 'month',
     weekStart: null,
@@ -3053,18 +3056,121 @@ async function openAdminModal() {
     renderEditorList();
     renderUpEventList();
     renderCalendarNoticeList();
+    const auditTab = document.getElementById('adminAuditTabBtn');
+    if (auditTab) auditTab.hidden = !state.isOwner;
+    if (!state.isOwner && document.getElementById('adminSectionAudit')?.classList.contains('active')) {
+        switchAdminTab('editors');
+    }
     document.getElementById('adminModal').classList.add('open');
+    if (state.isOwner) refreshScheduleAudit();
 }
 function closeAdminModal() { document.getElementById('adminModal').classList.remove('open'); }
 
 function switchAdminTab(tab) {
-    const names = ['editors', 'upevents', 'notices'];
+    if (tab === 'audit' && !state.isOwner) return;
+    const names = ['editors', 'upevents', 'notices', 'audit'];
     document.querySelectorAll('.admin-tab-btn').forEach((b, i) => {
         b.classList.toggle('active', names[i] === tab);
     });
     document.querySelectorAll('.admin-section').forEach(s => {
         s.classList.toggle('active', s.id === 'adminSection' + tab.charAt(0).toUpperCase() + tab.slice(1));
     });
+}
+
+const SCHEDULE_AUDIT_FIELD_LABELS = Object.freeze({
+    date: '날짜',
+    end_date: '종료일',
+    start_time: '시작 시간',
+    duration: '진행 시간',
+    title: '제목',
+    type: '유형',
+    collab: '참여자',
+    subtitle: '부제',
+    vod_url: '다시보기',
+    memo: '메모',
+    is_rest: '휴방 여부',
+    youtube_links: 'YouTube 링크',
+    sort_order: '정렬 순서',
+});
+
+function scheduleAuditChangedFields(entry) {
+    if (entry.action === 'insert') return ['일정 생성'];
+    if (entry.action === 'delete') return ['일정 삭제'];
+    const before = entry.old_values || {};
+    const after = entry.new_values || {};
+    return [...new Set([...Object.keys(before), ...Object.keys(after)])]
+        .filter(key => key !== 'updated_at' && JSON.stringify(before[key]) !== JSON.stringify(after[key]))
+        .map(key => SCHEDULE_AUDIT_FIELD_LABELS[key] || key);
+}
+
+function scheduleAuditJsonBlock(label, value) {
+    if (!value) return '';
+    return `<section class="schedule-audit-json-block">
+        <strong>${esc(label)}</strong>
+        <pre>${esc(JSON.stringify(value, null, 2))}</pre>
+    </section>`;
+}
+
+function renderScheduleAudit() {
+    const list = document.getElementById('scheduleAuditList');
+    if (!list || !state.isOwner) return;
+    if (state.scheduleAuditError) {
+        list.innerHTML = `<div class="schedule-audit-empty">변경 이력을 불러오지 못했습니다.<br><small>${esc(state.scheduleAuditError)}</small></div>`;
+        return;
+    }
+    if (!state.scheduleAudit.length) {
+        list.innerHTML = '<div class="schedule-audit-empty">아직 기록된 일정 변경이 없습니다.</div>';
+        return;
+    }
+
+    const actionLabels = { insert: '추가', update: '수정', delete: '삭제' };
+    list.innerHTML = state.scheduleAudit.map(entry => {
+        const snapshot = entry.new_values || entry.old_values || {};
+        const changedFields = scheduleAuditChangedFields(entry);
+        const changedAt = entry.changed_at
+            ? new Date(entry.changed_at).toLocaleString('ko-KR', { dateStyle: 'medium', timeStyle: 'medium' })
+            : '시간 확인 불가';
+        const actor = entry.changed_by_email || '시스템 또는 확인 불가';
+        const scheduleTitle = snapshot.title || '제목 없는 일정';
+        const scheduleDate = snapshot.date || '날짜 없음';
+        return `<details class="schedule-audit-entry">
+            <summary>
+                <span class="schedule-audit-action ${esc(entry.action)}">${esc(actionLabels[entry.action] || entry.action)}</span>
+                <span class="schedule-audit-main">
+                    <strong>${esc(scheduleTitle)}</strong>
+                    <span>${esc(scheduleDate)} · ${esc(changedFields.join(', ') || '변경 내용 없음')}</span>
+                </span>
+                <span class="schedule-audit-meta">${esc(actor)}<br>${esc(changedAt)}</span>
+            </summary>
+            <div class="schedule-audit-detail">
+                <div class="schedule-audit-id">일정 ID: ${esc(entry.schedule_id)}</div>
+                <div class="schedule-audit-json-grid">
+                    ${scheduleAuditJsonBlock('변경 전', entry.old_values)}
+                    ${scheduleAuditJsonBlock('변경 후', entry.new_values)}
+                </div>
+            </div>
+        </details>`;
+    }).join('');
+}
+
+async function refreshScheduleAudit() {
+    if (!state.isOwner) return;
+    const list = document.getElementById('scheduleAuditList');
+    if (list) list.innerHTML = '<div class="schedule-audit-empty">최근 변경 이력을 불러오는 중입니다.</div>';
+    try {
+        await _ensureDb();
+        const { data, error } = await db
+            .from('schedule_audit')
+            .select('id,schedule_id,action,changed_by_email,changed_at,old_values,new_values')
+            .order('changed_at', { ascending: false })
+            .limit(100);
+        state.scheduleAuditError = error ? error.message : null;
+        state.scheduleAudit = error ? [] : (data || []);
+    } catch (error) {
+        state.scheduleAuditError = error?.message || '알 수 없는 오류';
+        state.scheduleAudit = [];
+    }
+    renderScheduleAudit();
 }
 
 function renderEditorList() {
@@ -3777,7 +3883,10 @@ async function setSessionUser(user) {
         picture: safeImageUrl(user.picture || ''),
     } : null;
     state.isEditor = false;
+    state.isOwner = false;
     state.editors = [];
+    state.scheduleAudit = [];
+    state.scheduleAuditError = null;
     document.body.classList.remove('is-editor');
     if (!state.user) {
         document.getElementById('adminModal')?.classList.remove('open');
@@ -3788,6 +3897,7 @@ async function setSessionUser(user) {
     const canEdit = await checkEditorAccess();
     if (state.user?.email.toLowerCase() !== expectedEmail) return;
     state.isEditor = canEdit;
+    state.isOwner = canEdit && expectedEmail === OWNER_EMAIL.toLowerCase();
     document.body.classList.toggle('is-editor', state.isEditor);
     renderCalendar();
     renderMemoSidebar();

@@ -29,6 +29,23 @@ html[data-page="index"][data-theme="dark"] {
     color-scheme: dark;
 }
 
+html[data-page="content"] {
+    --accent: #7fb83f;
+    --bg: #f4f5f1;
+    --surface: #ffffff;
+    --surface-2: #fbfcf8;
+    --muted: #6b725f;
+}
+
+html[data-page="content"][data-theme="dark"] {
+    --accent: #8bc34a;
+    --bg: #11170f;
+    --surface: #192119;
+    --surface-2: #202b20;
+    --muted: #a8b4a1;
+    color-scheme: dark;
+}
+
 html[data-page="calendar"] {
     --accent: #8bc34a;
     --accent-dark: #6d9c32;
