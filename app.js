@@ -196,10 +196,6 @@ const DEFAULT_CALENDAR_NOTICE = {
     sort_order: 0,
 };
 
-const OPTIMIZED_NOTICE_IMAGES = {
-    'notice-bosikham-season2-20260627.png': 'notice-bosikham-season2-20260627.jpg',
-};
-
 let db = null;
 let _dbReady = null;
 function _ensureDb() {
@@ -3232,8 +3228,7 @@ function normalizeNoticeImageInput(value) {
 }
 
 function noticeImageSrc(value) {
-    const src = normalizeNoticeImageInput(value) || DEFAULT_CALENDAR_NOTICE.image_url;
-    return OPTIMIZED_NOTICE_IMAGES[src] || src;
+    return normalizeNoticeImageInput(value) || DEFAULT_CALENDAR_NOTICE.image_url;
 }
 
 function normalizeNoticeColor(value, fallback) {

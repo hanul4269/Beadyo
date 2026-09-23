@@ -2916,7 +2916,7 @@
     <!-- 검색창 (항상 표시) -->
     <div class="sb-search-row" id="sb-search-row" style="display:none">
         <div class="search-wrap">
-            <button id="random-btn" onclick="pickRandom()" title="랜덤 뽑기"><img src="random-mustache-small.png" alt="랜덤" width="72" height="72" decoding="async"></button>
+            <button id="random-btn" onclick="pickRandom()" title="랜덤 뽑기"><img src="random-mustache-small.webp" alt="랜덤" width="72" height="72" decoding="async"></button>
             <button id="live-filter-btn" class="live-filter-btn" onclick="toggleLiveFilter()" style="display:none">상세검색</button>
             <div class="search-input-wrap">
                 <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -3238,7 +3238,7 @@
 </div>
 
 <script src="supabase.min.js?v=supabase-2-112-2"></script>
-<script src="beadyo-common.js?v=brand-official-20260923"></script>
+<script src="beadyo-common.js?v=mascot-webp-20260924"></script>
 <script>
 const INITIAL_VIEW = new URLSearchParams(location.search).get('view') === 'live' ? 'live' : 'songbook';
 const SHEET_LINKS = {
@@ -3819,17 +3819,24 @@ function songCategoryClass(category) {
     if (key === '애교송') return 'cat-aegyo';
     return 'cat-etc';
 }
-function songCoverUrl(song) {
+const SONG_COVER_SIZE = {
+    thumbnail: 160,
+    random: 240,
+    card: 720,
+    detail: 960,
+};
+
+function songCoverUrl(song, size = SONG_COVER_SIZE.thumbnail) {
     const url = safeUrl(song?.cover_url);
     if (url === '#') return '';
-    return youtubeThumbnailFromUrl(url) || url;
+    return youtubeThumbnailFromUrl(url) || resizeItunesArtwork(url, size);
 }
 function songCoverFallbackLabel(song) {
     const category = String(song?.category || '').trim();
     return category ? category.slice(0, 4) : 'SONG';
 }
-function songCoverMediaHtml(song, cls = 'song-cover-thumb', loading = 'lazy') {
-    const src = songCoverUrl(song);
+function songCoverMediaHtml(song, cls = 'song-cover-thumb', loading = 'lazy', size = SONG_COVER_SIZE.thumbnail) {
+    const src = songCoverUrl(song, size);
     const fallback = `<div class="${cls} song-cover-fallback" style="${src ? 'display:none' : 'display:flex'}"><span>♪</span><small>${esc(songCoverFallbackLabel(song))}</small></div>`;
     if (!src) return fallback;
     return `<img class="${cls}" src="${esc(src)}" alt="${esc(song?.title || '노래 커버')}" loading="${loading}" decoding="async" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">${fallback}`;
@@ -3979,7 +3986,7 @@ function renderWelcomeCard() {
     <div class="wc-card">
         <div class="wc-hero">
             <div class="wc-photo-panel">
-                <img src="songbook-char.png" alt="구슬요" class="wc-img" width="796" height="708" decoding="async">
+                <img src="songbook-char.webp" alt="구슬요" class="wc-img" width="280" height="250" decoding="async">
             </div>
             <div class="wc-main">
                 <h1 class="wc-title">
@@ -4008,7 +4015,7 @@ function renderWelcomeCard() {
                             <textPath href="#randomSongArc" startOffset="50%" text-anchor="middle">RANDOM SONG</textPath>
                         </text>
                     </svg>
-                    <img src="random-mustache-small.png" alt="" class="wc-random-face" width="142" height="142" decoding="async">
+                    <img src="random-mustache-small.webp" alt="" class="wc-random-face" width="142" height="142" decoding="async">
                 </button>
             </div>
         </div>
@@ -4074,7 +4081,7 @@ function songbookCardGridHtml(items, isAll) {
                     ${s.memo ? `<div class="song-card-memo">${esc(s.memo)}</div>` : ''}
                 </div>` : '';
             return `<article class="song-card ${songCategoryClass(s.category)} ${songClickClass()}" onclick="${songClickHandler(s)}">
-                <div class="song-card-cover-wrap">${songCoverMediaHtml(s, 'song-card-cover')}</div>
+                <div class="song-card-cover-wrap">${songCoverMediaHtml(s, 'song-card-cover', 'lazy', SONG_COVER_SIZE.card)}</div>
                 <div class="song-card-info">
                     <div class="song-card-head">
                         <span class="cat-badge">${esc(s.category)}</span>
@@ -5088,7 +5095,7 @@ function renderRandomResult(song) {
     const emptyEl  = document.getElementById('r-empty');
 
     if (emptyEl) emptyEl.style.display = 'none';
-    coverEl.innerHTML = songCoverMediaHtml(song, 'random-cover-img', 'eager');
+    coverEl.innerHTML = songCoverMediaHtml(song, 'random-cover-img', 'eager', SONG_COVER_SIZE.random);
     coverEl.style.display = '';
     titleEl.textContent = song.title;
     artistEl.textContent = song.artist || '';
@@ -5849,8 +5856,19 @@ function coverYoutubeCandidateMatch(song, result) {
     return { score, titleScore, artistScore, accepted };
 }
 
-function upscaleItunesArtwork(url, size = 600) {
-    return String(url || '').replace(/\/\d+x\d+(bb)?\./, `/${size}x${size}bb.`);
+function resizeItunesArtwork(url, size = SONG_COVER_SIZE.thumbnail) {
+    const safeArtworkUrl = safeUrl(url);
+    if (safeArtworkUrl === '#') return '';
+    try {
+        const artworkUrl = new URL(safeArtworkUrl);
+        const hostname = artworkUrl.hostname.toLowerCase();
+        if (hostname !== 'mzstatic.com' && !hostname.endsWith('.mzstatic.com')) return safeArtworkUrl;
+        const pixels = Math.max(1, Math.round(Number(size) || SONG_COVER_SIZE.thumbnail));
+        artworkUrl.pathname = artworkUrl.pathname.replace(/\/\d+x\d+(?:bb)?\./i, `/${pixels}x${pixels}bb.`);
+        return artworkUrl.toString();
+    } catch {
+        return safeArtworkUrl;
+    }
 }
 
 function coverItunesSearchPlan(song) {
@@ -6035,7 +6053,7 @@ async function searchItunesCover(song, onRetry) {
             const candidate = {
                 score,
                 country,
-                coverUrl: upscaleItunesArtwork(art, 600),
+                coverUrl: resizeItunesArtwork(art),
                 title: result.trackName || '',
                 artist: result.artistName || '',
                 album: result.collectionName || '',
@@ -6433,7 +6451,7 @@ function songDetailPanelHtml(song) {
                 </div>`;
 
     return `
-        <div class="song-detail-cover-wrap">${songCoverMediaHtml(song, 'song-detail-cover', 'eager')}</div>
+        <div class="song-detail-cover-wrap">${songCoverMediaHtml(song, 'song-detail-cover', 'eager', SONG_COVER_SIZE.detail)}</div>
         <div class="song-detail-body">
             <button class="song-detail-close" type="button" onclick="closeSongDetailPanel()" aria-label="닫기">✕</button>
             <div class="song-detail-meta">
@@ -6586,7 +6604,7 @@ function updateCoverPreview(value) {
         el.innerHTML = '';
         return;
     }
-    const previewUrl = youtubeThumbnailFromUrl(url) || url;
+    const previewUrl = songCoverUrl({ cover_url: url }, SONG_COVER_SIZE.thumbnail);
     el.innerHTML = `<img src="${esc(previewUrl)}" alt="" decoding="async" referrerpolicy="no-referrer" onerror="this.parentElement.classList.remove('show');this.parentElement.innerHTML=''"><span>커버 미리보기</span>`;
     el.classList.add('show');
 }

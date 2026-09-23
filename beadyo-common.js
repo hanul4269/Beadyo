@@ -119,7 +119,7 @@
         home.setAttribute('aria-label', 'BEADYO 전체 홈으로 이동');
 
         const mascot = document.createElement('img');
-        mascot.src = 'stickers/kyabuki.gif';
+        mascot.src = 'stickers/kyabuki.webp';
         mascot.alt = '';
         mascot.width = 32;
         mascot.height = 32;
