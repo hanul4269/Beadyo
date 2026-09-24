@@ -108,6 +108,43 @@ function syncThemeToFrames(targetFrame = null) {
     }
 }
 
+const SONGBOOK_TAB_INDEX = 2;
+let pendingSongbookSongId = '';
+
+function normalizeSongbookSongId(value) {
+    const id = String(value ?? '').trim();
+    return /^[a-zA-Z0-9_-]+$/.test(id) ? id : '';
+}
+
+function deliverPendingSongbookSong(frame = document.getElementById(`frame-${SONGBOOK_TAB_INDEX}`)) {
+    if (!pendingSongbookSongId || !isFrameReadyForMessage(frame)) return false;
+    const origin = window.location.origin === 'null' ? '*' : window.location.origin;
+    frame.contentWindow.postMessage({
+        type: 'beadyo-focus-songbook-song',
+        songId: pendingSongbookSongId,
+    }, origin);
+    pendingSongbookSongId = '';
+    return true;
+}
+
+function openSongbookSong(songId) {
+    const targetId = normalizeSongbookSongId(songId);
+    if (!targetId) return;
+    pendingSongbookSongId = targetId;
+    BeadyoCommon.closeUnifiedSearch();
+    switchTab(SONGBOOK_TAB_INDEX);
+    requestAnimationFrame(() => deliverPendingSongbookSong());
+}
+
+window.addEventListener('message', event => {
+    if (!beadyoAllowedMessageOrigin(event.origin)) return;
+    if (event.data?.type === 'beadyo-open-unified-search') {
+        BeadyoCommon.openUnifiedSearch();
+    } else if (event.data?.type === 'beadyo-open-songbook-song') {
+        openSongbookSong(event.data.songId);
+    }
+});
+
 function toggleThemeMode() {
     applyTheme(currentTheme === 'dark' ? 'light' : 'dark', { persist: true, broadcast: true });
 }
@@ -922,6 +959,7 @@ function switchTab(index, options = {}) {
         hideLoading(index);
         if (index === 0 || index === 2 || index === 3 || index === 4 || index === CONTENT_TAB_INDEX) syncCalendarAuth();
         syncThemeToFrames();
+        if (index === SONGBOOK_TAB_INDEX) deliverPendingSongbookSong(frame);
     } else {
         document.getElementById('loading').style.display = 'flex';
         frame.dataset.messageReady = 'false';
@@ -931,6 +969,7 @@ function switchTab(index, options = {}) {
             hideLoading(index);
             if (index === 0 || index === 2 || index === 3 || index === 4 || index === CONTENT_TAB_INDEX) syncCalendarAuth(frame);
             syncThemeToFrames(frame);
+            if (index === SONGBOOK_TAB_INDEX) deliverPendingSongbookSong(frame);
         };
         frame.src = getFrameUrl(index);
         loaded.add(index);

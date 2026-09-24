@@ -1,0 +1,453 @@
+.beadyo-search-open,
+.beadyo-search-open body {
+    overflow: hidden;
+}
+
+.beadyo-search-overlay {
+    --beadyo-search-text: var(--ink, var(--text));
+    --beadyo-search-border: var(--line, var(--border));
+    --beadyo-search-soft: var(--surface-2, var(--bg));
+    --beadyo-search-accent-soft: var(--accent-soft, var(--accent-light, var(--surface-2)));
+    position: fixed;
+    z-index: 3000;
+    inset: 0;
+    display: grid;
+    place-items: start center;
+    padding: max(7vh, 48px) 20px 24px;
+    color: var(--beadyo-search-text);
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    opacity: 0;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: opacity 160ms ease;
+}
+
+.beadyo-search-overlay[hidden] {
+    display: none;
+}
+
+.beadyo-search-overlay.is-open {
+    opacity: 1;
+}
+
+.beadyo-search-modal {
+    display: flex;
+    flex-direction: column;
+    width: min(760px, 100%);
+    max-height: min(82vh, 820px);
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--beadyo-search-border);
+    border-radius: 22px;
+    box-shadow: 0 24px 70px color-mix(in srgb, var(--beadyo-search-text) 22%, transparent);
+    transform: translateY(10px) scale(.985);
+    transition: transform 160ms ease;
+}
+
+.beadyo-search-overlay.is-open .beadyo-search-modal {
+    transform: translateY(0) scale(1);
+}
+
+.beadyo-search-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 22px 14px;
+}
+
+.beadyo-search-title-wrap {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+}
+
+.beadyo-search-title-wrap strong {
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -.02em;
+}
+
+.beadyo-search-title-wrap span,
+.beadyo-search-summary,
+.beadyo-search-count-note,
+.beadyo-search-live-more {
+    color: var(--muted);
+}
+
+.beadyo-search-title-wrap span {
+    font-size: 12px;
+    font-weight: 650;
+}
+
+.beadyo-search-close {
+    display: inline-grid;
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    color: var(--muted);
+    font: inherit;
+    font-size: 25px;
+    line-height: 1;
+    cursor: pointer;
+    background: var(--beadyo-search-soft);
+    border: 1px solid var(--beadyo-search-border);
+    border-radius: 50%;
+    place-items: center;
+}
+
+.beadyo-search-close:hover,
+.beadyo-search-close:focus-visible {
+    color: var(--accent-dark, var(--accent));
+    border-color: var(--accent);
+    outline: none;
+}
+
+.beadyo-search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 22px;
+    color: var(--muted);
+}
+
+.beadyo-search-input-wrap > svg {
+    position: absolute;
+    left: 15px;
+    width: 21px;
+    height: 21px;
+    pointer-events: none;
+}
+
+.beadyo-search-input-wrap input {
+    width: 100%;
+    height: 52px;
+    padding: 0 62px 0 46px;
+    color: var(--beadyo-search-text);
+    font: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    background: var(--beadyo-search-soft);
+    border: 1.5px solid var(--beadyo-search-border);
+    border-radius: 15px;
+    outline: none;
+}
+
+.beadyo-search-input-wrap input::placeholder {
+    color: var(--muted);
+}
+
+.beadyo-search-input-wrap input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.beadyo-search-input-wrap kbd {
+    position: absolute;
+    right: 12px;
+    padding: 4px 7px;
+    color: var(--muted);
+    font: inherit;
+    font-size: 10px;
+    font-weight: 800;
+    background: var(--surface);
+    border: 1px solid var(--beadyo-search-border);
+    border-radius: 6px;
+}
+
+.beadyo-search-summary {
+    min-height: 35px;
+    padding: 10px 24px 8px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.beadyo-search-results {
+    min-height: 180px;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: 0 14px 16px;
+    scrollbar-color: var(--accent) var(--beadyo-search-soft);
+}
+
+.beadyo-search-result {
+    position: relative;
+    display: grid;
+    gap: 9px;
+    padding: 16px;
+    cursor: pointer;
+    background: var(--surface);
+    border: 1px solid var(--beadyo-search-border);
+    border-radius: 15px;
+    outline: none;
+    transition: background 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.beadyo-search-result + .beadyo-search-result {
+    margin-top: 8px;
+}
+
+.beadyo-search-result:hover,
+.beadyo-search-result.is-active,
+.beadyo-search-result:focus-visible {
+    background: var(--beadyo-search-accent-soft);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+}
+
+.beadyo-search-result-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px;
+    min-width: 0;
+    font-size: 15px;
+}
+
+.beadyo-search-result-heading strong {
+    overflow-wrap: anywhere;
+    font-size: 17px;
+    font-weight: 900;
+}
+
+.beadyo-search-result-heading span {
+    color: var(--muted);
+    font-weight: 700;
+}
+
+.beadyo-search-source {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.beadyo-search-source-label {
+    flex: 0 0 auto;
+    padding: 4px 8px;
+    color: var(--accent-dark, var(--accent));
+    font-size: 11px;
+    font-weight: 900;
+    background: var(--beadyo-search-accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    border-radius: 999px;
+}
+
+.beadyo-search-source-live .beadyo-search-source-label {
+    color: var(--blue, var(--accent-dark, var(--accent)));
+}
+
+.beadyo-search-live-dates {
+    display: grid;
+    gap: 5px;
+    margin-left: 8px;
+    padding-left: 12px;
+    border-left: 2px solid var(--beadyo-search-border);
+}
+
+.beadyo-search-live-date {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.beadyo-search-live-date time {
+    font-variant-numeric: tabular-nums;
+}
+
+.beadyo-search-watch {
+    color: var(--accent-dark, var(--accent));
+    font-weight: 850;
+    text-decoration: none;
+}
+
+.beadyo-search-watch:hover,
+.beadyo-search-watch:focus-visible {
+    text-decoration: underline;
+    outline: none;
+}
+
+.beadyo-search-excluded {
+    padding: 2px 6px;
+    color: var(--muted);
+    font-size: 10px;
+    background: var(--beadyo-search-soft);
+    border-radius: 999px;
+}
+
+.beadyo-search-live-more {
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.beadyo-search-more,
+.beadyo-search-empty button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 44px;
+    margin-top: 10px;
+    color: var(--accent-dark, var(--accent));
+    font: inherit;
+    font-size: 13px;
+    font-weight: 850;
+    cursor: pointer;
+    background: var(--beadyo-search-accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    border-radius: 13px;
+}
+
+.beadyo-search-more span {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.beadyo-search-empty,
+.beadyo-search-prompt,
+.beadyo-search-loading {
+    display: grid;
+    min-height: 210px;
+    place-content: center;
+    place-items: center;
+    text-align: center;
+}
+
+.beadyo-search-empty {
+    gap: 7px;
+}
+
+.beadyo-search-empty strong {
+    font-size: 15px;
+}
+
+.beadyo-search-empty span {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.beadyo-search-empty button {
+    width: auto;
+    min-width: 120px;
+    padding: 0 16px;
+}
+
+.beadyo-search-prompt {
+    gap: 12px;
+    color: var(--muted);
+}
+
+.beadyo-search-prompt > span {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    color: var(--accent-dark, var(--accent));
+    font-size: 13px;
+    font-weight: 900;
+    background: var(--beadyo-search-accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    border-radius: 14px;
+    place-items: center;
+}
+
+.beadyo-search-prompt strong {
+    max-width: 330px;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.beadyo-search-loading {
+    grid-auto-flow: column;
+    gap: 7px;
+}
+
+.beadyo-search-loading span {
+    width: 9px;
+    height: 9px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: beadyo-search-loading 900ms ease-in-out infinite alternate;
+}
+
+.beadyo-search-loading span:nth-child(2) {
+    animation-delay: 150ms;
+}
+
+.beadyo-search-loading span:nth-child(3) {
+    animation-delay: 300ms;
+}
+
+@keyframes beadyo-search-loading {
+    to { transform: translateY(-7px); }
+}
+
+@media (max-width: 640px) {
+    .beadyo-search-overlay {
+        place-items: stretch;
+        padding: 8px;
+    }
+
+    .beadyo-search-modal {
+        width: 100%;
+        max-height: calc(100dvh - 16px);
+        border-radius: 18px;
+    }
+
+    .beadyo-search-head {
+        padding: 17px 16px 12px;
+    }
+
+    .beadyo-search-title-wrap strong {
+        font-size: 18px;
+    }
+
+    .beadyo-search-title-wrap span {
+        font-size: 11px;
+    }
+
+    .beadyo-search-input-wrap {
+        margin: 0 14px;
+    }
+
+    .beadyo-search-input-wrap input {
+        height: 50px;
+        font-size: 16px;
+    }
+
+    .beadyo-search-summary {
+        padding-right: 17px;
+        padding-left: 17px;
+    }
+
+    .beadyo-search-results {
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+
+    .beadyo-search-result {
+        padding: 14px 13px;
+        border-radius: 13px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .beadyo-search-overlay,
+    .beadyo-search-modal,
+    .beadyo-search-result {
+        transition: none;
+    }
+
+    .beadyo-search-loading span {
+        animation: none;
+    }
+}

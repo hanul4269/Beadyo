@@ -75,6 +75,26 @@
     border-radius: 999px;
 }
 
+.beadyo-standalone-actions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 7px;
+}
+
+.beadyo-standalone-search-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.beadyo-standalone-search-button svg {
+    width: 15px;
+    height: 15px;
+}
+
 .beadyo-standalone-nav {
     overflow-x: auto;
     overscroll-behavior-x: contain;
@@ -196,6 +216,17 @@ html[data-theme='dark'] .beadyo-standalone-nav-link.is-active::after {
     .beadyo-standalone-home-link {
         padding: 7px 10px;
         font-size: 12px;
+    }
+
+    .beadyo-standalone-search-button span {
+        display: none;
+    }
+
+    .beadyo-standalone-search-button {
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        justify-content: center;
     }
 
     .beadyo-standalone-nav-list {

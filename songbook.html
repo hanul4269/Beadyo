@@ -627,6 +627,11 @@
             box-shadow: 0 8px 18px rgba(34,39,32,0.1);
         }
         .song-card.clickable { cursor: pointer; }
+        [data-songbook-entry-id] { scroll-margin-block: 120px; }
+        [data-songbook-entry-id].songbook-target {
+            outline: 3px solid var(--accent);
+            outline-offset: 3px;
+        }
         .song-card.cat-kpop {
             --card-accent: #7fb83f;
             --card-accent-bg: #eef7e4;
@@ -3240,7 +3245,10 @@
 <script src="supabase.min.js?v=supabase-2-112-2"></script>
 <script src="beadyo-common.js?v=mascot-webp-20260924"></script>
 <script>
-const INITIAL_VIEW = new URLSearchParams(location.search).get('view') === 'live' ? 'live' : 'songbook';
+const INITIAL_PARAMS = new URLSearchParams(location.search);
+const INITIAL_SONG_ID_RAW = String(INITIAL_PARAMS.get('song') || '').trim();
+const INITIAL_SONG_ID = /^[a-zA-Z0-9_-]+$/.test(INITIAL_SONG_ID_RAW) ? INITIAL_SONG_ID_RAW : '';
+const INITIAL_VIEW = INITIAL_SONG_ID ? 'songbook' : INITIAL_PARAMS.get('view') === 'live' ? 'live' : 'songbook';
 const SHEET_LINKS = {
     songbook: 'https://docs.google.com/spreadsheets/d/1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw/edit#gid=1451717792',
     live: 'https://docs.google.com/spreadsheets/d/1bIhxhHDU_Ig5IuDrS4WvPtMVsiVWHnDvm6dU3E3Q8Mo/edit#gid=1565839847',
@@ -3289,6 +3297,7 @@ const S = {
     songbookTag:  'all',
     songbookQuality: 'all',
     songbookFavoriteOnly: false,
+    songbookTargetId: null,
     songbookFavoriteIds: new Set(readSongbookFavoriteIds()),
     songbookFilterExpanded: {
         tags: false,
@@ -3313,6 +3322,7 @@ const S = {
     },
     session:      null,
 };
+let pendingSongbookTargetId = INITIAL_SONG_ID;
 
 // ── Supabase ─────────────────────────────────────
 let db = null, _dbReady = null;
@@ -3388,6 +3398,7 @@ async function loadSongbook() {
     if (S.mainTab === 'songbook') renderSkeleton('songbook-list');
     S.songbookData = await fetchAll('songbook', {}, [['artist', true], ['title', true]]);
     if (S.mainTab === 'songbook') renderSongbook();
+    if (pendingSongbookTargetId) revealSongbookSong(pendingSongbookTargetId);
 }
 
 async function loadLive(year) {
@@ -3705,6 +3716,10 @@ function filteredSongbookItems({
     ignoreQuality = false,
     ignoreFavorite = false,
 } = {}) {
+    const targetId = String(S.songbookTargetId ?? '').trim();
+    if (targetId) {
+        return (S.songbookData || []).filter(song => String(song?.id ?? '') === targetId);
+    }
     const isAll = forceAll || category === 'all';
     const originalKeys = new Set(
         (S.songbookData || [])
@@ -4055,7 +4070,7 @@ function songbookTableHtml(items, isAll) {
             </tr></thead>
             <tbody>
             ${items.map((s, i) => `
-                <tr ${editableSongAttrs(s)}>
+                <tr data-songbook-entry-id="${esc(s.id)}" ${editableSongAttrs(s)}>
                     <td class="col-num">${i + 1}</td>
                     <td class="col-fav">${songbookFavoriteButtonHtml(s, 'table-favorite')}</td>
                     <td class="col-cover">${songCoverMediaHtml(s)}</td>
@@ -4080,7 +4095,7 @@ function songbookCardGridHtml(items, isAll) {
                     ${links ? `<div class="song-card-links">${links}</div>` : ''}
                     ${s.memo ? `<div class="song-card-memo">${esc(s.memo)}</div>` : ''}
                 </div>` : '';
-            return `<article class="song-card ${songCategoryClass(s.category)} ${songClickClass()}" onclick="${songClickHandler(s)}">
+            return `<article class="song-card ${songCategoryClass(s.category)} ${songClickClass()}" data-songbook-entry-id="${esc(s.id)}" onclick="${songClickHandler(s)}">
                 <div class="song-card-cover-wrap">${songCoverMediaHtml(s, 'song-card-cover', 'lazy', SONG_COVER_SIZE.card)}</div>
                 <div class="song-card-info">
                     <div class="song-card-head">
@@ -4810,7 +4825,53 @@ function applyInitialView() {
     setMainTab(S.mainTab);
 }
 
+function normalizeSongbookTargetId(value) {
+    const id = String(value ?? '').trim();
+    return /^[a-zA-Z0-9_-]+$/.test(id) ? id : '';
+}
+
+function revealSongbookSong(songId) {
+    const targetId = normalizeSongbookTargetId(songId);
+    if (!targetId) return false;
+    if (!S.songbookData) {
+        pendingSongbookTargetId = targetId;
+        return false;
+    }
+
+    pendingSongbookTargetId = '';
+    const song = S.songbookData.find(item => String(item?.id ?? '') === targetId);
+    if (!song) {
+        showToast('선택한 노래책 곡을 찾지 못했어요');
+        return false;
+    }
+
+    S.songbookTargetId = targetId;
+    S.songbookCat = 'all';
+    S.songbookTag = 'all';
+    S.songbookQuality = 'all';
+    S.songbookFavoriteOnly = false;
+    S.query = String(song.title || '').trim();
+    document.querySelectorAll('#songbook-subtabs .sub-tab').forEach(element => {
+        element.classList.toggle('active', element.dataset.cat === 'all');
+    });
+    const input = document.getElementById('search-input');
+    if (input) input.value = S.query;
+    document.getElementById('search-clear')?.classList.toggle('show', !!S.query);
+    setMainTab('songbook');
+
+    requestAnimationFrame(() => {
+        const target = document.querySelector(`[data-songbook-entry-id="${CSS.escape(targetId)}"]`);
+        if (!target) return;
+        target.classList.add('songbook-target');
+        target.setAttribute('tabindex', '-1');
+        target.focus({ preventScroll: true });
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    return true;
+}
+
 function setSongbookCat(cat) {
+    S.songbookTargetId = null;
     S.songbookCat = cat;
     document.querySelectorAll('#songbook-subtabs .sub-tab').forEach(el =>
         el.classList.toggle('active', el.dataset.cat === cat));
@@ -4907,6 +4968,7 @@ function toggleStatsFold(key) {
 
 // ── 검색 ────────────────────────────────────────
 function onSearch(val) {
+    S.songbookTargetId = null;
     S.query = val.trim();
     document.getElementById('search-clear').classList.toggle('show', !!S.query);
 
@@ -4918,6 +4980,7 @@ function onSearch(val) {
 }
 
 function onWelcomeSearch(val) {
+    S.songbookTargetId = null;
     S.query = val.trim();
     document.getElementById('search-input').value = S.query;
     document.getElementById('search-clear').classList.toggle('show', !!S.query);
@@ -4927,6 +4990,7 @@ function onWelcomeSearch(val) {
 
 function clearSearch() {
     document.getElementById('search-input').value = '';
+    S.songbookTargetId = null;
     S.query = '';
     document.getElementById('search-clear').classList.remove('show');
     if (S.mainTab === 'songbook') renderSongbook();
@@ -5361,6 +5425,10 @@ window.addEventListener('message', (e) => {
     if (!beadyoAllowedMessageOrigin(e.origin)) return;
     if (e.data?.type === 'beadyo-theme-sync') {
         applyBeadyoTheme(e.data.theme, true);
+        return;
+    }
+    if (e.data?.type === 'beadyo-focus-songbook-song') {
+        revealSongbookSong(e.data.songId);
         return;
     }
     if (e.data?.type === 'beadyo-auth-sync' && db) {
