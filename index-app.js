@@ -627,7 +627,7 @@ async function loadNoticeNotificationItems() {
 }
 
 async function loadLiveNotificationItems() {
-    const data = await fetchRuntimeCache('live_status', 3500);
+    const data = await fetchLiveStatus();
     if (!data || typeof data.live === 'undefined') return [];
     const isLive = !!data.live;
     const updatedAt = data.updated || data.row_updated_at || '';
@@ -1049,6 +1049,40 @@ initNotificationInbox();
 
 // ── 라이브 상태 체크 ──
 const PROXY = 'https://clever-rhino-36.hanul4269.deno.net';
+const SOOP_STATION_API = 'https://chapi.sooplive.co.kr/api/beadyo97/station';
+
+// 라이브 상태 단일 진입점. 헤더 배지와 알림 패널이 같은 값을 쓰도록 한 곳에서 조회한다.
+// 순서: SOOP 직접 호출 → Deno 프록시 → Supabase 캐시(최후 수단)
+let _liveStatusMemo = { at: 0, data: null };
+async function fetchLiveStatus() {
+    if (_liveStatusMemo.data && Date.now() - _liveStatusMemo.at < 55000) return _liveStatusMemo.data;
+
+    const fromStation = d => ({
+        live: !!d?.broad?.broad_no,
+        title: String(d?.broad?.broad_title || '').trim(),
+        updated: new Date().toISOString(),
+    });
+
+    for (const url of [SOOP_STATION_API, `${PROXY}?url=${encodeURIComponent(SOOP_STATION_API)}`]) {
+        try {
+            const res = await fetchWithTimeout(url, 4000);
+            if (!res.ok) continue;
+            const data = fromStation(await res.json());
+            _liveStatusMemo = { at: Date.now(), data };
+            return data;
+        } catch {}
+    }
+
+    try {
+        const cached = await fetchRuntimeCache('live_status');
+        if (cached && typeof cached.live !== 'undefined' && isFreshRuntimeCache(cached, 30 * 60 * 1000)) {
+            _liveStatusMemo = { at: Date.now(), data: cached };
+            return cached;
+        }
+    } catch {}
+
+    return null;
+}
 
 async function fetchRuntimeCache(cacheKey, ms = 4000) {
     const url = `${SUPABASE_URL}/rest/v1/site_runtime_cache?select=payload,updated_at&cache_key=eq.${encodeURIComponent(cacheKey)}&limit=1`;
@@ -1077,29 +1111,8 @@ async function checkLiveStatus(force = false) {
     const badge = document.getElementById('live-badge');
     if (!badge) return;
 
-    // 1) Supabase 런타임 캐시: GitHub Actions가 5분마다 갱신
-    try {
-        const data = await fetchRuntimeCache('live_status');
-        if (data && typeof data.live !== 'undefined' && isFreshRuntimeCache(data, 15 * 60 * 1000)) {
-            badge.classList.toggle('is-live', !!data.live);
-            return;
-        }
-    } catch {}
-
-    // 2) Supabase 캐시가 없거나 오래되면 SOOP chapi API 직접 호출 (Deno 프록시 경유)
-    try {
-        const res = await fetchWithTimeout(
-            `${PROXY}?url=${encodeURIComponent('https://chapi.sooplive.co.kr/api/beadyo97/station')}`,
-            4000
-        );
-        if (res.ok) {
-            const d = await res.json();
-            const broad = d?.broad;
-            badge.classList.toggle('is-live', !!(broad?.broad_no));
-            return;
-        }
-    } catch {}
-
+    const data = await fetchLiveStatus();
+    if (data) badge.classList.toggle('is-live', !!data.live);
 }
 
 checkLiveStatus(true);

@@ -286,8 +286,13 @@ const MOOD_STICKERS = {
 function stickerImg(src, className, alt = '') {
     return `<img class="${className}" src="${esc(src)}" alt="${esc(alt)}" loading="lazy" decoding="async">`;
 }
+// 휴방 판정: is_rest 플래그와 type='rest' 중 하나라도 참이면 휴방으로 본다.
+// (두 값이 어긋난 데이터가 존재하므로 표시 로직은 항상 이 함수를 쓸 것)
+function isRestEvent(ev) {
+    return !!(ev?.is_rest || ev?.type === 'rest');
+}
 function stickerForEvent(ev) {
-    if (ev?.is_rest || ev?.type === 'rest') return MOOD_STICKERS.rest;
+    if (isRestEvent(ev)) return MOOD_STICKERS.rest;
     return MOOD_STICKERS[ev?.type] || MOOD_STICKERS.general;
 }
 function dayEmptyHtml(message, mood = 'empty') {
@@ -1090,7 +1095,7 @@ function eventOrderValue(ev) {
 
 function sortCalendarEvents(events) {
     return [...events].sort((a, b) => {
-        if (!!b.is_rest !== !!a.is_rest) return (b.is_rest ? 1 : 0) - (a.is_rest ? 1 : 0);
+        if (isRestEvent(b) !== isRestEvent(a)) return (isRestEvent(b) ? 1 : 0) - (isRestEvent(a) ? 1 : 0);
         const orderDiff = eventOrderValue(a) - eventOrderValue(b);
         if (orderDiff !== 0) return orderDiff;
         const timeDiff = String(a.start_time || '99:99').localeCompare(String(b.start_time || '99:99'));
@@ -1370,7 +1375,7 @@ function eventsForDate(dateStr) {
     return state.events
         .filter(ev => eventOnDate(ev, dateStr))
         .sort((a, b) => {
-            if (!!b.is_rest !== !!a.is_rest) return (b.is_rest ? 1 : 0) - (a.is_rest ? 1 : 0);
+            if (isRestEvent(b) !== isRestEvent(a)) return (isRestEvent(b) ? 1 : 0) - (isRestEvent(a) ? 1 : 0);
             return String(a.start_time || '99:99').localeCompare(String(b.start_time || '99:99'));
         });
 }
@@ -1398,7 +1403,7 @@ function renderMobileSchedule() {
             ? events.map(ev => {
                 const t = typeOf(ev.type);
                 const time = ev.start_time ? ev.start_time.slice(0, 5) : '미정';
-                const restSticker = ev.is_rest || ev.type === 'rest'
+                const restSticker = isRestEvent(ev)
                     ? stickerImg(MOOD_STICKERS.fan, 'mobile-event-sticker', '선풍기')
                     : '';
                 return `<button class="mobile-event-pill" style="${eventCardStyle(t)}" onclick="openDayViewModal('${dateStr}')">
@@ -1489,7 +1494,7 @@ function renderCalendar() {
         const dow     = idx % 7;
         const isToday = !other && dateStr === todayStr;
         const events  = other ? [] : calendarEventsForDate(dateStr);
-        const hasRest = events.some(e => e.is_rest);
+        const hasRest = events.some(isRestEvent);
 
         const isEmpty = !other && events.length === 0;
         const cellCls = ['cal-cell',
@@ -1552,7 +1557,7 @@ function renderCalendar() {
                 : ev.subtitle ? ' has-subtitle'
                 : ev.collab   ? ' has-collab'
                 : '';
-            const restClass = ev.is_rest || ev.type === 'rest' ? ' rest-chip' : '';
+            const restClass = isRestEvent(ev) ? ' rest-chip' : '';
 
             const memoAttr = isStart && ev.memo
                 ? `data-memo="${esc(ev.memo)}"` : '';
@@ -1563,7 +1568,7 @@ function renderCalendar() {
                 ? `<div class="chip-subtitle" style="--chip-subtitle-size:${chipSubtitleFontSize(ev.subtitle, isSingle, isCompact)};">${esc(ev.subtitle)}</div>` : '';
             const collabHtml = isStart && ev.collab
                 ? `<div class="chip-collab" style="--chip-detail-size:${chipSubtitleFontSize(ev.collab, isSingle, isCompact)};">w. ${esc(ev.collab)}</div>` : '';
-            const chipSticker = isStart && (ev.is_rest || ev.type === 'rest') && (isSingle || isStableList)
+            const chipSticker = isStart && isRestEvent(ev) && (isSingle || isStableList)
                 ? stickerImg(MOOD_STICKERS.fan, 'event-chip-sticker', '선풍기')
                 : '';
 
@@ -2091,7 +2096,7 @@ function dayEventCardHtml(ev, dateStr) {
         links.push(`<a class="day-link yt" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">${type === 'long' ? 'YouTube' : 'Shorts'}</a>`);
     });
 
-    const eventSticker = ev.is_rest || ev.type === 'rest'
+    const eventSticker = isRestEvent(ev)
         ? stickerImg(MOOD_STICKERS.fan, 'day-event-sticker', '선풍기')
         : '';
 
@@ -2439,11 +2444,23 @@ async function fetchSoopRankingLiveFresh(bjId, postNo) {
     const allItems = [];
     let liveUpdatedAt = null;
     let page = 1, lastPage = 1;
+    // SOOP이 beadyo.com 출처를 CORS로 허용하므로 직접 호출을 먼저 시도하고,
+    // 막히면 Deno 프록시로 우회한다. 한 번 성공한 경로는 이후 페이지에서 그대로 쓴다.
+    let useProxy = false;
     do {
         const target = `https://api-channel.sooplive.com/v1.1/channel/${bjId}/post/${postNo}/comment?page=${page}&orderBy=reg_date&cCommentNo=0&perPage=100`;
-        const url = `${PROXY}?url=${encodeURIComponent(target)}`;
         try {
-            const resp = await fetch(url, { signal: AbortSignal.timeout(10000) });
+            let resp = null;
+            if (!useProxy) {
+                try {
+                    resp = await fetch(target, { signal: AbortSignal.timeout(10000) });
+                    if (!resp.ok) resp = null;
+                } catch { resp = null; }
+                if (!resp) useProxy = true;
+            }
+            if (!resp) {
+                resp = await fetch(`${PROXY}?url=${encodeURIComponent(target)}`, { signal: AbortSignal.timeout(10000) });
+            }
             if (!resp.ok) break;
             liveUpdatedAt = liveUpdatedAt || new Date().toISOString();
             const d = await resp.json();
