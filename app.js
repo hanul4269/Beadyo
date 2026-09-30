@@ -2326,7 +2326,11 @@ async function openUpModal(options = {}) {
     for (const e of (cachedData.events || [])) cachedMap[e.id] = e;
     for (const e of (localSnapshot?.events || [])) cachedMap[e.id] = e;
 
-    const mergedEvents = sbEvents.map(e => ({ ...upEventFromRow(e), ranking: cachedMap[e.id]?.ranking || [] }));
+    const mergedEvents = sbEvents.map(e => ({
+        ...upEventFromRow(e),
+        ranking: cachedMap[e.id]?.ranking || [],
+        live_updated_at: cachedMap[e.id]?.live_updated_at || null,
+    }));
 
     _upCurrentData = { updated: localSnapshot?.updated || cachedData.updated || null, events: mergedEvents };
     writeLocalUpRankingSnapshot(_upCurrentData);
@@ -2405,13 +2409,11 @@ function upLiveCacheKey(bjId, postNo) {
     return `beadyo_up_live_${bjId}_${postNo}`;
 }
 
-function readCachedUpRanking(bjId, postNo) {
+function readCachedUpRanking(bjId, postNo, allowStale = false) {
     const cached = _upLiveRankingCache.get(upLiveCacheKey(bjId, postNo));
     if (!cached || !Array.isArray(cached.ranking)) return null;
-    if (Date.now() - Number(cached.savedAt || 0) > UP_LIVE_CACHE_TTL_MS) {
-        _upLiveRankingCache.delete(upLiveCacheKey(bjId, postNo));
-        return null;
-    }
+    // 만료된 완전한 결과도 조회 실패 시 보여줄 수 있도록 보존한다.
+    if (!allowStale && Date.now() - Number(cached.savedAt || 0) > UP_LIVE_CACHE_TTL_MS) return null;
     return { ranking: cached.ranking, updatedAt: cached.updatedAt || cached.savedAt };
 }
 
@@ -2427,12 +2429,16 @@ function writeCachedUpRanking(bjId, postNo, ranking) {
 
 async function fetchSoopRankingLive(bjId, postNo, options = {}) {
     const cacheKey = `${bjId}:${postNo}`;
+    if (_upLiveFetchPromises.has(cacheKey)) return _upLiveFetchPromises.get(cacheKey);
     if (!options.force) {
         const cached = readCachedUpRanking(bjId, postNo);
         if (cached) return cached;
-        if (_upLiveFetchPromises.has(cacheKey)) return _upLiveFetchPromises.get(cacheKey);
     }
-    const promise = fetchSoopRankingLiveFresh(bjId, postNo).finally(() => {
+    const promise = fetchSoopRankingLiveFresh(bjId, postNo).then(result => {
+        if (result) return result;
+        const previous = readCachedUpRanking(bjId, postNo, true);
+        return previous ? { ...previous, stale: true } : null;
+    }).finally(() => {
         _upLiveFetchPromises.delete(cacheKey);
     });
     _upLiveFetchPromises.set(cacheKey, promise);
@@ -2442,29 +2448,37 @@ async function fetchSoopRankingLive(bjId, postNo, options = {}) {
 async function fetchSoopRankingLiveFresh(bjId, postNo) {
     const PROXY = 'https://clever-rhino-36.hanul4269.deno.net';
     const allItems = [];
-    let liveUpdatedAt = null;
     let page = 1, lastPage = 1;
-    // SOOP이 beadyo.com 출처를 CORS로 허용하므로 직접 호출을 먼저 시도하고,
-    // 막히면 Deno 프록시로 우회한다. 한 번 성공한 경로는 이후 페이지에서 그대로 쓴다.
+    // 본문까지 읽고 페이지 구조를 확인한 뒤에만 직접 호출 성공으로 인정한다.
+    // 한 번 프록시로 전환하면 나머지 페이지에서도 같은 경로를 사용한다.
     let useProxy = false;
+    async function fetchPage(url) {
+        const resp = await fetch(url, { signal: AbortSignal.timeout(10000) });
+        if (!resp.ok) throw new Error(`UP HTTP ${resp.status}`);
+        const data = await resp.json();
+        const total = data?.meta?.lastPage;
+        const pageCount = Number(total);
+        if (!Array.isArray(data?.data) ||
+            !['number', 'string'].includes(typeof total) || String(total).trim() === '' ||
+            !Number.isSafeInteger(pageCount) || pageCount < 0 ||
+            (pageCount === 0 && (page !== 1 || data.data.length > 0)) ||
+            (pageCount > 0 && pageCount < page) ||
+            (data.data.length === 0 && (page > 1 || pageCount > 1))) {
+            throw new Error('Invalid UP page');
+        }
+        return { items: data.data, lastPage: Math.max(1, pageCount) };
+    }
     do {
         const target = `https://api-channel.sooplive.com/v1.1/channel/${bjId}/post/${postNo}/comment?page=${page}&orderBy=reg_date&cCommentNo=0&perPage=100`;
         try {
-            let resp = null;
+            let data = null;
             if (!useProxy) {
                 try {
-                    resp = await fetch(target, { signal: AbortSignal.timeout(10000) });
-                    if (!resp.ok) resp = null;
-                } catch { resp = null; }
-                if (!resp) useProxy = true;
+                    data = await fetchPage(target);
+                } catch { useProxy = true; }
             }
-            if (!resp) {
-                resp = await fetch(`${PROXY}?url=${encodeURIComponent(target)}`, { signal: AbortSignal.timeout(10000) });
-            }
-            if (!resp.ok) break;
-            liveUpdatedAt = liveUpdatedAt || new Date().toISOString();
-            const d = await resp.json();
-            const items = d.data || [];
+            if (!data) data = await fetchPage(`${PROXY}?url=${encodeURIComponent(target)}`);
+            const items = data.items;
             for (const it of items) {
                 if (it.pCommentNo) {
                     allItems.push({
@@ -2477,17 +2491,17 @@ async function fetchSoopRankingLiveFresh(bjId, postNo) {
                     });
                 }
             }
-            lastPage = (d.meta || {}).lastPage || 1;
+            lastPage = data.lastPage;
         } catch {
-            break;
+            // 일부 페이지만으로 이전의 완전한 랭킹을 덮어쓰지 않는다.
+            return null;
         }
         page++;
     } while (page <= lastPage);
 
-    if (!allItems.length) return null;
     allItems.sort((a, b) => b.up_count - a.up_count);
     allItems.forEach((r, i) => r.rank = i + 1);
-    const updatedAt = writeCachedUpRanking(bjId, postNo, allItems) || liveUpdatedAt;
+    const updatedAt = writeCachedUpRanking(bjId, postNo, allItems);
     return { ranking: allItems, updatedAt };
 }
 
@@ -2499,13 +2513,19 @@ function renderUpModal(data, fetchLive = false) {
         return;
     }
     let currentIdx = 0;
+    const liveStates = new Map();
 
     function renderTab(idx) {
         currentIdx = idx;
         const ev = events[idx];
-        const updateLabel = ev.live_updated_at
-            ? `실시간 업데이트: ${new Date(ev.live_updated_at).toLocaleString('ko-KR')}`
-            : (fetchLive ? '실시간 업데이트 확인 중...' : `캐시 업데이트: ${data.updated ? new Date(data.updated).toLocaleString('ko-KR') : '-'}`);
+        const liveState = liveStates.get(idx) || (fetchLive ? 'pending' : 'cached');
+        const lastUpdated = ev.live_updated_at || data.updated;
+        const lastUpdatedLabel = lastUpdated ? new Date(lastUpdated).toLocaleString('ko-KR') : '알 수 없음';
+        const updateLabel = liveState === 'error'
+            ? `업데이트 실패 · 마지막 갱신: ${lastUpdatedLabel}`
+            : liveState === 'pending'
+                ? '실시간 업데이트 확인 중...'
+                : `${ev.live_updated_at ? '실시간' : '캐시'} 업데이트: ${lastUpdatedLabel}`;
         const tabs = events.map((e, i) =>
             `<button class="up-tab-btn${i===idx?' active':''}" onclick="renderUpTab(${i})">${esc(e.tab)}</button>`
         ).join('');
@@ -2543,7 +2563,9 @@ function renderUpModal(data, fetchLive = false) {
                     <div class="up-rank-count">👍 ${Number(r.up_count).toLocaleString()}</div>
                 </div>`;
             }).join('')
-            : upEmptyHtml('랭킹 데이터를 불러오는 중입니다...', 'loading');
+            : upEmptyHtml(liveState === 'error' ? '랭킹을 불러오지 못했습니다'
+                : liveState === 'pending' ? '랭킹 데이터를 불러오는 중입니다...'
+                : '아직 랭킹에 표시할 댓글이 없습니다', liveState === 'pending' ? 'loading' : 'empty');
 
         document.getElementById('upModalContent').innerHTML = `
             <div class="up-tabs">${tabs}</div>
@@ -2552,7 +2574,10 @@ function renderUpModal(data, fetchLive = false) {
                 <div class="up-event-actions">${eventActions}</div>
             </div>
             <div class="up-ranking-list">${items}</div>
-            <div class="up-updated">${esc(updateLabel)}</div>
+            <div class="up-updated" role="status">${esc(updateLabel)}
+                ${liveState === 'error' ? `${ranking.length ? '<div>이전 랭킹을 표시하고 있습니다.</div>' : ''}
+                    <button type="button" class="btn btn-secondary" onclick="retryUpRanking()">다시 시도</button>` : ''}
+            </div>
             ${_upModalIsAutoPrompt ? `
                 <div class="up-popup-actions">
                     <button type="button" onclick="dismissUpAutoPopup('today')">오늘 하루 보지 않기</button>
@@ -2561,28 +2586,30 @@ function renderUpModal(data, fetchLive = false) {
     }
 
     const liveRequested = new Set();
-    async function refreshLiveRanking(idx) {
+    async function refreshLiveRanking(idx, force = false) {
         if (!fetchLive || liveRequested.has(idx)) return;
         const ev = events[idx];
         if (!ev) return;
         liveRequested.add(idx);
+        liveStates.set(idx, 'pending');
+        if (currentIdx === idx) renderTab(idx);
         const [bjId, postNo] = parseSoopUrl(ev.soop_url);
-        if (!bjId || !postNo) {
-            liveRequested.delete(idx);
-            return;
-        }
-        const result = await fetchSoopRankingLive(bjId, postNo);
+        let result = null;
+        try {
+            if (bjId && postNo) result = await fetchSoopRankingLive(bjId, postNo, { force });
+        } catch {}
+        liveStates.set(idx, result && !result.stale ? 'success' : 'error');
         if (result !== null) {
             ev.ranking = result.ranking;
             ev.live_updated_at = result.updatedAt;
             _upCurrentData = { updated: result.updatedAt || data.updated || null, events };
-            writeLocalUpRankingSnapshot(_upCurrentData);
-            if (currentIdx === idx) renderTab(idx);
-        } else {
-            liveRequested.delete(idx);
+            if (!result.stale) writeLocalUpRankingSnapshot(_upCurrentData);
         }
+        if (!result || result.stale) liveRequested.delete(idx);
+        if (currentIdx === idx) renderTab(idx);
     }
 
+    window.retryUpRanking = () => refreshLiveRanking(currentIdx, true);
     renderUpTab = (idx) => {
         renderTab(idx);
         refreshLiveRanking(idx);

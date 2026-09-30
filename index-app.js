@@ -1057,17 +1057,28 @@ let _liveStatusMemo = { at: 0, data: null };
 async function fetchLiveStatus() {
     if (_liveStatusMemo.data && Date.now() - _liveStatusMemo.at < 55000) return _liveStatusMemo.data;
 
-    const fromStation = d => ({
-        live: !!d?.broad?.broad_no,
-        title: String(d?.broad?.broad_title || '').trim(),
-        updated: new Date().toISOString(),
-    });
+    const fromStation = d => {
+        // 정상 OFF 응답은 station 정보와 명시적인 broad: null을 포함한다.
+        // 오류 JSON이나 누락된 broad를 방송 종료로 간주하지 않는다.
+        if (!d || d.station?.user_id !== 'beadyo97' ||
+            !Object.prototype.hasOwnProperty.call(d, 'broad')) return null;
+        const broad = d.broad;
+        if (broad !== null && (typeof broad !== 'object' || Array.isArray(broad) ||
+            !/^[1-9]\d*$/.test(String(broad.broad_no)) ||
+            typeof broad.broad_title !== 'string')) return null;
+        return {
+            live: broad !== null,
+            title: broad ? broad.broad_title.trim() : '',
+            updated: new Date().toISOString(),
+        };
+    };
 
     for (const url of [SOOP_STATION_API, `${PROXY}?url=${encodeURIComponent(SOOP_STATION_API)}`]) {
         try {
             const res = await fetchWithTimeout(url, 4000);
             if (!res.ok) continue;
             const data = fromStation(await res.json());
+            if (!data) continue;
             _liveStatusMemo = { at: Date.now(), data };
             return data;
         } catch {}
@@ -1075,7 +1086,7 @@ async function fetchLiveStatus() {
 
     try {
         const cached = await fetchRuntimeCache('live_status');
-        if (cached && typeof cached.live !== 'undefined' && isFreshRuntimeCache(cached, 30 * 60 * 1000)) {
+        if (cached && typeof cached.live === 'boolean' && isFreshRuntimeCache(cached, 30 * 60 * 1000)) {
             _liveStatusMemo = { at: Date.now(), data: cached };
             return cached;
         }

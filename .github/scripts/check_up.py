@@ -28,9 +28,18 @@ def fetch_replies(bj_id, post_no):
             }, timeout=15)
             print(f'  [page {page}] status={r.status_code}')
             if r.status_code != 200:
-                break
+                return None
             d = r.json()
-            data = d.get('data', [])
+            data = d.get('data')
+            total = d.get('meta', {}).get('lastPage')
+            if (not isinstance(data, list) or isinstance(total, bool)
+                    or not isinstance(total, (str, int)) or not str(total).isdigit()):
+                return None
+            last_page = int(total)
+            if ((last_page == 0 and (page != 1 or data))
+                    or (last_page > 0 and last_page < page)
+                    or (not data and (page > 1 or last_page > 1))):
+                return None
             for item in data:
                 if item.get('pCommentNo'):
                     all_items.append({
@@ -41,12 +50,11 @@ def fetch_replies(bj_id, post_no):
                         'up_count':    int(item.get('likeCnt', 0) or 0),
                         'reply_no':    str(item.get('pCommentNo', '')),
                     })
-            meta = d.get('meta', {})
-            print(f'  page {page}/{meta.get("lastPage", 1)}, got {len(data)} items')
-            if page >= meta.get('lastPage', 1):
+            print(f'  page {page}/{last_page}, got {len(data)} items')
+            if page >= last_page:
                 break
             page += 1
-        return [r for r in all_items if r['bj_id']] or None
+        return [r for r in all_items if r['bj_id']]
     except Exception as e:
         print(f'  curl_cffi error: {e}')
         return None
@@ -85,7 +93,8 @@ except Exception as e:
 try:
     with open('up.json', 'r', encoding='utf-8') as f:
         prev = json.load(f)
-    prev_map = {e['id']: e for e in prev.get('events', [])}
+    prev_map = {e['id']: {**e, 'live_updated_at': e.get('live_updated_at') or prev.get('updated')}
+                for e in prev.get('events', [])}
 except Exception:
     prev_map = {}
 
@@ -100,6 +109,7 @@ for ev in events:
             'title':    ev['title'],
             'soop_url': ev['soop_url'],
             'ranking':  prev_map.get(ev['id'], {}).get('ranking', []),
+            'live_updated_at': prev_map.get(ev['id'], {}).get('live_updated_at'),
         })
         continue
     print(f'Processing: [{ev["tab_name"]}] {ev["title"]} ({bj_id}/post/{post_no})')
@@ -129,6 +139,7 @@ for ev in events:
         'title':    ev['title'],
         'soop_url': ev['soop_url'],
         'ranking':  replies,
+        'live_updated_at': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
     })
 
 output = {
