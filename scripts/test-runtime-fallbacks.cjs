@@ -9,7 +9,7 @@ const app = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
 const index = fs.readFileSync(path.join(root, 'index-app.js'), 'utf8');
 const rankingSource = app.slice(app.indexOf('const UP_LIVE_CACHE_TTL_MS'), app.indexOf('\nfunction renderUpModal'));
 const liveSource = index.slice(index.indexOf("const PROXY ="), index.indexOf('\nasync function fetchRuntimeCache'));
-const freshSource = index.slice(index.indexOf('function isFreshRuntimeCache'), index.indexOf('\nlet _lastLiveStatusCheckAt'));
+const freshSource = index.slice(index.indexOf('function isFreshRuntimeCache'), index.indexOf('\nfunction checkLiveStatus'));
 const row = (id, likes) => ({pCommentNo: id, userId: `user${id}`, likeCnt: likes});
 const response = data => ({ok: true, status: 200, json: async () => data});
 const page = (items, lastPage = 1) => response({data: items, meta: {lastPage}});
@@ -90,7 +90,7 @@ test('overlapping forced ranking retries share one request', async () => {
 const station = broad => ({station: {user_id: 'beadyo97'}, broad});
 function live(fetchResponse, cache = null) {
     const calls = [];
-    const ctx = vm.createContext({Date,
+    const ctx = vm.createContext({Date, applyLiveStatus() {},
         fetchWithTimeout: async url => {const source = url.includes('deno.net') ? 'proxy' : 'direct'; calls.push(source); return fetchResponse(source);},
         fetchRuntimeCache: async () => {calls.push('cache'); return cache;}});
     vm.runInContext(liveSource + '\n' + freshSource, ctx);

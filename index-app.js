@@ -626,8 +626,12 @@ async function loadNoticeNotificationItems() {
         });
 }
 
-async function loadLiveNotificationItems() {
-    const data = await fetchLiveStatus();
+async function loadLiveNotificationItems(force = false) {
+    const data = await fetchLiveStatus({ force });
+    return liveNotificationItems(data || _liveStatusMemo.data);
+}
+
+function liveNotificationItems(data) {
     if (!data || typeof data.live === 'undefined') return [];
     const isLive = !!data.live;
     const updatedAt = data.updated || data.row_updated_at || '';
@@ -643,6 +647,17 @@ async function loadLiveNotificationItems() {
         href: 'https://www.sooplive.co.kr/station/beadyo97',
         attention: isLive,
     }];
+}
+
+function withCurrentLiveNotification(items) {
+    if (!_liveStatusMemo.data) return items;
+    return [...items.filter(item => item.type !== 'live'), ...liveNotificationItems(_liveStatusMemo.data)];
+}
+
+function applyLiveStatus(data) {
+    document.getElementById('live-badge')?.classList.toggle('is-live', data.live);
+    notificationState.items = withCurrentLiveNotification(notificationState.items);
+    renderNotificationPanel();
 }
 
 function normalizeUpNotificationEvents(data) {
@@ -756,6 +771,9 @@ async function refreshNotificationInbox(options = {}) {
     const force = options.force === true;
     if (notificationState.loading && notificationState.promise) return notificationState.promise;
     if (!force && notificationState.loadedAt && Date.now() - notificationState.loadedAt < NOTIFICATION_REFRESH_INTERVAL_MS) {
+        // 다른 알림의 2분 캐시와 독립적으로 LIVE의 55초 유효기간을 확인한다.
+        await fetchLiveStatus();
+        notificationState.items = withCurrentLiveNotification(notificationState.items);
         renderNotificationPanel();
         return notificationState.items;
     }
@@ -767,7 +785,7 @@ async function refreshNotificationInbox(options = {}) {
         const results = await Promise.allSettled([
             loadPatchNotificationItems(),
             loadNoticeNotificationItems(),
-            loadLiveNotificationItems(),
+            loadLiveNotificationItems(force),
             loadUpNotificationItems(),
         ]);
         const items = [];
@@ -778,7 +796,8 @@ async function refreshNotificationInbox(options = {}) {
                 notificationState.error = result.reason?.message || '알림 로드 실패';
             }
         });
-        notificationState.items = items;
+        // 다른 알림을 기다리는 동안 새 LIVE 조회가 끝났다면 최신 결과를 유지한다.
+        notificationState.items = withCurrentLiveNotification(items);
         notificationState.loadedAt = Date.now();
         notificationState.loading = false;
         notificationState.promise = null;
@@ -1054,9 +1073,24 @@ const SOOP_STATION_API = 'https://chapi.sooplive.co.kr/api/beadyo97/station';
 // 라이브 상태 단일 진입점. 헤더 배지와 알림 패널이 같은 값을 쓰도록 한 곳에서 조회한다.
 // 순서: SOOP 직접 호출 → Deno 프록시 → Supabase 캐시(최후 수단)
 let _liveStatusMemo = { at: 0, data: null };
-async function fetchLiveStatus() {
-    if (_liveStatusMemo.data && Date.now() - _liveStatusMemo.at < 55000) return _liveStatusMemo.data;
+let _liveStatusPromise = null;
+async function fetchLiveStatus({ force = false } = {}) {
+    // 강제 조회도 이미 진행 중인 요청에 합류하여 오래된 응답의 덮어쓰기를 막는다.
+    if (_liveStatusPromise) return _liveStatusPromise;
+    if (!force && _liveStatusMemo.data && Date.now() - _liveStatusMemo.at < 55000) return _liveStatusMemo.data;
+    _liveStatusPromise = fetchLiveStatusFresh().then(data => {
+        if (data) {
+            _liveStatusMemo = { at: Date.now(), data };
+            applyLiveStatus(data);
+        }
+        return data;
+    }).finally(() => {
+        _liveStatusPromise = null;
+    });
+    return _liveStatusPromise;
+}
 
+async function fetchLiveStatusFresh() {
     const fromStation = d => {
         // 정상 OFF 응답은 station 정보와 명시적인 broad: null을 포함한다.
         // 오류 JSON이나 누락된 broad를 방송 종료로 간주하지 않는다.
@@ -1079,7 +1113,6 @@ async function fetchLiveStatus() {
             if (!res.ok) continue;
             const data = fromStation(await res.json());
             if (!data) continue;
-            _liveStatusMemo = { at: Date.now(), data };
             return data;
         } catch {}
     }
@@ -1087,7 +1120,6 @@ async function fetchLiveStatus() {
     try {
         const cached = await fetchRuntimeCache('live_status');
         if (cached && typeof cached.live === 'boolean' && isFreshRuntimeCache(cached, 30 * 60 * 1000)) {
-            _liveStatusMemo = { at: Date.now(), data: cached };
             return cached;
         }
     } catch {}
@@ -1114,21 +1146,13 @@ function isFreshRuntimeCache(data, maxAgeMs) {
     return Number.isFinite(updatedAt) && Date.now() - updatedAt < maxAgeMs;
 }
 
-let _lastLiveStatusCheckAt = 0;
-async function checkLiveStatus(force = false) {
-    const now = Date.now();
-    if (!force && now - _lastLiveStatusCheckAt < 55000) return;
-    _lastLiveStatusCheckAt = now;
-    const badge = document.getElementById('live-badge');
-    if (!badge) return;
-
-    const data = await fetchLiveStatus();
-    if (data) badge.classList.toggle('is-live', !!data.live);
+function checkLiveStatus(force = false) {
+    return fetchLiveStatus({ force });
 }
 
 checkLiveStatus(true);
 setTimeout(checkLiveStatus, 3000);
-setInterval(checkLiveStatus, 60 * 1000);
+setInterval(() => checkLiveStatus(true), 60 * 1000);
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') checkLiveStatus(true);
 });
