@@ -2532,6 +2532,19 @@ function renderUpModal(data, fetchLive = false) {
         const ranking = displayUpRanking(ev);
         const baseUrl = soopPostBaseUrl(ev.soop_url);
         const highlightReplyNo = parseSoopHighlightReplyNo(ev.soop_url);
+        const highlighted = ranking.find(r => r._highlight);
+        const highlightSummary = highlighted
+            ? `<button type="button" class="up-highlight-summary" onclick="jumpToUpHighlight()">
+                <span class="up-highlight-label">하이라이트 댓글 · 순위로 이동 ↓</span>
+                <span class="up-highlight-person">
+                    <img class="up-highlight-profile" src="${esc(safeImageUrl(highlighted.profile_url, 'stickers/s8.png'))}" onerror="this.src='stickers/s8.png'" alt="">
+                    <span class="up-highlight-info"><strong>현재 ${Number(highlighted.rank)}위</strong>
+                    <span>${esc(highlighted.name)} · ${Number(highlighted.up_count).toLocaleString('ko-KR')} UP</span></span>
+                </span>
+              </button>`
+            : highlightReplyNo && liveState !== 'pending'
+                ? '<p class="up-highlight-missing" role="status">하이라이트 댓글을 현재 랭킹에서 찾지 못했습니다.</p>'
+                : '';
         const eventHref = safeUrl(ev.soop_url);
         const baseHref = safeUrl(baseUrl || ev.soop_url);
         const eventActions = highlightReplyNo
@@ -2573,6 +2586,7 @@ function renderUpModal(data, fetchLive = false) {
                 <div class="up-event-title">${esc(ev.title)}</div>
                 <div class="up-event-actions">${eventActions}</div>
             </div>
+            <div aria-live="polite">${highlightSummary}</div>
             <div class="up-ranking-list">${items}</div>
             <div class="up-updated" role="status">${esc(updateLabel)}
                 ${liveState === 'error' ? `${ranking.length ? '<div>이전 랭킹을 표시하고 있습니다.</div>' : ''}
@@ -3625,7 +3639,7 @@ function parseSoopHighlightReplyNo(url) {
     const normalized = normalizeOptionalUrl(url);
     if (!normalized) return '';
     try {
-        const m = new URL(normalized).hash.match(/^#comment_noti(\d+)$/);
+        const m = new URL(normalized).hash.match(/^#comment(?:_noti)?(\d+)$/i);
         return m ? m[1] : '';
     } catch {}
     return '';
@@ -3654,8 +3668,8 @@ function displayUpRanking(ev) {
     if (!highlightReplyNo) return ranking;
     const idx = ranking.findIndex(r => String(r.reply_no || '').replace(/\D/g, '') === highlightReplyNo);
     if (idx === -1) return ranking;
-    const highlighted = { ...ranking[idx], _highlight: true };
-    return [highlighted, ...ranking.filter((_, i) => i !== idx)];
+    ranking[idx]._highlight = true;
+    return ranking;
 }
 
 function _refreshUpModalDisplay() {
@@ -4075,3 +4089,9 @@ document.getElementById('monthLabel').addEventListener('click', () => {
         launchStickerRain();
     }
 });
+
+function jumpToUpHighlight() {
+    const target = document.querySelector('#upModalContent .up-rank-item.is-highlight');
+    target?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    target?.focus({ preventScroll: true });
+}

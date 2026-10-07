@@ -46,7 +46,7 @@
     <script defer src="supabase.min.js?v=supabase-2-112-2"></script>
     <script defer src="beadyo-common.js?v=mascot-webp-20260924"></script>
     <script defer src="patch-notes.js?v=common-20260918"></script>
-    <script defer src="index-app.js?v=profile-avatar-fallback-20260923"></script>
+    <script defer src="index-app.js?v=release-20261007"></script>
     <script>
         (() => {
             const key = 'beadyo:theme';
@@ -160,8 +160,8 @@
         }
 
         .header-link.icon-only {
-            width: 44px;
-            height: 44px;
+            width: 31px;
+            height: 31px;
             padding: 0;
             gap: 0;
             border: none;
@@ -181,12 +181,12 @@
         }
 
         .header-link.icon-only svg.soft-link-icon {
-            width: 44px;
-            height: 44px;
+            width: 31px;
+            height: 31px;
         }
 
         .header-links > a.header-link:not(.icon-only) {
-            min-height: 44px;
+            min-height: 31px;
             padding: 0 16px 0 10px;
             gap: 7px;
             border-radius: 23px;
@@ -778,8 +778,8 @@
             }
 
             .header-links > a.header-link:not(.icon-only) {
-                width: 44px;
-                min-height: 44px;
+                width: 31px;
+                min-height: 31px;
                 padding: 0;
                 gap: 0;
                 justify-content: center;
@@ -787,8 +787,8 @@
             }
 
             .header-links > a.header-link:not(.icon-only) svg.soft-link-icon {
-                width: 44px;
-                height: 44px;
+                width: 31px;
+                height: 31px;
             }
         }
 
@@ -800,16 +800,22 @@
 
             .header-link.icon-only,
             .header-links > a.header-link:not(.icon-only) {
-                width: 40px;
-                height: 40px;
-                min-height: 40px;
+                width: 28px;
+                height: 28px;
+                min-height: 28px;
             }
 
             .header-link.icon-only svg.soft-link-icon,
             .header-links > a.header-link:not(.icon-only) svg.soft-link-icon {
-                width: 40px;
-                height: 40px;
+                width: 28px;
+                height: 28px;
             }
+        }
+
+        @media (min-width: 641px) and (max-width: 1200px) {
+            .header-top { height: auto; min-height: 56px; flex-wrap: wrap; gap: 8px 20px; padding: 8px 24px; }
+            .logo-group { position: static; transform: none; }
+            .header-links { flex-wrap: wrap; }
         }
 
         /* ── 모바일 반응형 ── */

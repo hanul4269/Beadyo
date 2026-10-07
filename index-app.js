@@ -172,7 +172,7 @@ function markPwaGuideSeen() {
 }
 
 const TABS = [
-    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'schedule-audit-20260923' },
+    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'release-20261007' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
     { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'auth-session-clock-skew-20260828' },
     { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'auth-session-clock-skew-20260828' },
@@ -189,7 +189,7 @@ const MUSIC_PAGES = {
     songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'editor-rpc-20260918' },
     dance: { src: 'dance.html', directUrl: 'dance.html', assetVersion: 'music-dark-mode-20260822' },
     gembox: { src: 'gembox.html', directUrl: 'gembox.html', assetVersion: 'music-dark-mode-20260822' },
-    tractor: { src: 'tractor-service.html', directUrl: 'tractor-service.html', assetVersion: 'dark-panel-20260923' },
+    tractor: { src: 'tractor-service.html', directUrl: 'tractor-service.html', assetVersion: 'ep3-20261007' },
 };
 let currentMusicPage = 'songs';
 

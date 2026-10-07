@@ -20,10 +20,10 @@
     <link rel="stylesheet" href="tokens.css?v=20260918">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
     <link rel="preload" href="supabase.min.js?v=supabase-2-112-2" as="script">
-    <link rel="preload" href="app.js?v=schedule-audit-20260923" as="script">
+    <link rel="preload" href="app.js?v=release-20261007" as="script">
     <script defer src="supabase.min.js?v=supabase-2-112-2"></script>
     <script defer src="beadyo-common.js?v=mascot-webp-20260924"></script>
-    <script defer src="app.js?v=schedule-audit-20260923"></script>
+    <script defer src="app.js?v=release-20261007"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
@@ -1723,6 +1723,19 @@
                 position: static;
             }
         }
+        .up-highlight-summary {
+            display: grid; gap: 8px; width: 100%; margin: 0 0 12px;
+            padding: 14px; border: 2px solid var(--accent); border-radius: 11px;
+            background: var(--bg); color: var(--text); text-align: left; font: inherit; cursor: pointer;
+        }
+        .up-highlight-label { font-size: 12px; color: var(--muted); }
+        .up-highlight-person { display: grid; grid-template-columns: 48px minmax(0, 1fr); align-items: center; gap: 12px; }
+        .up-highlight-profile { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+        .up-highlight-info { display: grid; gap: 5px; min-width: 0; overflow-wrap: anywhere; }
+        .up-highlight-info strong { font-size: 25px; }
+        .up-highlight-summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        .up-highlight-missing { color: var(--muted); }
+        .up-rank-item.is-highlight .up-rank-num { font-size: 22px; }
         .up-ranking-list {
             display: flex;
             flex-direction: column;
