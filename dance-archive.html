@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="site-backdrop.js?v=release-20261011-all"></script>
+    <script src="site-theme.js?v=release-20261011-all"></script>
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="robots" content="noindex, nofollow">
     <title>구슬요 춤영상 검토페이지</title>
     <link rel="icon" href="logo-icon.webp">
-    <link rel="stylesheet" href="tokens.css?v=20260918">
+    <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
+    <script src="modal-focus.js?v=release-20261011-all"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
@@ -399,6 +402,10 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 8px 22px rgba(0,0,0,.18);
+            border: 0;
+            padding: 0;
+            color: var(--ink);
+            cursor: pointer;
         }
 
         .play-mark svg {
@@ -434,9 +441,23 @@
 
         .card-body {
             padding: 11px 12px 12px;
+            width: 100%;
+            border: 0;
+            background: transparent;
+            color: inherit;
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .play-mark:focus-visible,
+        .card-body:focus-visible {
+            outline: 3px solid var(--accent-dark);
+            outline-offset: -3px;
         }
 
         .card-title {
+            display: block;
             min-height: 42px;
             font-size: 14px;
             font-weight: 900;
@@ -802,7 +823,7 @@
             <section class="tools" aria-label="필터">
                 <label class="search">
                     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
-                    <input id="searchInput" type="search" placeholder="제목, 곡명, 태그 검색">
+                    <input id="searchInput" type="search" placeholder="제목, 곡명, 태그 검색" aria-label="춤영상 제목, 곡명, 태그 검색">
                 </label>
                 <div class="source-tabs" role="group" aria-label="출처">
                     <button class="source-tab active" data-source="all">전체</button>
@@ -902,7 +923,7 @@
     </div>
 
     <script src="supabase.min.js?v=supabase-2-112-2"></script>
-    <script src="beadyo-common.js?v=mascot-webp-20260924"></script>
+    <script src="beadyo-common.js?v=release-20261011-all"></script>
     <script src="dance-data.js?v=status-20260628"></script>
     <script src="dance-thumbnail-backfill.js?v=thumbs-20260628"></script>
     <script>
@@ -1168,14 +1189,17 @@
             frame.src = getVideoEmbedUrl(video);
             document.getElementById('videoModalOriginal').href = video.url;
             modal.hidden = false;
+            window.BeadyoModalFocus.activate(modal, closeVideoModal);
         }
 
         function closeVideoModal() {
             const modal = document.getElementById('videoModal');
+            if (modal.hidden) return;
             document.getElementById('videoModalFrame').src = '';
             resetVideoFrame();
             modal.classList.remove('soop-crop');
             modal.hidden = true;
+            window.BeadyoModalFocus.release(modal);
         }
 
         function filteredVideos() {
@@ -1215,20 +1239,22 @@
                             <input type="checkbox" data-select-id="${esc(video.id)}" ${selectedIds.has(video.id) ? 'checked' : ''}>
                             선택
                         </label>
-                        <span class="play-mark"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+                        <button class="play-mark" type="button" aria-label="${esc(video.title)} 영상 재생"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
                     </div>
-                    <div class="card-body">
-                        <div class="card-title">${esc(video.title)}</div>
-                        <div class="card-line"><span>${esc(video.date)}</span><span>${esc(video.song)}</span></div>
-                        <div class="tags">${video.tags.map(tag => `<span class="tag">${esc(tag)}</span>`).join('')}</div>
-                    </div>
+                    <button class="card-body" type="button" aria-label="${esc(video.title)} 검토 상세 보기">
+                        <span class="card-title">${esc(video.title)}</span>
+                        <span class="card-line"><span>${esc(video.date)}</span><span>${esc(video.song)}</span></span>
+                        <span class="tags">${video.tags.map(tag => `<span class="tag">${esc(tag)}</span>`).join('')}</span>
+                    </button>
                 </article>
             `).join('');
             grid.querySelectorAll('.video-card').forEach(card => {
                 card.addEventListener('click', () => {
+                    const restoreFocus = card.contains(document.activeElement);
                     selectedId = card.dataset.id;
                     renderGrid();
                     renderDetail();
+                    if (restoreFocus) [...grid.querySelectorAll('.video-card')].find(item => item.dataset.id === selectedId)?.querySelector('.card-body')?.focus({ preventScroll: true });
                 });
                 card.querySelector('.thumb').addEventListener('click', event => {
                     event.stopPropagation();
@@ -1236,14 +1262,19 @@
                     if (video) openVideoModal(video);
                 });
             });
+            grid.querySelectorAll('.select-video').forEach(label => {
+                label.addEventListener('click', event => event.stopPropagation());
+            });
             grid.querySelectorAll('input[data-select-id]').forEach(input => {
                 input.addEventListener('click', event => event.stopPropagation());
                 input.addEventListener('change', event => {
                     event.stopPropagation();
+                    const restoreFocus = document.activeElement === input;
                     const id = input.dataset.selectId;
                     if (input.checked) selectedIds.add(id);
                     else selectedIds.delete(id);
                     renderGrid();
+                    if (restoreFocus) [...grid.querySelectorAll('input[data-select-id]')].find(item => item.dataset.selectId === id)?.focus({ preventScroll: true });
                 });
             });
             if (!items.some(v => v.id === selectedId) && items[0]) {
@@ -1520,11 +1551,6 @@
         document.getElementById('bulkHideBtn').addEventListener('click', () => setSelectedStatus('hidden'));
         document.querySelectorAll('[data-close-video]').forEach(element => {
             element.addEventListener('click', closeVideoModal);
-        });
-        document.addEventListener('keydown', event => {
-            if (event.key === 'Escape' && !document.getElementById('videoModal').hidden) {
-                closeVideoModal();
-            }
         });
         updateImportStatus();
         renderSummary();

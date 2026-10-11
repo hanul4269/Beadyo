@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="site-backdrop.js?v=release-20261011-all"></script>
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="구슬요의 오리지널 곡, 커버곡과 라이브 영상을 한곳에서 찾아보세요.">
     <title>구슬요 음악 — 오리지널·커버·라이브 모음</title>
@@ -17,7 +18,7 @@
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
-    <link rel="stylesheet" href="tokens.css?v=20260918">
+    <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
@@ -614,6 +615,8 @@
             background-size: 200% 100%;
         }
     </style>
+    <script defer src="page-footer.js?v=release-20261011-all"></script>
+    <link rel="stylesheet" href="heading-font.css?v=release-20261011-all">
 </head>
 <body>
     <div class="songs-header">
@@ -646,6 +649,7 @@
     </div>
 
     <div class="songs-body">
+        <p id="music-selection" hidden style="margin: 0 0 16px; font-size: 13px; color: var(--text-sub)">검색에서 선택한 음악 영상 <button type="button" class="filter-tab" onclick="clearMusicSelection()">선택 해제</button></p>
         <div class="songs-grid" id="songs-grid"></div>
     </div>
 
@@ -696,7 +700,7 @@
     <div class="toast" id="toast"></div>
 
     <script src="supabase.min.js?v=supabase-2-112-2"></script>
-    <script src="beadyo-common.js?v=mascot-webp-20260924"></script>
+    <script src="beadyo-common.js?v=release-20261011-all"></script>
     <script>
         let db = null;
         let _dbReady = null;
@@ -710,7 +714,34 @@
             return _dbReady;
         }
 
-        let state = { songs: [], filter: 'all', query: '', sort: 'newest', isEditor: false, editingId: null };
+        let state = { songs: [], filter: 'all', query: '', videoId: '', sort: 'newest', isEditor: false, editingId: null };
+
+        function readMusicRoute() {
+            const params = new URLSearchParams(location.search);
+            const videoId = (params.get('video') || '').trim();
+            state.videoId = /^[a-zA-Z0-9_-]+$/.test(videoId) ? videoId : '';
+            state.query = (params.get('q') || '').trim();
+            state.filter = ['original', 'cover', 'live'].includes(params.get('type')) ? params.get('type') : 'all';
+            state.sort = ['oldest', 'title'].includes(params.get('sort')) ? params.get('sort') : 'newest';
+            document.getElementById('search-input').value = state.query;
+            document.getElementById('sort-select').value = state.sort;
+            document.querySelectorAll('.filter-tab').forEach((el, i) => el.classList.toggle('active', ['all','original','cover','live'][i] === state.filter));
+        }
+
+        function syncMusicRoute() {
+            const url = new URL(location.href);
+            for (const [key, value] of Object.entries({ q: state.query, video: state.videoId, type: state.filter === 'all' ? '' : state.filter, sort: state.sort === 'newest' ? '' : state.sort })) {
+                if (value) url.searchParams.set(key, value);
+                else url.searchParams.delete(key);
+            }
+            history.replaceState(history.state, '', url.pathname + url.search + url.hash);
+        }
+
+        function clearMusicSelection() {
+            state.videoId = '';
+            syncMusicRoute();
+            renderGrid();
+        }
 
         // ─── YouTube 유틸 ───
         function extractVideoId(url) {
@@ -747,6 +778,8 @@
         // ─── 필터 / 검색 ───
         function setFilter(f) {
             state.filter = f;
+            state.videoId = '';
+            syncMusicRoute();
             document.querySelectorAll('.filter-tab').forEach((el, i) => {
                 el.classList.toggle('active', ['all','original','cover','live'][i] === f);
             });
@@ -755,11 +788,14 @@
 
         function setSort(sort) {
             state.sort = sort;
+            syncMusicRoute();
             renderGrid();
         }
 
         function onSearchInput(val) {
             state.query = val.trim();
+            state.videoId = '';
+            syncMusicRoute();
             renderGrid();
         }
 
@@ -794,9 +830,12 @@
         // ─── 렌더 ───
         function renderGrid() {
             const grid = document.getElementById('songs-grid');
-            let items = state.songs.filter(s => state.filter === 'all' || s.type === state.filter);
-            if (state.query) {
-                items = items.filter(s => matchesQuery(s.title, state.query));
+            const selection = document.getElementById('music-selection');
+            selection.hidden = !state.videoId;
+            let items = state.songs.filter(s => state.videoId ? String(s.id) === state.videoId : state.filter === 'all' || s.type === state.filter);
+            if (state.query && !state.videoId) {
+                const query = BeadyoCommon.normalizeUnifiedSearchText(state.query);
+                items = items.filter(s => matchesQuery(s.title, state.query) || BeadyoCommon.normalizeUnifiedSearchText([s.title, s.collab].filter(Boolean).join(' ')).includes(query));
             }
             items = [...items].sort((a, b) => {
                 if (state.sort === 'oldest') return String(a.upload_date || '').localeCompare(String(b.upload_date || ''));
@@ -805,7 +844,9 @@
             });
 
             if (!items.length) {
-                const label = state.query
+                const label = state.videoId
+                    ? '선택한 음악 영상을 찾지 못했어요'
+                    : state.query
                     ? `"${esc(state.query)}" 검색 결과가 없어요`
                     : state.filter === 'all' ? '등록된 노래가 없어요'
                     : state.filter === 'original' ? '오리지널 곡이 없어요'
@@ -833,7 +874,7 @@
                     : '';
                 const fallbackHtml = `<div class="song-thumb-fallback" style="${thumb ? 'display:none' : ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>`;
 
-                return `<a class="song-tile" href="${esc(href)}" target="_blank" rel="noopener noreferrer">
+                return `<a class="song-tile" data-music-id="${esc(song.id)}" href="${esc(href)}" target="_blank" rel="noopener noreferrer">
                     <div class="song-thumb-wrap">
                         ${thumbHtml}${fallbackHtml}
                         <div class="play-overlay">
@@ -949,10 +990,15 @@
         }
 
         function parseDate(raw) {
-            const digits = raw.replace(/\D/g, '');
-            if (digits.length === 8) return `${digits.slice(0,4)}-${digits.slice(4,6)}-${digits.slice(6,8)}`;
-            if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
-            return null;
+            const value = String(raw || '').trim();
+            if (!/^(\d{8}|\d{4}-\d{2}-\d{2})$/.test(value)) return null;
+            const digits = value.replace(/-/g, '');
+            const year = Number(digits.slice(0,4)), month = Number(digits.slice(4,6)), day = Number(digits.slice(6,8));
+            const date = new Date(0);
+            date.setFullYear(year, month - 1, day);
+            date.setHours(0, 0, 0, 0);
+            if (year < 1 || date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) return null;
+            return `${digits.slice(0,4)}-${digits.slice(4,6)}-${digits.slice(6,8)}`;
         }
 
         async function saveSong() {
@@ -1026,19 +1072,26 @@
             return data === true;
         }
 
+        let editorGeneration = 0;
         window.addEventListener('message', async event => {
-            const allowed = ['https://beadyo.com', 'http://localhost:3000', 'http://127.0.0.1:3000'];
-            if (!allowed.includes(event.origin) && event.origin !== window.location.origin) return;
+            if (!beadyoAllowedMessageOrigin(event.origin)) return;
             const { data } = event;
             if (!data) return;
             if (data.type === 'beadyo-auth-sync') {
                 const user = data.user;
-                state.isEditor = user ? await checkEditor(user) : false;
+                const generation = ++editorGeneration;
+                state.isEditor = false;
+                document.body.classList.remove('is-editor');
+                const canEdit = user ? await checkEditor(user) : false;
+                if (generation !== editorGeneration) return;
+                state.isEditor = canEdit;
                 document.body.classList.toggle('is-editor', state.isEditor);
             }
         });
 
         // ─── 초기 로드 ───
+        readMusicRoute();
+        window.addEventListener('popstate', () => { readMusicRoute(); renderGrid(); });
         loadSongs();
     </script>
 </body>

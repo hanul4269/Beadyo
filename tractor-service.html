@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="site-backdrop.js?v=release-20261011-all"></script>
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="구슬요의 음악 토크쇼 트랙터서비스 에피소드와 출연진, 관련 영상을 확인하세요.">
     <title>트랙터서비스 — 구슬요 음악 토크쇼</title>
@@ -17,8 +18,9 @@
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
-    <link rel="stylesheet" href="tokens.css?v=20260918">
-    <script src="beadyo-common.js?v=mascot-webp-20260924"></script>
+    <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
+    <script src="beadyo-common.js?v=release-20261011-all"></script>
+    <script src="modal-focus.js?v=release-20261011-all"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://www.youtube.com">
     <link rel="preconnect" href="https://i.ytimg.com">
@@ -809,6 +811,7 @@
             .video-modal { padding: 12px; }
         }
     </style>
+    <script defer src="page-footer.js?v=release-20261011-all"></script>
 </head>
 <body>
     <main class="page">
@@ -973,16 +976,18 @@
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
+            window.BeadyoModalFocus.activate(modal, closeVideoModal);
         }
 
         function closeVideoModal() {
             const modal = document.getElementById('videoModal');
             const frameWrap = document.getElementById('videoFrameWrap');
-            if (!modal || !frameWrap) return;
+            if (!modal || !frameWrap || !modal.classList.contains('open')) return;
             modal.classList.remove('open');
             modal.setAttribute('aria-hidden', 'true');
             frameWrap.innerHTML = '';
             document.body.style.overflow = '';
+            window.BeadyoModalFocus.release(modal);
         }
 
         function handleVideoBackdrop(event) {
@@ -995,9 +1000,6 @@
             });
         });
 
-        document.addEventListener('keydown', event => {
-            if (event.key === 'Escape') closeVideoModal();
-        });
     </script>
 </body>
 </html>

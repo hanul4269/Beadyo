@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="site-backdrop.js?v=release-20261011-all"></script>
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="구슬요의 보석함 시즌별 출연진과 커버곡 영상을 모아보세요.">
     <title>구슬요의 보석함 — 시즌별 출연진과 커버곡</title>
@@ -17,16 +18,14 @@
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
-    <link rel="stylesheet" href="tokens.css?v=20260918">
-    <script src="beadyo-common.js?v=mascot-webp-20260924"></script>
+    <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
+    <script src="beadyo-common.js?v=release-20261011-all"></script>
+    <script src="modal-focus.js?v=release-20261011-all"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
-    <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="heading-font.css?v=release-20261011-all">
     <noscript>
         <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@800;900&display=swap" rel="stylesheet">
     </noscript>
     <script>
         (() => {
@@ -101,18 +100,29 @@
             max-width: 720px;
         }
         h1 {
-            font-family: 'AppleMyungjo', 'Hahmlet', 'Noto Serif KR', 'Nanum Myeongjo', 'Batang', serif;
+            --title-fill: linear-gradient(180deg, #a5ce61 0%, #7fb83f 48%, #4f7f25 100%);
+            --title-outline: #f5faed;
+            --title-depth: rgba(61,95,29,0.5);
+            --title-glow: rgba(127,184,63,0.22);
+            font-family: var(--heading-font);
             font-size: 58px;
-            line-height: 0.98;
-            letter-spacing: 0;
-            color: #2d5f70;
-            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            color: var(--accent-dark);
+            font-weight: 800;
             word-break: keep-all;
-            -webkit-text-stroke: 0.35px rgba(255,255,255,0.78);
-            text-shadow:
-                0 2px 0 rgba(255,255,255,0.92),
-                0 5px 12px rgba(47,95,111,0.16),
-                0 0 18px rgba(127,184,63,0.18);
+            -webkit-text-stroke: 0.6px var(--title-outline);
+            filter:
+                drop-shadow(0 2px 0 var(--title-depth))
+                drop-shadow(0 5px 8px var(--title-glow));
+        }
+        @supports ((background-clip: text) or (-webkit-background-clip: text)) {
+            h1 {
+                background-image: var(--title-fill);
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
         }
         .hero-copy {
             max-width: 680px;
@@ -650,12 +660,11 @@
             background: linear-gradient(180deg, rgba(17,23,15,0.18), rgba(17,23,15,0.72));
         }
         html[data-theme="dark"] h1 {
-            color: #dff0d4;
-            -webkit-text-stroke-color: rgba(7,14,7,0.34);
-            text-shadow:
-                0 2px 0 rgba(7,14,7,0.86),
-                0 8px 18px rgba(0,0,0,0.34),
-                0 0 18px rgba(139,195,74,0.18);
+            --title-fill: linear-gradient(180deg, #e1f6b9 0%, #b4dc7b 48%, #8bc34a 100%);
+            --title-outline: rgba(232,250,207,0.55);
+            --title-depth: rgba(7,14,7,0.88);
+            --title-glow: rgba(139,195,74,0.16);
+            color: var(--accent-dark);
         }
         html[data-theme="dark"] .hero-copy,
         html[data-theme="dark"] .hero-meta,
@@ -738,7 +747,7 @@
                 min-height: 266px;
                 padding: 10px 12px 16px;
             }
-            h1 { font-size: 40px; line-height: 1; }
+            h1 { font-size: 40px; }
             .hero-copy { font-size: 13px; max-width: 94%; line-height: 1.38; }
             .hero-actions { gap: 7px; margin-top: 8px; }
             .hero-button { min-height: 34px; padding: 0 12px; font-size: 12px; }
@@ -751,6 +760,7 @@
             .video-head { min-height: 44px; padding-left: 12px; }
         }
     </style>
+    <script defer src="page-footer.js?v=release-20261011-all"></script>
 </head>
 <body>
     <main class="page-shell">
@@ -1144,25 +1154,23 @@
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
+            window.BeadyoModalFocus.activate(modal, closeVideoModal);
         }
 
         function closeVideoModal() {
             const modal = document.getElementById('videoModal');
             const frameWrap = document.getElementById('videoFrameWrap');
-            if (!modal || !frameWrap) return;
+            if (!modal || !frameWrap || !modal.classList.contains('open')) return;
             modal.classList.remove('open');
             modal.setAttribute('aria-hidden', 'true');
             frameWrap.innerHTML = '';
             document.body.style.overflow = '';
+            window.BeadyoModalFocus.release(modal);
         }
 
         function handleVideoBackdrop(event) {
             if (event.target?.id === 'videoModal') closeVideoModal();
         }
-
-        document.addEventListener('keydown', event => {
-            if (event.key === 'Escape') closeVideoModal();
-        });
 
         renderSeasonTabs();
         renderCast();

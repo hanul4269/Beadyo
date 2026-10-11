@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="site-backdrop.js?v=release-20261011-all"></script>
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="구슬요가 직접 또는 공동으로 기획한 방송 콘텐츠 기록을 살펴보세요.">
     <title>구슬요 CONTENT 아카이브</title>
@@ -17,7 +18,7 @@
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
-    <link rel="stylesheet" href="tokens.css?v=20260923">
+    <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
@@ -41,10 +42,16 @@
             window.addEventListener('storage', event => { if (event.key === key) apply(event.newValue); });
         })();
     </script>
-    <link rel="stylesheet" href="content.css?v=content-archive-20260923-1">
+    <link rel="stylesheet" href="content.css?v=release-20261011-all">
     <script defer src="supabase.min.js?v=supabase-2-112-2"></script>
-    <script defer src="beadyo-common.js?v=mascot-webp-20260924"></script>
-    <script defer src="content.js?v=common-20260918"></script>
+    <script defer src="beadyo-common.js?v=release-20261011-all"></script>
+    <link rel="stylesheet" href="explore.css?v=release-20261011-all">
+    <script defer src="explore-data.js?v=release-20261011-all"></script>
+    <script defer src="explore.js?v=release-20261011-all"></script>
+    <script defer src="content-series.js?v=release-20261011-all"></script>
+    <script defer src="content.js?v=release-20261011-all"></script>
+    <script defer src="page-footer.js?v=release-20261011-all"></script>
+    <link rel="stylesheet" href="heading-font.css?v=release-20261011-all">
 </head>
 <body>
     <header class="archive-header">
@@ -66,10 +73,12 @@
                 <input id="content-search" type="search" autocomplete="off" placeholder="콘텐츠명, 설명, 출연자, 태그 검색">
             </label>
             <div class="select-row">
+                <label><span class="sr-only">시리즈</span><select id="series-filter"><option value="">전체 시리즈</option></select></label>
                 <label><span class="sr-only">연도</span><select id="year-filter"><option value="">전체 연도</option></select></label>
                 <label><span class="sr-only">콘텐츠 분류</span><select id="category-filter"><option value="">전체 분류</option></select></label>
                 <label><span class="sr-only">기획 형태</span><select id="planning-filter"><option value="">전체 기획 형태</option></select></label>
                 <label><span class="sr-only">정렬</span><select id="sort-filter">
+                    <option value="series" hidden>회차순</option>
                     <option value="newest">최신순</option>
                     <option value="oldest">오래된순</option>
                     <option value="title">이름순</option>
@@ -111,6 +120,10 @@
                     <label class="field required"><span>콘텐츠명</span><input id="field-title" name="title" type="text" maxlength="200" required placeholder="콘텐츠 이름"></label>
                 </div>
                 <p class="duplicate-warning" id="duplicate-warning" hidden></p>
+                <div class="form-grid two-col">
+                    <label class="field"><span>시리즈</span><select id="field-series"><option value="">시리즈 없음</option></select></label>
+                    <label class="field"><span>회차 번호 (확인된 경우만)</span><input id="field-episode" type="number" min="1" max="9999" step="1" placeholder="미등록 시 날짜순"></label>
+                </div>
 
                 <label class="field"><span>한 줄 소개</span><input id="field-summary" name="summary" type="text" maxlength="300" placeholder="카드에 표시할 짧은 소개"></label>
                 <label class="field"><span>상세 설명</span><textarea id="field-description" name="description" rows="5" placeholder="콘텐츠의 배경과 내용을 자세히 기록해 주세요"></textarea></label>

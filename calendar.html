@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="site-backdrop.js?v=release-20261011-all"></script>
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="구슬요의 방송 일정과 예정된 콘텐츠를 달력에서 한눈에 확인하세요.">
     <title>구슬요 일정표 — 방송 일정과 예정 콘텐츠</title>
@@ -17,13 +18,16 @@
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
-    <link rel="stylesheet" href="tokens.css?v=20260918">
+    <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
     <link rel="preload" href="supabase.min.js?v=supabase-2-112-2" as="script">
-    <link rel="preload" href="app.js?v=release-20261007" as="script">
+    <link rel="preload" href="app.js?v=release-20261011-all" as="script">
     <script defer src="supabase.min.js?v=supabase-2-112-2"></script>
-    <script defer src="beadyo-common.js?v=mascot-webp-20260924"></script>
-    <script defer src="app.js?v=release-20261007"></script>
+    <script defer src="beadyo-common.js?v=release-20261011-all"></script>
+    <link rel="stylesheet" href="explore.css?v=release-20261011-all">
+    <script defer src="explore-data.js?v=release-20261011-all"></script>
+    <script defer src="explore.js?v=release-20261011-all"></script>
+    <script defer src="app.js?v=release-20261011-all"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
@@ -151,7 +155,7 @@
             justify-content: center;
             padding: 10px 20px 10px;
         }
-        .nav-center { display: flex; align-items: center; gap: 10px; }
+        .nav-center { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; max-width: 100%; }
 
         .nav-btn {
             width: 42px; height: 42px;
@@ -220,6 +224,7 @@
             font-weight: 700;
             min-width: 136px;
             text-align: center;
+            white-space: nowrap;
         }
 
         .today-btn {
@@ -355,6 +360,23 @@
             align-items: flex-start;
         }
         .cal-area { flex: 1; min-width: 0; }
+        .cal-sheet-link {
+            display: inline-flex;
+            align-items: center;
+            min-height: 32px;
+            padding: 4px 10px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: var(--surface);
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .cal-sheet-link:hover { color: var(--accent-dark); background: var(--accent-light); }
+        .cal-sheet-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
 
         /* ── 캘린더 그리드 ── */
         .cal-head-row {
@@ -1323,95 +1345,6 @@
         .memo-modal-card.is-link { cursor: pointer; border-left: 3px solid #8bc34a; }
         .memo-modal-card.is-link:hover { background: #f0f9e5; }
 
-        /* ── 범례 사이드바 ── */
-        .legend-sidebar {
-            width: 112px;
-            flex-shrink: 0;
-            padding-top: 28px;
-        }
-        .up-launcher {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            margin-bottom: 10px;
-            padding: 8px 10px;
-            border: 1px solid rgba(139,195,74,0.28);
-            border-radius: 14px;
-            background: linear-gradient(180deg, #f8fff1 0%, #e7f6d1 100%);
-            color: #6e9731;
-            box-shadow: 0 4px 12px rgba(139,195,74,0.14);
-            font: inherit;
-            font-size: 12px;
-            font-weight: 900;
-            letter-spacing: 0.3px;
-            cursor: pointer;
-            transition: transform 0.12s, box-shadow 0.12s, filter 0.15s;
-        }
-        .up-launcher:hover {
-            filter: brightness(0.98);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(139,195,74,0.18);
-        }
-        .up-launcher-emoji {
-            width: 18px;
-            height: 18px;
-            object-fit: contain;
-            flex-shrink: 0;
-        }
-        .legend-title {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--muted);
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            margin-bottom: 9px;
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 12px;
-            color: var(--text);
-            margin-bottom: 4px;
-            padding: 3px 5px;
-            border-radius: 5px;
-            transition: background 0.15s;
-        }
-        .is-editor .legend-item { cursor: pointer; }
-        .is-editor .legend-item:hover { background: var(--accent-light); }
-        .legend-add {
-            margin-left: auto;
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--accent);
-            opacity: 0;
-            transition: opacity 0.15s;
-            line-height: 1;
-        }
-        .is-editor .legend-item:hover .legend-add { opacity: 1; }
-        .legend-dot {
-            width: 12px; height: 12px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 9px;
-            line-height: 1;
-        }
-        .legend-sticker {
-            margin-top: 16px;
-            text-align: center;
-            opacity: 0.88;
-        }
-        .legend-sticker img {
-            width: 108px;
-            max-width: 100%;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.12));
-        }
-
         /* ── 모달 공통 ── */
         .modal-overlay {
             display: none;
@@ -1457,6 +1390,10 @@
             white-space: pre-wrap;
             word-break: break-word;
             overflow-wrap: break-word;
+        }
+        #viewContent > .modal-title {
+            font-size: clamp(20px, 6vw, 26px);
+            word-break: keep-all;
         }
 
         /* ── 공지 팝업 ── */
@@ -2888,7 +2825,6 @@
 
         /* ── 반응형 ── */
         @media (max-width: 900px) {
-            .legend-sidebar { display: none; }
             .memo-sidebar   { display: none; }
         }
         @media (max-width: 640px) {
@@ -2897,6 +2833,8 @@
                 background-image: none;
                 height: 100dvh;
                 overflow: hidden;
+                display: flex;
+                flex-direction: column;
             }
             .header {
                 background: transparent;
@@ -2904,6 +2842,7 @@
                 border-radius: 0;
                 min-height: 0;
                 height: auto;
+                flex-shrink: 0;
                 padding: 4px 14px 0;
                 position: relative;
             }
@@ -2923,6 +2862,8 @@
                 box-shadow: 0 2px 8px rgba(0,0,0,0.04);
             }
             .cal-nav {
+                display: block;
+                flex-shrink: 0;
                 padding: 8px 16px 8px;
             }
             .nav-center {
@@ -2930,10 +2871,12 @@
                 justify-content: center;
                 background: #fff;
                 border: 1px solid #f5d5dd;
-                border-radius: 999px;
+                border-radius: 18px;
                 box-shadow: 0 7px 20px rgba(0,0,0,0.06);
-                padding: 11px 16px;
+                gap: 8px;
+                padding: 10px 12px;
             }
+            .nav-center .cal-sheet-link { min-height: 40px; }
             .nav-btn {
                 display: none;
             }
@@ -2966,7 +2909,8 @@
             }
             .mobile-schedule-view {
                 display: block;
-                height: calc(100dvh - 146px);
+                flex: 1;
+                min-height: 0;
                 padding: 8px 14px 0;
                 overflow-y: auto;
             }
@@ -3191,7 +3135,6 @@
         html[data-theme="dark"] .profile-menu button:hover,
         html[data-theme="dark"] .today-btn:hover,
         html[data-theme="dark"] .view-toggle button:hover,
-        html[data-theme="dark"] .is-editor .legend-item:hover,
         html[data-theme="dark"] .memo-modal-card.is-link:hover,
         html[data-theme="dark"] .up-popup-actions button:hover,
         html[data-theme="dark"] .broadcast-vod-add:hover,
@@ -3399,6 +3342,8 @@
             }
         }
     </style>
+    <script defer src="page-footer.js?v=release-20261011-all"></script>
+    <link rel="stylesheet" href="heading-font.css?v=release-20261011-all">
 </head>
 <body>
 
@@ -3422,6 +3367,7 @@
                 <svg viewBox="0 0 24 24"><path d="M4 16.5V20h3.5L18.2 9.3l-3.5-3.5L4 16.5Z"/><path d="m13.5 7 3.5 3.5"/><path d="M5 21h14"/></svg>
             </button>
         </div>
+        <a class="cal-sheet-link" href="./#schedule" target="_top">구) 스케쥴 바로가기</a>
     </div>
 </div>
 
@@ -3444,7 +3390,6 @@
         </div>
         <div class="cal-grid" id="calGrid"></div>
     </div>
-    <div class="legend-sidebar" id="legend"></div>
 </div>
 </div>
 
@@ -3648,8 +3593,8 @@
                     <input type="text" id="newUpTitle" placeholder="제목 (예: [종겜동 운동회2] 참가 모집)">
                     <input type="url" id="newUpUrl" placeholder="SOOP 게시글 또는 하이라이트 댓글 URL">
                     <label class="up-form-check">
-                        <input type="checkbox" id="newUpStartup">
-                        사이트 접속 시 먼저 띄우기
+                        <input type="checkbox" id="newUpStartup" disabled title="현재 자동 팝업 대신 HOME 카드로 안내합니다">
+                        자동 팝업 없이 HOME 카드로 안내
                     </label>
                     <div style="display:flex;gap:8px;align-items:center;">
                         <input type="number" id="newUpOrder" placeholder="순서 (기본 0)" style="width:130px;">

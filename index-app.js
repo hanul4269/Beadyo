@@ -1,4 +1,4 @@
-const FALLBACK_ASSET_VERSION = 'development-request-comments-20260902';
+const FALLBACK_ASSET_VERSION = 'release-20261011-all';
 const IS_LOCAL_HOST = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(window.location.hostname);
 const APP_ASSET_VERSION = (() => {
     try {
@@ -45,7 +45,7 @@ function withFrameAssetVersion(src, assetVersion = APP_ASSET_VERSION) {
     const url = new URL(src, window.location.href);
     if (url.origin !== window.location.origin) return src;
     url.searchParams.set('v', IS_LOCAL_HOST ? FRAME_ASSET_VERSION : assetVersion);
-    return `${url.pathname.replace(/^\//, '')}${url.search}${url.hash}`;
+    return `${url.pathname}${url.search}${url.hash}`;
 }
 
 function normalizeTheme(value) {
@@ -110,7 +110,8 @@ function syncThemeToFrames(targetFrame = null) {
 
 const SONGBOOK_TAB_INDEX = 2;
 let pendingSongbookSongId = '';
-
+let pendingSongbookDetail = false;
+let pendingLiveDate = '';
 function normalizeSongbookSongId(value) {
     const id = String(value ?? '').trim();
     return /^[a-zA-Z0-9_-]+$/.test(id) ? id : '';
@@ -122,15 +123,18 @@ function deliverPendingSongbookSong(frame = document.getElementById(`frame-${SON
     frame.contentWindow.postMessage({
         type: 'beadyo-focus-songbook-song',
         songId: pendingSongbookSongId,
+        detail: pendingSongbookDetail,
     }, origin);
     pendingSongbookSongId = '';
+    pendingSongbookDetail = false;
     return true;
 }
 
-function openSongbookSong(songId) {
+function openSongbookSong(songId, options = {}) {
     const targetId = normalizeSongbookSongId(songId);
     if (!targetId) return;
     pendingSongbookSongId = targetId;
+    pendingSongbookDetail = options.detail === true;
     BeadyoCommon.closeUnifiedSearch();
     switchTab(SONGBOOK_TAB_INDEX);
     requestAnimationFrame(() => deliverPendingSongbookSong());
@@ -172,24 +176,26 @@ function markPwaGuideSeen() {
 }
 
 const TABS = [
-    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'release-20261007' },
+    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'release-20261011-all' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
-    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'auth-session-clock-skew-20260828' },
-    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'auth-session-clock-skew-20260828' },
-    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'editor-rpc-20260918' },
-    { type: 'content', src: 'content.html', directUrl: 'content.html', assetVersion: 'theme-tokens-20260923' },
-    { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'pinball-fullscreen-20260923' },
+    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'release-20261011-all' },
+    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'release-20261011-all' },
+    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'release-20261011-all' },
+    { type: 'content', src: 'content.html', directUrl: 'content.html', assetVersion: 'release-20261011-all' },
+    { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'release-20261011-all' },
+    { type: 'home' },
 ];
 
 const CONTENT_TAB_INDEX = 5;
 const GAME_TAB_INDEX = 6;
-const TAB_ROUTES = ['calendar', 'schedule', 'songbook', 'live', 'music', 'content', 'games'];
+const HOME_TAB_INDEX = 7;
+const TAB_ROUTES = ['calendar', 'schedule', 'songbook', 'live', 'music', 'content', 'games', 'home'];
 const MUSIC_TAB_INDEX = 4;
 const MUSIC_PAGES = {
-    songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'editor-rpc-20260918' },
-    dance: { src: 'dance.html', directUrl: 'dance.html', assetVersion: 'music-dark-mode-20260822' },
-    gembox: { src: 'gembox.html', directUrl: 'gembox.html', assetVersion: 'music-dark-mode-20260822' },
-    tractor: { src: 'tractor-service.html', directUrl: 'tractor-service.html', assetVersion: 'ep3-20261007' },
+    songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'release-20261011-all' },
+    dance: { src: 'dance.html', directUrl: 'dance.html', assetVersion: 'release-20261011-all' },
+    gembox: { src: 'gembox.html', directUrl: 'gembox.html', assetVersion: 'release-20261011-all' },
+    tractor: { src: 'tractor-service.html', directUrl: 'tractor-service.html', assetVersion: 'release-20261011-all' },
 };
 let currentMusicPage = 'songs';
 
@@ -223,11 +229,15 @@ function routeToTabIndex() {
 }
 
 function syncTabUrl(index, replace = false) {
+    if (authServiceUnavailable && window.location.hash.includes('access_token=')) return;
     const route = index === MUSIC_TAB_INDEX
         ? (currentMusicPage === 'songs' ? 'music' : currentMusicPage)
         : TAB_ROUTES[index];
     if (!route) return;
-    const nextUrl = `${window.location.pathname}${window.location.search}#${route}`;
+    const params = new URLSearchParams(window.location.search);
+    if (!replace) params.delete('tab');
+    const search = params.toString();
+    const nextUrl = `${window.location.pathname}${search ? `?${search}` : ''}#${route}`;
     if (window.location.href.endsWith(`#${route}`)) return;
     const method = replace ? 'replaceState' : 'pushState';
     history[method]({ tab: index }, document.title, nextUrl);
@@ -251,14 +261,48 @@ function scheduleUrl(tab) {
 }
 
 const loaded = new Set();
-const authDb = getBeadyoSupabaseClient({
-    auth: {
-        detectSessionInUrl: false,
-        flowType: 'pkce',
-    },
-    global: { fetch: fetchWithJwtFutureRetry },
-});
+const pendingFrameLoads = new Map();
+const FRAME_LOAD_TIMEOUT_MS = 20000;
+const AUTH_UNAVAILABLE_MESSAGE = '로그인 서비스를 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요.';
+let authServiceUnavailable = false;
+const authDb = (() => {
+    try {
+        return getBeadyoSupabaseClient({
+            auth: {
+                detectSessionInUrl: false,
+                flowType: 'pkce',
+            },
+            global: { fetch: fetchWithJwtFutureRetry },
+        });
+    } catch (error) {
+        authServiceUnavailable = true;
+        console.error('로그인 서비스 초기화 실패:', error);
+        return null;
+    }
+})();
 let authUser = null;
+
+function showAuthUnavailable() {
+    authServiceUnavailable = true;
+    document.getElementById('auth-badge')?.classList.remove('show');
+    document.querySelectorAll('.login-btn').forEach(button => {
+        button.style.display = '';
+        button.textContent = '로그인 연결 오류';
+        button.title = AUTH_UNAVAILABLE_MESSAGE;
+        button.setAttribute('aria-label', AUTH_UNAVAILABLE_MESSAGE);
+    });
+    const overlay = document.getElementById('login-overlay');
+    const status = overlay?.querySelector('.login-modal-subtitle');
+    if (status) {
+        status.textContent = AUTH_UNAVAILABLE_MESSAGE;
+        status.setAttribute('role', 'status');
+    }
+    const googleButton = overlay?.querySelector('.login-google-btn');
+    if (googleButton) {
+        googleButton.disabled = true;
+        googleButton.title = AUTH_UNAVAILABLE_MESSAGE;
+    }
+}
 
 function isJwtIssuedAtFutureError(error) {
     const message = String(error?.message || error?.error_description || error || '');
@@ -336,7 +380,7 @@ async function fetchWithJwtFutureRetry(input, init) {
 }
 
 async function isEditorUser(user) {
-    if (!user) return false;
+    if (!user || !authDb || authServiceUnavailable) return false;
     try {
         const { data, error } = await authDb.rpc('is_beadyo_editor');
         if (error) {
@@ -357,6 +401,14 @@ function getFrameUrl(index) {
         return withFrameAssetVersion(musicPage.src, musicPage.assetVersion);
     }
     const tab = TABS[index];
+    if (index === CONTENT_TAB_INDEX) {
+        const child = new URL(tab.src, location.href), parent = new URLSearchParams(location.search);
+        ['q','year','category','planning','series','sort','content'].forEach(key => {
+            const value = parent.get(['series', 'content'].includes(key) ? key : 'content_' + key);
+            if (value) child.searchParams.set(key, value);
+        });
+        return withFrameAssetVersion(child.pathname + child.search, tab.assetVersion);
+    }
     if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'content' || tab.type === 'games') {
         return withFrameAssetVersion(tab.src, tab.assetVersion);
     }
@@ -376,10 +428,87 @@ function getSheetDirectUrl(index) {
 }
 
 function hideLoading(index) {
-    const el = document.getElementById('loading');
-    if (el) el.style.display = 'none';
     const frame = document.getElementById(`frame-${index}`);
-    if (frame) requestAnimationFrame(() => frame.classList.add('loaded'));
+    const el = document.getElementById('loading');
+    if (el && frame?.classList.contains('active')) el.style.display = 'none';
+    if (frame) requestAnimationFrame(() => {
+        if (index === HOME_TAB_INDEX || (loaded.has(index) && frame.dataset.messageReady === 'true')) {
+            frame.classList.add('loaded');
+        }
+    });
+}
+
+function showFrameLoading(index, error = '') {
+    const frame = document.getElementById(`frame-${index}`);
+    const el = document.getElementById('loading');
+    if (!el || !frame?.classList.contains('active')) return;
+    el.style.display = 'flex';
+    el.dataset.frameIndex = String(index);
+    const text = el.querySelector('.loading-text');
+    if (text) {
+        text.textContent = error || '대기 중';
+        text.classList.toggle('loading-dots', !error);
+        text.style.color = error ? 'var(--ink)' : '';
+    }
+    let retry = el.querySelector('[data-frame-load-retry]');
+    if (error && !retry) {
+        retry = document.createElement('button');
+        retry.type = 'button';
+        retry.className = 'notification-ghost-btn';
+        retry.dataset.frameLoadRetry = '';
+        retry.textContent = '다시 시도';
+        retry.addEventListener('click', () => {
+            startFrameLoad(Number(el.dataset.frameIndex), true);
+        });
+        el.append(retry);
+    }
+    if (retry) retry.hidden = !error;
+}
+
+function cancelFrameLoad(index) {
+    const pending = pendingFrameLoads.get(index);
+    if (pending) clearTimeout(pending.timer);
+    pendingFrameLoads.delete(index);
+}
+
+function startFrameLoad(index, force = false) {
+    const frame = document.getElementById(`frame-${index}`);
+    if (!frame) return;
+    if (!force && pendingFrameLoads.has(index)) {
+        showFrameLoading(index, pendingFrameLoads.get(index).error);
+        return;
+    }
+    cancelFrameLoad(index);
+    loaded.delete(index);
+    frame.dataset.messageReady = 'false';
+    frame.classList.remove('loaded');
+    const pending = { timer: null, error: '' };
+    pendingFrameLoads.set(index, pending);
+    showFrameLoading(index);
+    const fail = message => {
+        if (pendingFrameLoads.get(index) !== pending) return;
+        clearTimeout(pending.timer);
+        pending.error = message;
+        showFrameLoading(index, message);
+    };
+    frame.onerror = () => fail('화면을 불러오지 못했습니다. 다시 시도해 주세요.');
+    frame.onload = () => {
+        if (pendingFrameLoads.get(index) !== pending) return;
+        clearTimeout(pending.timer);
+        pendingFrameLoads.delete(index);
+        loaded.add(index);
+        frame.dataset.messageReady = 'true';
+        resetFrameScrollAfterLoad(index);
+        hideLoading(index);
+        if (index === 0 || index === 2 || index === 3 || index === 4 || index === CONTENT_TAB_INDEX) syncCalendarAuth(frame);
+        syncThemeToFrames(frame);
+        if (index === SONGBOOK_TAB_INDEX) deliverPendingSongbookSong(frame);
+        if (index === 3) deliverPendingLiveDate(frame);
+    };
+    pending.timer = setTimeout(() => {
+        fail('화면을 불러오는 데 시간이 걸리고 있습니다. 다시 시도해 주세요.');
+    }, FRAME_LOAD_TIMEOUT_MS);
+    frame.src = getFrameUrl(index);
 }
 
 function resetFrameScroll(index) {
@@ -403,6 +532,7 @@ function resetFrameScrollAfterLoad(index) {
 function updateMobileFab(index) {
     const fab = document.getElementById('mobile-fab');
     if (!isMobile) return;
+    if (index === HOME_TAB_INDEX) { fab.classList.remove('show'); return; }
     const type = TABS[index]?.type;
     if (type === 'calendar' || type === 'songs' || type === 'songbook' || type === 'content' || type === 'games') {
         fab.classList.remove('show');
@@ -430,6 +560,8 @@ function isFrameReadyForMessage(frame) {
 }
 
 function syncCalendarAuth(targetFrame = null) {
+    // An unavailable SDK is not a confirmed guest session.
+    if (!authDb || authServiceUnavailable) return;
     const origin = window.location.origin === 'null' ? '*' : window.location.origin;
     const msg = { type: 'beadyo-auth-sync', user: getSerializableAuthUser() };
     const frames = targetFrame
@@ -451,6 +583,7 @@ function updateMusicSubnav(activeIndex) {
 }
 
 function sendCalendarAction(action) {
+    if (!authDb || authServiceUnavailable) return;
     const frame = document.getElementById('frame-0');
     if (!frame?.contentWindow) return;
     frame.contentWindow.postMessage({
@@ -897,6 +1030,7 @@ function handleNotificationItemClick(id) {
 }
 
 function openCalendarAdmin() {
+    if (!authDb || authServiceUnavailable) { openLoginModal(); return; }
     closeAuthMenu();
     switchTab(0);
     setTimeout(() => sendCalendarAction('open-admin'), 120);
@@ -904,7 +1038,7 @@ function openCalendarAdmin() {
 
 function openDanceReviewPage() {
     closeAuthMenu();
-    window.location.href = withFrameAssetVersion('dance-archive.html', 'dance-nav-20260628');
+    window.location.href = withFrameAssetVersion('dance-archive.html', 'no-playlists-20261010');
 }
 
 function openDevelopmentRequestsPage() {
@@ -926,6 +1060,7 @@ function handlePatchNotesOverlayClick(event) {
 }
 
 async function updateAuthUI() {
+    if (!authDb || authServiceUnavailable) { showAuthUnavailable(); return; }
     const badge = document.getElementById('auth-badge');
     if (!authUser) {
         badge.classList.remove('show');
@@ -963,35 +1098,62 @@ async function updateAuthUI() {
     badge.classList.add('show');
 }
 
+function deliverPendingLiveDate(frame = document.getElementById('frame-3')) {
+    if (!pendingLiveDate || !isFrameReadyForMessage(frame)) return;
+    frame.contentWindow.postMessage({ type: 'beadyo-focus-live-date', date: pendingLiveDate }, location.origin);
+    pendingLiveDate = '';
+}
+
+function openLiveDate(date) {
+    if (!window.BeadyoExploreData?.validDate(date)) return;
+    pendingLiveDate = date;
+    switchTab(3);
+    deliverPendingLiveDate();
+}
+
+function openCalendarDate(date) {
+    if (!window.BeadyoExploreData?.validDate(date)) return;
+    invokeCalendarFrameFunction('openCalendarDate', [date]);
+}
+
 function switchTab(index, options = {}) {
     const { updateUrl = true, replaceUrl = false } = options;
-    document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
+    document.body.classList.toggle('home-view', index === HOME_TAB_INDEX);
+    document.querySelector('.content').classList.toggle('external-sheet-view', index === 1);
+    document.querySelectorAll('.tab').forEach((t, i) => {
+        const active = Number(t.dataset.tabIndex ?? i) === index;
+        t.classList.toggle('active', active);
+        if (active) t.setAttribute('aria-current', 'page');
+        else t.removeAttribute('aria-current');
+        if (active && window.matchMedia('(max-width: 640px)').matches) {
+            t.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        }
+    });
+    const home = document.getElementById('frame-7');
+    if (home) home.hidden = index !== HOME_TAB_INDEX;
     document.querySelectorAll('.sheet-frame').forEach((f, i) => f.classList.toggle('active', i === index));
     updateMusicSubnav(index);
 
     updateMobileFab(index);
+    window.dispatchEvent(new CustomEvent('beadyo-tab-change', { detail: { index } }));
     if (updateUrl) syncTabUrl(index, replaceUrl);
 
     const frame = document.getElementById(`frame-${index}`);
+
+    if (index === HOME_TAB_INDEX) {
+        hideLoading(index);
+        window.BeadyoHome?.activate();
+        return;
+    }
 
     if (loaded.has(index) && index !== 1) {
         hideLoading(index);
         if (index === 0 || index === 2 || index === 3 || index === 4 || index === CONTENT_TAB_INDEX) syncCalendarAuth();
         syncThemeToFrames();
         if (index === SONGBOOK_TAB_INDEX) deliverPendingSongbookSong(frame);
+        if (index === 3) deliverPendingLiveDate(frame);
     } else {
-        document.getElementById('loading').style.display = 'flex';
-        frame.dataset.messageReady = 'false';
-        frame.onload = () => {
-            frame.dataset.messageReady = 'true';
-            resetFrameScrollAfterLoad(index);
-            hideLoading(index);
-            if (index === 0 || index === 2 || index === 3 || index === 4 || index === CONTENT_TAB_INDEX) syncCalendarAuth(frame);
-            syncThemeToFrames(frame);
-            if (index === SONGBOOK_TAB_INDEX) deliverPendingSongbookSong(frame);
-        };
-        frame.src = getFrameUrl(index);
-        loaded.add(index);
+        startFrameLoad(index);
     }
 }
 
@@ -1002,6 +1164,7 @@ function switchMusicPage(page) {
 
     const frame = document.getElementById(`frame-${MUSIC_TAB_INDEX}`);
     const isMusicActive = frame?.classList.contains('active');
+    cancelFrameLoad(MUSIC_TAB_INDEX);
     loaded.delete(MUSIC_TAB_INDEX);
 
     if (!isMusicActive) {
@@ -1009,17 +1172,7 @@ function switchMusicPage(page) {
         return;
     }
 
-    document.getElementById('loading').style.display = 'flex';
-    frame.dataset.messageReady = 'false';
-    frame.onload = () => {
-        frame.dataset.messageReady = 'true';
-        resetFrameScrollAfterLoad(MUSIC_TAB_INDEX);
-        hideLoading(MUSIC_TAB_INDEX);
-        syncCalendarAuth(frame);
-        syncThemeToFrames(frame);
-    };
-    frame.src = getFrameUrl(MUSIC_TAB_INDEX);
-    loaded.add(MUSIC_TAB_INDEX);
+    startFrameLoad(MUSIC_TAB_INDEX);
     syncTabUrl(MUSIC_TAB_INDEX);
 }
 
@@ -1043,15 +1196,19 @@ try {
     switchTab(0, { replaceUrl: true });
 }
 
-window.addEventListener('hashchange', () => {
+function handleTabRouteChange() {
     const musicPage = routeToMusicPage();
     if (musicPage && musicPage !== currentMusicPage) {
         switchMusicPage(musicPage);
         return;
     }
     const routeTab = routeToTabIndex();
-    if (routeTab !== null) switchTab(routeTab, { updateUrl: false });
-});
+    if (routeTab !== null && !document.getElementById(`frame-${routeTab}`)?.classList.contains('active')) {
+        switchTab(routeTab, { updateUrl: false });
+    }
+}
+window.addEventListener('hashchange', handleTabRouteChange);
+window.addEventListener('popstate', handleTabRouteChange);
 
 window.addEventListener('storage', event => {
     if (event.key === THEME_STORAGE_KEY) {
@@ -1069,6 +1226,21 @@ initNotificationInbox();
 // ── 라이브 상태 체크 ──
 const PROXY = 'https://clever-rhino-36.hanul4269.deno.net';
 const SOOP_STATION_API = 'https://chapi.sooplive.co.kr/api/beadyo97/station';
+
+// fetchWithTimeout bounds response headers; body parsing needs its own deadline.
+async function readLiveStatusJson(response, ms = 4000) {
+    let timer;
+    try {
+        return await Promise.race([
+            response.json(),
+            new Promise((_, reject) => {
+                timer = setTimeout(() => reject(new Error('LIVE body timeout')), ms);
+            }),
+        ]);
+    } finally {
+        clearTimeout(timer);
+    }
+}
 
 // 라이브 상태 단일 진입점. 헤더 배지와 알림 패널이 같은 값을 쓰도록 한 곳에서 조회한다.
 // 순서: SOOP 직접 호출 → Deno 프록시 → Supabase 캐시(최후 수단)
@@ -1103,6 +1275,7 @@ async function fetchLiveStatusFresh() {
         return {
             live: broad !== null,
             title: broad ? broad.broad_title.trim() : '',
+            broad_no: broad ? String(broad.broad_no) : null,
             updated: new Date().toISOString(),
         };
     };
@@ -1111,7 +1284,7 @@ async function fetchLiveStatusFresh() {
         try {
             const res = await fetchWithTimeout(url, 4000);
             if (!res.ok) continue;
-            const data = fromStation(await res.json());
+            const data = fromStation(await readLiveStatusJson(res));
             if (!data) continue;
             return data;
         } catch {}
@@ -1136,14 +1309,15 @@ async function fetchRuntimeCache(cacheKey, ms = 4000) {
         },
     });
     if (!res.ok) throw new Error(`runtime cache HTTP ${res.status}`);
-    const rows = await res.json();
+    const rows = await readLiveStatusJson(res, ms);
     const row = Array.isArray(rows) ? rows[0] : null;
     return row?.payload ? { ...row.payload, row_updated_at: row.updated_at } : null;
 }
 
 function isFreshRuntimeCache(data, maxAgeMs) {
     const updatedAt = Date.parse(data?.updated || data?.row_updated_at || '');
-    return Number.isFinite(updatedAt) && Date.now() - updatedAt < maxAgeMs;
+    const age = Date.now() - updatedAt;
+    return Number.isFinite(updatedAt) && age >= 0 && age < maxAgeMs;
 }
 
 function checkLiveStatus(force = false) {
@@ -1152,19 +1326,50 @@ function checkLiveStatus(force = false) {
 
 checkLiveStatus(true);
 setTimeout(checkLiveStatus, 3000);
-setInterval(() => checkLiveStatus(true), 60 * 1000);
+setInterval(() => {
+    if (document.visibilityState !== 'visible') return;
+    return checkLiveStatus(true);
+}, 60 * 1000);
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') checkLiveStatus(true);
 });
 
 // ── 로그인 모달 ──
+let loginLastFocused = null;
 function openLoginModal() {
-    document.getElementById('login-overlay').classList.add('open');
+    const overlay = document.getElementById('login-overlay');
+    if (overlay.classList.contains('open')) return;
+    loginLastFocused = document.activeElement;
+    overlay.classList.add('open');
+    overlay.querySelector('button:not([disabled])')?.focus();
 }
 
 function closeLoginModal() {
     document.getElementById('login-overlay').classList.remove('open');
+    const focusTarget = loginLastFocused?.closest('#quick-menu-panel')
+        ? document.getElementById('quick-menu-toggle') : loginLastFocused;
+    if (focusTarget?.isConnected) focusTarget.focus();
+    loginLastFocused = null;
 }
+
+document.addEventListener('keydown', event => {
+    const overlay = document.getElementById('login-overlay');
+    if (!overlay?.classList.contains('open')) return;
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        closeLoginModal();
+    } else if (event.key === 'Tab') {
+        const buttons = [...overlay.querySelectorAll('button:not([disabled])')];
+        const first = buttons[0], last = buttons.at(-1);
+        if (!first) return;
+        const outside = !overlay.contains(document.activeElement);
+        if (event.shiftKey && (document.activeElement === first || outside)) {
+            event.preventDefault(); last.focus();
+        } else if (!event.shiftKey && (document.activeElement === last || outside)) {
+            event.preventDefault(); first.focus();
+        }
+    }
+});
 
 function handleLoginOverlayClick(e) {
     if (e.target === document.getElementById('login-overlay')) closeLoginModal();
@@ -1223,6 +1428,7 @@ function viewMobile() {
 }
 
 async function initAuth() {
+    if (!authDb || authServiceUnavailable) { showAuthUnavailable(); return; }
     authDb.auth.onAuthStateChange((_event, session) => {
         authUser = session?.user ?? null;
         updateAuthUI();
@@ -1296,6 +1502,7 @@ async function signIn() {
         alert('파일로 직접 열면 로그인이 안 돼요.\n터미널에서 아래 명령어로 로컬 서버를 실행해주세요:\n\npython3 -m http.server 3000\n\n그 다음 http://localhost:3000 에서 접속하면 로그인 가능해요.');
         return;
     }
+    if (!authDb || authServiceUnavailable) { openLoginModal(); return; }
     const { data, error } = await authDb.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -1310,6 +1517,7 @@ async function signIn() {
 }
 
 async function signOut() {
+    if (!authDb || authServiceUnavailable) { openLoginModal(); return; }
     closeAuthMenu();
     await authDb.auth.signOut();
     authUser = null;
@@ -1317,4 +1525,7 @@ async function signOut() {
     syncCalendarAuth();
 }
 
-initAuth();
+initAuth().catch(error => {
+    console.error('로그인 서비스 초기화 실패:', error);
+    showAuthUnavailable();
+});

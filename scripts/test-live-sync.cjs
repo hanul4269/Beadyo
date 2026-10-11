@@ -30,7 +30,7 @@ function harness() {
         fetchWithTimeout:async url=>{calls.push({at:now,proxy:url.includes('deno.net')});return handler(url);},
         fetchRuntimeCache:async()=>null,
         loadPatchNotificationItems:async()=>[], loadNoticeNotificationItems:async()=>[{id:'notice:1',type:'notice',isRead:true}], loadUpNotificationItems:async()=>[],
-        setInterval:(fn,ms)=>intervals.push({fn,ms}),setTimeout:(fn,ms)=>timeouts.push({fn,ms})});
+        setInterval:(fn,ms)=>intervals.push({fn,ms}),setTimeout:(fn,ms)=>timeouts.push({fn,ms}),clearTimeout(){}});
     vm.runInContext(notifications+'\n'+inbox+'\n'+live+'\n'+fresh+'\n'+check+'\n'+timers,ctx);
     return {ctx,calls,intervals,timeouts,events,renders,setOn(v){on=v;},setHandler(fn){handler=fn;},advance(ms){now+=ms;},get badge(){return badge;},get item(){return ctx.notificationState.items.find(i=>i.type==='live');}};
 }
@@ -80,6 +80,23 @@ test('visibility and interval arriving during a slow request coalesce',async()=>
     const first=h.ctx.checkLiveStatus(true);h.events.visibilitychange();const interval=h.intervals[0].fn();
     assert.equal(h.calls.length,1);pending.resolve(response(true));await Promise.all([first,interval]);
     assert.equal(h.badge,true);
+});
+test('hidden documents skip interval polling and refresh when visible again', async()=>{
+    const h=harness(); await h.ctx.checkLiveStatus(true);
+    h.ctx.document.visibilityState='hidden'; h.advance(60000);
+    await h.intervals[0].fn(); assert.equal(h.calls.length,1);
+    h.ctx.document.visibilityState='visible'; h.events.visibilitychange(); await settle();
+    assert.equal(h.calls.length,2);
+});
+test('HOME visits reuse header success and still refresh after its memo expires', async()=>{
+    const h=harness(); await h.ctx.checkLiveStatus(true);
+    const homeSource=fs.readFileSync(path.resolve(__dirname, '../home.js'),'utf8');
+    const loader=homeSource.match(/live: async \(\) => \{(.*?)\},/)[1];
+    vm.runInContext(`async function loadHomeLive() {${loader}}`,h.ctx);
+    await h.ctx.loadHomeLive(); h.advance(10000); await h.ctx.loadHomeLive();
+    assert.equal(h.calls.length,1);
+    h.advance(50000); h.setOn(true); assert.equal((await h.ctx.loadHomeLive()).live,true);
+    assert.equal(h.calls.length,2);
 });
 test('all-route failure preserves matching last known UI and allows a subsequent retry',async()=>{
     const h=harness();h.setOn(true);await h.ctx.checkLiveStatus(true);const previousTime=h.item.timestamp;

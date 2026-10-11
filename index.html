@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="site-backdrop.js?v=release-20261011-all"></script>
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="구슬요 방송 일정, 노래책, 라이브 기록, 음악, 기획 콘텐츠와 게임을 모아 보는 사이트입니다.">
     <title>비드요닷컴 — OFFICIAL</title>
@@ -28,7 +29,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="manifest" href="/manifest.webmanifest">
     <link rel="icon" type="image/webp" href="logo-icon.webp">
-    <link rel="stylesheet" href="tokens.css?v=20260918">
+    <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="dns-prefetch" href="https://docs.google.com">
     <link rel="dns-prefetch" href="https://sheets.googleapis.com">
@@ -44,9 +45,23 @@
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
     <script defer src="supabase.min.js?v=supabase-2-112-2"></script>
-    <script defer src="beadyo-common.js?v=mascot-webp-20260924"></script>
+    <script defer src="beadyo-common.js?v=release-20261011-all"></script>
     <script defer src="patch-notes.js?v=common-20260918"></script>
-    <script defer src="index-app.js?v=release-20261007"></script>
+    <link rel="stylesheet" href="explore.css?v=release-20261011-all">
+    <script defer src="explore-data.js?v=release-20261011-all"></script>
+    <script defer src="explore.js?v=release-20261011-all"></script>
+    <script defer src="index-app.js?v=release-20261011-all"></script>
+    <script defer src="explore-shell.js?v=release-20261011-all"></script>
+    <link rel="stylesheet" href="home.css?v=release-20261011-all">
+    <script defer src="home-data.js?v=release-20261011-all"></script>
+    <script defer src="home-visual.js?v=release-20261011-all"></script>
+    <script defer src="home-soop.js?v=release-20261011-all"></script>
+    <script defer src="monthly-data.js?v=release-20261011-all"></script>
+    <script defer src="monthly.js?v=release-20261011-all"></script>
+    <script defer src="video-metadata.js?v=release-20261011-all"></script>
+    <script defer src="home.js?v=release-20261011-all"></script>
+    <link rel="stylesheet" href="page-footer.css?v=release-20261011-all">
+    <script defer src="page-footer.js?v=release-20261011-all"></script>
     <script>
         (() => {
             const key = 'beadyo:theme';
@@ -511,7 +526,7 @@
         .tab.active {
             color: #fff;
             border-bottom-color: var(--accent);
-            background: rgba(139,195,74,0.1);
+            background: transparent;
         }
 
         .tab-icon {
@@ -623,69 +638,6 @@
 
         .calendar-frame-host {
             background: #f5f4f0;
-        }
-
-        .site-footer {
-            display: flex;
-            flex-shrink: 0;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            min-height: 34px;
-            padding: 6px 16px 7px;
-            border-top: 1px solid rgba(139,195,74,0.12);
-            background: linear-gradient(180deg, rgba(248,251,243,0.96) 0%, rgba(244,248,238,0.98) 100%);
-            color: #6b725f;
-            text-align: center;
-        }
-
-        .footer-line {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            font-size: 11px;
-            line-height: 1.25;
-        }
-
-        .footer-contact {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            color: #5d6c42;
-            text-decoration: none;
-        }
-
-        .footer-contact strong {
-            color: #7aa53b;
-            font-weight: 800;
-        }
-
-        .footer-contact:hover {
-            color: #46601c;
-        }
-
-        .footer-discord {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            color: #5865f2;
-            font-weight: 800;
-            text-decoration: none;
-        }
-
-        .footer-discord:hover {
-            color: #4250d8;
-        }
-
-        .footer-discord svg {
-            width: 14px;
-            height: 14px;
-            flex-shrink: 0;
-            fill: currentColor;
         }
 
         .desktop-only { display: none; }
@@ -887,7 +839,7 @@
                 min-width: 142px;
             }
 
-            .tabs { padding: 0 8px; }
+            .tabs { padding: 0 8px; justify-content: flex-start; }
 
             .tab {
                 padding: 6px 4px;
@@ -905,19 +857,6 @@
                 height: 14px;
             }
 
-            .site-footer {
-                display: none;
-            }
-
-            .footer-line {
-                font-size: 11px;
-            }
-
-            .footer-contact {
-                gap: 6px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
         }
 
         /* ── 모바일 플로팅 버튼 ── */
@@ -1845,24 +1784,6 @@
             background: var(--bg);
         }
 
-        html[data-theme="dark"] .site-footer {
-            border-top-color: var(--line);
-            background: linear-gradient(180deg, rgba(25,33,25,0.98), rgba(18,25,17,0.99));
-            color: var(--muted);
-        }
-
-        html[data-theme="dark"] .footer-contact {
-            color: #bfd4b2;
-        }
-
-        html[data-theme="dark"] .footer-contact strong {
-            color: var(--accent-dark);
-        }
-
-        html[data-theme="dark"] .footer-discord {
-            color: #aeb6ff;
-        }
-
         html[data-theme="dark"] .quick-menu-overlay,
         html[data-theme="dark"] .login-overlay,
         html[data-theme="dark"] .guide-overlay,
@@ -1988,6 +1909,8 @@
             75%  { content: '...'; }
         }
     </style>
+    <link rel="preload" href="assets/fonts/suite/SUITE-Variable.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="heading-font.css?v=release-20261011-all">
 </head>
 <body>
     <div class="header">
@@ -2034,31 +1957,31 @@
             </div>
         </div>
         <div class="tabs">
-        <div class="tab active" onclick="switchTab(0)">
+        <div class="tab" data-tab-index="7" role="button" tabindex="0" onclick="switchTab(7)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab(7);}">
+            <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3Z"/><path d="M9 20v-7h6v7"/></svg></span>
+            HOME
+        </div>
+        <div class="tab active" data-tab-index="0" role="button" tabindex="0" onclick="switchTab(0)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab(0);}">
             <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="14" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="14" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="14" r="1.2" fill="currentColor" stroke="none"/></svg></span>
             CALENDAR
         </div>
-        <div class="tab" onclick="switchTab(1)">
-            <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
-            SCHEDULE
-        </div>
-        <div class="tab" onclick="switchTab(2)">
+        <div class="tab" data-tab-index="2" role="button" tabindex="0" onclick="switchTab(2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab(2);}">
             <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
             SONGBOOK
         </div>
-        <div class="tab" onclick="switchTab(3)">
+        <div class="tab" data-tab-index="3" role="button" tabindex="0" onclick="switchTab(3)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab(3);}">
             <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
             LIVE RECORD
         </div>
-        <div class="tab" onclick="switchTab(4)">
+        <div class="tab" data-tab-index="4" role="button" tabindex="0" onclick="switchTab(4)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab(4);}">
             <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polygon points="10,8 16,10 10,12" fill="currentColor" stroke="none"/></svg></span>
             MUSIC
         </div>
-        <div class="tab" onclick="switchTab(5)">
+        <div class="tab" data-tab-index="5" role="button" tabindex="0" onclick="switchTab(5)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab(5);}">
             <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m9 9 6 3-6 3Z"/><path d="M7 20v2M17 20v2"/></svg></span>
             CONTENT
         </div>
-        <div class="tab" onclick="switchTab(6)">
+        <div class="tab" data-tab-index="6" role="button" tabindex="0" onclick="switchTab(6)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchTab(6);}">
             <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><path d="M7 10v4M17 10v4M10 7h4M10 17h4"/></svg></span>
             GAME
         </div>
@@ -2070,8 +1993,18 @@
     </div>
     </div>
 
+    <dialog class="explore-dialog" id="explore-more" aria-labelledby="explore-more-title">
+        <div class="explore-dialog-head"><h2 id="explore-more-title">MORE</h2><button class="explore-action" type="button" data-explore-close aria-label="메뉴 닫기">닫기</button></div>
+        <nav class="explore-menu-list" id="explore-more-items" aria-label="전체 메뉴"></nav>
+        <div class="explore-more-footer"><button class="explore-action" type="button" data-start-here>뉴북이 입문가이드</button></div>
+    </dialog>
+    <dialog class="explore-dialog" id="start-here" aria-labelledby="start-here-title">
+        <div class="explore-dialog-head"><h1 id="start-here-title">뉴북이 입문가이드</h1><button class="explore-action" type="button" data-explore-close aria-label="뉴북이 입문가이드 닫기">닫기</button></div>
+        <div class="explore-dialog-body" id="start-here-body"></div>
+    </dialog>
+
     <div class="login-overlay" id="login-overlay" onclick="handleLoginOverlayClick(event)">
-        <div class="login-modal">
+        <div class="login-modal" role="dialog" aria-modal="true" aria-label="로그인">
             <div class="login-modal-title">BEADYO</div>
             <div class="login-modal-subtitle">로그인</div>
             <button class="login-google-btn" onclick="signIn()">
@@ -2164,10 +2097,6 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="14" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="14" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="14" r="1.2" fill="currentColor" stroke="none"/></svg>
                         CALENDAR
                     </button>
-                    <button class="qm-item" onclick="switchTab(1); closeQuickMenu()">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                        SCHEDULE
-                    </button>
                     <button class="qm-item" onclick="switchTab(2); closeQuickMenu()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                         SONGBOOK
@@ -2243,23 +2172,17 @@
             <iframe class="sheet-frame local-frame-host" id="frame-4" title="음악" loading="lazy"></iframe>
             <iframe class="sheet-frame local-frame-host" id="frame-5" title="콘텐츠 아카이브" loading="lazy"></iframe>
             <iframe class="sheet-frame local-frame-host" id="frame-6" title="게임" loading="lazy" allow="fullscreen" allowfullscreen></iframe>
+            <section class="sheet-frame home-root" id="frame-7" aria-label="HOME" hidden></section>
         </div>
-        <footer class="site-footer">
-            <div class="footer-line">
-                <a class="footer-contact" href="mailto:hanul4269@kakao.com">
-                    <strong>Contact</strong>
-                    <span>hanul4269@kakao.com</span>
-                    <span>(홈페이지 운영 & 버그 관련 문의)</span>
-                </a>
-                <a class="footer-discord" href="https://discord.gg/KemnCJmHyd" target="_blank" rel="noopener noreferrer" title="BEADYO Discord 서버에서 문의하기" aria-label="BEADYO Discord 서버에서 문의하기">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.3 4.4A18.8 18.8 0 0 0 15.7 3l-.2.3c-.2.4-.4.8-.5 1.2a17.4 17.4 0 0 0-6 0 8.2 8.2 0 0 0-.6-1.2L8.3 3a18.8 18.8 0 0 0-4.6 1.4C.8 8.8.1 13.1.5 17.4A18.9 18.9 0 0 0 6.1 20c.5-.6.9-1.3 1.2-2a11.8 11.8 0 0 1-1.9-.9l.4-.3a13.3 13.3 0 0 0 12.4 0l.4.3c-.6.4-1.2.7-1.9.9.4.7.8 1.4 1.2 2a18.8 18.8 0 0 0 5.6-2.6c.6-5-.9-9.2-3.2-13ZM8.2 14.7c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2Zm7.6 0c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2Z"/></svg>
-                    <span>Discord</span>
-                </a>
-            </div>
-            <div class="footer-line">© 2026 BEADYO 사이트 모든 저작물의 권리는 원저작자에게 있습니다.</div>
-        </footer>
     </div>
 
+    <nav class="explore-bottom" aria-label="모바일 주요 메뉴">
+        <button type="button" data-explore-tab="7">HOME<span>첫 화면</span></button>
+        <button type="button" data-explore-tab="0">CALENDAR<span>일정</span></button>
+        <button type="button" data-explore-tab="2">SONGBOOK<span>노래</span></button>
+        <button type="button" data-explore-tab="5">CONTENT<span>콘텐츠</span></button>
+        <button type="button" id="explore-more-toggle" data-explore-more aria-haspopup="dialog" aria-controls="explore-more">MORE<span>전체 메뉴</span></button>
+    </nav>
     <a class="mobile-fab" id="mobile-fab" href="#" target="_blank" rel="noopener noreferrer">✏️ 검색·편집하기</a>
 </body>
 </html>

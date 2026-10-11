@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <script src="site-backdrop.js?v=release-20261011-all"></script>
     <meta name="theme-color" content="#76ad39">
     <meta name="robots" content="noindex, nofollow">
     <title>개발요청란 | BEADYO</title>
     <link rel="icon" href="logo-icon.webp">
-    <link rel="stylesheet" href="tokens.css?v=20260918">
+    <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
     <script src="supabase.min.js"></script>
-    <script src="beadyo-common.js?v=mascot-webp-20260924"></script>
+    <script src="beadyo-common.js?v=release-20261011-all"></script>
     <style>
         * { box-sizing: border-box; }
 
@@ -519,6 +520,7 @@
         .auth-gate { margin-top: 20px; }
         .auth-gate strong { display: block; margin-bottom: 5px; color: var(--ink); font-size: 18px; }
         .auth-gate a { color: var(--green-700); font-weight: 900; }
+        html[data-theme="dark"] .auth-gate a { color: #b7df7f; }
 
         .toast {
             position: fixed;

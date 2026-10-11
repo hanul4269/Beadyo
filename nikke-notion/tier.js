@@ -115,22 +115,46 @@
     document.querySelectorAll('.mode-button').forEach(button => {
         button.addEventListener('click', () => {
             state.mode = button.dataset.mode;
+            list.setAttribute('aria-labelledby', button.id);
             document.querySelectorAll('.mode-button').forEach(item => {
                 const active = item === button;
                 item.classList.toggle('active', active);
                 item.setAttribute('aria-selected', String(active));
+                item.tabIndex = active ? 0 : -1;
             });
             render();
+        });
+    });
+
+    const modeTabs = [...document.querySelectorAll('.mode-button')];
+    modeTabs.forEach(button => {
+        button.id = `tier-mode-${button.dataset.mode}`;
+        button.setAttribute('aria-controls', list.id);
+        button.tabIndex = button.classList.contains('active') ? 0 : -1;
+        if (button.tabIndex === 0) list.setAttribute('aria-labelledby', button.id);
+        button.addEventListener('keydown', event => {
+            const index = modeTabs.indexOf(button);
+            const next = event.key === 'ArrowRight' ? (index + 1) % modeTabs.length
+                : event.key === 'ArrowLeft' ? (index + modeTabs.length - 1) % modeTabs.length
+                : event.key === 'Home' ? 0 : event.key === 'End' ? modeTabs.length - 1 : -1;
+            if (next < 0) return;
+            event.preventDefault();
+            modeTabs[next].focus();
+            modeTabs[next].click();
         });
     });
 
     document.querySelectorAll('.burst-button').forEach(button => {
         button.addEventListener('click', () => {
             state.burst = button.dataset.burst;
-            document.querySelectorAll('.burst-button').forEach(item => item.classList.toggle('active', item === button));
+            document.querySelectorAll('.burst-button').forEach(item => {
+                item.classList.toggle('active', item === button);
+                item.setAttribute('aria-pressed', String(item === button));
+            });
             render();
         });
     });
+    document.querySelectorAll('.burst-button').forEach(button => button.setAttribute('aria-pressed', String(button.classList.contains('active'))));
 
     document.getElementById('tier-search').addEventListener('input', event => {
         state.query = event.target.value.trim().toLocaleLowerCase();

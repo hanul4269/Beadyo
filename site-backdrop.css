@@ -1,0 +1,227 @@
+/* Opt-in trial only. Existing page styles remain the rollback baseline. */
+html[data-page][data-site-backdrop="home"] {
+    --site-backdrop-wash: rgba(212,222,204,.56);
+    --site-backdrop-control: rgba(224,232,216,.94);
+    --site-backdrop-toolbar: rgba(224,232,216,.96);
+    --site-backdrop-line: rgba(40,66,45,.22);
+    --site-backdrop-shadow: 0 4px 16px rgba(34,39,32,.07);
+    --site-backdrop-on-green: #203314;
+    --site-backdrop-live: #a32530;
+    background-color: var(--bg, #f4f5f1);
+    background-image: none;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+/* Keep the forest on HOME; archive pages retain the same quiet solid surfaces. */
+html[data-page="index"][data-site-backdrop="home"]:has(body.home-view) {
+    background-image: linear-gradient(var(--site-backdrop-wash), var(--site-backdrop-wash)), url('assets/home/forest-background.webp');
+}
+/* Keep daylight soft across the shared reading surfaces. */
+html[data-page][data-site-backdrop="home"]:not([data-theme="dark"]) {
+    --bg: #cedbc5;
+    --surface: #e5ebdf;
+    --surface-2: #dce5d3;
+    --surface-soft: #dce5d3;
+    --accent-dark: #426b24;
+    --accent-light: #d6e4c7;
+    --accent-soft: #dde7d3;
+    --accent-faint: #e3ebd9;
+    --row-hover: #d4e1c8;
+    --muted: #59664f;
+    --panel: #e5ebdf;
+    --panel-2: #dce5d3;
+    --panel-glass: rgba(224,232,216,.94);
+    --frame-bg: #dce5d3;
+    --signal-dark: #426b24;
+    --signal-soft: #d6e4c7;
+    --stage: #dce5d3;
+}
+html[data-page="index"][data-site-backdrop="home"]:not([data-theme="dark"]) :is(.qm-section-card, .qm-item, .auth-menu, .login-modal, .guide-modal, .patch-notes-modal, .notification-panel, .notification-list, .notification-item, .loading) {
+    background: var(--surface);
+}
+html[data-page="calendar"][data-site-backdrop="home"]:not([data-theme="dark"]) :is(.mobile-day-card, .memo-card, .modal) {
+    background: var(--surface);
+}
+html[data-page="calendar"][data-site-backdrop="home"]:not([data-theme="dark"]) .day-label {
+    background: var(--site-backdrop-toolbar);
+}
+html[data-page="calendar"][data-site-backdrop="home"]:not([data-theme="dark"]) :is(.field input, .field select, .field textarea, .broadcast-vod-row input) {
+    background: var(--surface-2);
+}
+html[data-page="songbook"][data-site-backdrop="home"]:not([data-theme="dark"]) .song-card-info {
+    background: linear-gradient(180deg, var(--surface), var(--card-accent-soft)), var(--surface);
+}
+html[data-page="songbook"][data-site-backdrop="home"]:not([data-theme="dark"]) :is(.wc-stats th, .wc-stats td, .wc-recent-card, .song-table thead th) {
+    background: var(--surface-2);
+}
+html[data-page="guide"][data-site-backdrop="home"]:not([data-theme="dark"]) :is(.guide-header, .new-feature) {
+    background: linear-gradient(180deg, var(--surface), var(--surface-2));
+}
+html[data-page="games"][data-site-backdrop="home"]:not([data-theme="dark"]) :is(.counter, .action-btn, .slot-card, .winner-box) {
+    background: var(--surface);
+}
+html[data-page="games"][data-site-backdrop="home"]:not([data-theme="dark"]) .play-stage {
+    background: linear-gradient(180deg, var(--surface), var(--stage));
+}
+html[data-page="nikke"][data-site-backdrop="home"]:not([data-theme="dark"]) .storyline-embed {
+    --beadyo-panel: var(--surface);
+    --beadyo-stage: var(--surface-2);
+    --beadyo-green-dark: var(--accent-dark);
+    --beadyo-green-soft: var(--accent-soft);
+    --beadyo-muted: var(--muted);
+}
+html[data-page][data-site-backdrop="home"][data-theme="dark"] {
+    --site-backdrop-wash: rgba(15,23,15,.68);
+    --site-backdrop-control: rgba(25,33,25,.9);
+    --site-backdrop-toolbar: rgba(25,33,25,.9);
+    --site-backdrop-line: rgba(224,243,217,.25);
+    --site-backdrop-shadow: 0 4px 16px rgba(0,0,0,.18);
+    --site-backdrop-live: #ffc4c8;
+}
+
+/* Embedded documents reveal the single image behind the main site shell. */
+html[data-page][data-site-backdrop="home"][data-site-backdrop-embedded="true"] {
+    background: transparent;
+}
+html[data-page][data-site-backdrop="home"][data-site-backdrop-embedded] body {
+    background: transparent;
+}
+html[data-page][data-site-backdrop="home"] :is(.content, .sheet-frame, .guide-frame-wrap, .guide-content-frame, .nikke-frame, .nikke-frame iframe) {
+    background: transparent;
+}
+html[data-page="nikke"][data-site-backdrop="home"] .storyline-embed {
+    background: transparent !important;
+}
+
+/* HOME's header sits over the forest; other menus keep their original green header. */
+html[data-page="index"][data-site-backdrop="home"] body.home-view {
+    --header-bg: transparent;
+    --tab-hover: rgba(244,248,239,.32);
+}
+html[data-page="index"][data-site-backdrop="home"][data-theme="dark"] body.home-view {
+    --tab-hover: rgba(15,23,15,.32);
+}
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header { background: transparent; }
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header .header-top { border-bottom-color: var(--site-backdrop-line); }
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header .logo-text { color: var(--ink); }
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header .header-links { background: var(--site-backdrop-control); border-color: var(--site-backdrop-line); border-radius: 999px; }
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header :is(.header-link, .quick-menu-btn, #signout-btn) { color: var(--ink); border-color: var(--site-backdrop-line); }
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header .quick-menu-btn { background: var(--site-backdrop-control); }
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header .tab { color: var(--ink); }
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header .tab:hover { color: var(--accent-dark); }
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header .tab.active { color: var(--accent-dark); background: transparent; border-bottom-color: var(--accent-dark); }
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header .tab-icon { background: var(--site-backdrop-control); border-color: var(--site-backdrop-line); box-shadow: none; }
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header .tab.active .tab-icon { background: var(--accent-light); border-color: var(--accent-dark); }
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header .subtab { color: var(--ink); background: var(--site-backdrop-control); border-color: var(--site-backdrop-line); }
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header .subtab.active { color: var(--accent-dark); background: var(--surface); }
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header .live-badge { color: var(--ink); background: var(--site-backdrop-control); border-color: var(--site-backdrop-line); }
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header .live-badge.is-live { color: var(--site-backdrop-live); border-color: currentColor; }
+html[data-page="index"][data-site-backdrop="home"] body.home-view .header :is(a, button, .tab):focus-visible { outline: 3px solid var(--accent-dark); outline-offset: 2px; }
+html[data-page="index"][data-site-backdrop="home"] :is(.site-footer, .explore-bottom) { background: var(--site-backdrop-control); border-color: var(--site-backdrop-line); }
+html[data-page="index"][data-site-backdrop="home"] .explore-bottom button.active { color: var(--accent-dark); background: var(--accent-light); box-shadow: inset 0 -2px var(--accent-dark); }
+
+/* Warm, readable filter shelves connect the archive pages to the forest. */
+html[data-page][data-site-backdrop="home"] :is(.sb-header, .songs-header, .archive-header) {
+    background: var(--site-backdrop-toolbar);
+    border-bottom-color: var(--site-backdrop-line);
+    border-radius: 0 0 16px 16px;
+    box-shadow: var(--site-backdrop-shadow);
+}
+html[data-page][data-site-backdrop="home"] :is(.beadyo-standalone-header, .beadyo-page-footer) {
+    background: var(--site-backdrop-control);
+    border-color: var(--site-backdrop-line);
+}
+
+/* Keep the songbook's reading surface, with the same card edges as HOME. */
+html[data-page="songbook"][data-site-backdrop="home"] .wc-card {
+    width: calc(100% - 32px);
+    margin: 16px auto 24px;
+    border: 1px solid var(--site-backdrop-line);
+    border-radius: 18px;
+    box-shadow: var(--site-backdrop-shadow);
+}
+
+/* Small result/status text needs its own quiet surface over the image. */
+html[data-page="content"][data-site-backdrop="home"] .result-line {
+    width: fit-content;
+    max-width: 100%;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    border: 1px solid var(--site-backdrop-line);
+    border-radius: 10px;
+    background: var(--site-backdrop-control);
+}
+html[data-page="songbook"][data-site-backdrop="home"] .result-info {
+    width: fit-content;
+    max-width: calc(100% - 32px);
+    margin: 8px 16px 12px;
+    border: 1px solid var(--site-backdrop-line);
+    border-radius: 10px;
+    background: var(--site-backdrop-control);
+}
+html[data-page][data-site-backdrop="home"] .empty-state {
+    border: 1px solid var(--site-backdrop-line);
+    border-radius: 14px;
+    background: var(--site-backdrop-toolbar);
+}
+
+/* Inactive dates stay subdued without disappearing into the artwork. */
+html[data-page="calendar"][data-site-backdrop="home"] .cal-cell.other-month {
+    background: var(--site-backdrop-control);
+    box-shadow: inset 0 0 0 1px var(--border);
+}
+html[data-page="calendar"][data-site-backdrop="home"] .cal-cell.other-month .date-num {
+    color: var(--muted);
+}
+html[data-page="calendar"][data-site-backdrop="home"] .user-badge {
+    color: var(--text);
+    background: var(--site-backdrop-control);
+    border-color: var(--site-backdrop-line);
+}
+
+/* Green selected controls use dark ink in both themes. */
+html[data-page="songbook"][data-site-backdrop="home"] .sub-tab.active,
+html[data-page="calendar"][data-site-backdrop="home"] :is(.view-toggle button.active, .nav-btn),
+html[data-page="games"][data-site-backdrop="home"] .mode-btn.active,
+html[data-page="nikke"][data-site-backdrop="home"] .view-tab.active {
+    color: var(--site-backdrop-on-green);
+}
+
+/* Remove the extra opaque sheet around NIKKE; keep the actual game arenas. */
+html[data-page="games"][data-site-backdrop="home"] #nikke-panel .play-stage {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+}
+html[data-page="nikke"][data-site-backdrop="home"] .viewer {
+    background: var(--site-backdrop-toolbar);
+    box-shadow: var(--site-backdrop-shadow);
+}
+
+@media (min-width: 641px) {
+    html[data-page="calendar"][data-site-backdrop="home"] .nav-center {
+        background: transparent;
+        box-shadow: none;
+    }
+}
+@media (max-width: 640px) {
+    html[data-page="calendar"][data-site-backdrop="home"] .nav-center {
+        background: var(--site-backdrop-toolbar);
+        border-color: var(--site-backdrop-line);
+        box-shadow: var(--site-backdrop-shadow);
+    }
+    html[data-page="songbook"][data-site-backdrop="home"] .wc-card {
+        width: calc(100% - 24px);
+        margin: 12px auto 18px;
+        border-radius: 15px;
+    }
+}
+@media (max-width: 480px) {
+    /* The minimum card height must not widen the mobile grid via its aspect ratio. */
+    html[data-page="songbook"][data-site-backdrop="home"] .song-card {
+        width: 100%;
+    }
+}

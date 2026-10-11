@@ -1,0 +1,75 @@
+{
+  "provenance": "User supplied these four files and requested their use on HOME. No artist, public original URL or independent license was supplied. This records site-use instruction, not a general redistribution license.",
+  "assets": [
+    {
+      "source": "7052697eea240224c.png",
+      "source_bytes": 968609,
+      "display_size": [
+        1600,
+        233
+      ],
+      "frames": 1,
+      "duration_ms": null,
+      "poster_bytes": 61052,
+      "animation_bytes": null
+    },
+    {
+      "source": "362769b4ecb39f3f2.png",
+      "source_bytes": 2935000,
+      "display_size": [
+        1000,
+        562
+      ],
+      "frames": 1,
+      "duration_ms": null,
+      "poster_bytes": 73166,
+      "animation_bytes": null
+    },
+    {
+      "source": "88396a381537467bc.gif",
+      "source_bytes": 6336902,
+      "display_size": [
+        480,
+        480
+      ],
+      "frames": 20,
+      "duration_ms": 1320,
+      "poster_bytes": 33326,
+      "animation_bytes": 443978
+    },
+    {
+      "source": "23056a251b7fa4f9f.gif",
+      "source_bytes": 20722047,
+      "display_size": [
+        640,
+        318
+      ],
+      "frames": 50,
+      "duration_ms": 3300,
+      "poster_bytes": 26944,
+      "animation_bytes": 989376
+    },
+    {
+      "source": "260520.mp4",
+      "provenance": "User supplied the video and explicitly requested its use as a static HOME background on 2026-10-10.",
+      "source_bytes": 14686995,
+      "source_size": [
+        1920,
+        1080
+      ],
+      "source_duration_seconds": 6,
+      "frame_time_seconds": 0,
+      "extraction": "Browser-decoded paused first frame, captured at 1600x900 without controls; converted to static WebP.",
+      "display_size": [
+        1600,
+        900
+      ],
+      "frames": 1,
+      "duration_ms": null,
+      "poster_bytes": 120026,
+      "animation_bytes": null,
+      "output": "forest-background.webp",
+      "output_sha256": "c0a44da929ad384c4b0231acef0e8992a361518b9d9d8faffc2388f919b468a0"
+    }
+  ]
+}

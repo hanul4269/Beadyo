@@ -451,3 +451,50 @@
         animation: none;
     }
 }
+
+/* Keep the existing search cards and palette; only add typed result groups. */
+.beadyo-search-overlay,
+.beadyo-search-overlay * { box-sizing: border-box; }
+.beadyo-search-modal,
+.beadyo-search-input-wrap input,
+.beadyo-search-section { min-width: 0; }
+.beadyo-search-section + .beadyo-search-section { margin-top: 22px; }
+.beadyo-search-section h3 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 4px;
+    font-size: 13px;
+}
+.beadyo-search-section h3 span { color: var(--muted); font-size: 12px; }
+a.beadyo-search-result { color: inherit; text-decoration: none; }
+.beadyo-search-subtitle { font-size: 13px; font-weight: 700; }
+.beadyo-search-subtitle,
+.beadyo-search-source,
+.beadyo-search-summary,
+.beadyo-search-warning { overflow-wrap: anywhere; }
+.beadyo-search-source { color: var(--muted); }
+.beadyo-search-source time { font-size: 12px; font-variant-numeric: tabular-nums; }
+.beadyo-search-warning {
+    display: grid;
+    gap: 8px;
+    margin: 6px 0 14px;
+    padding: 12px;
+    font-size: 12px;
+    background: var(--beadyo-search-soft);
+    border: 1px solid var(--beadyo-search-border);
+    border-radius: 12px;
+}
+.beadyo-search-warning button {
+    justify-self: start;
+    min-height: 36px;
+    padding: 5px 12px;
+    color: var(--accent-dark, var(--accent));
+    font: inherit;
+    font-weight: 800;
+    background: var(--surface);
+    border: 1px solid var(--beadyo-search-border);
+    border-radius: 8px;
+    cursor: pointer;
+}
+.beadyo-search-more { flex-wrap: wrap; padding: 8px; }

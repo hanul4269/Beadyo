@@ -6,11 +6,6 @@
     const SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
     const OWNER_EMAIL = 'riosniper12@gmail.com';
-    const ALLOWED_MESSAGE_ORIGINS = new Set([
-        'https://beadyo.com',
-        'http://localhost:3000',
-        'http://127.0.0.1:3000',
-    ]);
 
     let supabaseClient = null;
 
@@ -59,11 +54,11 @@
     }
 
     function allowedMessageOrigin(origin) {
-        return origin === global.location.origin || ALLOWED_MESSAGE_ORIGINS.has(origin);
+        return origin !== 'null' && origin === global.location.origin;
     }
 
-    const UNIFIED_SEARCH_CACHE_KEY = 'beadyo:unified-search:v1';
-    const UNIFIED_SEARCH_CACHE_VERSION = 1;
+    const UNIFIED_SEARCH_CACHE_KEY = 'beadyo:unified-search:v2';
+    const UNIFIED_SEARCH_CACHE_VERSION = 2;
     const UNIFIED_SEARCH_CACHE_TTL_MS = 60 * 60 * 1000;
     const UNIFIED_SEARCH_PAGE_SIZE = 1000;
     const UNIFIED_SEARCH_DEFAULT_LIMIT = 20;
@@ -78,6 +73,8 @@
     const UNIFIED_SEARCH_COLUMNS = Object.freeze({
         songbook: 'id,category,sort_order,title,artist,skill_level,memo,tags',
         live_songs: 'id,performed_date,title,artist,memo,clip_url,exclude_from_stats',
+        content_archive: 'id,title,summary,broadcast_date,categories,planning_type,hosts,cast_members,tags',
+        youtube_songs: 'id,title,type,collab,upload_date',
     });
     const HANGUL_CHOSEONG = Object.freeze([
         'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ',
@@ -431,92 +428,189 @@
         };
     }
 
+    const SEARCH_SOURCES = Object.freeze({
+        songbook: { table: 'songbook', rows: 'songbookRows', label: '노래책' },
+        live: { table: 'live_songs', rows: 'liveRows', label: '방송 노래 기록' },
+        content: { table: 'content_archive', rows: 'contentRows', label: '콘텐츠' },
+        music: { table: 'youtube_songs', rows: 'musicRows', label: '음악 영상' },
+    });
+    const SEARCH_TYPES = Object.freeze([
+        ['shortcut', '시리즈·페이지 바로가기'], ['content', '콘텐츠'],
+        ['music', '음악 영상'], ['songbook', '노래책'], ['live', '방송 노래 기록'],
+    ]);
+    let searchSeriesPromise = null;
+    function loadSearchSeries() {
+        if (global.BeadyoContentSeries) return Promise.resolve(global.BeadyoContentSeries);
+        if (searchSeriesPromise) return searchSeriesPromise;
+        searchSeriesPromise = new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'content-series.js?v=release-20261011-all';
+            const timer = setTimeout(() => { script.remove(); reject(new Error('시리즈 정보를 불러오지 못했어요.')); }, 12000);
+            script.onload = () => {
+                clearTimeout(timer);
+                if (global.BeadyoContentSeries) resolve(global.BeadyoContentSeries);
+                else reject(new Error('시리즈 정보를 불러오지 못했어요.'));
+            };
+            script.onerror = () => { clearTimeout(timer); script.remove(); reject(new Error('시리즈 정보를 불러오지 못했어요.')); };
+            document.head.append(script);
+        }).finally(() => { searchSeriesPromise = null; });
+        return searchSeriesPromise;
+    }
+
+    // Preserve source identities: two performances or videos with the same title are distinct.
+    function createUnifiedCatalog(payload = {}) {
+        const entries = [], seen = new Set();
+        const series = global.BeadyoContentSeries;
+        const text = value => String(value ?? '').trim();
+        function add(type, row, fields) {
+            const id = text(row.id);
+            const key = `${type}:${id}`;
+            if (!id || seen.has(key)) return;
+            seen.add(key);
+            entries.push({ id, key, type, title: text(row.title), subtitle: '', metadata: '', date: '', ...fields });
+        }
+        for (const row of payload.songbookRows || []) add('songbook', row, {
+            subtitle: text(row.artist), metadata: uniqueSongbookSummary([row]),
+            href: `songbook.html?view=songbook&song=${encodeURIComponent(row.id)}&detail=1`,
+            terms: [row.title, row.artist, row.memo, ...normalizeTags(row.tags)], aliases: [row.title],
+        });
+        for (const row of payload.liveRows || []) add('live', row, {
+            subtitle: text(row.artist), date: text(row.performed_date),
+            metadata: [row.memo, row.exclude_from_stats === true ? '집계 제외' : ''].filter(Boolean).join(' · '),
+            href: `songbook.html?view=live&record=${encodeURIComponent(row.id)}${row.performed_date ? `&date=${encodeURIComponent(row.performed_date)}` : ''}`,
+            terms: [row.title, row.artist, row.memo, row.performed_date], aliases: [row.title],
+        });
+        for (const row of payload.musicRows || []) add('music', row, {
+            subtitle: text(row.collab), date: text(row.upload_date),
+            metadata: ({ original: '오리지널', cover: '커버', live: '라이브' })[row.type] || '',
+            href: `songs.html?video=${encodeURIComponent(row.id)}`,
+            terms: [row.title, row.collab], aliases: [row.title],
+        });
+        for (const row of payload.contentRows || []) {
+            const info = series?.normalize(row) || {};
+            const seriesName = series?.name(info.series_id) || '';
+            add('content', row, {
+                subtitle: text(row.summary) !== text(row.title) ? text(row.summary) : '',
+                date: text(row.broadcast_date),
+                metadata: [seriesName, info.episode_number && `${info.episode_number}화`, ...(row.categories || [])].filter(Boolean).join(' · '),
+                href: `content.html?content=${encodeURIComponent(row.id)}`,
+                aliases: [row.title, row.summary],
+                terms: [row.title, row.summary, seriesName, ...(row.hosts || []), ...(row.cast_members || []),
+                    ...normalizeTags(row.tags).filter(tag => !series?.isMetadata(tag))],
+            });
+        }
+        for (const item of series?.registry || []) {
+            const count = entries.filter(entry => entry.type === 'content' &&
+                series.normalize((payload.contentRows || []).find(row => String(row.id) === entry.id) || {}).series_id === item.id).length;
+            if (count) add('shortcut', { id: `series:${item.id}`, title: item.name }, {
+                subtitle: '시리즈 모아보기', metadata: `등록 콘텐츠 ${count}개`,
+                href: `content.html?series=${encodeURIComponent(item.id)}`, aliases: [item.name], terms: [item.name],
+            });
+        }
+        for (const page of [
+            { id: 'gembox', title: 'GEMBOX', subtitle: '보석함', href: 'gembox.html', aliases: ['GEMBOX', '보석함', '구슬요의 보석함'] },
+            { id: 'tractor', title: 'TRACTOR SERVICE', subtitle: '트랙터서비스', href: 'tractor-service.html', aliases: ['TRACTOR SERVICE', '트랙터서비스'] },
+            { id: 'dance', title: 'DANCE', subtitle: '춤영상', href: 'dance.html', aliases: ['DANCE', '춤영상'] },
+        ]) add('shortcut', page, { ...page, terms: page.aliases, metadata: '전용 페이지' });
+        return entries;
+    }
+
+    function searchUnifiedCatalog(entries, rawQuery, options = {}) {
+        const queryText = String(rawQuery ?? '').trim();
+        const choseongOnly = isAllChoseongQuery(queryText);
+        const query = choseongOnly ? normalizeChoseongQuery(queryText) : normalizeUnifiedSearchText(queryText);
+        const result = { query: queryText, total: 0, sections: [], items: [], reason: null };
+        if (!query) return { ...result, reason: 'empty-query' };
+        if (choseongOnly && [...query].length < UNIFIED_SEARCH_CONFIG.minChoseongLength) return { ...result, reason: 'choseong-too-short' };
+        const normalize = choseongOnly ? hangulChoseong : normalizeUnifiedSearchText;
+        const ranked = entries.map(item => {
+            const aliases = (item.aliases || [item.title]).map(normalize).filter(Boolean);
+            const exact = bestTextMatch(aliases, query, { exact: 600, prefix: 450, partial: 380 });
+            const details = (item.terms || []).map(normalize).filter(Boolean);
+            const score = item.type === 'shortcut'
+                ? (query.length >= 2 ? bestTextMatch(aliases, query, { exact: 620, prefix: 410, partial: 0 }) : 0)
+                : Math.max(exact, bestTextMatch(details, query, { exact: 320, prefix: 260, partial: 200 }));
+            return { ...item, score };
+        }).filter(item => item.score > 0).sort((a, b) => b.score - a.score ||
+            String(b.date).localeCompare(String(a.date)) || searchCollator.compare(a.title, b.title) || searchCollator.compare(a.key, b.key));
+        for (const [type, label] of SEARCH_TYPES) {
+            const matches = ranked.filter(item => item.type === type);
+            if (!matches.length) continue;
+            const limit = Math.max(3, Number(options.limits?.[type]) || 3);
+            const items = matches.slice(0, limit);
+            result.sections.push({ type, label, total: matches.length, items });
+            result.items.push(...items);
+        }
+        result.total = ranked.length;
+        return result;
+    }
+
     function readUnifiedSearchCache() {
         try {
-            const raw = global.localStorage?.getItem(UNIFIED_SEARCH_CACHE_KEY);
-            if (!raw) return null;
-            const cached = JSON.parse(raw);
-            if (
-                cached?.version !== UNIFIED_SEARCH_CACHE_VERSION ||
-                !Number.isFinite(cached?.fetchedAt) ||
-                Date.now() - cached.fetchedAt > UNIFIED_SEARCH_CACHE_TTL_MS ||
-                !Array.isArray(cached?.songbookRows) ||
-                !Array.isArray(cached?.liveRows)
-            ) {
-                return null;
-            }
-            return cached;
-        } catch {
-            return null;
-        }
+            const cached = JSON.parse(global.localStorage?.getItem(UNIFIED_SEARCH_CACHE_KEY) || 'null');
+            return cached?.version === UNIFIED_SEARCH_CACHE_VERSION && cached.sources ? cached : null;
+        } catch { return null; }
     }
-
     function writeUnifiedSearchCache(payload) {
-        try {
-            global.localStorage?.setItem(UNIFIED_SEARCH_CACHE_KEY, JSON.stringify(payload));
-            return true;
-        } catch {
-            return false;
-        }
+        try { global.localStorage?.setItem(UNIFIED_SEARCH_CACHE_KEY, JSON.stringify(payload)); } catch {}
     }
-
     async function fetchUnifiedSearchTable(table, columns) {
-        const client = getSupabaseClient();
-        const rows = [];
+        const client = getSupabaseClient(), rows = [];
         let from = 0;
         while (true) {
-            const { data, error } = await client
-                .from(table)
-                .select(columns)
-                .order('id', { ascending: true })
-                .range(from, from + UNIFIED_SEARCH_PAGE_SIZE - 1);
-            if (error) throw error;
-            if (!data?.length) break;
-            rows.push(...data);
-            if (data.length < UNIFIED_SEARCH_PAGE_SIZE) break;
-            from += UNIFIED_SEARCH_PAGE_SIZE;
+            const controller = new AbortController();
+            let timer;
+            try {
+                let request = client.from(table).select(columns).order('id', { ascending: true })
+                    .range(from, from + UNIFIED_SEARCH_PAGE_SIZE - 1);
+                if (request.abortSignal) request = request.abortSignal(controller.signal);
+                const timeout = new Promise((_, reject) => {
+                    timer = setTimeout(() => { controller.abort(); reject(new Error('조회 시간이 초과됐어요.')); }, 12000);
+                });
+                const { data, error } = await Promise.race([request, timeout]);
+                if (error) throw error;
+                if (!Array.isArray(data)) throw new Error('검색 응답을 확인하지 못했어요.');
+                rows.push(...data);
+                if (data.length < UNIFIED_SEARCH_PAGE_SIZE) break;
+                from += UNIFIED_SEARCH_PAGE_SIZE;
+            } finally { clearTimeout(timer); }
         }
         return rows;
     }
 
-    function hydrateUnifiedSearchData(payload, source) {
-        const groups = createUnifiedSearchIndex(payload.songbookRows, payload.liveRows);
-        unifiedSearchState.data = {
-            groups,
-            songbookRows: payload.songbookRows,
-            liveRows: payload.liveRows,
-            fetchedAt: payload.fetchedAt,
-            source,
-        };
-        return unifiedSearchState.data;
-    }
-
     async function loadUnifiedSearchData(options = {}) {
-        const force = options.force === true;
-        if (!force && unifiedSearchState.data) return unifiedSearchState.data;
         if (unifiedSearchState.loadPromise) return unifiedSearchState.loadPromise;
-
-        if (!force) {
-            const cached = readUnifiedSearchCache();
-            if (cached) return hydrateUnifiedSearchData(cached, 'localStorage');
-        }
-
+        const force = options.force === true;
+        const cached = readUnifiedSearchCache();
+        const sources = { ...(cached?.sources || {}), ...(unifiedSearchState.data?.sources || {}) };
         unifiedSearchState.loadPromise = (async () => {
-            const [songbookRows, liveRows] = await Promise.all([
-                fetchUnifiedSearchTable('songbook', UNIFIED_SEARCH_COLUMNS.songbook),
-                fetchUnifiedSearchTable('live_songs', UNIFIED_SEARCH_COLUMNS.live_songs),
-            ]);
-            const payload = {
-                version: UNIFIED_SEARCH_CACHE_VERSION,
-                fetchedAt: Date.now(),
-                songbookRows,
-                liveRows,
+            const errors = {}, sourceStates = {}, payload = {};
+            await Promise.allSettled(Object.entries(SEARCH_SOURCES).map(async ([key, config]) => {
+                try {
+                    if (key === 'content') await loadSearchSeries();
+                    const saved = sources[key];
+                    if (force || !Array.isArray(saved?.rows) || !Number.isFinite(saved.fetchedAt) ||
+                        saved.fetchedAt > Date.now() || Date.now() - saved.fetchedAt >= UNIFIED_SEARCH_CACHE_TTL_MS) {
+                        sources[key] = { rows: await fetchUnifiedSearchTable(config.table, UNIFIED_SEARCH_COLUMNS[config.table]), fetchedAt: Date.now() };
+                    }
+                    payload[config.rows] = sources[key].rows;
+                    sourceStates[key] = 'success';
+                } catch (error) {
+                    // An unavailable source is never persisted as a successful empty result.
+                    delete sources[key];
+                    payload[config.rows] = [];
+                    errors[key] = String(error?.message || error);
+                    sourceStates[key] = 'error';
+                }
+            }));
+            writeUnifiedSearchCache({ version: UNIFIED_SEARCH_CACHE_VERSION, sources });
+            unifiedSearchState.data = {
+                ...payload, sources, sourceStates, errors, fetchedAt: Date.now(),
+                groups: createUnifiedSearchIndex(payload.songbookRows, payload.liveRows),
+                entries: createUnifiedCatalog(payload),
             };
-            writeUnifiedSearchCache(payload);
-            return hydrateUnifiedSearchData(payload, 'network');
-        })().finally(() => {
-            unifiedSearchState.loadPromise = null;
-        });
+            return unifiedSearchState.data;
+        })().finally(() => { unifiedSearchState.loadPromise = null; });
         return unifiedSearchState.loadPromise;
     }
 
@@ -541,7 +635,9 @@
         loading: false,
         querySequence: 0,
         result: null,
-        visibleLimit: UNIFIED_SEARCH_DEFAULT_LIMIT,
+        limits: {},
+        restore: null,
+        previousInert: false,
     };
 
     function unifiedSearchIcon() {
@@ -552,7 +648,7 @@
         if (document.querySelector('link[data-beadyo-unified-search]')) return;
         const stylesheet = document.createElement('link');
         stylesheet.rel = 'stylesheet';
-        stylesheet.href = 'unified-search.css?v=20260924';
+        stylesheet.href = 'unified-search.css?v=release-20261011-all';
         stylesheet.dataset.beadyoUnifiedSearch = '';
         document.head.append(stylesheet);
     }
@@ -563,17 +659,17 @@
                 <header class="beadyo-search-head">
                     <div class="beadyo-search-title-wrap">
                         <strong>통합 검색</strong>
-                        <span>노래책과 라이브 기록을 한 번에 찾아요</span>
+                        <span>콘텐츠·음악 영상·노래를 찾아보세요</span>
                     </div>
                     <button class="beadyo-search-close" type="button" data-beadyo-search-close aria-label="통합 검색 닫기">&times;</button>
                 </header>
                 <div class="beadyo-search-input-wrap">
                     ${unifiedSearchIcon()}
-                    <input type="search" data-beadyo-search-input autocomplete="off" spellcheck="false" placeholder="제목, 가수, 초성 검색" aria-label="통합 검색어">
+                    <input type="search" data-beadyo-search-input autocomplete="off" spellcheck="false" placeholder="제목, 시리즈, 가수, 초성 검색" aria-label="통합 검색어">
                     <kbd>ESC</kbd>
                 </div>
                 <div class="beadyo-search-summary" data-beadyo-search-summary aria-live="polite">검색 데이터를 준비하는 중...</div>
-                <div class="beadyo-search-results" data-beadyo-search-results role="listbox" aria-label="통합 검색 결과"></div>
+                <div class="beadyo-search-results" data-beadyo-search-results id="beadyo-search-results" role="region" aria-label="통합 검색 결과"></div>
             </section>
         </div>`;
     }
@@ -594,7 +690,10 @@
             if (event.target === overlay) closeUnifiedSearch();
         });
         input.addEventListener('input', () => {
-            unifiedSearchUiState.visibleLimit = UNIFIED_SEARCH_DEFAULT_LIMIT;
+            unifiedSearchUiState.limits = {};
+            unifiedSearchUiState.querySequence += 1;
+            unifiedSearchUiState.result = null;
+            unifiedSearchUiState.activeIndex = -1;
             clearTimeout(unifiedSearchUiState.debounceTimer);
             unifiedSearchUiState.debounceTimer = setTimeout(
                 () => runUnifiedSearch(input.value),
@@ -607,15 +706,29 @@
             setUnifiedSearchActiveIndex(Number(result.dataset.beadyoSearchResultIndex));
         });
         overlay.addEventListener('click', event => {
-            if (event.target.closest('.beadyo-search-watch')) return;
+            if (event.target.closest('[data-beadyo-search-retry]')) { prepareUnifiedSearch({ force: true }); return; }
             const more = event.target.closest('[data-beadyo-search-more]');
             if (more) {
-                unifiedSearchUiState.visibleLimit += UNIFIED_SEARCH_DEFAULT_LIMIT;
-                runUnifiedSearch(input.value, { immediate: true });
+                const type = more.dataset.beadyoSearchMore;
+                const scrollTop = overlay.querySelector('[data-beadyo-search-results]').scrollTop;
+                const previousCount = unifiedSearchUiState.result?.sections.find(section => section.type === type)?.items.length || 0;
+                unifiedSearchUiState.limits[type] = (unifiedSearchUiState.limits[type] || 3) + 10;
+                runUnifiedSearch(input.value, { immediate: true }).then(() => {
+                    overlay.querySelector('[data-beadyo-search-results]').scrollTop = scrollTop;
+                    const section = unifiedSearchUiState.result?.sections.find(section => section.type === type);
+                    const firstNew = section?.items[previousCount];
+                    const nextIndex = unifiedSearchUiState.result?.items.findIndex(item => item.key === firstNew?.key);
+                    const focusTarget = overlay.querySelector(`[data-beadyo-search-more="${type}"]`) ||
+                        overlay.querySelector(`[data-beadyo-search-result-index="${nextIndex}"]`) || input;
+                    focusTarget.focus({ preventScroll: true });
+                });
                 return;
             }
             const result = event.target.closest('[data-beadyo-search-result-index]');
-            if (result) selectUnifiedSearchResult(Number(result.dataset.beadyoSearchResultIndex));
+            if (result && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+                event.preventDefault();
+                selectUnifiedSearchResult(Number(result.dataset.beadyoSearchResultIndex));
+            }
         });
         return overlay;
     }
@@ -634,48 +747,16 @@
         return [categories.join(' · '), level ? `숙련도 ${skillStars(level)}` : ''].filter(Boolean).join(' · ');
     }
 
-    function unifiedSearchLiveRowsHtml(rows) {
-        const visibleRows = rows.slice(0, 3);
-        const remaining = rows.length - visibleRows.length;
-        return `<div class="beadyo-search-live-dates">
-            ${visibleRows.map(row => {
-                const clipUrl = safeUrl(row?.clip_url, '');
-                return `<div class="beadyo-search-live-date">
-                    <time datetime="${esc(row?.performed_date || '')}">${esc(row?.performed_date || '날짜 미상')}</time>
-                    ${clipUrl ? `<a class="beadyo-search-watch" href="${esc(clipUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(`${row?.performed_date || '날짜 미상'} 다시보기 새 탭에서 열기`)}">다시보기 ▶</a>` : ''}
-                    ${row?.exclude_from_stats === true ? '<span class="beadyo-search-excluded">집계 제외</span>' : ''}
-                </div>`;
-            }).join('')}
-            ${remaining > 0 ? `<div class="beadyo-search-live-more">외 ${remaining}건</div>` : ''}
-        </div>`;
-    }
-
     function unifiedSearchResultHtml(item, index) {
-        const songbookSummary = uniqueSongbookSummary(item.songbookRows || []);
-        const excludedCount = Math.max(0, Number(item.totalLiveRecords || 0) - Number(item.liveCount || 0));
-        const hasSongbook = !!item.songbookRows?.length;
-        return `<article class="beadyo-search-result${hasSongbook ? ' is-navigable' : ''}" id="beadyo-search-result-${index}" role="option" aria-selected="false" tabindex="-1" data-beadyo-search-result-index="${index}"${hasSongbook ? ` data-beadyo-search-songbook-id="${esc(item.songbookRows[0]?.id)}"` : ''}>
-            <div class="beadyo-search-result-heading">
-                <strong>${esc(item.title || '')}</strong>
-                ${item.artist ? `<span aria-hidden="true">—</span><span>${esc(item.artist)}</span>` : ''}
-            </div>
-            ${item.songbookRows?.length ? `<div class="beadyo-search-source beadyo-search-source-songbook">
-                <span class="beadyo-search-source-label">노래책</span>
-                <span>${esc(songbookSummary || '등록됨')}</span>
-            </div>` : ''}
-            ${item.liveRows?.length ? `<div class="beadyo-search-source beadyo-search-source-live">
-                <span class="beadyo-search-source-label">라이브 기록</span>
-                <strong>${Number(item.liveCount || 0)}번 부름</strong>
-                ${excludedCount ? `<span class="beadyo-search-count-note">· 집계 제외 ${excludedCount}건</span>` : ''}
-            </div>
-            ${unifiedSearchLiveRowsHtml(item.liveRows)}` : ''}
-        </article>`;
+        return `<a class="beadyo-search-result is-navigable" href="${esc(item.href)}" id="beadyo-search-result-${index}" data-beadyo-search-result-index="${index}">
+            <div class="beadyo-search-result-heading"><strong>${esc(item.title)}</strong></div>
+            ${item.subtitle ? `<div class="beadyo-search-subtitle">${esc(item.subtitle)}</div>` : ''}
+            ${item.metadata || item.date ? `<div class="beadyo-search-source">${item.metadata ? `<span>${esc(item.metadata)}</span>` : ''}${item.date ? `<time datetime="${esc(item.date)}">${esc(item.date)}</time>` : ''}</div>` : ''}
+        </a>`;
     }
-
-    function unifiedSearchEmptyHtml(message) {
-        return `<div class="beadyo-search-empty"><strong>${esc(message)}</strong><span>제목이나 가수를 다른 단어로 검색해보세요.</span></div>`;
+    function unifiedSearchEmptyHtml(message, detail = '제목, 시리즈, 가수를 다른 단어로 검색해보세요.') {
+        return `<div class="beadyo-search-empty"><strong>${esc(message)}</strong><span>${esc(detail)}</span></div>`;
     }
-
     function renderUnifiedSearchResult(result) {
         const overlay = document.querySelector('[data-beadyo-search-overlay]');
         if (!overlay) return;
@@ -683,37 +764,51 @@
         const results = overlay.querySelector('[data-beadyo-search-results]');
         unifiedSearchUiState.result = result;
         unifiedSearchUiState.activeIndex = -1;
-        results.removeAttribute('aria-activedescendant');
-
+        overlay.querySelector('[data-beadyo-search-input]').removeAttribute('aria-describedby');
+        const errors = Object.keys(unifiedSearchState.data?.errors || {});
+        const allFailed = errors.length === Object.keys(SEARCH_SOURCES).length;
+        const warning = errors.length ? `<div class="beadyo-search-warning" role="status"><span>${esc(errors.map(key => SEARCH_SOURCES[key].label).join(' · '))} 조회 실패 · ${allFailed ? '전용 페이지 바로가기는 이용할 수 있어요.' : '다른 검색 결과는 계속 볼 수 있어요.'}</span><button type="button" data-beadyo-search-retry>다시 시도</button></div>` : '';
         if (result.reason === 'empty-query') {
-            summary.textContent = '제목, 가수, 초성으로 검색하세요.';
-            results.innerHTML = '<div class="beadyo-search-prompt"><span>⌘K</span><strong>검색어를 입력하면 노래책과 라이브 기록을 함께 보여드려요.</strong></div>';
+            summary.textContent = '제목, 시리즈, 가수, 초성으로 검색하세요.';
+            results.innerHTML = warning + '<div class="beadyo-search-prompt"><span>⌘K</span><strong>콘텐츠·음악 영상·노래를 찾아보세요.</strong></div>';
             return;
         }
         if (result.reason === 'choseong-too-short') {
             summary.textContent = '초성은 2글자 이상 입력해주세요.';
-            results.innerHTML = unifiedSearchEmptyHtml('초성을 한 글자 더 입력해주세요');
+            results.innerHTML = warning + unifiedSearchEmptyHtml('초성을 한 글자 더 입력해주세요');
             return;
         }
+        summary.textContent = `"${result.query}" ${errors.length ? '조회된 자료에서 ' : ''}검색 결과 ${result.total}개`;
         if (!result.total) {
-            summary.textContent = `"${result.query}" 검색 결과 0곡`;
-            results.innerHTML = unifiedSearchEmptyHtml('검색 결과가 없어요');
+            if (allFailed) summary.textContent = `"${result.query}" 검색 자료 조회 실패`;
+            results.innerHTML = warning + (errors.length
+                ? unifiedSearchEmptyHtml(allFailed ? '검색 자료를 불러오지 못했어요' : '일부 자료를 조회하지 못했어요', '다시 시도로 검색 결과를 확인해주세요.')
+                : unifiedSearchEmptyHtml('검색 결과가 없어요'));
             return;
         }
-
-        summary.textContent = `"${result.query}" 검색 결과 ${result.total}곡`;
-        results.innerHTML = result.items.map(unifiedSearchResultHtml).join('') + (
-            result.hasMore
-                ? `<button class="beadyo-search-more" type="button" data-beadyo-search-more>더 보기 <span>${result.items.length}/${result.total}</span></button>`
-                : ''
-        );
+        let index = 0;
+        results.innerHTML = warning + result.sections.map(section => {
+            const remaining = section.total - section.items.length;
+            return `<section class="beadyo-search-section" aria-label="${esc(section.label)}">
+                <h3>${esc(section.label)} <span>${section.total}${section.type === 'songbook' ? '곡' : '개'}</span></h3>
+                ${section.items.map(item => unifiedSearchResultHtml(item, index++)).join('')}
+                ${remaining > 0 ? `<button class="beadyo-search-more" type="button" data-beadyo-search-more="${section.type}">${esc(section.label)} 더 보기 <span>남은 ${remaining}개 · 전체 ${section.total}개</span></button>` : ''}
+            </section>`;
+        }).join('');
         setUnifiedSearchActiveIndex(0);
+        if (unifiedSearchUiState.restore) {
+            const saved = unifiedSearchUiState.restore;
+            const active = result.items.findIndex(item => item.key === saved.activeKey);
+            setUnifiedSearchActiveIndex(Math.max(0, active));
+            results.scrollTop = saved.scrollTop || 0;
+            unifiedSearchUiState.restore = null;
+        }
     }
 
     function renderUnifiedSearchLoading() {
         const overlay = document.querySelector('[data-beadyo-search-overlay]');
         if (!overlay) return;
-        overlay.querySelector('[data-beadyo-search-summary]').textContent = '노래책과 라이브 기록을 불러오는 중...';
+        overlay.querySelector('[data-beadyo-search-summary]').textContent = '콘텐츠·음악 영상·노래를 불러오는 중...';
         overlay.querySelector('[data-beadyo-search-results]').innerHTML = `<div class="beadyo-search-loading" aria-label="검색 데이터 로딩 중">
             <span></span><span></span><span></span>
         </div>`;
@@ -727,7 +822,6 @@
             <strong>잠시 후 다시 시도해주세요.</strong>
             <button type="button" data-beadyo-search-retry>다시 시도</button>
         </div>`;
-        overlay.querySelector('[data-beadyo-search-retry]')?.addEventListener('click', () => prepareUnifiedSearch({ force: true }));
         if (error) console.error('Unified search load failed:', error);
     }
 
@@ -752,7 +846,8 @@
         if (!options.immediate && unifiedSearchUiState.loading) return;
         const sequence = ++unifiedSearchUiState.querySequence;
         try {
-            const result = await searchUnifiedSongs(query, { limit: unifiedSearchUiState.visibleLimit });
+            const data = unifiedSearchState.data || await loadUnifiedSearchData();
+            const result = searchUnifiedCatalog(data.entries, query, { limits: unifiedSearchUiState.limits });
             if (sequence !== unifiedSearchUiState.querySequence) return;
             renderUnifiedSearchResult(result);
         } catch (error) {
@@ -773,10 +868,11 @@
         cards.forEach((card, cardIndex) => {
             const active = cardIndex === next;
             card.classList.toggle('is-active', active);
-            card.setAttribute('aria-selected', active ? 'true' : 'false');
+            if (active) card.setAttribute('aria-current', 'true');
+            else card.removeAttribute('aria-current');
         });
         const activeCard = cards[next];
-        overlay.querySelector('[data-beadyo-search-results]')?.setAttribute('aria-activedescendant', activeCard.id);
+        overlay.querySelector('[data-beadyo-search-input]')?.setAttribute('aria-describedby', activeCard.id);
     }
 
     function moveUnifiedSearchActive(delta) {
@@ -792,35 +888,30 @@
     function selectUnifiedSearchResult(index = unifiedSearchUiState.activeIndex) {
         const item = unifiedSearchUiState.result?.items?.[index];
         if (!item) return;
-        setUnifiedSearchActiveIndex(index);
-        const songbookId = item.songbookRows?.[0]?.id;
-        if (songbookId !== undefined && songbookId !== null && String(songbookId).trim()) {
-            openUnifiedSearchSongbookSong(songbookId);
-            return;
-        }
-        document.querySelector(`[data-beadyo-search-result-index="${index}"] .beadyo-search-watch`)?.click();
+        const overlay = document.querySelector('[data-beadyo-search-overlay]');
+        const saved = {
+            open: true, query: overlay.querySelector('[data-beadyo-search-input]').value,
+            limits: { ...unifiedSearchUiState.limits }, activeKey: item.key,
+            scrollTop: overlay.querySelector('[data-beadyo-search-results]').scrollTop,
+        };
+        global.history.replaceState({ ...global.history.state, beadyoSearch: saved }, '', global.location.href);
+        global.location.assign(new URL(item.href, global.location.href).href);
     }
 
-    function openUnifiedSearchSongbookSong(songbookId) {
-        const targetId = String(songbookId ?? '').trim();
-        if (!targetId) return;
-        const message = { type: 'beadyo-open-songbook-song', songId: targetId };
-        const origin = global.location.origin === 'null' ? '*' : global.location.origin;
-
-        if (global.self !== global.top) {
-            global.parent.postMessage(message, origin);
-            return;
-        }
-        if (document.getElementById('frame-2')) {
-            global.postMessage(message, origin);
-            return;
-        }
-
-        const target = new URL('songbook.html', global.location.href);
-        target.searchParams.set('view', 'songbook');
-        target.searchParams.set('song', targetId);
-        global.location.assign(target.toString());
+    let searchHistoryRestored = false;
+    function restoreUnifiedSearch(event) {
+        if (searchHistoryRestored && !event?.persisted) return;
+        const saved = global.history.state?.beadyoSearch;
+        if (!saved?.open || global.self !== global.top) return;
+        searchHistoryRestored = true;
+        const overlay = ensureUnifiedSearchModal();
+        overlay.querySelector('[data-beadyo-search-input]').value = saved.query || '';
+        unifiedSearchUiState.limits = saved.limits || {};
+        unifiedSearchUiState.restore = saved;
+        openUnifiedSearch();
     }
+    global.addEventListener('pageshow', restoreUnifiedSearch);
+    document.addEventListener('DOMContentLoaded', restoreUnifiedSearch);
 
     function openUnifiedSearch() {
         if (global.self !== global.top) {
@@ -829,13 +920,20 @@
             return;
         }
         const overlay = ensureUnifiedSearchModal();
-        unifiedSearchUiState.lastFocused = document.activeElement;
+        if (overlay.hidden) {
+            unifiedSearchUiState.lastFocused = document.activeElement;
+            unifiedSearchUiState.previousInert = overlay.inert;
+        }
+        overlay.inert = false;
         overlay.hidden = false;
         requestAnimationFrame(() => overlay.classList.add('is-open'));
         document.documentElement.classList.add('beadyo-search-open');
         const input = overlay.querySelector('[data-beadyo-search-input]');
         requestAnimationFrame(() => input.focus());
-        if (!unifiedSearchState.data && !unifiedSearchUiState.loading) {
+        const data = unifiedSearchState.data;
+        const needsLoad = !data || Object.keys(data.errors).length ||
+            Object.values(data.sources).some(source => Date.now() - source.fetchedAt >= UNIFIED_SEARCH_CACHE_TTL_MS);
+        if (needsLoad && !unifiedSearchUiState.loading) {
             prepareUnifiedSearch();
         } else if (unifiedSearchUiState.loadError) {
             renderUnifiedSearchError(unifiedSearchUiState.loadError);
@@ -848,7 +946,12 @@
         const overlay = document.querySelector('[data-beadyo-search-overlay]');
         if (!overlay || overlay.hidden) return;
         clearTimeout(unifiedSearchUiState.debounceTimer);
+        unifiedSearchUiState.querySequence += 1;
+        if (global.history.state?.beadyoSearch) {
+            global.history.replaceState({ ...global.history.state, beadyoSearch: null }, '', global.location.href);
+        }
         overlay.classList.remove('is-open');
+        overlay.inert = unifiedSearchUiState.previousInert;
         document.documentElement.classList.remove('beadyo-search-open');
         setTimeout(() => {
             if (!overlay.classList.contains('is-open')) overlay.hidden = true;
@@ -868,15 +971,22 @@
         if (!overlay || overlay.hidden) return;
         if (event.key === 'Escape') {
             event.preventDefault();
-            event.stopPropagation();
+            event.stopImmediatePropagation();
             closeUnifiedSearch();
+        } else if (event.key === 'Tab') {
+            event.stopImmediatePropagation();
+            const focusable = [...overlay.querySelectorAll('input, button, a[href]')].filter(el => !el.disabled && !el.hidden);
+            const first = focusable[0], last = focusable[focusable.length - 1];
+            if (!overlay.contains(document.activeElement)) { event.preventDefault(); (event.shiftKey ? last : first)?.focus(); }
+            else if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
         } else if (event.key === 'ArrowDown') {
             event.preventDefault();
             moveUnifiedSearchActive(1);
         } else if (event.key === 'ArrowUp') {
             event.preventDefault();
             moveUnifiedSearchActive(-1);
-        } else if (event.key === 'Enter' && unifiedSearchUiState.activeIndex >= 0) {
+        } else if (event.key === 'Enter' && event.target.matches('[data-beadyo-search-input]') && unifiedSearchUiState.activeIndex >= 0) {
             event.preventDefault();
             selectUnifiedSearchResult();
         }
@@ -899,6 +1009,13 @@
         openUnifiedSearch();
     });
     document.addEventListener('keydown', handleUnifiedSearchKeydown, true);
+    // Existing video dialogs also own a focus guard. The foreground search takes priority.
+    document.addEventListener('focusin', event => {
+        const overlay = document.querySelector('[data-beadyo-search-overlay]');
+        if (!overlay || overlay.hidden || !overlay.classList.contains('is-open')) return;
+        event.stopImmediatePropagation();
+        if (!overlay.contains(event.target)) overlay.querySelector('[data-beadyo-search-input]')?.focus();
+    }, true);
 
     const STANDALONE_PAGES = new Set([
         'calendar.html',
@@ -953,7 +1070,7 @@
 
         const home = document.createElement('a');
         home.className = 'beadyo-standalone-brand';
-        home.href = 'index.html';
+        home.href = 'index.html#home';
         home.setAttribute('aria-label', 'BEADYO 전체 홈으로 이동');
 
         const mascot = document.createElement('img');
@@ -974,7 +1091,7 @@
 
         const homeAction = document.createElement('a');
         homeAction.className = 'beadyo-standalone-home-link';
-        homeAction.href = 'index.html';
+        homeAction.href = 'index.html#home';
         homeAction.textContent = '전체 홈';
         homeAction.setAttribute('aria-label', 'BEADYO 전체 홈으로 이동');
 
@@ -1056,6 +1173,8 @@
         isAllChoseongQuery,
         createUnifiedSearchIndex,
         searchUnifiedIndex,
+        createUnifiedCatalog,
+        searchUnifiedCatalog,
         loadUnifiedSearchData,
         searchUnifiedSongs,
         clearUnifiedSearchCache,

@@ -1,0 +1,26 @@
+/* SUITE is reserved for prominent headings; body text keeps each page's font. */
+@font-face {
+    font-family: 'SUITE Variable';
+    font-style: normal;
+    font-weight: 300 900;
+    font-display: swap;
+    src: url('assets/fonts/suite/SUITE-Variable.woff2') format('woff2');
+}
+:root {
+    --heading-font: 'SUITE Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.home-root :is(h1, h2, h3),
+.home-root :is(.home-live-title, .home-item-title, .home-soop-title),
+.explore-dialog :is(h1, h2, h3),
+.archive-heading h1,
+.content-card .card-title,
+#detail-content :is(h2, h3),
+.songs-title,
+.wc-title,
+.wc-recent h2,
+.song-detail-title,
+.stats-sec-title,
+.month-label,
+html[data-page="games"] h1 {
+    font-family: var(--heading-font);
+}

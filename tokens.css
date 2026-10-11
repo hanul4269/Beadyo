@@ -1,3 +1,5 @@
+@import url('site-backdrop.css?v=release-20261011-all');
+
 /* Shared design tokens. Page-specific values are preserved intentionally. */
 
 html[data-page="index"] {
@@ -360,3 +362,69 @@ html[data-page="tractor-service"][data-theme="dark"] {
     --gold: #f0c16d;
     color-scheme: dark;
 }
+
+/* The standalone guide and review page use the same saved night palette. */
+html[data-page="guide"][data-theme="dark"] {
+    --accent: #8bc34a;
+    --accent-dark: #b7df7f;
+    --accent-soft: #21381b;
+    --bg: #11170f;
+    --surface: #192119;
+    --surface-2: #202b20;
+    --border: rgba(223,238,211,.14);
+    --text: #edf5e8;
+    --muted: #a8b4a1;
+    --coral: #ff9c8f;
+    --gold: #e3c05f;
+    color-scheme: dark;
+}
+html[data-page="guide"][data-theme="dark"] :is(.guide-header, .new-feature) {
+    background: linear-gradient(180deg, var(--surface), var(--surface-2));
+}
+html[data-page="guide"][data-theme="dark"] .new-feature-step {
+    background: var(--accent-soft);
+    color: var(--text);
+}
+html[data-page="guide"][data-theme="dark"] .tip { color: var(--text); }
+html[data-page="guide"] .step-num { color: #203314; }
+
+html[data-page="dance-archive"][data-theme="dark"] {
+    --accent: #8bc34a;
+    --accent-dark: #b7df7f;
+    --accent-soft: #21381b;
+    --ink: #edf5e8;
+    --muted: #a8b4a1;
+    --line: rgba(223,238,211,.14);
+    --surface: #192119;
+    --surface-2: #202b20;
+    --bg: #11170f;
+    --soop: #64c795;
+    --clip: #7fb0ff;
+    --catch: #e5a85c;
+    --youtube: #ff7d72;
+    --gold: #e3c05f;
+    color-scheme: dark;
+}
+html[data-page="dance-archive"][data-theme="dark"] body {
+    background: linear-gradient(180deg, rgba(17,23,15,.88) 0 0), url("banner.jpg") top center / 1600px auto no-repeat, var(--bg);
+}
+html[data-page="dance-archive"][data-theme="dark"] :is(.summary-item, .tools, .bulk-bar, .detail, .empty) { background: var(--surface); }
+html[data-page="dance-archive"][data-theme="dark"] :is(.source-tabs, .source-badge, .status-badge, .play-mark, .pipeline, .detail-media) { background: var(--surface-2); }
+html[data-page="dance-archive"][data-theme="dark"] :is(.top-note, .pipeline-step) { color: var(--muted); }
+html[data-page="dance-archive"][data-theme="dark"] .import-btn {
+    background: #1d3141;
+    color: #92c9f4;
+    border-color: var(--line);
+}
+html[data-page="dance-archive"][data-theme="dark"] .import-btn.secondary {
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+}
+html[data-page="dance-archive"][data-theme="dark"] :is(.bulk-btn:not(.primary):not(.warning), .action-btn.muted) {
+    background: var(--surface-2);
+    color: var(--ink);
+}
+html[data-page="dance-archive"][data-theme="dark"] :is(.bulk-btn.warning, .action-btn.warning) { background: #332d1d; color: #f0c16d; }
+html[data-page="dance-archive"][data-theme="dark"] .select-video { background: var(--surface-2); color: #92c9f4; }
+html[data-page="dance-archive"][data-theme="dark"] .thumb { background: var(--surface-2); }
+html[data-page="dance-archive"] :is(.page-link, .bulk-btn.primary, .action-btn.primary, .step-dot, .video-modal-original) { color: #203314; }

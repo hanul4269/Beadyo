@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="site-backdrop.js?v=release-20261011-all"></script>
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <script>
         (() => {
@@ -27,8 +28,8 @@
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
-    <link rel="stylesheet" href="tokens.css?v=20260918">
-    <script src="beadyo-common.js?v=mascot-webp-20260924"></script>
+    <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
+    <script src="beadyo-common.js?v=release-20261011-all"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
@@ -319,6 +320,11 @@
         .ladder-start:hover {
             transform: translateY(-2px);
             box-shadow: 0 9px 20px rgba(42,47,41,.13), 0 0 0 3px rgba(127,184,63,.14);
+        }
+
+        .ladder-start:focus-visible {
+            outline: 3px solid var(--accent-dark);
+            outline-offset: 3px;
         }
 
         .slot-card {
@@ -1560,6 +1566,7 @@
             }
 
             .stage-toolbar {
+                grid-template-columns: minmax(0, 1fr);
                 justify-items: center;
             }
 
@@ -1683,6 +1690,10 @@
                 flex: 1;
             }
 
+            .action-btn {
+                padding-inline: 10px;
+            }
+
             .mode-tabs {
                 overflow-x: auto;
                 scrollbar-width: none;
@@ -1702,8 +1713,14 @@
             }
 
             .slot-row {
-                grid-template-columns: repeat(var(--cols), minmax(62px, 1fr));
+                grid-template-columns: repeat(var(--cols), minmax(46px, 1fr));
                 gap: 8px;
+            }
+
+            #ladder-panel .ladder-board {
+                min-width: 0;
+                overflow-x: auto;
+                grid-template-columns: max(100%, calc(var(--cols) * 46px + (var(--cols) - 1) * 8px + 24px));
             }
 
             .avatar {
@@ -1781,6 +1798,8 @@
             }
         }
     </style>
+    <script defer src="page-footer.js?v=release-20261011-all"></script>
+    <link rel="stylesheet" href="heading-font.css?v=release-20261011-all">
 </head>
 <body>
     <main class="page">
@@ -1944,7 +1963,7 @@
                         </div>
                     </div>
                     <div class="gacha-prize-modal" id="gacha-prize-modal" onclick="if(event.target === this) closeGachaPrize()" hidden>
-                        <section class="gacha-prize-card" role="dialog" aria-modal="true" aria-label="뽑기 결과">
+                        <section class="gacha-prize-card" role="dialog" aria-modal="true" aria-label="뽑기 결과" tabindex="-1">
                             <div class="gacha-ball" id="gacha-result-ball"><img id="gacha-result-img" src="game-assets/gobookticon/gobook-04.png" alt=""></div>
                             <div class="gacha-prize-title">당첨!</div>
                             <div class="gacha-prize-name" id="gacha-winner">대기 중</div>
@@ -1970,14 +1989,14 @@
         <section class="game-panel" id="nikke-panel">
             <div class="play-stage">
                 <div class="nikke-frame">
-                    <iframe data-src="nikke.html?v=inline-storyline-20260929" title="NIKKE 가이드" loading="lazy" scrolling="no"></iframe>
+                    <iframe data-src="nikke.html?v=no-playlists-20261010" title="NIKKE 가이드" loading="lazy" scrolling="no"></iframe>
                 </div>
             </div>
         </section>
     </main>
 
     <div class="modal-backdrop" id="settings-modal" onclick="modalBackdropClick(event)">
-        <section class="modal" role="dialog" aria-modal="true" aria-label="게임 설정">
+        <section class="modal" role="dialog" aria-modal="true" aria-label="게임 설정" tabindex="-1">
             <div class="modal-head">
                 <div class="modal-title" id="settings-title">후보 설정</div>
                 <button class="icon-btn" type="button" onclick="closeModal()" aria-label="닫기">
@@ -2004,7 +2023,7 @@
     <div class="game-toast" id="game-toast" role="status" aria-live="polite"></div>
 
     <div class="modal-backdrop" id="results-modal" onclick="modalBackdropClick(event)">
-        <section class="modal" role="dialog" aria-modal="true" aria-label="사다리 결과">
+        <section class="modal" role="dialog" aria-modal="true" aria-label="사다리 결과" tabindex="-1">
             <div class="modal-head">
                 <div class="modal-title">사다리 결과</div>
                 <button class="icon-btn" type="button" onclick="closeModal()" aria-label="닫기">
@@ -2070,9 +2089,13 @@
         const defaultLadderNames = Array(LIMITS.ladder).fill('');
         const defaultPrizes = Array(LIMITS.ladder).fill('');
         const ladder = { count: 4, names: [...defaultLadderNames], prizes: [...defaultPrizes], rungs: [], mapping: [], paths: [], running: false, rungsVisible: false };
-        const roulette = { count: 4, names: [...defaultRouletteNames], rotation: 0, history: [], spinning: false };
-        const gacha = { count: 9, names: [...defaultGachaNames], history: [], drawing: false };
+        const roulette = { count: 4, names: [...defaultRouletteNames], rotation: 0, history: [], spinning: false, runToken: 0, resultTimer: 0 };
+        const gacha = { count: 9, names: [...defaultGachaNames], history: [], drawing: false, runToken: 0, animationFrame: 0, finishAnimation: null, pauseTimer: 0, finishPause: null, resultTimer: 0 };
         let settingsMode = 'ladder';
+        let activeGameModal = null;
+        let gameModalOpener = null;
+        let gameModalOverflow = '';
+        let gameModalInert = [];
 
         function $(id) {
             return document.getElementById(id);
@@ -2239,7 +2262,7 @@
             const prizes = visiblePrizes();
             $('ladder-top').innerHTML = names.map((name, i) => `
                 <div class="slot">
-                    <img class="avatar ladder-start" src="${ASSETS[i % ASSETS.length]}" alt="" title="출발" onclick="runLadder(${i})">
+                    <img class="avatar ladder-start" src="${ASSETS[i % ASSETS.length]}" alt="" title="출발" role="button" tabindex="0" aria-label="${escapeHtml(name || `참가자 ${i + 1}`)} 출발" onclick="runLadder(${i})" onkeydown="handleLadderStartKeydown(event, ${i})">
                     <div class="slot-card" contenteditable="true" data-kind="name" data-index="${i}" data-placeholder="참가자" onclick="event.stopPropagation()">${escapeHtml(name)}</div>
                     <div class="arrow" onclick="event.stopPropagation()" aria-hidden="true"></div>
                 </div>
@@ -2282,13 +2305,22 @@
         function handleSlotKeydown(event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
+                event.stopPropagation();
                 event.currentTarget.blur();
             }
+        }
+
+        function handleLadderStartKeydown(event, index) {
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+            event.preventDefault();
+            event.stopPropagation();
+            if (!event.repeat) runLadder(index);
         }
 
         function clearLadderResults() {
             $('result-list').innerHTML = '';
             $('results-modal').classList.remove('open');
+            releaseGameModal($('results-modal'));
             const token = $('ladder-token');
             token.hidden = true;
             token.style.left = '';
@@ -2616,6 +2648,7 @@
                 return `<div class="result-item"><span>${escapeHtml(name)}</span><em>→</em><b>${escapeHtml(prize)}</b></div>`;
             }).join('');
             $('results-modal').classList.add('open');
+            focusGameModal($('results-modal'));
         }
 
         function updateRoulette() {
@@ -2624,6 +2657,7 @@
         }
 
         function clearRouletteResults() {
+            cancelRouletteSpin();
             roulette.rotation = 0;
             roulette.history = [];
             $('roulette-canvas').style.transitionDuration = '0s';
@@ -2690,10 +2724,20 @@
             return ((deg % 360) + 360) % 360;
         }
 
+        function cancelRouletteSpin() {
+            roulette.runToken += 1;
+            clearTimeout(roulette.resultTimer);
+            roulette.resultTimer = 0;
+            roulette.spinning = false;
+            $('spin-btn').disabled = false;
+            document.querySelector('.wheel-center').disabled = false;
+        }
+
         function spinRoulette() {
             if (roulette.spinning) return;
             const names = visibleRouletteNames();
             if (names.length < 2) return;
+            const runToken = ++roulette.runToken;
             roulette.spinning = true;
             $('spin-btn').disabled = true;
             document.querySelector('.wheel-center').disabled = true;
@@ -2710,9 +2754,12 @@
             const currentRotation = normalizeDegrees(roulette.rotation);
             const delta = normalizeDegrees(targetRotation - currentRotation);
             roulette.rotation += turns * 360 + delta;
+            $('roulette-canvas').style.transitionDuration = '';
             $('roulette-canvas').style.transform = `rotate(${roulette.rotation}deg)`;
             $('wheel-center-img').src = ASSETS[(winnerIndex + 2) % ASSETS.length];
-            setTimeout(() => {
+            roulette.resultTimer = setTimeout(() => {
+                if (runToken !== roulette.runToken || !roulette.spinning) return;
+                roulette.resultTimer = 0;
                 const winner = names[winnerIndex];
                 $('winner-name').textContent = winner;
                 $('winner-img').src = ASSETS[winnerIndex % ASSETS.length];
@@ -2960,16 +3007,26 @@
             state.ball.style.setProperty('--rest-rotate', `${state.rotate.toFixed(1)}deg`);
         }
 
-        function animateGachaCapsules(bowl) {
+        function animateGachaCapsules(bowl, runToken) {
             const balls = Array.from(bowl?.querySelectorAll('.gacha-ball') || []);
-            if (!balls.length) return Promise.resolve();
+            if (!balls.length) return Promise.resolve(true);
             bowl.classList.add('shuffling');
             const states = balls.map((ball, index) => makeGachaPhysicsState(ball, bowl, index, balls.length));
             return new Promise(resolve => {
+                function finish(completed) {
+                    if (gacha.finishAnimation === finish) gacha.finishAnimation = null;
+                    resolve(completed);
+                }
+                gacha.finishAnimation = finish;
                 const duration = randomBetween(2850, 3300);
                 let startedAt = 0;
                 let lastAt = 0;
                 function tick(now) {
+                    if (runToken !== gacha.runToken || !gacha.drawing) {
+                        finish(false);
+                        return;
+                    }
+                    gacha.animationFrame = 0;
                     if (!startedAt) {
                         startedAt = now;
                         lastAt = now;
@@ -2979,13 +3036,41 @@
                     lastAt = now;
                     states.forEach(state => stepGachaCapsule(state, elapsed, dt));
                     if (elapsed < duration) {
-                        requestAnimationFrame(tick);
+                        gacha.animationFrame = requestAnimationFrame(tick);
                     } else {
                         bowl.classList.remove('shuffling');
-                        resolve();
+                        finish(true);
                     }
                 }
-                requestAnimationFrame(tick);
+                gacha.animationFrame = requestAnimationFrame(tick);
+            });
+        }
+
+        function cancelGachaDraw() {
+            gacha.runToken += 1;
+            cancelAnimationFrame(gacha.animationFrame);
+            clearTimeout(gacha.pauseTimer);
+            clearTimeout(gacha.resultTimer);
+            gacha.animationFrame = gacha.pauseTimer = gacha.resultTimer = 0;
+            gacha.finishAnimation?.(false);
+            gacha.finishPause?.(false);
+            gacha.finishAnimation = gacha.finishPause = null;
+            gacha.drawing = false;
+            $('gacha-btn').disabled = false;
+            $('gacha-btn').classList.remove('pulling');
+            $('gacha-bowl')?.classList.remove('shuffling');
+            document.querySelector('.gacha-machine')?.classList.remove('dispensing');
+        }
+
+        function pauseGachaDraw(runToken) {
+            return new Promise(resolve => {
+                gacha.finishPause = resolve;
+                gacha.pauseTimer = setTimeout(() => {
+                    if (runToken !== gacha.runToken || !gacha.drawing) return resolve(false);
+                    gacha.pauseTimer = 0;
+                    gacha.finishPause = null;
+                    resolve(true);
+                }, 180);
             });
         }
 
@@ -2995,6 +3080,7 @@
             if (names.length < 2) return;
             closeGachaPrize();
             renderGacha();
+            const runToken = ++gacha.runToken;
             gacha.drawing = true;
             const lever = $('gacha-btn');
             const bowl = $('gacha-bowl');
@@ -3002,13 +3088,15 @@
             lever.classList.remove('pulling');
             void lever.offsetWidth;
             lever.classList.add('pulling');
-            await animateGachaCapsules(bowl);
-            await new Promise(resolve => setTimeout(resolve, 180));
-            drawGacha();
+            if (!await animateGachaCapsules(bowl, runToken)) return;
+            if (runToken !== gacha.runToken || !gacha.drawing) return;
+            if (!await pauseGachaDraw(runToken)) return;
+            if (runToken !== gacha.runToken || !gacha.drawing) return;
+            drawGacha(runToken, names);
         }
 
-        function drawGacha() {
-            const names = visibleGachaNames();
+        function drawGacha(runToken, names) {
+            if (runToken !== gacha.runToken || !gacha.drawing) return;
             const winnerIndex = Math.floor(Math.random() * names.length);
             const winner = names[winnerIndex];
             const asset = ASSETS[winnerIndex % ASSETS.length];
@@ -3030,7 +3118,9 @@
             void machine?.offsetWidth;
             machine?.classList.add('dispensing');
             dock.innerHTML = `<div class="gacha-ball pick" style="--cap:${color}"><img src="${asset}" alt=""></div>`;
-            setTimeout(() => {
+            gacha.resultTimer = setTimeout(() => {
+                if (runToken !== gacha.runToken || !gacha.drawing) return;
+                gacha.resultTimer = 0;
                 $('gacha-result-img').src = asset;
                 const resultBall = $('gacha-result-ball');
                 if (resultBall) resultBall.style.setProperty('--cap', color);
@@ -3045,20 +3135,23 @@
                 $('gacha-btn').disabled = false;
                 $('gacha-btn').classList.remove('pulling');
                 machine?.classList.remove('dispensing');
+                focusGameModal($('gacha-prize-modal'));
             }, 1900);
         }
 
         function closeGachaPrize() {
             const modal = $('gacha-prize-modal');
             if (modal) modal.hidden = true;
+            releaseGameModal(modal);
         }
 
         function clearGachaResults() {
+            cancelGachaDraw();
             gacha.history = [];
             $('gacha-winner').textContent = '대기 중';
             $('gacha-result-img').src = ASSETS[3];
             $('gacha-history').innerHTML = '';
-            $('gacha-prize-modal').hidden = true;
+            closeGachaPrize();
             const statusLast = $('gacha-status-last');
             if (statusLast) statusLast.textContent = '-';
             document.querySelector('.gacha-machine')?.classList.remove('dispensing');
@@ -3072,6 +3165,8 @@
         }
 
         function openSettings(mode) {
+            if (mode === 'roulette' && roulette.spinning) resetRoulette();
+            if (mode === 'gacha' && gacha.drawing) resetGacha();
             settingsMode = mode;
             $('settings-title').textContent = mode === 'gacha' ? '뽑기 후보 설정' : (mode === 'ladder' ? '사다리 설정' : '룰렛 설정');
             const nameLabel = document.querySelector('label[for="name-input"]');
@@ -3086,6 +3181,7 @@
             $('prize-field').style.display = mode === 'ladder' ? '' : 'none';
             $('prize-input').value = visiblePrizes().join('\n');
             $('settings-modal').classList.add('open');
+            focusGameModal($('settings-modal'), '#name-input');
         }
 
         function applySettings() {
@@ -3117,23 +3213,85 @@
             closeModal();
         }
 
+        function focusGameModal(overlay, initialSelector = 'button') {
+            if (!overlay || activeGameModal === overlay) return;
+            if (activeGameModal) releaseGameModal(activeGameModal, false);
+            activeGameModal = overlay;
+            gameModalOpener = document.activeElement;
+            gameModalOverflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+            // Keep every ancestor of the dialog active, including the nested gacha result.
+            for (let branch = overlay; branch && branch !== document.body; branch = branch.parentElement) {
+                for (const sibling of branch.parentElement?.children || []) {
+                    if (sibling === branch) continue;
+                    gameModalInert.push([sibling, sibling.inert]);
+                    sibling.inert = true;
+                }
+            }
+            requestAnimationFrame(() => {
+                if (activeGameModal !== overlay) return;
+                const target = overlay.querySelector(initialSelector) || overlay.querySelector('[role="dialog"]');
+                target?.focus();
+            });
+        }
+
+        function releaseGameModal(overlay, restoreFocus = true) {
+            if (!overlay || activeGameModal !== overlay) return;
+            gameModalInert.forEach(([element, previous]) => { element.inert = previous; });
+            gameModalInert = [];
+            document.body.style.overflow = gameModalOverflow;
+            const opener = gameModalOpener;
+            activeGameModal = gameModalOpener = null;
+            if (restoreFocus && opener?.isConnected && !opener.disabled) opener.focus();
+        }
+
         function modalBackdropClick(event) {
             if (event.target.classList.contains('modal-backdrop')) closeModal();
         }
 
         function closeModal() {
-            document.querySelectorAll('.modal-backdrop.open').forEach(modal => modal.classList.remove('open'));
+            document.querySelectorAll('.modal-backdrop.open').forEach(modal => {
+                modal.classList.remove('open');
+                releaseGameModal(modal);
+            });
         }
 
-        document.addEventListener('keydown', event => {
-            if (event.key === 'Escape') closeModal();
-            if (event.key === 'Enter' && document.querySelector('#ladder-panel.active') && !document.querySelector('.modal-backdrop.open')) revealLadder();
-        });
+        function handleGameKeydown(event) {
+            if (event.defaultPrevented) return;
+            if (activeGameModal) {
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (activeGameModal === $('gacha-prize-modal')) closeGachaPrize();
+                    else closeModal();
+                } else if (event.key === 'Tab') {
+                    const targets = Array.from(activeGameModal.querySelectorAll('button, input, textarea, select, a[href], [tabindex]'))
+                        .filter(element => !element.disabled && element.tabIndex >= 0 && element.getClientRects().length);
+                    const first = targets[0];
+                    const last = targets[targets.length - 1];
+                    if (!first) {
+                        event.preventDefault();
+                        activeGameModal.querySelector('[role="dialog"]')?.focus();
+                    } else if (!activeGameModal.contains(document.activeElement) ||
+                        (event.shiftKey ? document.activeElement === first : document.activeElement === last)) {
+                        event.preventDefault();
+                        (event.shiftKey ? last : first).focus();
+                    }
+                }
+                return;
+            }
+            if (event.key !== 'Enter' || event.repeat || event.isComposing) return;
+            if (event.target?.closest?.('input, textarea, select, button, a, [contenteditable], [role="button"]')) return;
+            if (document.querySelector('#ladder-panel.active')) revealLadder();
+        }
+
+        document.addEventListener('keydown', handleGameKeydown);
 
         resetLadder();
         updateRoulette();
         updateGacha();
-        switchMode(readStoredGameMode(), { persist: false, scroll: false });
+        const requestedGameMode = new URLSearchParams(location.search).get('mode');
+        switchMode(GAME_MODES.has(requestedGameMode) ? requestedGameMode : readStoredGameMode(), { persist: false, scroll: false });
         window.addEventListener('resize', () => {
             drawLadder();
             drawRoulette();

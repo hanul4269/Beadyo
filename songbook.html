@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="site-backdrop.js?v=release-20261011-all"></script>
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="구슬요가 부른 곡 목록을 살펴보고 제목과 가수로 원하는 노래를 검색하세요.">
     <title>구슬요 노래책 — 부른 곡 목록과 검색</title>
@@ -17,7 +18,7 @@
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
-    <link rel="stylesheet" href="tokens.css?v=20260918">
+    <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
@@ -2875,6 +2876,8 @@
             background: rgba(5,9,5,0.62);
         }
     </style>
+    <script defer src="page-footer.js?v=release-20261011-all"></script>
+    <link rel="stylesheet" href="heading-font.css?v=release-20261011-all">
 </head>
 <body>
 
@@ -2974,6 +2977,7 @@
     <!-- 라이브 섹션 -->
     <div id="live-section" style="display:none">
         <div class="song-table-wrap">
+            <div class="explore-note" id="explore-live-date" hidden></div>
             <div id="live-list"></div>
         </div>
         <div id="stats-panel" class="stats-panel" style="display:none"></div>
@@ -3243,11 +3247,18 @@
 </div>
 
 <script src="supabase.min.js?v=supabase-2-112-2"></script>
-<script src="beadyo-common.js?v=mascot-webp-20260924"></script>
+<script src="beadyo-common.js?v=release-20261011-all"></script>
+<link rel="stylesheet" href="explore.css?v=release-20261011-all">
+<script src="explore-data.js?v=release-20261011-all"></script>
+<script src="explore.js?v=release-20261011-all"></script>
 <script>
 const INITIAL_PARAMS = new URLSearchParams(location.search);
 const INITIAL_SONG_ID_RAW = String(INITIAL_PARAMS.get('song') || '').trim();
 const INITIAL_SONG_ID = /^[a-zA-Z0-9_-]+$/.test(INITIAL_SONG_ID_RAW) ? INITIAL_SONG_ID_RAW : '';
+const INITIAL_LIVE_DATE = window.BeadyoExploreData?.validDate(INITIAL_PARAMS.get('date')) || '';
+const INITIAL_RECORD_ID_RAW = String(INITIAL_PARAMS.get('record') || '').trim();
+const INITIAL_RECORD_ID = /^\d+$/.test(INITIAL_RECORD_ID_RAW) ? INITIAL_RECORD_ID_RAW : '';
+const INITIAL_DETAIL = INITIAL_PARAMS.get('detail') === '1';
 const INITIAL_VIEW = INITIAL_SONG_ID ? 'songbook' : INITIAL_PARAMS.get('view') === 'live' ? 'live' : 'songbook';
 const SHEET_LINKS = {
     songbook: 'https://docs.google.com/spreadsheets/d/1pJ61PqiKLJvqgKZXH_B1sLZrPwTI157t9sJ5tCAu_Jw/edit#gid=1451717792',
@@ -3303,7 +3314,9 @@ const S = {
         tags: false,
         quality: false,
     },
-    liveYear:     'stats',
+    liveDate: INITIAL_VIEW === 'live' ? INITIAL_LIVE_DATE : '',
+    liveTargetId: INITIAL_VIEW === 'live' ? INITIAL_RECORD_ID : '',
+    liveYear: INITIAL_VIEW === 'live' && INITIAL_LIVE_DATE ? Number(INITIAL_LIVE_DATE.slice(0, 4)) : INITIAL_RECORD_ID ? 'all' : 'stats',
     query:        '',
     songbookData: null,
     liveCache:    {},
@@ -3323,6 +3336,9 @@ const S = {
     session:      null,
 };
 let pendingSongbookTargetId = INITIAL_SONG_ID;
+let pendingSongbookDetail = INITIAL_DETAIL;
+// Preserve existing archive fallback behavior, but never reuse an incomplete read in related details.
+const incompleteLiveYears = new Set();
 
 // ── Supabase ─────────────────────────────────────
 let db = null, _dbReady = null;
@@ -3368,9 +3384,11 @@ async function ensureSongbookTagsColumn() {
 }
 
 // Supabase에서 페이지네이션 처리해 전체 데이터 가져오기
-async function fetchAll(table, filters = {}, order = []) {
+async function fetchAll(table, filters = {}, order = [], options = {}) {
     await ensureDb();
     const PAGE = 1000;
+    const liveYear = table === 'live_songs' ? String(filters.year ?? 'all') : '';
+    let incomplete = false;
     let all = [], from = 0;
     while (true) {
         let q = db.from(table).select('*').range(from, from + PAGE - 1);
@@ -3379,6 +3397,9 @@ async function fetchAll(table, filters = {}, order = []) {
         const { data, error } = await q;
         if (error) {
             showToast('데이터 로드 실패: ' + error.message);
+            incomplete = true;
+            if (liveYear) incompleteLiveYears.add(liveYear);
+            if (options.strict) throw error;
             break;
         }
         if (!data || data.length === 0) break;
@@ -3386,6 +3407,7 @@ async function fetchAll(table, filters = {}, order = []) {
         if (data.length < PAGE) break;
         from += PAGE;
     }
+    if (liveYear && !incomplete) incompleteLiveYears.delete(liveYear);
     return all;
 }
 
@@ -3398,7 +3420,7 @@ async function loadSongbook() {
     if (S.mainTab === 'songbook') renderSkeleton('songbook-list');
     S.songbookData = await fetchAll('songbook', {}, [['artist', true], ['title', true]]);
     if (S.mainTab === 'songbook') renderSongbook();
-    if (pendingSongbookTargetId) revealSongbookSong(pendingSongbookTargetId);
+    if (pendingSongbookTargetId) revealSongbookSong(pendingSongbookTargetId, pendingSongbookDetail);
 }
 
 async function loadLive(year) {
@@ -3806,6 +3828,7 @@ function refreshOpenSongDetailFavorite(id) {
     const panel = document.getElementById('song-detail-panel');
     panel.innerHTML = songDetailPanelHtml(song);
     updateSongDetailLastDate(song);
+    window.BeadyoExplore?.mountSong(document.getElementById('song-related-links'), song, ensureLiveAllForSongDetail);
 }
 function toggleSongbookFavorite(id, event) {
     event?.preventDefault();
@@ -4240,16 +4263,20 @@ function renderSongbook(forceAll) {
 }
 
 // ── 렌더: 라이브 ─────────────────────────────────
+let liveRenderGeneration = 0;
 async function renderLive() {
+    const generation = ++liveRenderGeneration;
     const year = S.liveYear;
+    const isCurrent = () => generation === liveRenderGeneration && S.mainTab === 'live' && S.liveYear === year;
     document.querySelector('.sb-body').classList.remove('welcome-wide');
 
-    if (year === 'stats' && !S.query) {
+    if (year === 'stats' && !S.query && !S.liveTargetId) {
         document.getElementById('live-list').parentElement.style.display = 'none';
         document.getElementById('stats-panel').style.display = 'block';
         document.getElementById('result-info').style.display = 'none';
         document.querySelector('.sb-body').classList.add('stats-wide');
         await ensureStatsData();
+        if (!isCurrent()) return;
         renderStats();
         return;
     }
@@ -4264,6 +4291,7 @@ async function renderLive() {
         renderSkeleton('live-list');
         await loadLive(key);
     }
+    if (!isCurrent()) return;
 
     const raw = S.liveCache[key] || [];
 
@@ -4273,9 +4301,10 @@ async function renderLive() {
         : raw;
 
     // 검색어 필터
-    const searched = S.query
-        ? filtered.filter(r => matches(r.title, r.artist, S.query, r.memo))
-        : filtered;
+    const byDate = S.liveDate ? filtered.filter(row => row.performed_date === S.liveDate) : filtered;
+    const searched = S.liveTargetId
+        ? byDate.filter(row => String(row.id) === S.liveTargetId)
+        : S.query ? byDate.filter(r => matches(r.title, r.artist, S.query, r.memo)) : byDate;
 
     // 정렬
     const { sort, dir } = S.liveFilter;
@@ -4289,6 +4318,11 @@ async function renderLive() {
     });
 
     updateResultInfo(items.length, raw.length);
+    const dateFilter = document.getElementById('explore-live-date');
+    dateFilter.hidden = !S.liveDate && !S.liveTargetId;
+    dateFilter.innerHTML = S.liveTargetId
+        ? `검색에서 선택한 방송 노래 기록${S.liveDate ? ` · ${esc(S.liveDate)}` : ''} <button type="button" class="explore-action" onclick="clearLiveRecord()">선택 해제</button>`
+        : S.liveDate ? `${esc(S.liveDate)}의 노래 기록 <button type="button" class="explore-action" onclick="clearLiveDate()">날짜 조건 해제</button>` : '';
 
     // 당해 누적 횟수 맵 (연도+제목+가수 기준)
     const countMap = {};
@@ -4325,7 +4359,7 @@ async function renderLive() {
             const cnt = countMap[liveStatKey(r, true)] || 1;
             const excluded = !!r.exclude_from_stats;
             return `
-            <tr class="${S.session ? 'editable ' : ''}${monthStart ? 'month-start' : ''}"${S.session ? ` onclick="openLiveModal(${r.id})"` : ''}>
+            <tr data-live-record-id="${esc(r.id)}" class="${S.session ? 'editable ' : ''}${monthStart ? 'month-start' : ''}"${S.session ? ` onclick="openLiveModal(${r.id})"` : ''}>
                 <td class="col-num">${i + 1}</td>
                 ${showYear ? `<td class="col-year">${r.year ? `<span class="year-badge y${r.year}">${r.year}</span>` : ''}</td>` : ''}
                 <td class="col-date">${fmtDate(r.performed_date)}</td>
@@ -4726,6 +4760,8 @@ function updateResultInfo(shown, total) {
         } else {
             el.textContent = `총 ${total}곡`;
         }
+    } else if (S.liveTargetId) {
+        el.textContent = `선택한 방송 노래 기록 ${shown}개`;
     } else if (S.query && shown !== total) {
         el.textContent = `"${S.query}" — ${total}곡 중 ${shown}곡`;
     } else {
@@ -4830,15 +4866,17 @@ function normalizeSongbookTargetId(value) {
     return /^[a-zA-Z0-9_-]+$/.test(id) ? id : '';
 }
 
-function revealSongbookSong(songId) {
+function revealSongbookSong(songId, detail = false) {
     const targetId = normalizeSongbookTargetId(songId);
     if (!targetId) return false;
     if (!S.songbookData) {
         pendingSongbookTargetId = targetId;
+        pendingSongbookDetail = detail;
         return false;
     }
 
     pendingSongbookTargetId = '';
+    pendingSongbookDetail = false;
     const song = S.songbookData.find(item => String(item?.id ?? '') === targetId);
     if (!song) {
         showToast('선택한 노래책 곡을 찾지 못했어요');
@@ -4866,6 +4904,7 @@ function revealSongbookSong(songId) {
         target.setAttribute('tabindex', '-1');
         target.focus({ preventScroll: true });
         target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (detail) openSongDetailPanel(song.id);
     });
     return true;
 }
@@ -4923,7 +4962,33 @@ function toggleSongbookFacet(kind) {
     renderSongbook();
 }
 
+function revealLiveDate(date, recordId = '') {
+    if (!window.BeadyoExploreData?.validDate(date)) return;
+    S.liveTargetId = /^\d+$/.test(String(recordId)) ? String(recordId) : '';
+    S.liveDate = date;
+    S.query = '';
+    document.getElementById('search-input').value = '';
+    document.getElementById('search-clear').classList.remove('show');
+    S.liveYear = Number(date.slice(0, 4));
+    document.querySelectorAll('#live-subtabs .sub-tab').forEach((tab, i) => {
+        tab.classList.toggle('active', ['stats', '2026', '2025', '2024', '2023', '2022'][i] === String(S.liveYear));
+    });
+    setMainTab('live');
+}
+function clearLiveRecordRoute(clearDate = false) {
+    const hadTarget = !!S.liveTargetId;
+    S.liveTargetId = '';
+    if (!hadTarget && !clearDate) return;
+    const url = new URL(location.href);
+    url.searchParams.delete('record');
+    if (clearDate) url.searchParams.delete('date');
+    history.replaceState(history.state, '', url.pathname + url.search + url.hash);
+}
+function clearLiveRecord() { clearLiveRecordRoute(); renderLive(); }
+function clearLiveDate() { S.liveDate = ''; clearLiveRecordRoute(true); renderLive(); }
 function setLiveYear(year) {
+    clearLiveRecordRoute(true);
+    S.liveDate = '';
     S.liveYear = year;
     const vals = ['stats','2026','2025','2024','2023','2022'];
     document.querySelectorAll('#live-subtabs .sub-tab').forEach((el, i) =>
@@ -4969,6 +5034,7 @@ function toggleStatsFold(key) {
 // ── 검색 ────────────────────────────────────────
 function onSearch(val) {
     S.songbookTargetId = null;
+    clearLiveRecordRoute();
     S.query = val.trim();
     document.getElementById('search-clear').classList.toggle('show', !!S.query);
 
@@ -5378,7 +5444,8 @@ function songbookSaveErrorMessage(error) {
 // ── 초기화 ───────────────────────────────────────
 async function init() {
     if (S.mainTab === 'live') {
-        applyInitialView();
+        if (INITIAL_LIVE_DATE) revealLiveDate(INITIAL_LIVE_DATE, INITIAL_RECORD_ID);
+        else applyInitialView();
         deferWarmup(() => loadSongbook());
         return;
     }
@@ -5428,7 +5495,11 @@ window.addEventListener('message', (e) => {
         return;
     }
     if (e.data?.type === 'beadyo-focus-songbook-song') {
-        revealSongbookSong(e.data.songId);
+        revealSongbookSong(e.data.songId, e.data.detail === true);
+        return;
+    }
+    if (e.data?.type === 'beadyo-focus-live-date') {
+        revealLiveDate(e.data.date);
         return;
     }
     if (e.data?.type === 'beadyo-auth-sync' && db) {
@@ -6548,6 +6619,7 @@ function songDetailPanelHtml(song) {
                 </div>
                 ${memoHtml}
             </div>
+            <section class="explore-related" id="song-related-links"></section>
         </div>`;
 }
 
@@ -6569,16 +6641,17 @@ function latestLiveRecordForSong(song, rows) {
 }
 
 async function ensureLiveAllForSongDetail() {
-    if (S.liveCache['all'] !== undefined) return S.liveCache['all'];
+    if (S.liveCache['all'] !== undefined && !incompleteLiveYears.size) return S.liveCache['all'];
     if (_songDetailLivePromise) return _songDetailLivePromise;
 
     const years = [2022, 2023, 2024, 2025, 2026];
     _songDetailLivePromise = Promise.all(years.map(async year => {
-        if (S.liveCache[year] !== undefined) return S.liveCache[year] || [];
-        const rows = await fetchAll('live_songs', { year }, [['performed_date', false], ['id', false]]);
+        if (S.liveCache[year] !== undefined && !incompleteLiveYears.has(String(year)) && !incompleteLiveYears.has('all')) return S.liveCache[year] || [];
+        const rows = await fetchAll('live_songs', { year }, [['performed_date', false], ['id', false]], { strict: true });
         S.liveCache[year] = rows;
         return rows;
     })).then(parts => {
+        incompleteLiveYears.delete('all');
         S.liveCache['all'] = parts.flat()
             .sort((a, b) => (b.performed_date || '').localeCompare(a.performed_date || ''));
         return S.liveCache['all'];
@@ -6615,6 +6688,7 @@ function openSongDetailPanel(id) {
     panel.innerHTML = songDetailPanelHtml(song);
     modal.classList.add('open');
     updateSongDetailLastDate(song);
+    window.BeadyoExplore?.mountSong(document.getElementById('song-related-links'), song, ensureLiveAllForSongDetail);
 }
 
 function closeSongDetailPanel() {

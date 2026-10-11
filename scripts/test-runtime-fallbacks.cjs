@@ -88,19 +88,28 @@ test('overlapping forced ranking retries share one request', async () => {
     assert.equal(r.calls.length, 1);
 });
 const station = broad => ({station: {user_id: 'beadyo97'}, broad});
-function live(fetchResponse, cache = null) {
+function live(fetchResponse, cache = null, timers = { setTimeout, clearTimeout }) {
     const calls = [];
-    const ctx = vm.createContext({Date, applyLiveStatus() {},
+    const ctx = vm.createContext({Date, ...timers, applyLiveStatus() {},
         fetchWithTimeout: async url => {const source = url.includes('deno.net') ? 'proxy' : 'direct'; calls.push(source); return fetchResponse(source);},
         fetchRuntimeCache: async () => {calls.push('cache'); return cache;}});
     vm.runInContext(liveSource + '\n' + freshSource, ctx);
     return {ctx, calls};
 }
+test('stalled direct LIVE body reaches proxy and releases the shared request', async () => {
+    const r = live(source => source === 'direct' ? { ok: true, json: () => new Promise(() => {}) } : response(station(null)), null,
+        { setTimeout: fn => setTimeout(fn, 10), clearTimeout });
+    const result = await Promise.race([r.ctx.fetchLiveStatus(), new Promise(resolve => setTimeout(() => resolve('stalled'), 80))]);
+    assert.notEqual(result, 'stalled'); assert.equal(result.live, false);
+    assert.deepEqual(r.calls, ['direct', 'proxy']);
+    await r.ctx.fetchLiveStatus(); assert.equal(r.calls.length, 2);
+});
 for (const broad of [null, {broad_no: 123, broad_title: ' LIVE '}, {broad_no: '123', broad_title: 'LIVE'}]) {
     test(`normal station is accepted and memoized: ${JSON.stringify(broad)}`, async () => {
         const r = live(() => response(station(broad)));
         const result = await r.ctx.fetchLiveStatus();
         assert.equal(result.live, broad !== null);
+        assert.equal(result.broad_no, broad ? String(broad.broad_no) : null);
         await r.ctx.fetchLiveStatus();
         assert.deepEqual(r.calls, ['direct']);
     });

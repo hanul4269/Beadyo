@@ -1,6 +1,7 @@
 (() => {
     'use strict';
 
+    const Series = window.BeadyoContentSeries;
     const IMAGE_BUCKET = 'content-images';
     const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
     const IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
@@ -18,6 +19,7 @@
         year: '',
         category: '',
         planningType: '',
+        series: '',
         sort: 'newest',
         isEditor: false,
         loading: true,
@@ -75,6 +77,7 @@
         const replaysSource = Array.isArray(row?.replays) ? row.replays : [];
         return {
             id: stringValue(row?.id, 100),
+            ...Series.normalize(row || {}),
             broadcast_date: normalizeDate(row?.broadcast_date),
             title: stringValue(row?.title, 200) || '제목 없는 콘텐츠',
             summary: stringValue(row?.summary, 500),
@@ -84,7 +87,7 @@
             planners: stringList(row?.planners),
             hosts: stringList(row?.hosts),
             cast_members: stringList(row?.cast_members),
-            tags: stringList(row?.tags),
+            tags: stringList(row?.tags).filter(tag => !Series.isMetadata(tag)),
             thumbnail_url: contentSafeUrl(row?.thumbnail_url),
             notes: stringValue(row?.notes, 10000),
             replays: replaysSource.map(normalizeReplay).filter(Boolean).sort((a, b) => a.sort_order - b.sort_order),
@@ -276,11 +279,13 @@
         const query = state.query.toLocaleLowerCase('ko-KR');
         const items = state.items.filter(item => {
             if (query && !searchableText(item).includes(query)) return false;
+            if (state.series && item.series_id !== state.series) return false;
             if (state.year && !item.broadcast_date.startsWith(`${state.year}-`)) return false;
             if (state.category && !item.categories.includes(state.category)) return false;
             if (state.planningType && item.planning_type !== state.planningType) return false;
             return true;
         });
+        if (state.series) return Series.sortEpisodes(items);
         return items.sort((a, b) => {
             if (state.sort === 'title') return a.title.localeCompare(b.title, 'ko-KR');
             const dateCompare = a.broadcast_date.localeCompare(b.broadcast_date);
@@ -290,13 +295,16 @@
     }
 
     function hasActiveFilters() {
-        return Boolean(state.query || state.year || state.category || state.planningType || state.sort !== 'newest');
+        return Boolean(state.series || state.query || state.year || state.category || state.planningType || state.sort !== 'newest');
     }
 
     function renderFilters() {
         const years = [...new Set(state.items.map(item => item.broadcast_date.slice(0, 4)).filter(year => /^\d{4}$/.test(year)))].sort().reverse();
         const categories = [...new Set(state.items.flatMap(item => item.categories))].sort((a, b) => a.localeCompare(b, 'ko-KR'));
         const planningTypes = [...new Set(state.items.map(item => item.planning_type).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ko-KR'));
+        $('#series-filter').innerHTML = '<option value="">전체 시리즈</option>' + Series.registry.map(series => `<option value="${esc(series.id)}"${series.id === state.series ? ' selected' : ''}>${esc(series.name)}</option>`).join('');
+        $('#sort-filter').disabled = Boolean(state.series);
+        $('#sort-filter').value = state.series ? 'series' : state.sort;
         fillSelect($('#year-filter'), years, '전체 연도', state.year);
         fillSelect($('#category-filter'), categories, '전체 분류', state.category);
         fillSelect($('#planning-filter'), planningTypes, '전체 기획 형태', state.planningType);
@@ -311,7 +319,7 @@
         renderFilters();
         const items = filteredItems();
         $('#result-count').textContent = `총 ${items.length.toLocaleString('ko-KR')}개의 콘텐츠`;
-        const active = [state.year && `${state.year}년`, state.category, state.planningType].filter(Boolean);
+        const active = [state.series && `${Series.name(state.series)} · 회차순 (미등록 회차는 날짜순)`, state.year && `${state.year}년`, state.category, state.planningType].filter(Boolean);
         $('#active-filter-summary').textContent = active.length ? `· ${active.join(' · ')}` : '';
 
         if (state.loadError) {
@@ -337,7 +345,7 @@
             return `<button class="content-card" type="button" data-content-id="${esc(item.id)}" aria-label="${esc(item.title)} 상세 보기">
                 <div class="card-media">${imageMarkup(item, 'card-thumb')}<span class="replay-mark${replayCount ? '' : ' none'}">${replayCount ? `▶ 다시보기 ${replayCount}` : '다시보기 없음'}</span></div>
                 <div class="card-body">
-                    <div class="card-kicker">${esc([item.categories[0], item.planning_type].filter(Boolean).join(' · ') || 'BEADYO CONTENT')}</div>
+                    <div class="card-kicker">${esc([Series.name(item.series_id), item.episode_number && `${item.episode_number}화`, item.categories[0], item.planning_type].filter(Boolean).join(' · ') || 'BEADYO CONTENT')}</div>
                     <h2 class="card-title">${esc(item.title)}</h2>
                     <p class="card-summary">${esc(item.summary || item.description || '상세 기록에서 콘텐츠 정보를 확인해 보세요.')}</p>
                     <div class="card-people">${people ? `출연 · ${esc(people)}` : '&nbsp;'}</div>
@@ -388,6 +396,12 @@
         return value ? `<section class="detail-section"><h3>${esc(title)}</h3><p>${esc(value)}</p></section>` : '';
     }
 
+    function dateRelatedMarkup(item) {
+        const date = window.BeadyoExploreData?.validDate(item.broadcast_date);
+        if (!date) return '';
+        return `<section class="detail-section explore-related"><h3>이 날짜의 일정과 노래 기록</h3><p class="explore-note">콘텐츠에 등록된 방송일 기준으로 이동합니다.</p>${window.BeadyoExplore?.localLink(`calendar.html?date=${encodeURIComponent(date)}`, 'CALENDAR에서 이 날짜 보기') || ''}</section>`;
+    }
+
     function replayMarkup(replay) {
         const available = replay.url && replay.status === '정상';
         const platformClass = replay.platform.toLowerCase() === 'youtube' ? ' youtube' : '';
@@ -397,11 +411,46 @@
             : `<div class="replay-unavailable" aria-label="${esc(replay.label)} ${esc(replay.status)}">${inner}</div>`;
     }
 
+    function seriesMarkup(item) {
+        if (!item.series_id) return '';
+        const episodes = Series.sortEpisodes(state.items.filter(row => row.series_id === item.series_id));
+        const index = episodes.findIndex(row => row.id === item.id);
+        const anchor = (row, label) => {
+            const target = new URL(window.location.href);
+            target.searchParams.set('content', row.id);
+            return `<a class="detail-action" href="${esc(target.pathname + target.search)}" data-series-content="${esc(row.id)}"${row.id === item.id ? ' aria-current="page"' : ''}>${esc(label)}</a>`;
+        };
+        return `<section class="detail-section content-series"><h3>${esc(Series.name(item.series_id))} · 같은 시리즈</h3><p>회차 번호가 없는 기록은 방송 날짜순으로 표시합니다.</p><nav class="series-navigation" aria-label="이전 다음 회차">${episodes[index - 1] ? anchor(episodes[index - 1], '← 이전 회차') : '<span>첫 등록 회차</span>'}${episodes[index + 1] ? anchor(episodes[index + 1], '다음 회차 →') : '<span>마지막 등록 회차</span>'}</nav><ul class="series-episodes">${episodes.map(row => `<li>${anchor(row, [row.episode_number && `${row.episode_number}화`, row.summary || row.title].filter(Boolean).join(' · '))}<small>${esc([row.broadcast_date, row.cast_members.join(', ')].filter(Boolean).join(' · '))}</small></li>`).join('')}</ul></section>`;
+    }
+
+    const filterParams = { query: 'q', year: 'year', category: 'category', planningType: 'planning', series: 'series', sort: 'sort' };
+    function publishContentState() {
+        if (window.parent !== window) window.parent.postMessage({ type:'beadyo-content-state', search:window.location.search }, location.origin);
+    }
+    function syncFilterUrl() {
+        const target = new URL(window.location.href);
+        Object.entries(filterParams).forEach(([field, key]) => {
+            const value = state[field];
+            if (value && !(field === 'sort' && value === 'newest')) target.searchParams.set(key, value);
+            else target.searchParams.delete(key);
+        });
+        history.replaceState(null, '', target.pathname + target.search + target.hash);
+        publishContentState();
+    }
+    function readFilterUrl() {
+        const params = new URLSearchParams(window.location.search);
+        Object.entries(filterParams).forEach(([field, key]) => { state[field] = params.get(key) || (field === 'sort' ? 'newest' : ''); });
+        if (!Series.name(state.series)) state.series = '';
+        if (!['newest', 'oldest', 'title'].includes(state.sort)) state.sort = 'newest';
+        $('#content-search').value = state.query;
+        $('#sort-filter').value = state.sort;
+    }
+
     function openDetail(id, options = {}) {
         const item = state.items.find(candidate => candidate.id === id);
         if (!item) return;
         const thumbnailUrl = displayThumbnailUrl(item);
-        if (!options.refresh) state.lastFocused = document.activeElement;
+        if (!options.refresh && $('#detail-layer').hidden) state.lastFocused = document.activeElement;
         state.detailId = item.id;
         const updated = formatTimestamp(item.updated_at);
         const replays = item.replays.length ? `<section class="detail-section"><h3>다시보기</h3><div class="replay-list">${item.replays.map(replayMarkup).join('')}</div></section>` : '';
@@ -411,6 +460,8 @@
             <div class="detail-body">
                 <dl class="detail-meta">${detailMeta('콘텐츠 분류', item.categories)}${detailMeta('기획 형태', item.planning_type)}${detailMeta('기획자', item.planners)}${detailMeta('진행자', item.hosts)}${detailMeta('출연자', item.cast_members)}${detailMeta('방송일', formatDate(item.broadcast_date, true))}</dl>
                 ${replays}
+                ${seriesMarkup(item)}
+                ${dateRelatedMarkup(item)}
                 ${detailText('상세 설명', item.description)}
                 ${chips.length ? `<section class="detail-section"><h3>태그와 분류</h3><div class="detail-chips">${chips.map(value => `<span class="chip${value.startsWith('#') ? ' tag' : ''}">${esc(value)}</span>`).join('')}</div></section>` : ''}
                 ${detailText('비고', item.notes)}
@@ -420,6 +471,7 @@
         document.body.classList.add('modal-open');
         if (!options.refresh) $('#detail-modal').focus({ preventScroll: true });
         if (options.updateUrl !== false) setContentParam(item.id);
+        $$('[data-series-content]').forEach(anchor => anchor.addEventListener('click', event => { if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return; event.preventDefault(); openDetail(anchor.dataset.seriesContent); $('#detail-modal').scrollTop = 0; }));
         $('[data-share-content]')?.addEventListener('click', () => shareContent(item));
         $('[data-edit-content]')?.addEventListener('click', () => openForm(item.id));
         $('[data-delete-content]')?.addEventListener('click', () => deleteContent(item.id));
@@ -440,6 +492,7 @@
             if (id) url.searchParams.set('content', id);
             else url.searchParams.delete('content');
             history.replaceState({ content: id || null }, document.title, `${url.pathname}${url.search}${url.hash}`);
+            publishContentState();
         } catch {}
     }
 
@@ -450,8 +503,10 @@
     }
 
     async function shareContent(item) {
-        const url = new URL('content.html', window.location.href);
+        const url = new URL('content.html', document.baseURI);
+        url.search = window.location.search;
         url.searchParams.set('content', item.id);
+        url.searchParams.delete('v');
         const shareData = { title: `${item.title} | BEADYO CONTENT`, text: item.summary || '구슬요 CONTENT 아카이브', url: url.toString() };
         try {
             if (navigator.share) await navigator.share(shareData);
@@ -564,6 +619,8 @@
         $('#content-form').reset();
         $('#form-title').textContent = item ? '콘텐츠 수정' : '콘텐츠 추가';
         $('#form-delete-btn').hidden = !item;
+        $('#field-series').innerHTML = '<option value="">시리즈 없음</option>' + Series.registry.map(series => `<option value="${esc(series.id)}"${series.id === item?.series_id ? ' selected' : ''}>${esc(series.name)}</option>`).join('');
+        $('#field-episode').value = item?.episode_number || '';
         $('#field-date').value = item?.broadcast_date || '';
         $('#field-title').value = item?.title === '제목 없는 콘텐츠' ? '' : item?.title || '';
         $('#field-summary').value = item?.summary || '';
@@ -665,6 +722,10 @@
         if (title.length > 200) return showToast('콘텐츠명은 200자 이하로 입력해 주세요', true);
         const urlInput = $('#field-thumbnail-url').value.trim();
         if (urlInput && !contentSafeUrl(urlInput)) return showToast('이미지 URL을 확인해 주세요', true);
+        const seriesId = $('#field-series').value;
+        const episodeRaw = $('#field-episode').value;
+        const episodeNumber = episodeRaw ? Number(episodeRaw) : null;
+        if (episodeRaw && (!seriesId || !Number.isInteger(episodeNumber) || episodeNumber < 1 || episodeNumber > 9999)) return showToast('시리즈를 선택하고 올바른 회차 번호를 입력해 주세요', true);
         const replays = readReplays();
         if (replays.some(replay => replay._rawUrl && !replay.url)) return showToast('다시보기 URL을 확인해 주세요', true);
         checkDuplicate();
@@ -700,6 +761,7 @@
                 replays: replays.map(({ _rawUrl, ...replay }) => replay).sort((a, b) => a.sort_order - b.sort_order),
             };
             LIST_FIELDS.forEach(field => { payload[field] = readRepeatRows(field); });
+            payload.tags = Series.encode(payload.tags, seriesId, episodeNumber);
             const query = state.editingId
                 ? db.from('content_archive').update(payload).eq('id', state.editingId).select('*').single()
                 : db.from('content_archive').insert(payload).select('*').single();
@@ -747,6 +809,7 @@
     }
 
     function resetFilters() {
+        state.series = '';
         state.query = '';
         state.year = '';
         state.category = '';
@@ -754,6 +817,7 @@
         state.sort = 'newest';
         $('#content-search').value = '';
         $('#sort-filter').value = 'newest';
+        syncFilterUrl();
         renderGrid();
     }
 
@@ -781,8 +845,14 @@
         }
     }
 
+    let editorGeneration = 0;
     async function setEditorFromUser(user) {
-        state.isEditor = await checkEditor(user);
+        const generation = ++editorGeneration;
+        state.isEditor = false;
+        $('#add-content-btn').hidden = true;
+        const canEdit = await checkEditor(user);
+        if (generation !== editorGeneration) return;
+        state.isEditor = canEdit;
         $('#add-content-btn').hidden = !state.isEditor;
         renderGrid();
         if (state.detailId) openDetail(state.detailId, { updateUrl: false });
@@ -792,7 +862,7 @@
         if (!db) return;
         const { data: { session } = {} } = await db.auth.getSession();
         await setEditorFromUser(session?.user || null);
-        db.auth.onAuthStateChange((_event, nextSession) => setEditorFromUser(nextSession?.user || null));
+        db.auth.onAuthStateChange((_event, nextSession) => { void setEditorFromUser(nextSession?.user || null); });
     }
 
     function handleKeydown(event) {
@@ -809,21 +879,23 @@
         if (!focusable.length) return;
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
-        if (event.shiftKey && document.activeElement === first) {
+        const modal = openLayer.querySelector('[role="dialog"]') || openLayer;
+        const active = document.activeElement;
+        const startsOutside = active === modal || !modal.contains(active);
+        const atBoundary = event.shiftKey ? active === first : active === last;
+        if (startsOutside || atBoundary) {
             event.preventDefault();
-            last.focus();
-        } else if (!event.shiftKey && document.activeElement === last) {
-            event.preventDefault();
-            first.focus();
+            (event.shiftKey ? last : first).focus();
         }
     }
 
     function bindEvents() {
-        $('#content-search').addEventListener('input', event => { state.query = event.target.value.trim(); renderGrid(); });
-        $('#year-filter').addEventListener('change', event => { state.year = event.target.value; renderGrid(); });
-        $('#category-filter').addEventListener('change', event => { state.category = event.target.value; renderGrid(); });
-        $('#planning-filter').addEventListener('change', event => { state.planningType = event.target.value; renderGrid(); });
-        $('#sort-filter').addEventListener('change', event => { state.sort = event.target.value; renderGrid(); });
+        $('#series-filter').addEventListener('change', event => { state.series = event.target.value; syncFilterUrl(); renderGrid(); });
+        $('#content-search').addEventListener('input', event => { state.query = event.target.value.trim(); syncFilterUrl(); renderGrid(); });
+        $('#year-filter').addEventListener('change', event => { state.year = event.target.value; syncFilterUrl(); renderGrid(); });
+        $('#category-filter').addEventListener('change', event => { state.category = event.target.value; syncFilterUrl(); renderGrid(); });
+        $('#planning-filter').addEventListener('change', event => { state.planningType = event.target.value; syncFilterUrl(); renderGrid(); });
+        $('#sort-filter').addEventListener('change', event => { state.sort = event.target.value; syncFilterUrl(); renderGrid(); });
         $('#filter-reset').addEventListener('click', resetFilters);
         $('#add-content-btn').addEventListener('click', () => openForm());
         $$('[data-close-modal]').forEach(element => element.addEventListener('click', () => closeDetail()));
@@ -881,6 +953,7 @@
             setEditorFromUser(event.data.user || null);
         });
         window.addEventListener('popstate', () => {
+            readFilterUrl(); renderGrid();
             const id = new URLSearchParams(window.location.search).get('content');
             if (id && state.items.some(item => item.id === id)) openDetail(id, { updateUrl: false });
             else closeDetail({ updateUrl: false });
@@ -889,6 +962,7 @@
 
     async function init() {
         bindEvents();
+        readFilterUrl();
         renderSkeletons();
         await Promise.all([loadContents(), initAuth()]);
     }

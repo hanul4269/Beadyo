@@ -210,6 +210,20 @@ function _ensureDb() {
     return _dbReady;
 }
 
+async function readCalendarJson(response, timeoutMs = 6000) {
+    let timer;
+    try {
+        return await Promise.race([
+            response.json(),
+            new Promise((_, reject) => {
+                timer = setTimeout(() => reject(new Error('Calendar response body timeout')), timeoutMs);
+            }),
+        ]);
+    } finally {
+        clearTimeout(timer);
+    }
+}
+
 async function fetchRuntimeCache(cacheKey, timeoutMs = 5000) {
     const controller = new AbortController();
     const tid = setTimeout(() => controller.abort(), timeoutMs);
@@ -224,7 +238,7 @@ async function fetchRuntimeCache(cacheKey, timeoutMs = 5000) {
         });
         clearTimeout(tid);
         if (!res.ok) throw new Error(`runtime cache HTTP ${res.status}`);
-        const rows = await res.json();
+        const rows = await readCalendarJson(res, timeoutMs);
         const row = Array.isArray(rows) ? rows[0] : null;
         return row?.payload ? { ...row.payload, row_updated_at: row.updated_at } : null;
     } catch (error) {
@@ -247,7 +261,7 @@ async function fetchActiveUpEvents(timeoutMs = 8000) {
         });
         clearTimeout(tid);
         if (!res.ok) throw new Error(`up_events HTTP ${res.status}`);
-        return await res.json();
+        return await readCalendarJson(res, timeoutMs);
     } catch (error) {
         clearTimeout(tid);
         throw error;
@@ -1066,11 +1080,11 @@ function scheduleCalendarReload(delay = 350) {
     }, delay);
 }
 
-function startCalendarFallbackPolling() {
+function startCalendarFallbackPolling(intervalMs = 30000) {
     clearInterval(_calendarFallbackPollTimer);
     _calendarFallbackPollTimer = setInterval(() => {
         if (document.visibilityState === 'visible') loadEvents().catch(() => {});
-    }, 30000);
+    }, intervalMs);
 }
 
 async function initCalendarRealtime() {
@@ -1083,7 +1097,11 @@ async function initCalendarRealtime() {
             .on('postgres_changes', { event: '*', schema: 'public', table: 'schedules' }, () => {
                 scheduleCalendarReload();
             })
-            .subscribe();
+            .subscribe(status => {
+                // Keep a safety refresh even if a table is missing from the Realtime publication.
+                // Connection failures use the faster fallback until Realtime reconnects.
+                startCalendarFallbackPolling(status === 'SUBSCRIBED' ? 120000 : 30000);
+            });
     } catch (error) {
         console.warn('calendar realtime unavailable:', error);
     }
@@ -1214,6 +1232,22 @@ async function moveEventToDate(eventId, srcDate, targetDate) {
 }
 
 // ─── 데이터 로드 ───
+function calendarLoadRange() {
+    const prev = new Date(state.year, state.month - 1, 1);
+    let from = dateToStr(prev);
+    let to = toDateStr(state.year, state.month, new Date(state.year, state.month + 1, 0).getDate());
+    const includeDays = (start, days) => {
+        if (!start) return;
+        const [y, m, d] = start.split('-').map(Number);
+        const end = dateToStr(addDays(new Date(y, m - 1, d), days - 1));
+        if (start < from) from = start;
+        if (end > to) to = end;
+    };
+    if (state.viewMode === 'week') includeDays(state.weekStart, 7);
+    if (window.innerWidth <= 640) includeDays(state.mobileStartDate, 3);
+    return { from, to };
+}
+
 async function loadEvents({ isRetry = false } = {}) {
     const requestSequence = ++_loadRequestSequence;
     _eventsLoaded = false;
@@ -1221,18 +1255,7 @@ async function loadEvents({ isRetry = false } = {}) {
     _retryTimer = null;
     if (!isRetry) _loadRetryAttempt = 0;
 
-    const first = toDateStr(state.year, state.month, 1);
-    let   last  = toDateStr(state.year, state.month, new Date(state.year, state.month + 1, 0).getDate());
-    const prev  = new Date(state.year, state.month - 1, 1);
-    const extFirst = `${prev.getFullYear()}-${pad(prev.getMonth() + 1)}-01`;
-
-    // 주간 뷰에서 주가 월 경계를 넘는 경우 다음 달까지 포함
-    if (state.viewMode === 'week' && state.weekStart) {
-        const [wy, wm, wd] = state.weekStart.split('-').map(Number);
-        const weekEnd = addDays(new Date(wy, wm - 1, wd), 6);
-        const weekEndStr = dateToStr(weekEnd);
-        if (weekEndStr > last) last = weekEndStr;
-    }
+    const { from: extFirst, to: last } = calendarLoadRange();
 
     // 빈 상태라도 즉시 렌더 (모바일 무한 빈 화면 방지)
     if (state.events.length === 0) renderCalendar();
@@ -1271,7 +1294,7 @@ async function loadEvents({ isRetry = false } = {}) {
         }
         clearTimeout(tid);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        data = await res.json();
+        data = await readCalendarJson(res);
     } catch (e) {
         clearTimeout(tid);
         if (requestSequence !== _loadRequestSequence) return;
@@ -1283,13 +1306,18 @@ async function loadEvents({ isRetry = false } = {}) {
 
     if (requestSequence !== _loadRequestSequence) return;
     state.events = Array.isArray(data) ? data : [];
-    await loadBroadcastInfos(extFirst, last);
+    await loadBroadcastInfos(extFirst, last, requestSequence);
     if (requestSequence !== _loadRequestSequence) return;
     _eventsLoaded = true;
     _loadRetryAttempt = 0;
     _loadFailureNoticeShown = false;
     renderCalendar();
-    loadYtLinks().catch(() => {});
+    loadYtLinks(extFirst, last, requestSequence).catch(() => {});
+    if (pendingCalendarDate) {
+        const date = pendingCalendarDate;
+        pendingCalendarDate = '';
+        openDayViewModal(date);
+    }
 }
 
 async function loadEditors() {
@@ -1313,62 +1341,51 @@ async function checkEditorAccess() {
     return data === true;
 }
 
-async function loadYtLinks() {
-    const now = new Date();
-    const firstDay = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const lastDay  = new Date(now.getFullYear(), now.getMonth() + 2, 0);
-    const from = dateToStr(firstDay);
-    const to   = dateToStr(lastDay);
+async function loadYtLinks(from, to, requestSequence = _loadRequestSequence) {
+    if (!from || !to) ({ from, to } = calendarLoadRange());
     try {
-        const res = await fetch(
+        const res = await BeadyoCommon.fetchWithTimeout(
             `${SUPABASE_URL}/rest/v1/youtube_links?select=id,date,url&date=gte.${from}&date=lte.${to}&order=date.asc,created_at.asc`,
+            6000,
             { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
         );
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
+        const data = await readCalendarJson(res);
+        if (requestSequence !== _loadRequestSequence) return;
         state.ytLinks = Array.isArray(data) ? data : [];
     } catch (e) {
+        if (requestSequence !== _loadRequestSequence) return;
         console.error('loadYtLinks:', e);
         state.ytLinks = [];
     }
     renderCalendar();
+    refreshDayYoutubeLinks();
 }
 
-async function loadBroadcastInfos(from, to) {
+async function loadBroadcastInfos(from, to, requestSequence = _loadRequestSequence) {
     try {
         const headers = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` };
-        let res = await fetch(
+        let res = await BeadyoCommon.fetchWithTimeout(
             `${SUPABASE_URL}/rest/v1/broadcast_infos?select=id,date,start_time,end_time,vod_urls,vod_titles,memo&date=gte.${from}&date=lte.${to}&order=date.asc`,
+            6000,
             { headers }
         );
         if (!res.ok && res.status === 400) {
-            res = await fetch(
+            res = await BeadyoCommon.fetchWithTimeout(
                 `${SUPABASE_URL}/rest/v1/broadcast_infos?select=id,date,start_time,end_time,vod_urls,memo&date=gte.${from}&date=lte.${to}&order=date.asc`,
+                6000,
                 { headers }
             );
         }
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
+        const data = await readCalendarJson(res);
+        if (requestSequence !== _loadRequestSequence) return;
         state.broadcastInfos = Array.isArray(data) ? data : [];
     } catch (e) {
+        if (requestSequence !== _loadRequestSequence) return;
         console.warn('loadBroadcastInfos:', e);
         state.broadcastInfos = [];
     }
-}
-
-// ─── 범례 렌더링 ───
-function renderLegend() {
-    document.getElementById('legend').innerHTML =
-        `<button class="up-launcher" onclick="openUpModal()"><img class="up-launcher-emoji" src="stickers/s8.png" alt=""><span>UP</span></button>` +
-        `<div class="legend-title">유형</div>` +
-        EVENT_TYPES.map(t => `
-            <div class="legend-item" onclick="openAddModalWithType('${t.key}')">
-                <div class="legend-dot" style="${typeStyle(t)}">${esc(t.icon)}</div>
-                <span>${t.label}</span>
-                <span class="legend-add">+</span>
-            </div>
-        `).join('') +
-        `<div class="legend-sticker"><img src="stickers/legend-thanks-hanul.png" alt="고마워요"></div>`;
 }
 
 function eventsForDate(dateStr) {
@@ -1667,17 +1684,22 @@ function _resetMemoForm(source = 'sidebar') {
     _memoEditingId = null;
 }
 
+let _memoCardsRequestSequence = 0;
 async function loadMemoCards() {
+    const requestSequence = ++_memoCardsRequestSequence;
     const ym = `${state.year}-${String(state.month + 1).padStart(2, '0')}`;
     try {
-        const res = await fetch(
+        const res = await BeadyoCommon.fetchWithTimeout(
             `${SUPABASE_URL}/rest/v1/memo_cards?select=id,content,url,sort_order,year_month&year_month=eq.${ym}&order=sort_order.asc,created_at.asc`,
+            6000,
             { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
         );
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
+        const data = await readCalendarJson(res);
+        if (requestSequence !== _memoCardsRequestSequence) return;
         state.memoCards = Array.isArray(data) ? data : [];
     } catch (e) {
+        if (requestSequence !== _memoCardsRequestSequence) return;
         console.error('loadMemoCards:', e);
         state.memoCards = [];
     }
@@ -2120,12 +2142,40 @@ function dayEventCardHtml(ev, dateStr) {
     </div>`;
 }
 
+let pendingCalendarDate = window.BeadyoExploreData?.validDate(new URLSearchParams(location.search).get('date')) || '';
+function alignCalendarDate(date) {
+    const [y, m, d] = date.split('-').map(Number);
+    const day = new Date(y, m - 1, d);
+    state.year = y;
+    state.month = m - 1;
+    state.mobileStartDate = date;
+    state.weekStart = dateToStr(addDays(day, -day.getDay()));
+}
+if (pendingCalendarDate) alignCalendarDate(pendingCalendarDate);
+function openCalendarDate(date) {
+    if (!window.BeadyoExploreData?.validDate(date)) return;
+    pendingCalendarDate = date;
+    alignCalendarDate(date);
+    loadEvents();
+}
+function dayYoutubeLinksHtml(dateStr) {
+    const ytLinks = state.ytLinks.filter(yl => yl.date === dateStr);
+    return ytLinks.length ? `<div class="day-section-title sub">YouTube 링크</div><div class="day-link-row">${ytLinks.map(yl => {
+        const type = ytLinkType(yl.url);
+        return `<a class="vod-link yt-vod-link" href="${esc(safeUrl(yl.url))}" target="_blank" rel="noopener noreferrer">${type === 'short' ? '▶ YouTube Shorts' : '▶ YouTube'}</a>`;
+    }).join('')}</div>` : '';
+}
+function refreshDayYoutubeLinks() {
+    const modal = document.getElementById('viewModal');
+    const section = document.getElementById('day-youtube-links');
+    if (!modal?.classList.contains('open') || !modal.dataset.dayDate || !section) return;
+    section.innerHTML = dayYoutubeLinksHtml(modal.dataset.dayDate);
+}
 function openDayViewModal(dateStr) {
     const events = calendarEventsForDate(dateStr);
     const info = broadcastInfoForDate(dateStr);
     const time = broadcastTimeLabel(info);
     const links = broadcastLinks(info);
-    const ytLinks = state.ytLinks.filter(yl => yl.date === dateStr);
 
     let html = `<div class="modal-title">${formatDate(dateStr)}</div>`;
     html += `<div class="day-modal-section">
@@ -2144,13 +2194,13 @@ function openDayViewModal(dateStr) {
                 ${links.length ? `<div class="day-link-row broadcast-links">${links.map(link => `<a class="vod-link" href="${esc(safeUrl(link.url))}" target="_blank" rel="noopener noreferrer">▶ ${esc(link.title)}</a>`).join('')}</div>` : ''}
             </div>`
             : dayEmptyHtml('아직 방송정보가 등록되지 않았어요', 'pre')}
-        ${ytLinks.length ? `<div class="day-section-title sub">YouTube 링크</div><div class="day-link-row">${ytLinks.map(yl => {
-            const type = ytLinkType(yl.url);
-            return `<a class="vod-link yt-vod-link" href="${esc(safeUrl(yl.url))}" target="_blank" rel="noopener noreferrer">${type === 'short' ? '▶ YouTube Shorts' : '▶ YouTube'}</a>`;
-        }).join('')}</div>` : ''}
+        <div id="day-youtube-links">${dayYoutubeLinksHtml(dateStr)}</div>
     </div>`;
 
+    html += '<section class="explore-related" id="calendar-song-links"></section>';
     document.getElementById('viewContent').innerHTML = html;
+    document.getElementById('viewModal').dataset.dayDate = dateStr;
+    window.BeadyoExplore?.mountDate(document.getElementById('calendar-song-links'), dateStr, [...links.map(link => link.url), ...events.flatMap(event => [event.vod_url, ...eventScheduleLinks(event).map(link => link.url)])]);
     document.getElementById('viewBtns').innerHTML = state.isEditor
         ? `<button class="btn btn-primary" onclick="openBroadcastModal(${jsArg(dateStr)})">방송정보 편집</button>
            <button class="btn btn-secondary" onclick="closeViewModal();openAddModal(${jsArg(dateStr)})">일정 추가</button>
@@ -2162,6 +2212,7 @@ function openDayViewModal(dateStr) {
 function openViewModal(id) {
     const ev = state.events.find(e => e.id === id);
     if (!ev) return;
+    delete document.getElementById('viewModal').dataset.dayDate;
     const t = typeOf(ev.type);
 
     let html = `<div class="modal-title">${esc(ev.title)}</div>`;
@@ -2192,6 +2243,7 @@ function openViewModal(id) {
         html += `<a class="vod-link yt-vod-link" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">${type === 'long' ? '▶ YouTube' : '▶ YouTube Shorts'}</a>`;
     });
 
+    if (ev.date) html += `<div class="view-section"><button class="btn btn-secondary" onclick="openDayViewModal(${jsArg(ev.date)})">이 날짜의 방송정보·노래 기록 →</button></div>`;
     document.getElementById('viewContent').innerHTML = html;
     document.getElementById('viewBtns').innerHTML = state.isEditor
         ? `<button class="btn btn-primary"  onclick="openEditModal(${jsArg(id)})">수정</button>
@@ -2213,7 +2265,11 @@ function openViewModal(id) {
         }
     }
 }
-function closeViewModal() { document.getElementById('viewModal').classList.remove('open'); }
+function closeViewModal() {
+    const modal = document.getElementById('viewModal');
+    modal.classList.remove('open');
+    delete modal.dataset.dayDate;
+}
 
 const UP_LOCAL_RANKING_CACHE_KEY = 'beadyoUpRankingLastSnapshot:v1';
 const UP_LOCAL_RANKING_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
@@ -2364,18 +2420,9 @@ function dismissUpAutoPopup(mode) {
     closeUpModal();
 }
 
-async function maybeOpenUpModalOnStart() {
-    if (_upAutoPopupChecked) return;
-    _upAutoPopupChecked = true;
-    if (upAutoPopupHiddenUntil()) return;
-    try {
-        const data = await fetchActiveUpEvents();
-        const events = data || [];
-        if (events.some(isUpStartupEvent)) {
-            openUpModal({ auto: true, startupOnly: true, sbEvents: events });
-        }
-    } catch {}
-}
+// STEP 2 policy: no automatic UP prompt, including standalone CALENDAR.
+// Existing hide-until values and show_on_startup flags remain untouched.
+async function maybeOpenUpModalOnStart() { _upAutoPopupChecked = true; }
 
 function parseSoopUrl(url) {
     const clean = url.split('#')[0];
@@ -2901,12 +2948,6 @@ function initTimePicker(value) {
     mCol.removeEventListener('scroll', _tpSync);
     hCol.addEventListener('scroll', _tpSync, { passive: true });
     mCol.addEventListener('scroll', _tpSync, { passive: true });
-}
-
-function openAddModalWithType(typeKey) {
-    if (!state.isEditor) return;
-    const today = new Date();
-    openAddModal(toDateStr(today.getFullYear(), today.getMonth(), today.getDate()), typeKey);
 }
 
 let _editReturnContext = null;
@@ -3713,8 +3754,8 @@ function renderUpEventList() {
                     <button class="up-order-btn" onclick="moveUpEvent(${jsArg(e.id)}, 1)" ${index === upEvents.length - 1 ? 'disabled' : ''}>아래</button>
                 </div>
                 <label class="up-startup-toggle">
-                    <input type="checkbox" ${isUpStartupEvent(e) ? 'checked' : ''} onchange="toggleUpStartup('${esc(String(e.id))}', this.checked)">
-                    <span>먼저 띄우기</span>
+                    <input type="checkbox" ${isUpStartupEvent(e) ? 'checked' : ''} disabled title="현재 자동 팝업 대신 수동 UP 상세에서 확인합니다">
+                    <span>이전 팝업 설정 · 현재 수동 UP 상세</span>
                 </label>
                 <button class="editor-remove-btn" onclick="removeUpEvent(${jsArg(e.id)})">삭제</button>
             </div>
@@ -3844,6 +3885,7 @@ function setViewMode(mode) {
 }
 
 function changeMonth(delta) {
+    pendingCalendarDate = '';
     if (state.viewMode === 'week') {
         if (!state.weekStart) {
             const today = new Date();
@@ -3854,7 +3896,8 @@ function changeMonth(delta) {
         state.weekStart = dateToStr(newWs);
         const newYear  = newWs.getFullYear();
         const newMonth = newWs.getMonth();
-        if (newYear !== state.year || newMonth !== state.month) {
+        const weekEnd = addDays(newWs, 6);
+        if (newYear !== state.year || newMonth !== state.month || weekEnd.getFullYear() !== newYear || weekEnd.getMonth() !== newMonth) {
             state.year  = newYear;
             state.month = newMonth;
             loadEvents();
@@ -3872,6 +3915,7 @@ function changeMonth(delta) {
     loadMemoCards().catch(() => {});
 }
 function goToday() {
+    pendingCalendarDate = '';
     const now = new Date();
     state.year  = now.getFullYear();
     state.month = now.getMonth();
@@ -3882,12 +3926,14 @@ function goToday() {
 }
 
 function navigateMobileDays(delta) {
+    pendingCalendarDate = '';
     const [y, m, d] = state.mobileStartDate.split('-').map(Number);
     const next = new Date(y, m - 1, d + delta);
     state.mobileStartDate = dateToStr(next);
     const newYear = next.getFullYear();
     const newMonth = next.getMonth();
-    if (newYear !== state.year || newMonth !== state.month) {
+    const windowEnd = addDays(next, 2);
+    if (newYear !== state.year || newMonth !== state.month || windowEnd.getFullYear() !== newYear || windowEnd.getMonth() !== newMonth) {
         state.year = newYear;
         state.month = newMonth;
         loadEvents();
@@ -3994,7 +4040,6 @@ const STICKER_RAIN_ASSETS = [
 const CONFETTI_COLORS = ['#ff7eb3','#ffcd3c','#7bc67e','#6eb5ff','#ff8c69','#c77dff','#ff6b6b'];
 
 // ─── 초기화 ───
-renderLegend();
 loadEvents().catch(err => {
     console.error('initial loadEvents:', err);
     state.events = [];
@@ -4005,7 +4050,7 @@ loadMemoCards().catch(err => console.error('initial loadMemoCards:', err));
 initCalendarRealtime();
 initAuth();
 maybeOpenCalendarNoticeOnStart();
-setTimeout(() => { maybeOpenUpModalOnStart(); }, 700);
+// UP events remain accessible through the existing manual UP buttons.
 checkBirthday();
 
 document.addEventListener('keydown', event => {
