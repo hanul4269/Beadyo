@@ -1,0 +1,30 @@
+{
+  "boardHtml": "<!doctype html><html lang=\"ko\"><head><title>💩슬요 똥글💩,떼굴떼굴구슬요 : 네이버 카페</title></head><body><div class=\"BoardHeaderTitle\"><div class=\"title_area\"><div class=\"info_tit\"><h3 class=\"sub-tit-color\">💩슬요 똥글💩</h3></div></div></div></body></html>",
+  "articles": {
+    "result": {
+      "articleList": [
+        {"type":"ARTICLE","item":{"articleId":40216,"cafeId":31098081,"menuId":21,"subject":"일어나써","writeDateTimestamp":1792211434443,"openArticle":true,"blindArticle":false,"restrictMenu":false}},
+        {"type":"ARTICLE","item":{"articleId":40213,"cafeId":31098081,"menuId":21,"subject":"얘두라","writeDateTimestamp":1792183409410,"openArticle":true,"blindArticle":false,"restrictMenu":false}},
+        {"type":"ARTICLE","item":{"articleId":40207,"cafeId":31098081,"menuId":21,"subject":"좋아","writeDateTimestamp":1792133547433,"openArticle":true,"blindArticle":false,"restrictMenu":false}},
+        {"type":"ARTICLE","item":{"articleId":40203,"cafeId":31098081,"menuId":21,"subject":"집 더착!!","writeDateTimestamp":1792078511400,"openArticle":true,"blindArticle":false,"restrictMenu":false}},
+        {"type":"ARTICLE","item":{"articleId":40195,"cafeId":31098081,"menuId":21,"subject":"2일차의 끝","writeDateTimestamp":1791999481863,"openArticle":true,"blindArticle":false,"restrictMenu":false}},
+        {"type":"ARTICLE","item":{"articleId":40192,"cafeId":31098081,"menuId":21,"subject":"2일차","writeDateTimestamp":1791946822700,"openArticle":true,"blindArticle":false,"restrictMenu":false}}
+      ],
+      "pageInfo": {"lastNavigationPageNumber":10,"visibleNextButton":true}
+    }
+  },
+  "notices": {
+    "result": {
+      "articleList": [
+        {"type":"ARTICLE","item":{"articleId":39944,"cafeId":31098081,"menuId":32}},
+        {"type":"ARTICLE","item":{"articleId":39918,"cafeId":31098081,"menuId":32}},
+        {"type":"ARTICLE","item":{"articleId":39681,"cafeId":31098081,"menuId":32}},
+        {"type":"ARTICLE","item":{"articleId":37469,"cafeId":31098081,"menuId":41}},
+        {"type":"ARTICLE","item":{"articleId":36229,"cafeId":31098081,"menuId":32}},
+        {"type":"ARTICLE","item":{"articleId":31974,"cafeId":31098081,"menuId":32}},
+        {"type":"ARTICLE","item":{"articleId":2034,"cafeId":31098081,"menuId":32}},
+        {"type":"ARTICLE","item":{"articleId":117,"cafeId":31098081,"menuId":32}}
+      ]
+    }
+  }
+}

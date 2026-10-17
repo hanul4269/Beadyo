@@ -176,7 +176,7 @@ function markPwaGuideSeen() {
 }
 
 const TABS = [
-    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'release-20261011-all' },
+    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'release-20261017-all' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
     { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'release-20261011-all' },
     { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'release-20261011-all' },

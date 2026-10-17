@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "cafeId": "31098081",
+  "menuId": "21",
+  "boardTitle": "슬요 똥글",
+  "fetchedAt": "2026-10-17T11:15:01.625Z",
+  "posts": [
+    {
+      "id": "40216",
+      "title": "일어나써",
+      "publishedAt": "2026-10-17T13:30:34.443+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40216"
+    },
+    {
+      "id": "40213",
+      "title": "얘두라",
+      "publishedAt": "2026-10-17T05:43:29.410+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40213"
+    },
+    {
+      "id": "40207",
+      "title": "좋아",
+      "publishedAt": "2026-10-16T15:52:27.433+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40207"
+    },
+    {
+      "id": "40203",
+      "title": "집 더착!!",
+      "publishedAt": "2026-10-16T00:35:11.400+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40203"
+    },
+    {
+      "id": "40195",
+      "title": "2일차의 끝",
+      "publishedAt": "2026-10-15T02:38:01.863+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40195"
+    }
+  ]
+}

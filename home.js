@@ -44,8 +44,9 @@
             ${card('schedule', '오늘과 다음 일정', tabLink('calendar', 'CALENDAR →'), 'home-wide')}
             ${card('news', '최신 소식', tabLink('music', 'MUSIC →'), 'home-news-wide')}
             ${card('content', '최근 콘텐츠', tabLink('content', 'CONTENT →'), 'home-wide')}
-            ${card('events', '주요 이벤트', tabLink('calendar', '전체 일정 →'))}
+            ${card('cafe', '슬요 똥글', `<div class="home-cafe-actions"><button class="home-action home-cafe-refresh" id="home-cafe-refresh" type="button" data-home-refresh="cafe" aria-label="슬요 똥글 새로고침" title="최근 목록 새로고침">새로고침</button>${external(window.BeadyoHomeCafe?.boardUrl || 'https://cafe.naver.com/f-e/cafes/31098081/menus/21?viewType=L', '전체 보기')}</div>`)}
             ${card('monthly', '이번 달 돌아보기', '', 'home-wide')}
+            ${card('events', '주요 이벤트', tabLink('calendar', '전체 일정 →'))}
         </div></div>`;
     }
     function stateHtml(key, empty) {
@@ -121,6 +122,32 @@
     function renderContent() {
         setHtml('home-content', rows('content', e => `<li><a class="home-item" href="content.html?content=${encodeURIComponent(e.id)}"><span class="home-item-date">${esc(e.broadcast_date)}</span><span class="home-item-title">${esc(e.title)} →</span></a></li>`, '등록된 콘텐츠가 없습니다.') + refreshNotice('content'));
     }
+    function renderCafe() {
+        const state = sources.cafe;
+        const refreshing = state?.status === 'loading' || Boolean(state?.refreshing);
+        const button = document.getElementById('home-cafe-refresh');
+        if (button) {
+            button.disabled = refreshing;
+            button.ariaBusy = String(refreshing);
+            button.textContent = refreshing ? '갱신 중…' : '새로고침';
+        }
+        let html;
+        if (!state || state.status === 'loading') {
+            html = '<p class="home-state" role="status">카페 글을 불러오는 중…</p>';
+        } else if (state.status === 'error') {
+            html = '<div class="home-state home-error">카페 글 목록을 불러오지 못했습니다.<button class="home-action" type="button" data-home-retry="cafe">다시 시도</button></div>';
+        } else {
+            const data = state.data;
+            const date = value => new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(value));
+            const checked = new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(data.fetchedAt));
+            html = data.posts.length ? `<ul class="home-list home-cafe-list">${data.posts.map(post => `<li><a class="home-item home-cafe-item" href="${esc(post.href)}" target="_blank" rel="noopener noreferrer"><span class="home-item-title">${esc(post.title)} ↗</span><time class="home-cafe-date" datetime="${esc(post.publishedAt)}">${esc(date(post.publishedAt))}</time></a></li>`).join('')}</ul>` : '<p class="home-state">현재 표시할 공개 게시글이 없습니다.</p>';
+            html += `<p class="home-meta home-cafe-checked">최근 업데이트 · <time datetime="${esc(data.fetchedAt)}">${esc(checked)}</time></p>`;
+            if (data.fetchFailed || state.refreshError) {
+                html += '<p class="home-state home-error">갱신하지 못해 마지막으로 확인한 목록을 표시합니다. <button class="home-action" type="button" data-home-retry="cafe">다시 시도</button></p>';
+            }
+        }
+        setHtml('home-cafe', html);
+    }
     function renderEvents() {
         const state = sources.events;
         const day = D.dayKey();
@@ -131,7 +158,7 @@
             return `<a class="home-event" href="calendar.html?date=${encodeURIComponent(e.date)}" data-home-date="${esc(e.date)}"><div class="home-dday">${label}</div><span class="home-item-title">${esc(e.title)}</span><p class="home-meta">${esc(eventDate(e))}${e.end_date ? ` ~ ${esc(dateText(e.end_date))}` : ''}</p><span class="home-link">CALENDAR에서 상세 보기 →</span></a>`;
         }).join('') + refreshNotice('events'));
     }
-    const renderers = { live: renderLive, schedule: renderSchedule, soop: renderSoop, notices: renderNews, music: renderNews, videos: renderNews, content: renderContent, events: renderEvents };
+    const renderers = { live: renderLive, schedule: renderSchedule, soop: renderSoop, cafe: renderCafe, notices: renderNews, music: renderNews, videos: renderNews, content: renderContent, events: renderEvents };
     function deadline(promise, ms = 12000) {
         let timer;
         return Promise.race([promise, new Promise((_, reject) => { timer = setTimeout(() => reject(new Error('HOME timeout')), ms); })]).finally(() => clearTimeout(timer));
@@ -155,6 +182,7 @@
         live: async () => { const data = await fetchLiveStatus(); if (!data) throw new Error('Live unavailable'); return data; },
         schedule: schedules,
         soop: () => window.BeadyoHomeSoop.read(C.fetchWithTimeout),
+        cafe: (options = {}) => window.BeadyoHomeCafe.read(C.fetchWithTimeout, { force: Boolean(options.force || sources.cafe?.refreshError || sources.cafe?.data?.fetchFailed) }),
         notices: () => readRows('calendar_notices?select=id,title,link_url,created_at&is_active=eq.true&order=created_at.desc,id.asc&limit=3'),
         music: () => readRows(`youtube_songs?select=id,title,type,upload_date,youtube_url&or=(upload_date.lte.${D.dayKey()},upload_date.is.null)&order=upload_date.desc.nullslast,id.asc&limit=3`),
         videos: async () => {
@@ -177,14 +205,14 @@
             return data.filter(e => Number.isFinite(D.dayNumber(e.date)) && (e.end_date || e.date) >= D.dayKey());
         },
     };
-    async function load(key) {
+    async function load(key, options = {}) {
         if (sources[key]?.status === 'loading' || sources[key]?.refreshing) return;
         const previous = sources[key]?.status === 'success' ? sources[key] : null;
         sources[key] = previous ? { ...previous, refreshing: true } : { status: 'loading' };
         pending++;
-        if (!previous) renderers[key]();
+        if (!previous || key === 'cafe') renderers[key]();
         try {
-            const data = await deadline(loaders[key]());
+            const data = await deadline(loaders[key](options));
             sources[key] = { status: 'success', data, at: Date.now() };
         } catch {
             sources[key] = previous ? { ...previous, refreshing: false, refreshError: true } : { status: 'error' };
@@ -223,7 +251,8 @@
                     const routes = { calendar: 0, music: 4, content: 5 };
                     if (target.dataset.homeRoute === 'music') switchMusicPage('songs');
                     else switchTab(routes[target.dataset.homeRoute]);
-                } else if (target.dataset.homeRetry && loaders[target.dataset.homeRetry]) void load(target.dataset.homeRetry);
+                } else if (target.dataset.homeRefresh === 'cafe') void load('cafe', { force: true });
+                else if (target.dataset.homeRetry && loaders[target.dataset.homeRetry]) void load(target.dataset.homeRetry);
             });
         }
         window.BeadyoHomeVisual?.activate();

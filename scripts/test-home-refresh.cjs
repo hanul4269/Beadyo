@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const source = fs.readFileSync(require.resolve('../home.js'), 'utf8');
-const loadSource = source.slice(source.indexOf('    async function load(key) {'), source.indexOf('    function refresh() {'));
+const loadSource = source.slice(source.indexOf('    async function load(key, options = {}) {'), source.indexOf('    function refresh() {'));
 function harness(previous) {
     const sources = previous ? { live: previous } : {};
     const renders = [];

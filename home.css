@@ -73,6 +73,14 @@ body.home-view .explore-bottom { background: var(--home-control-surface); border
 .home-root .home-item:hover .home-item-title { color: var(--accent-dark); text-decoration: underline; }
 .home-root .home-item-title { display: block; font-size: 15px; font-weight: 700; line-height: 1.55; overflow-wrap: anywhere; white-space: pre-line; }
 .home-root .home-item-desc { display: block; font-size: 13px; color: var(--muted); line-height: 1.6; margin-top: 4px; overflow-wrap: anywhere; }
+.home-root .home-cafe-item { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.home-root .home-cafe-item .home-item-title { min-width: 0; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.home-root .home-cafe-date { flex-shrink: 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.home-root .home-cafe-checked { overflow-wrap: anywhere; }
+.home-root [data-home-card="cafe"] .home-card-head { align-items: center; flex-wrap: wrap; }
+.home-root .home-cafe-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.home-root .home-cafe-refresh { min-height: 36px; padding: 7px 8px; font-size: 12px; }
+.home-root .home-cafe-refresh:disabled { cursor: wait; opacity: .65; }
 .home-root .home-item-date { display: block; color: var(--accent-dark); font-size: 12px; font-weight: 700; line-height: 1.6; margin-bottom: 3px; }
 .home-root .home-tag { display: inline-block; font-size: 11px; font-weight: 700; border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; margin-right: 6px; color: var(--muted); }
 .home-root .home-news-columns { display: grid; grid-template-columns: minmax(0,3fr) minmax(0,2fr); gap: 24px; }

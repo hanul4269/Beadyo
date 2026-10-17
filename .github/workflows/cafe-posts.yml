@@ -1,0 +1,39 @@
+name: Update Public Cafe Posts
+
+on:
+  schedule:
+    - cron: '17,47 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-cafe-posts
+  cancel-in-progress: false
+
+jobs:
+  update-cafe-posts:
+    if: github.repository == 'hanul4269/Beadyo' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Check public-list parser
+        run: python3 scripts/test-cafe-posts.py
+
+      - name: Fetch public posts without login
+        run: python3 scripts/update-cafe-posts.py
+
+      # The client reads this small public JSON from raw.githubusercontent.com.
+      # This updates data without deploying any site code or using a database.
+      - name: Save only the validated public cache
+        run: |
+          git add -- data/cafe-posts.json
+          if ! git diff --cached --quiet -- data/cafe-posts.json; then
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'data: refresh public cafe posts'
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi

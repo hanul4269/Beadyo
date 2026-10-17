@@ -100,12 +100,133 @@ test('one failed source leaves other HOME sources usable and never invents data'
     assert.doesNotMatch(node('home-news').innerHTML, /home-notices/);
     assert.match(node('home-news').innerHTML, /등록된 음악 영상이 없습니다/);
     assert.doesNotMatch(root.innerHTML, /home-up|home-fan|data-home-settings|home-all-hidden/);
-    assert.deepEqual([...root.innerHTML.matchAll(/data-home-card="([^"]+)"/g)].map(match => match[1]), ['live','schedule','news','content','events','monthly']);
+    assert.match(node('home-cafe').innerHTML, /카페 글 목록을 불러오지 못했습니다/);
+    assert.deepEqual([...root.innerHTML.matchAll(/data-home-card="([^"]+)"/g)].map(match => match[1]), ['live','schedule','news','content','cafe','monthly','events']);
     assert.doesNotMatch(root.innerHTML, /home-song|오늘의 한 곡/);
     assert.equal(nodes.has('home-song'), false);
     assert.equal(node('refresh').disabled, false);
     assert.match(root.innerHTML, /href="\/index.html\?keep=1#calendar"/);
     assert.doesNotMatch(root.innerHTML, /href="[^"]*tab=home/);
+});
+
+test('manual cafe refresh keeps five posts, bypasses cache once, and recovers after failure', async t => {
+    const nodes = new Map(), listeners = new Map(), requests = [], deferred = [];
+    const node = id => {
+        if (!nodes.has(id)) nodes.set(id, { innerHTML: '', textContent: '', disabled: false });
+        return nodes.get(id);
+    };
+    const root = node('frame-7');
+    root.classList = { contains: () => true };
+    root.querySelector = () => node('home-cafe-refresh');
+    root.addEventListener = (type, handler) => listeners.set(type, handler);
+    const fetchedAt = new Date().toISOString();
+    const feed = prefix => ({ fetchedAt, stale: false, fetchFailed: false, posts: Array.from({ length: 5 }, (_, index) => ({
+        id: String(40000 + index), title: `${prefix} ${index + 1}`,
+        publishedAt: new Date(Date.parse(fetchedAt) - (index + 1) * 60000).toISOString(),
+        href: `https://cafe.naver.com/f-e/cafes/31098081/articles/${40000 + index}`,
+    })) });
+    const initial = feed('기존 글');
+    const fetchWithTimeout = async () => ({ ok: true, json: async () => ({ scheduleIds: [] }) });
+    const readCafe = (fetch, options) => {
+        requests.push({ fetch, force: options.force });
+        if (requests.length === 1) return Promise.resolve(initial);
+        let resolve, reject;
+        const promise = new Promise((yes, no) => { resolve = yes; reject = no; });
+        deferred.push({ resolve, reject });
+        return promise;
+    };
+    t.after(() => deferred.forEach(request => request.resolve(initial)));
+    const ctx = vm.createContext({ console, Date, Intl, Set, Promise, URL, URLSearchParams, setTimeout, clearTimeout, setInterval() {},
+        document: { hidden: false, getElementById: node, addEventListener() {} },
+        window: { location: { pathname: '/index.html', search: '?tab=home' }, BeadyoHomeData: D,
+            BeadyoHomeSoop: { boardUrl: require('../home-soop.js').boardUrl, read: async () => [] },
+            BeadyoHomeCafe: { boardUrl: 'https://cafe.naver.com/f-e/cafes/31098081/menus/21?viewType=L', read: readCafe },
+            BeadyoExploreData: require('../explore-data.js'),
+            BeadyoCommon: { esc: text => String(text ?? ''), safeUrl: text => text || '', fetchWithTimeout },
+        },
+        fetchLiveStatus: async () => null, fetchSupabaseRest: async () => [],
+    });
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '../home.js'), 'utf8'), ctx);
+    const settle = () => new Promise(resolve => setImmediate(resolve));
+    await settle();
+    assert.match(root.innerHTML, /id="home-cafe-refresh"[^>]*data-home-refresh="cafe"/);
+    assert.deepEqual([...root.innerHTML.matchAll(/data-home-card="([^"]+)"/g)].map(match => match[1]),
+        ['live', 'schedule', 'news', 'content', 'cafe', 'monthly', 'events']);
+    const button = node('home-cafe-refresh');
+    button.dataset = { homeRefresh: 'cafe' };
+    button.closest = () => button;
+    const click = target => listeners.get('click')({ target, preventDefault() {} });
+    const html = () => node('home-cafe').innerHTML;
+    const list = () => html().match(/<ul class="home-list home-cafe-list">[\s\S]*?<\/ul>/)?.[0];
+    const assertButton = busy => {
+        assert.equal(button.disabled, busy);
+        assert.equal(button.ariaBusy, String(busy));
+        assert.equal(button.textContent, busy ? '갱신 중…' : '새로고침');
+    };
+    const assertFivePosts = prefix => {
+        assert.equal([...html().matchAll(/class="home-item home-cafe-item"/g)].length, 5);
+        for (let index = 1; index <= 5; index++) assert.match(html(), new RegExp(`${prefix} ${index}`));
+    };
+    assertButton(false);
+    assertFivePosts('기존 글');
+    assert.equal(requests.length, 1);
+    assert.equal(requests[0].force, false);
+    const originalList = list();
+
+    click(button);
+    assertButton(true);
+    assert.equal(requests.length, 2);
+    assert.equal(requests[1].fetch, fetchWithTimeout);
+    assert.equal(requests[1].force, true);
+    assert.equal(list(), originalList);
+    assertFivePosts('기존 글');
+    assert.match(html(), /최근 업데이트 · <time/);
+    assert.equal((html().match(/<p\b/g) || []).length, 1);
+    assert.doesNotMatch(html(), /목록을 새로고침하는 중|수집된 목록을 다시 불러왔습니다|정기 수집 후 반영/);
+    // Exercise the load guard even if a queued/programmatic click reaches a disabled button.
+    click(button);
+    click(button);
+    assert.equal(requests.length, 2);
+    deferred[0].resolve(feed('새 글'));
+    await settle();
+    assertButton(false);
+    assertFivePosts('새 글');
+    assert.doesNotMatch(html(), /기존 글/);
+    assert.match(html(), /최근 업데이트 · <time/);
+    assert.equal((html().match(/<p\b/g) || []).length, 1);
+    assert.doesNotMatch(html(), /수집된 목록을 다시 불러왔습니다|정기 수집 후 반영|고정 공지를 제외한 최근 글/);
+    assert.ok(html().includes(`datetime="${fetchedAt}"`));
+
+    const updatedList = list();
+    click(button);
+    assertButton(true);
+    assert.equal(requests.length, 3);
+    assert.equal(requests[2].force, true);
+    assert.equal(list(), updatedList);
+    deferred[1].reject(new Error('Cafe cache unavailable'));
+    await settle();
+    assertButton(false);
+    assertFivePosts('새 글');
+    assert.equal(list(), updatedList);
+    assert.match(html(), /마지막으로 확인한 목록/);
+    assert.match(html(), /data-home-retry="cafe"/);
+    assert.doesNotMatch(html(), /수집된 목록을 다시 불러왔습니다/);
+
+    const retry = { dataset: { homeRetry: 'cafe' } };
+    retry.closest = () => retry;
+    click(retry);
+    assertButton(true);
+    assert.equal(requests.length, 4);
+    assert.equal(requests[3].force, true);
+    assert.equal(list(), updatedList);
+    click(retry);
+    click(button);
+    assert.equal(requests.length, 4);
+    deferred[2].resolve(feed('재시도 글'));
+    await settle();
+    assertButton(false);
+    assertFivePosts('재시도 글');
+    assert.doesNotMatch(html(), /data-home-retry="cafe"|마지막으로 확인한 목록|목록을 새로고침하는 중/);
 });
 
 test('fixed HOME ignores retired preferences; bare entry stays CALENDAR and explicit tabs survive', () => {

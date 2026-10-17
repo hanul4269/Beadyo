@@ -21,13 +21,14 @@
     <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
     <link rel="preload" href="supabase.min.js?v=supabase-2-112-2" as="script">
-    <link rel="preload" href="app.js?v=release-20261011-all" as="script">
+    <link rel="preload" href="app.js?v=release-20261017-all" as="script">
     <script defer src="supabase.min.js?v=supabase-2-112-2"></script>
     <script defer src="beadyo-common.js?v=release-20261011-all"></script>
+    <script defer src="modal-focus.js?v=release-20261011-all"></script>
     <link rel="stylesheet" href="explore.css?v=release-20261011-all">
     <script defer src="explore-data.js?v=release-20261011-all"></script>
     <script defer src="explore.js?v=release-20261011-all"></script>
-    <script defer src="app.js?v=release-20261011-all"></script>
+    <script defer src="app.js?v=release-20261017-all"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
@@ -344,8 +345,13 @@
         }
 
         /* ── 메인 레이아웃 ── */
+        @media (min-width: 641px) {
+            /* Keep the calendar on the viewport center even with a scrollbar. */
+            html { scrollbar-gutter: stable both-edges; }
+        }
         .outer-layout {
-            display: flex;
+            display: grid;
+            grid-template-columns: minmax(240px, 1fr) minmax(0, 1800px) minmax(240px, 1fr);
             gap: 16px;
             margin: 0 auto;
             padding: 0 12px;
@@ -353,7 +359,8 @@
         }
         .main-layout {
             display: flex;
-            flex: 1;
+            grid-column: 2;
+            width: 100%;
             min-width: 0;
             max-width: 1800px;
             gap: 16px;
@@ -1108,6 +1115,20 @@
         .event-chip.dragging { opacity: 0.35; cursor: grabbing; }
         .event-chip.drag-over { outline: 2px dashed var(--accent); transform: translateY(-2px); }
         .cal-cell.cell-drop-target { background: rgba(139,195,74,0.10) !important; outline: 2px dashed var(--accent); outline-offset: -2px; }
+        .cal-cell.copy-drop-target,
+        .event-chip.copy-drop-target { outline: 3px solid var(--accent-dark); outline-offset: -3px; }
+        .schedule-drag-hint {
+            display: none;
+            margin: 0 12px 10px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        @media (min-width: 641px) and (pointer: fine) {
+            .is-editor .schedule-drag-hint { display: block; }
+        }
         .event-chip-sticker {
             position: absolute;
             left: 50%;
@@ -1199,6 +1220,8 @@
 
         /* ── 메모 사이드바 ── */
         .memo-sidebar {
+            grid-column: 1;
+            justify-self: end;
             width: 240px;
             flex-shrink: 0;
             display: flex;
@@ -1326,7 +1349,7 @@
             z-index: 100;
         }
         .memo-fab svg { width: 20px; height: 20px; }
-        @media (max-width: 900px) {
+        @media (max-width: 1440px) {
             .memo-fab { display: flex; }
         }
         /* ── 메모 모달 ── */
@@ -2247,6 +2270,138 @@
         #editTitle { min-height: 0; height: 54px; resize: none; line-height: 1.45; }
         .field-row { display: flex; gap: 10px; }
         .field-row .field { flex: 1; margin-bottom: 0; }
+        #editModal .field,
+        #editModal .field input,
+        #editModal .field textarea { min-width: 0; }
+        .schedule-type-label {
+            margin-bottom: 7px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .schedule-type-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            min-width: 0;
+        }
+        .field .schedule-type-choice {
+            position: relative;
+            display: inline-flex;
+            max-width: 100%;
+            margin: 0;
+            cursor: pointer;
+        }
+        #editModal .schedule-type-choice input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            border: 0;
+            clip-path: inset(50%);
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .schedule-type-choice span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
+            padding: 7px 13px;
+            border: 1.5px solid var(--border);
+            border-radius: 20px;
+            background: var(--surface);
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.35;
+            overflow-wrap: anywhere;
+            transition: background .15s, color .15s, border-color .15s;
+        }
+        .schedule-type-choice:hover span {
+            border-color: var(--accent);
+            background: var(--accent-light);
+            color: var(--accent-dark);
+        }
+        .schedule-type-choice input:checked + span {
+            border-color: var(--accent-dark);
+            background: var(--accent);
+            color: #203314;
+        }
+        .schedule-type-choice input:focus-visible + span {
+            outline: 3px solid var(--accent-dark);
+            outline-offset: 2px;
+        }
+        .schedule-copy-bar,
+        .schedule-copy-panel {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            min-width: 0;
+            padding: 10px 12px;
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+        .schedule-copy-bar {
+            width: calc(100% - 24px);
+            max-width: 900px;
+            margin: 0 auto 12px;
+            flex-shrink: 0;
+        }
+        .schedule-copy-panel { margin-bottom: 10px; }
+        #scheduleCopyLabel,
+        #editCopyLabel {
+            flex: 1 1 180px;
+            min-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .schedule-copy-action {
+            min-width: 0;
+            min-height: 40px;
+            max-width: 100%;
+            padding: 7px 11px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: var(--accent-light);
+            color: var(--accent-dark);
+            font: inherit;
+            font-weight: 700;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+            cursor: pointer;
+        }
+        .schedule-copy-action:hover { border-color: var(--accent); }
+        .schedule-copy-action:focus-visible {
+            outline: 3px solid var(--accent-dark);
+            outline-offset: 2px;
+        }
+        .schedule-copy-action.secondary {
+            background: var(--surface);
+            color: var(--muted);
+        }
+        .schedule-copy-hint {
+            margin-bottom: 13px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+        .schedule-copy-bar[hidden],
+        .schedule-copy-panel[hidden],
+        .schedule-copy-hint[hidden] { display: none; }
+        @media (max-width: 480px) {
+            #editModal .field-row { flex-direction: column; gap: 13px; }
+            .schedule-copy-bar { margin-bottom: 8px; }
+            .schedule-copy-bar > span { flex-basis: 100%; }
+            .schedule-copy-bar .schedule-copy-action { flex: 1 1 110px; }
+        }
         .hotclip-url-list {
             display: flex;
             flex-direction: column;
@@ -2824,8 +2979,10 @@
         }
 
         /* ── 반응형 ── */
-        @media (max-width: 900px) {
+        @media (max-width: 1440px) {
             .memo-sidebar   { display: none; }
+            .outer-layout { grid-template-columns: minmax(0, 1fr); }
+            .main-layout { grid-column: 1; justify-self: center; }
         }
         @media (max-width: 640px) {
             body {
@@ -3371,6 +3528,15 @@
     </div>
 </div>
 
+<p class="schedule-drag-hint" id="scheduleDragHint" role="status" aria-live="polite">⌘(Mac) / Ctrl(Windows) + 드래그로 날짜에 복사 · 그냥 드래그하면 이동</p>
+
+<!-- 복사한 일정 -->
+<div class="schedule-copy-bar" id="scheduleCopyBar" hidden aria-live="polite">
+    <span id="scheduleCopyLabel"></span>
+    <button type="button" class="schedule-copy-action" onclick="pasteCopiedEvent()">날짜 선택해 붙여넣기</button>
+    <button type="button" class="schedule-copy-action secondary" onclick="clearCopiedEvent()">복사 해제</button>
+</div>
+
 <!-- 모바일 일정 리스트 -->
 <main class="mobile-schedule-view" id="mobileScheduleView"></main>
 
@@ -3441,26 +3607,36 @@
 
 <!-- ─── 추가/수정 모달 ─── -->
 <div class="modal-overlay" id="editModal" onmousedown="if(event.target===this)closeEditModal()">
-    <div class="modal">
-        <button class="modal-close" onclick="closeEditModal()">×</button>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle" tabindex="-1">
+        <button type="button" class="modal-close" onclick="closeEditModal()" aria-label="일정 편집 창 닫기">×</button>
         <div class="modal-title" id="editModalTitle">일정 추가</div>
+        <div class="schedule-copy-panel" id="editCopyPanel" hidden>
+            <span id="editCopyLabel" aria-live="polite"></span>
+            <button type="button" class="schedule-copy-action" onclick="pasteCopiedEvent(document.getElementById('editDate').value)">이 날짜에 붙여넣기</button>
+        </div>
+        <p class="schedule-copy-hint" id="editCopyHint" hidden>날짜와 내용을 확인한 뒤 저장하세요. 원본 일정은 그대로 유지됩니다.</p>
+        <div class="field">
+            <div class="schedule-type-label" id="editTypeLabel">컨텐츠 유형</div>
+            <input type="hidden" id="editType">
+            <div class="schedule-type-options" id="editTypeOptions" role="group" aria-labelledby="editTypeLabel"></div>
+        </div>
 
         <div class="field-row" style="margin-bottom:13px;">
             <div class="field">
-                <label>시작 날짜 *</label>
-                <input type="date" id="editDate">
+                <label for="editDate">시작 날짜 *</label>
+                <input type="date" id="editDate" onchange="updateCopiedEventDates(this.value)">
             </div>
             <div class="field">
-                <label>종료 날짜</label>
-                <input type="date" id="editEndDate">
+                <label for="editEndDate">종료 날짜</label>
+                <input type="date" id="editEndDate" onchange="editCopyEndDateChanged()">
             </div>
         </div>
         <div class="field-row" style="margin-bottom:13px;">
             <div class="field">
-                <label>방송 시간</label>
+                <label for="editTime">방송 시간</label>
                 <div class="tp-input-row">
                     <input type="text" id="editTime" placeholder="HH:MM" maxlength="5" oninput="onTimeTextInput(this)" onkeydown="onTimeKeyDown(event)">
-                    <button type="button" class="tp-toggle-btn" id="tpToggleBtn" onclick="toggleTimePicker()" title="시간 선택기">
+                    <button type="button" class="tp-toggle-btn" id="tpToggleBtn" onclick="toggleTimePicker()" title="시간 선택기" aria-label="방송 시간 선택기 열기">
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
                     </button>
                 </div>
@@ -3474,49 +3650,46 @@
                 </div>
             </div>
             <div class="field">
-                <label>방송 길이</label>
+                <label for="editDuration">방송 길이</label>
                 <input type="text" id="editDuration" placeholder="예: 02:30">
             </div>
         </div>
         <div class="field">
-            <label>제목 *</label>
+            <label for="editTitle">제목 *</label>
             <textarea id="editTitle" rows="2" placeholder="방송/일정 제목"></textarea>
         </div>
         <div class="field">
-            <label>부제</label>
+            <label for="editSubtitle">부제</label>
             <input type="text" id="editSubtitle" placeholder="부제목">
         </div>
         <div class="field">
-            <label>컨텐츠 유형</label>
-            <select id="editType"></select>
-        </div>
-        <div class="field">
-            <label>합방멤버</label>
+            <label for="editCollab">합방멤버</label>
             <input type="text" id="editCollab" placeholder="예: 구슬요, 따린, 냐냐, 엘시">
         </div>
         <div class="field">
-            <label>메모</label>
+            <label for="editMemo">메모</label>
             <textarea id="editMemo" placeholder="추가 메모"></textarea>
         </div>
         <div class="field">
-            <label>링크 URL</label>
+            <label for="editVodUrl">링크 URL</label>
             <input type="url" id="editVodUrl" placeholder="https://...">
         </div>
         <div class="field">
-            <label>핫클립 URL</label>
+            <label for="editHotclip1">핫클립 URL</label>
             <div class="hotclip-url-list">
-                <input type="url" class="edit-hotclip-url" placeholder="핫클립 1 URL">
-                <input type="url" class="edit-hotclip-url" placeholder="핫클립 2 URL">
-                <input type="url" class="edit-hotclip-url" placeholder="핫클립 3 URL">
+                <input type="url" id="editHotclip1" class="edit-hotclip-url" placeholder="핫클립 1 URL">
+                <input type="url" class="edit-hotclip-url" placeholder="핫클립 2 URL" aria-label="핫클립 2 URL">
+                <input type="url" class="edit-hotclip-url" placeholder="핫클립 3 URL" aria-label="핫클립 3 URL">
             </div>
             <div class="field-help">최대 3개까지 등록 가능</div>
         </div>
         <input type="checkbox" id="editIsRest" hidden>
         <input type="hidden" id="editPreservedLinks">
         <input type="hidden" id="editId">
+        <div id="editSaveStatus" class="field-help" role="status" aria-live="polite"></div>
         <div class="btn-row">
-            <button class="btn btn-primary" onclick="saveEvent()">저장</button>
-            <button class="btn btn-secondary" onclick="closeEditModal()">취소</button>
+            <button type="button" class="btn btn-primary" id="saveEventBtn" onclick="saveEvent()">저장</button>
+            <button type="button" class="btn btn-secondary" onclick="closeEditModal()">취소</button>
         </div>
     </div>
 </div>

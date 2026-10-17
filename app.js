@@ -649,6 +649,10 @@ function toAmPm(timeStr) {
 
 let toastTimer;
 function showToast(msg) {
+    if (document.getElementById('editModal')?.classList?.contains('open')) {
+        const status = document.getElementById('editSaveStatus');
+        if (status) status.textContent = msg;
+    }
     const el = document.getElementById('toast');
     el.innerHTML = `${stickerImg(toastStickerForMessage(msg), 'toast-sticker')}<span>${esc(msg)}</span>`;
     el.classList.add('show');
@@ -1031,6 +1035,7 @@ function downloadPaintCanvas() {
 // ─── 드래그앤드랍 순서 ───
 let dragState = { id: null, dateStr: null };
 let _dragged = false;
+let _scheduleDropPending = false;
 let _eventsLoaded = false;
 let _retryTimer = null;
 let _loadRetryAttempt = 0;
@@ -1132,9 +1137,10 @@ function nextSortOrderForDate(dateStr) {
     return orders.length ? Math.max(...orders) + 1 : dayEvents.length;
 }
 
-async function saveDateOrder(dateStr, orderedEvents) {
-    if (!state.isEditor) return false;
+async function saveDateOrder(dateStr, orderedEvents, editor = scheduleDragEditor()) {
+    if (!scheduleDragEditorMatches(editor)) return false;
     await _ensureDb();
+    if (!scheduleDragEditorMatches(editor)) return false;
     orderedEvents.forEach((ev, i) => { ev.sort_order = i; });
     const updates = orderedEvents
         .filter(ev => ev.date === dateStr)
@@ -1149,82 +1155,155 @@ async function saveDateOrder(dateStr, orderedEvents) {
     return true;
 }
 
+function scheduleDragEditor() {
+    return { email: state.user?.email?.toLowerCase(), epoch: _scheduleEditorEpoch };
+}
+function scheduleDragEditorMatches(editor) {
+    return state.isEditor && editor.epoch === _scheduleEditorEpoch && editor.email === state.user?.email?.toLowerCase();
+}
+function scheduleDragUsesCommand() {
+    return /Mac|iPhone|iPad|iPod/i.test(navigator.userAgentData?.platform || navigator.platform || '');
+}
+function scheduleDragIsCopy(event) {
+    return !!(scheduleDragUsesCommand() ? event.metaKey : event.ctrlKey);
+}
+function scheduleDragHint(message = '') {
+    const hint = document.getElementById('scheduleDragHint');
+    if (!hint) return;
+    hint.textContent = message || (_scheduleDropPending ? '일정을 저장하고 있습니다…'
+        : `${scheduleDragUsesCommand() ? '⌘' : 'Ctrl'} + 드래그로 날짜에 복사 · 그냥 드래그하면 이동`);
+}
+function clearScheduleDragStyles() {
+    document.querySelectorAll('.dragging, .drag-over, .cell-drop-target, .copy-drop-target').forEach(el => {
+        el.classList.remove('dragging', 'drag-over', 'cell-drop-target', 'copy-drop-target');
+    });
+}
+function resetScheduleDrag() {
+    dragState = { id: null, dateStr: null };
+    clearScheduleDragStyles();
+    scheduleDragHint();
+}
 function dragStart(e, id, dateStr) {
-    _dragged = false;
-    dragState = { id, dateStr };
+    resetScheduleDrag();
+    const source = state.events.find(ev => ev.id === id);
+    if (!state.isEditor || _savingEvent || _scheduleDropPending || !source || source.date !== dateStr) {
+        e.preventDefault();
+        return;
+    }
+    _dragged = true;
+    dragState = { id, dateStr, source: { ...source }, editor: scheduleDragEditor() };
     e.currentTarget.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.effectAllowed = 'copyMove';
+    e.dataTransfer.setData('application/x-beadyo-schedule', String(id));
+    e.dataTransfer.setData('text/plain', source.title);
+    e.dataTransfer.dropEffect = scheduleDragIsCopy(e) ? 'copy' : 'move';
+    scheduleDragHint('원하는 날짜로 드래그하세요 · Esc로 취소');
 }
 function dragEnd(e) {
     _dragged = true;
     setTimeout(() => { _dragged = false; }, 100);
     e.currentTarget.classList.remove('dragging');
-    document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
-    document.querySelectorAll('.cell-drop-target').forEach(el => el.classList.remove('cell-drop-target'));
+    resetScheduleDrag();
+}
+function showScheduleDropTarget(e, dateStr, className) {
+    if (!dragState.id || _scheduleDropPending || !scheduleDragEditorMatches(dragState.editor)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const copy = scheduleDragIsCopy(e);
+    e.dataTransfer.dropEffect = copy ? 'copy' : 'move';
+    e.currentTarget.classList.add(className);
+    e.currentTarget.classList.toggle('copy-drop-target', copy);
+    scheduleDragHint(copy && dateStr === dragState.dateStr ? '복사할 다른 날짜를 선택하세요'
+        : `놓으면 ${dateStr}에 ${copy ? '복사' : '이동'}됩니다${copy ? ' · 원본 유지' : ''}`);
 }
 function dragOver(e, id, dateStr) {
-    if (dragState.id === id) return;
-    e.preventDefault();
-    e.stopPropagation();
-    e.currentTarget.classList.add('drag-over');
+    showScheduleDropTarget(e, dateStr, 'drag-over');
 }
 function dragLeave(e) {
-    e.currentTarget.classList.remove('drag-over');
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    e.currentTarget.classList.remove('drag-over', 'copy-drop-target');
 }
 async function dragDrop(e, targetId, targetDateStr) {
-    e.preventDefault();
-    e.stopPropagation();
-    e.currentTarget.classList.remove('drag-over');
-    const { id: sourceId, dateStr: srcDate } = dragState;
-    dragState = { id: null, dateStr: null };
-    if (!sourceId || sourceId === targetId) return;
-
-    if (srcDate === targetDateStr) {
-        const orderedEvents = calendarEventsForDate(targetDateStr);
-        const fromIdx = orderedEvents.findIndex(ev => ev.id === sourceId);
-        const toIdx   = orderedEvents.findIndex(ev => ev.id === targetId);
-        if (fromIdx === -1 || toIdx === -1) return;
-        const [moved] = orderedEvents.splice(fromIdx, 1);
-        orderedEvents.splice(toIdx, 0, moved);
-        const saved = await saveDateOrder(targetDateStr, orderedEvents);
-        if (!saved) await loadEvents();
-        renderCalendar();
-    } else {
-        await moveEventToDate(sourceId, srcDate, targetDateStr);
-    }
+    await dropSchedule(e, targetDateStr, targetId);
 }
 function cellDragOver(e, dateStr) {
-    if (!dragState.id) return;
-    e.preventDefault();
-    e.currentTarget.classList.add('cell-drop-target');
+    showScheduleDropTarget(e, dateStr, 'cell-drop-target');
 }
 function cellDragLeave(e) {
     if (e.currentTarget.contains(e.relatedTarget)) return;
-    e.currentTarget.classList.remove('cell-drop-target');
+    e.currentTarget.classList.remove('cell-drop-target', 'copy-drop-target');
 }
 async function cellDrop(e, dateStr) {
-    e.preventDefault();
-    e.currentTarget.classList.remove('cell-drop-target');
-    const { id: sourceId, dateStr: srcDate } = dragState;
-    dragState = { id: null, dateStr: null };
-    if (!sourceId || srcDate === dateStr) return;
-    await moveEventToDate(sourceId, srcDate, dateStr);
+    await dropSchedule(e, dateStr);
 }
-async function moveEventToDate(eventId, srcDate, targetDate) {
-    if (!state.isEditor) return;
-    await _ensureDb();
+function draggedScheduleDates(source, targetDate) {
+    const start = scheduleDateMillis(source.date);
+    if (start === null || scheduleDateMillis(targetDate) === null) return null;
+    if (!source.end_date) return { date: targetDate, end_date: null };
+    const end = scheduleDateMillis(source.end_date);
+    if (end === null || end < start) return null;
+    const shiftedEnd = copiedEndDate(targetDate, (end - start) / 86400000);
+    return shiftedEnd ? { date: targetDate, end_date: shiftedEnd } : null;
+}
+function draggedScheduleCopy(source, targetDate) {
+    const dates = draggedScheduleDates(source, targetDate);
+    if (!dates) return null;
+    const payload = Object.fromEntries([
+        'title', 'start_time', 'duration', 'type', 'collab', 'subtitle', 'memo', 'is_rest', 'vod_url', 'youtube_links',
+    ].map(key => [key, source[key] ?? null]));
+    return { ...payload, ...dates, sort_order: nextSortOrderForDate(targetDate) };
+}
+async function dropSchedule(e, targetDate, targetId = null) {
+    e.preventDefault();
+    e.stopPropagation();
+    const source = dragState;
+    const copy = scheduleDragIsCopy(e);
+    // Consume once, before any await: nested card/cell drops cannot create two copies.
+    resetScheduleDrag();
+    if (!source.id || _savingEvent || _scheduleDropPending || !scheduleDragEditorMatches(source.editor)) return;
+    if (source.dateStr === targetDate && (copy || !targetId || source.id === targetId)) return;
+    if (!draggedScheduleDates(source.source, targetDate)) { showToast('일정 날짜를 확인해주세요'); return; }
+    _scheduleDropPending = true;
+    scheduleDragHint();
+    try {
+        if (copy) {
+            const payload = draggedScheduleCopy(source.source, targetDate);
+            await _ensureDb();
+            if (!scheduleDragEditorMatches(source.editor)) return;
+            const { error } = await db.from('schedules').insert(payload);
+            if (error) { await handleSupabaseMutationError(error, '복사 실패: ' + error.message); return; }
+            showToast(`${targetDate}에 복사했습니다. 원본은 그대로 유지됩니다`);
+            await loadEvents();
+        } else if (source.dateStr === targetDate) {
+            const orderedEvents = calendarEventsForDate(targetDate);
+            const from = orderedEvents.findIndex(ev => ev.id === source.id);
+            const to = orderedEvents.findIndex(ev => ev.id === targetId);
+            if (from === -1 || to === -1) return;
+            const [moved] = orderedEvents.splice(from, 1);
+            orderedEvents.splice(to, 0, moved);
+            const saved = await saveDateOrder(targetDate, orderedEvents, source.editor);
+            if (!saved) await loadEvents();
+            renderCalendar();
+        } else {
+            await moveEventToDate(source.id, source.dateStr, targetDate, source.editor);
+        }
+    } catch (error) {
+        showToast('저장하지 못했습니다. 연결 상태를 확인하고 다시 드래그해주세요');
+        console.error('schedule drop:', error);
+    } finally {
+        _scheduleDropPending = false;
+        scheduleDragHint();
+    }
+}
+async function moveEventToDate(eventId, srcDate, targetDate, editor = scheduleDragEditor()) {
+    if (!scheduleDragEditorMatches(editor)) return;
     const ev = state.events.find(e => e.id === eventId);
     if (!ev) return;
-    const payload = { date: targetDate, sort_order: nextSortOrderForDate(targetDate) };
-    if (ev.end_date && ev.end_date !== ev.date) {
-        const [sy, sm, sd] = srcDate.split('-').map(Number);
-        const [ty, tm, td] = targetDate.split('-').map(Number);
-        const dayDiff = Math.round((new Date(ty, tm - 1, td) - new Date(sy, sm - 1, sd)) / 86400000);
-        const [ey, em, ed] = ev.end_date.split('-').map(Number);
-        const newEnd = new Date(ey, em - 1, ed);
-        newEnd.setDate(newEnd.getDate() + dayDiff);
-        payload.end_date = toDateStr(newEnd.getFullYear(), newEnd.getMonth(), newEnd.getDate());
-    }
+    const dates = draggedScheduleDates(ev, targetDate);
+    if (!dates) return;
+    const payload = { ...dates, sort_order: nextSortOrderForDate(targetDate) };
+    await _ensureDb();
+    if (!scheduleDragEditorMatches(editor)) return;
     const { error } = await db.from('schedules').update(payload).eq('id', eventId);
     if (error) { await handleSupabaseMutationError(error, '이동 실패: ' + error.message); return; }
     showToast('일정이 이동되었습니다');
@@ -1640,7 +1719,7 @@ function renderCalendar() {
         const cellDropAttrs = !other && state.isEditor
             ? `ondragover="cellDragOver(event,'${dateStr}')" ondragleave="cellDragLeave(event)" ondrop="cellDrop(event,'${dateStr}')"` : '';
 
-        return `<div class="${cellCls}" ${cellClick} ${cellDropAttrs}>
+        return `<div class="${cellCls}" data-date="${dateStr}" ${cellClick} ${cellDropAttrs}>
             <div class="cell-date-row">
                 ${dateNumHtml}
                 ${ytBadgesHtml}
@@ -2137,6 +2216,7 @@ function dayEventCardHtml(ev, dateStr) {
         </div>
         ${state.isEditor ? `<div class="day-event-actions">
             <button class="day-edit-btn" onclick="openEditModal(${jsArg(ev.id)}, { type: 'day', date: ${jsArg(dateStr)} })">수정</button>
+            <button class="day-edit-btn" onclick="copyEvent(${jsArg(ev.id)})">복사</button>
             <button class="day-delete-btn" onclick="event.stopPropagation();deleteEvent(${jsArg(ev.id)})">삭제</button>
         </div>` : ''}
     </div>`;
@@ -2204,6 +2284,7 @@ function openDayViewModal(dateStr) {
     document.getElementById('viewBtns').innerHTML = state.isEditor
         ? `<button class="btn btn-primary" onclick="openBroadcastModal(${jsArg(dateStr)})">방송정보 편집</button>
            <button class="btn btn-secondary" onclick="closeViewModal();openAddModal(${jsArg(dateStr)})">일정 추가</button>
+           ${_copiedEvent ? `<button class="btn btn-secondary" onclick="pasteCopiedEvent(${jsArg(dateStr)})">복사한 일정 붙여넣기</button>` : ''}
            <button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>`
         : `<button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>`;
     document.getElementById('viewModal').classList.add('open');
@@ -2688,9 +2769,18 @@ function renderUpModal(data, fetchLive = false) {
 
 // ─── 추가/수정 모달 ───
 function populateTypeSelect() {
-    document.getElementById('editType').innerHTML = EVENT_TYPES.map(t =>
-        `<option value="${t.key}">${t.label}</option>`
+    document.getElementById('editTypeOptions').innerHTML = EVENT_TYPES.map(t =>
+        `<label class="schedule-type-choice"><input type="radio" name="scheduleType" value="${t.key}" onchange="selectEventType(this.value)"><span>${esc(t.key === 'collab' ? '참여·합방' : t.label)}</span></label>`
     ).join('');
+}
+
+function selectEventType(type) {
+    const selected = EVENT_TYPES.some(t => t.key === type) ? type : 'general';
+    document.getElementById('editType').value = selected;
+    document.querySelectorAll('input[name="scheduleType"]').forEach(input => {
+        input.checked = input.value === selected;
+    });
+    document.getElementById('editIsRest').checked = selected === 'rest';
 }
 
 // ── 시간 피커 ──
@@ -2951,62 +3041,95 @@ function initTimePicker(value) {
 }
 
 let _editReturnContext = null;
+let _copiedEvent = null;
+let _copyDraft = null;
+let _savingEvent = false;
+let _scheduleEditorEpoch = 0;
+let _scheduleAuthRequest = 0;
+
+// Keep only editable schedule fields in memory, independent of the loaded month.
+function scheduleDateMillis(value) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '') || value.startsWith('0000')) return null;
+    const millis = Date.parse(value + 'T00:00:00Z');
+    return Number.isFinite(millis) && new Date(millis).toISOString().slice(0, 10) === value ? millis : null;
+}
+
+function copiedEndDate(date, days) {
+    const start = scheduleDateMillis(date);
+    if (start === null) return '';
+    const result = new Date(start + days * 86400000).toISOString().slice(0, 10);
+    return scheduleDateMillis(result) === null ? '' : result;
+}
+
+function refreshScheduleCopyUi() {
+    const available = state.isEditor && !!_copiedEvent;
+    const bar = document.getElementById('scheduleCopyBar');
+    if (bar) bar.hidden = !available;
+    const label = document.getElementById('scheduleCopyLabel');
+    if (label) {
+        label.textContent = available ? `복사한 일정: ${_copiedEvent.title}` : '';
+        label.title = available ? _copiedEvent.title : '';
+    }
+    const panel = document.getElementById('editCopyPanel');
+    if (panel) panel.hidden = !available || !!_copyDraft || !!document.getElementById('editId').value;
+    const editLabel = document.getElementById('editCopyLabel');
+    if (editLabel) editLabel.textContent = available ? `복사한 일정: ${_copiedEvent.title}` : '';
+    const hint = document.getElementById('editCopyHint');
+    if (hint) hint.hidden = !_copyDraft;
+}
+
+function showEditModal() {
+    const modal = document.getElementById('editModal');
+    refreshScheduleCopyUi();
+    modal.classList.add('open');
+    window.BeadyoModalFocus?.activate(modal, () => closeEditModal());
+}
 
 function openAddModal(dateStr, type = 'chat') {
+    if (!state.isEditor || _savingEvent) return;
     _editReturnContext = null;
-    populateTypeSelect();
-    document.getElementById('editModalTitle').textContent = '일정 추가';
-    document.getElementById('editId').value        = '';
-    document.getElementById('editDate').value      = dateStr;
-    document.getElementById('editEndDate').value   = '';
-    initTimePicker('');
-    document.getElementById('editDuration').value  = '';
-    document.getElementById('editTitle').value     = '';
-    document.getElementById('editType').value      = type;
-    document.getElementById('editCollab').value    = '';
-    document.getElementById('editSubtitle').value  = '';
-    document.getElementById('editVodUrl').value    = '';
-    setHotclipInputs([]);
-    document.getElementById('editMemo').value      = '';
-    document.getElementById('editIsRest').checked  = false;
-    const preservedLinksInput = document.getElementById('editPreservedLinks');
-    if (preservedLinksInput) preservedLinksInput.value = '';
-    document.getElementById('editModal').classList.add('open');
+    _copyDraft = null;
+    fillEditForm({ date: dateStr, type, is_rest: type === 'rest' }, '일정 추가');
+    showEditModal();
 }
 
 function openEditModal(id, returnContext = null) {
-    _editReturnContext = returnContext || { type: 'event', id };
-    closeViewModal();
+    if (!state.isEditor || _savingEvent) return;
     const ev = state.events.find(e => e.id === id);
-    if (!ev) {
-        _editReturnContext = null;
-        return;
-    }
+    if (!ev) return;
+    _editReturnContext = returnContext || { type: 'event', id };
+    _copyDraft = null;
+    closeViewModal();
     fillEditForm(ev, '일정 수정', ev.id);
-    document.getElementById('editModal').classList.add('open');
+    showEditModal();
 }
 
 function reopenEditReturnContext(context) {
     if (!context) return;
     if (context.type === 'day' && context.date) {
         openDayViewModal(context.date);
+        document.getElementById('viewModal')?.querySelector('button')?.focus();
         return;
     }
     if (context.type === 'event' && context.id && state.events.some(e => e.id === context.id)) {
         openViewModal(context.id);
+        document.getElementById('viewModal')?.querySelector('button')?.focus();
     }
 }
 
 function fillEditForm(ev, title, id = '') {
     populateTypeSelect();
+    const status = document.getElementById('editSaveStatus');
+    if (status) status.textContent = '';
     document.getElementById('editModalTitle').textContent = title;
     document.getElementById('editId').value        = id;
     document.getElementById('editDate').value      = ev.date ?? '';
     document.getElementById('editEndDate').value   = ev.end_date ?? '';
+    document.getElementById('editEndDate').min     = ev.date ?? '';
     initTimePicker(ev.start_time ? ev.start_time.slice(0, 5) : '');
     document.getElementById('editDuration').value  = ev.duration ?? '';
     document.getElementById('editTitle').value     = ev.title ?? '';
-    document.getElementById('editType').value      = ev.type ?? 'chat';
+    selectEventType(ev.type ?? 'chat');
     document.getElementById('editCollab').value    = ev.collab ?? '';
     document.getElementById('editSubtitle').value  = ev.subtitle ?? '';
     document.getElementById('editVodUrl').value    = ev.vod_url ?? '';
@@ -3035,19 +3158,62 @@ function readHotclipInputs() {
     return { urls: urls.slice(0, 3) };
 }
 function closeEditModal(options = {}) {
-    const { reopenView = true } = options;
-    document.getElementById('editModal').classList.remove('open');
+    const { reopenView = true, force = false } = options;
+    if (_savingEvent && !force) return;
+    const modal = document.getElementById('editModal');
+    modal.classList.remove('open');
+    window.BeadyoModalFocus?.release(modal);
     const returnContext = _editReturnContext;
+    const wasCopied = !!_copyDraft;
     _editReturnContext = null;
+    _copyDraft = null;
+    refreshScheduleCopyUi();
     if (reopenView) reopenEditReturnContext(returnContext);
+    if (wasCopied && state.isEditor) document.getElementById('scheduleCopyBar')?.querySelector('button')?.focus();
 }
 
 function copyEvent(id) {
     const ev = state.events.find(e => e.id === id);
-    if (!ev || !state.isEditor) return;
+    if (!ev || !state.isEditor || _savingEvent) return;
+    _copiedEvent = Object.fromEntries([
+        'title', 'date', 'end_date', 'start_time', 'duration', 'type', 'collab', 'subtitle', 'memo', 'is_rest', 'vod_url', 'youtube_links',
+    ].map(key => [key, ev[key] ?? null]));
     closeViewModal();
-    fillEditForm(ev, '일정 복사', '');
-    document.getElementById('editModal').classList.add('open');
+    refreshScheduleCopyUi();
+    showToast('일정을 복사했습니다. 원하는 날짜에서 붙여넣으세요');
+}
+
+function pasteCopiedEvent(targetDate = '') {
+    if (!state.isEditor || !_copiedEvent || _savingEvent) return;
+    const start = scheduleDateMillis(_copiedEvent.date);
+    const end = scheduleDateMillis(_copiedEvent.end_date);
+    const days = start !== null && end !== null && end >= start ? (end - start) / 86400000 : null;
+    const date = scheduleDateMillis(targetDate) !== null ? targetDate : '';
+    _editReturnContext = null;
+    _copyDraft = { days, autoEndDate: true };
+    closeViewModal();
+    fillEditForm({ ..._copiedEvent, date, end_date: days === null ? '' : copiedEndDate(date, days) }, '복사한 일정 추가');
+    showEditModal();
+    document.getElementById(date ? 'editTitle' : 'editDate').focus();
+}
+
+function updateCopiedEventDates(date) {
+    const endInput = document.getElementById('editEndDate');
+    endInput.min = date;
+    if (_copyDraft?.autoEndDate && _copyDraft.days !== null) {
+        endInput.value = copiedEndDate(date, _copyDraft.days);
+    }
+}
+
+function editCopyEndDateChanged() {
+    if (_copyDraft) _copyDraft.autoEndDate = false;
+}
+
+function clearCopiedEvent() {
+    _copiedEvent = null;
+    refreshScheduleCopyUi();
+    const view = document.getElementById('viewModal');
+    if (view?.classList.contains('open') && view.dataset.dayDate) openDayViewModal(view.dataset.dayDate);
 }
 
 async function repeatWeekly(id) {
@@ -3087,11 +3253,16 @@ async function repeatWeekly(id) {
 }
 
 async function saveEvent() {
-    await _ensureDb();
+    if (_savingEvent) return;
+    if (!state.isEditor) { showToast('일정 편집 권한이 필요합니다'); return; }
     const title = document.getElementById('editTitle').value.trim().replace(/\n{2,}/g, '\n');
     if (!title) { showToast('제목을 입력해주세요'); return; }
     const date = document.getElementById('editDate').value;
-    if (!date)  { showToast('날짜를 선택해주세요'); return; }
+    if (scheduleDateMillis(date) === null) { showToast('날짜를 선택해주세요'); return; }
+    const endDate = document.getElementById('editEndDate').value;
+    if (endDate && (scheduleDateMillis(endDate) === null || endDate < date)) {
+        showToast('종료 날짜는 시작 날짜 이후로 선택해주세요'); return;
+    }
     const vodUrlInput = document.getElementById('editVodUrl').value.trim();
     const vodUrl = normalizeOptionalUrl(vodUrlInput);
     if (vodUrlInput && !vodUrl) { showToast('링크 URL은 http 또는 https 주소로 입력해주세요'); return; }
@@ -3120,16 +3291,42 @@ async function saveEvent() {
 
     const id = document.getElementById('editId').value;
     if (!id) payload.sort_order = nextSortOrderForDate(date);
-    const { error } = id
-        ? await db.from('schedules').update(payload).eq('id', id)
-        : await db.from('schedules').insert(payload);
-
-    if (error) { await handleSupabaseMutationError(error, '저장 실패: ' + error.message); return; }
-    showToast(id ? '수정되었습니다' : '추가되었습니다');
+    const editorEmail = state.user?.email?.toLowerCase();
+    const editorEpoch = _scheduleEditorEpoch;
     const returnContext = id ? _editReturnContext : null;
+    const wasCopied = !!_copyDraft;
+    const controls = [...document.getElementById('editModal').querySelectorAll('input, textarea, button')]
+        .map(control => [control, control.disabled]);
+    const saveButton = document.getElementById('saveEventBtn');
+    _savingEvent = true;
+    controls.forEach(([control]) => { control.disabled = true; });
+    if (saveButton) saveButton.textContent = '저장 중…';
+    let saved = false;
+    try {
+        await _ensureDb();
+        if (!state.isEditor || editorEpoch !== _scheduleEditorEpoch || state.user?.email?.toLowerCase() !== editorEmail) {
+            showToast('편집 권한이 변경되었습니다. 다시 로그인해주세요');
+            return;
+        }
+        const { error } = id
+            ? await db.from('schedules').update(payload).eq('id', id)
+            : await db.from('schedules').insert(payload);
+        if (error) { await handleSupabaseMutationError(error, '저장 실패: ' + error.message); return; }
+        saved = true;
+    } catch (error) {
+        showToast('저장하지 못했습니다. 연결 상태를 확인하고 다시 시도해주세요');
+        console.error('saveEvent:', error);
+    } finally {
+        _savingEvent = false;
+        controls.forEach(([control, disabled]) => { control.disabled = disabled; });
+        if (saveButton) saveButton.textContent = '저장';
+    }
+    if (!saved) return;
+    showToast(id ? '수정되었습니다' : '추가되었습니다');
     closeEditModal({ reopenView: false });
+    if (wasCopied) alignCalendarDate(date);
     await loadEvents();
-    reopenEditReturnContext(returnContext);
+    if (state.isEditor && editorEpoch === _scheduleEditorEpoch) reopenEditReturnContext(returnContext);
 }
 
 async function deleteEvent(id) {
@@ -3976,6 +4173,15 @@ async function initAuth() {
 }
 
 async function setSessionUser(user) {
+    const authRequest = ++_scheduleAuthRequest;
+    const previousEmail = state.user?.email?.toLowerCase();
+    const nextEmail = user?.email?.toLowerCase();
+    if (previousEmail !== nextEmail || !user) {
+        _scheduleEditorEpoch++;
+        resetScheduleDrag();
+        clearCopiedEvent();
+        closeEditModal({ reopenView: false, force: true });
+    }
     state.user = user ? {
         email: user.email,
         name: user.name || user.email,
@@ -3987,6 +4193,7 @@ async function setSessionUser(user) {
     state.scheduleAudit = [];
     state.scheduleAuditError = null;
     document.body.classList.remove('is-editor');
+    refreshScheduleCopyUi();
     if (!state.user) {
         document.getElementById('adminModal')?.classList.remove('open');
         renderCalendar();
@@ -3994,8 +4201,15 @@ async function setSessionUser(user) {
     }
     const expectedEmail = state.user.email.toLowerCase();
     const canEdit = await checkEditorAccess();
-    if (state.user?.email.toLowerCase() !== expectedEmail) return;
+    if (authRequest !== _scheduleAuthRequest || state.user?.email.toLowerCase() !== expectedEmail) return;
     state.isEditor = canEdit;
+    if (!canEdit) {
+        _scheduleEditorEpoch++;
+        resetScheduleDrag();
+        clearCopiedEvent();
+        closeEditModal({ reopenView: false, force: true });
+    }
+    refreshScheduleCopyUi();
     state.isOwner = canEdit && expectedEmail === OWNER_EMAIL.toLowerCase();
     document.body.classList.toggle('is-editor', state.isEditor);
     renderCalendar();
@@ -4006,6 +4220,7 @@ async function setSessionUser(user) {
 let touchStartX = 0;
 document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
 document.addEventListener('touchend', e => {
+    if (document.getElementById('editModal').classList.contains('open')) return;
     const dx = e.changedTouches[0].clientX - touchStartX;
     if (Math.abs(dx) > 60) {
         if (window.innerWidth <= 640) {
