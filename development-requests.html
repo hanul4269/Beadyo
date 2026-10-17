@@ -11,6 +11,10 @@
     <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
     <script src="supabase.min.js"></script>
     <script src="beadyo-common.js?v=release-20261011-all"></script>
+    <link rel="stylesheet" href="comment-emoticons.css?v=comment-emoji-full-20261017">
+    <script src="comment-emoticons-data.js?v=comment-emoji-full-20261017"></script>
+    <script src="comment-native-emojis-data.js?v=comment-emoji-full-20261017"></script>
+    <script src="comment-emoticons.js?v=comment-emoji-full-20261017"></script>
     <style>
         * { box-sizing: border-box; }
 
@@ -639,6 +643,11 @@
             editingCommentId: null,
         };
         let toastTimer = null;
+        const commentDrafts = new Map();
+        const commentPending = new Set();
+        const commentComposing = new Set();
+        const commentDiscardDrafts = new Set();
+        let commentRenderDeferred = false;
 
         function applyStoredTheme() {
             let theme = 'light';
@@ -774,7 +783,7 @@
         function commentEditor(comment) {
             return `
                 <div class="comment-edit-form">
-                    <textarea class="comment-edit-content" maxlength="1000" aria-label="댓글 내용 수정">${escapeHtml(comment.content)}</textarea>
+                    ${BeadyoCommentEmoji.composer({ key: `edit:${comment.id}`, value: comment.content, editing: true })}
                     <div class="comment-actions">
                         <button class="comment-action-btn" type="button" data-action="cancel-comment-edit" data-comment-id="${comment.id}">취소</button>
                         <button class="comment-action-btn" type="button" data-action="save-comment-edit" data-comment-id="${comment.id}">저장</button>
@@ -794,7 +803,7 @@
                             <span class="comment-author">${escapeHtml(comment.author_name || '사용자')}</span>
                             <span class="comment-date">${escapeHtml(formatDate(comment.created_at))}</span>
                         </div>
-                        ${isEditing ? commentEditor(comment) : `<p class="comment-text">${escapeHtml(comment.content)}</p>${commentActions(comment)}`}
+                        ${isEditing ? commentEditor(comment) : `<p class="comment-text">${BeadyoCommentEmoji.render(comment.content)}</p>${commentActions(comment)}`}
                     </div>
                 </div>
             `;
@@ -812,7 +821,7 @@
                         ${comments.length ? comments.map(commentItem).join('') : '<div class="comment-empty">아직 댓글이 없어요.</div>'}
                     </div>
                     <form class="comment-form" data-request-id="${request.id}">
-                        <textarea class="comment-content" maxlength="1000" required aria-label="댓글 내용" placeholder="댓글을 남겨주세요."></textarea>
+                        ${BeadyoCommentEmoji.composer({ key: `new:${request.id}` })}
                         <button class="comment-submit-btn" type="submit">등록</button>
                     </form>
                 </section>
@@ -845,8 +854,30 @@
             `;
         }
 
-        function renderRequests() {
+        function applyCommentPending() {
+            document.querySelectorAll('[data-comment-composer]').forEach(composer => {
+                const busy = commentPending.has(composer.dataset.commentComposer) || commentDiscardDrafts.has(composer.dataset.commentComposer);
+                BeadyoCommentEmoji.setBusy(composer, busy);
+                const form = composer.closest('.comment-form, .comment-edit-form');
+                form.querySelectorAll('.comment-submit-btn, .comment-actions button').forEach(button => { button.disabled = busy; });
+                const button = form.querySelector('.comment-submit-btn, [data-action="save-comment-edit"]');
+                if (button) button.textContent = composer.dataset.commentComposer.startsWith('new:')
+                    ? (busy ? '등록 중...' : '등록') : (busy ? '저장 중...' : '저장');
+            });
+        }
+
+        function renderRequests(discardDraftKey = null) {
+            if (discardDraftKey) commentDiscardDrafts.add(discardDraftKey);
+            // Keep an active Korean IME composition intact while another comment saves.
+            if (commentComposing.size) { commentRenderDeferred = true; return; }
+            commentRenderDeferred = false;
             const list = document.getElementById('request-list');
+            const active = document.activeElement;
+            const activeKey = list.contains(active) && active.matches('textarea')
+                ? active.closest('[data-comment-composer]')?.dataset.commentComposer : null;
+            for (const [key, value] of BeadyoCommentEmoji.capture(list)) commentDrafts.set(key, value);
+            for (const key of commentDiscardDrafts) commentDrafts.delete(key);
+            commentDiscardDrafts.clear();
             const filtered = state.filter === 'all'
                 ? state.requests
                 : state.requests.filter(request => request.status === state.filter);
@@ -856,6 +887,13 @@
                 return;
             }
             list.innerHTML = filtered.map(requestCard).join('');
+            BeadyoCommentEmoji.restore(list, commentDrafts);
+            applyCommentPending();
+            if (activeKey) {
+                const composer = [...list.querySelectorAll('[data-comment-composer]')].find(item => item.dataset.commentComposer === activeKey);
+                const textarea = composer?.querySelector('textarea');
+                if (textarea && !textarea.disabled) textarea.focus({ preventScroll: true });
+            }
         }
 
         async function loadRequests() {
@@ -1024,18 +1062,28 @@
 
         async function submitComment(form) {
             const requestId = Number(form.dataset.requestId);
+            const draftKey = `new:${requestId}`;
             const textarea = form.querySelector('.comment-content');
             const submitButton = form.querySelector('.comment-submit-btn');
-            const content = textarea.value.trim();
+            if (submitButton.disabled || commentPending.has(draftKey) || commentDiscardDrafts.has(draftKey)) return;
+            const composer = form.querySelector('[data-comment-composer]');
+            const content = BeadyoCommentEmoji.getContent(composer);
             if (!content) {
                 showToast('댓글 내용을 적어주세요.', 'error');
                 textarea.focus();
                 return;
             }
+            if (content.length > BeadyoCommentEmoji.MAX_LENGTH) {
+                showToast('댓글은 이모티콘을 포함해 최대 1,000자까지 입력할 수 있어요.', 'error');
+                return;
+            }
 
             submitButton.disabled = true;
             submitButton.textContent = '등록 중...';
-            const { data, error } = await db
+            commentPending.add(draftKey);
+            applyCommentPending();
+            try {
+                const { data, error } = await db
                 .from('development_request_comments')
                 .insert({
                     request_id: requestId,
@@ -1045,18 +1093,21 @@
                 })
                 .select('id,request_id,author_id,author_name,author_avatar,content,created_at,updated_at')
                 .single();
-            if (error) {
+                if (error) throw error;
+                if (!state.comments[requestId]) state.comments[requestId] = [];
+                state.comments[requestId].push(data);
+                renderRequests(draftKey);
+                showToast('댓글을 등록했어요.');
+            } catch (error) {
                 console.error(error);
+                showToast('댓글을 등록하지 못했어요.', 'error');
+            } finally {
+                commentPending.delete(draftKey);
                 submitButton.disabled = false;
                 submitButton.textContent = '등록';
-                showToast('댓글을 등록하지 못했어요.', 'error');
-                return;
+                BeadyoCommentEmoji.setBusy(composer, false);
+                applyCommentPending();
             }
-
-            if (!state.comments[requestId]) state.comments[requestId] = [];
-            state.comments[requestId].push(data);
-            renderRequests();
-            showToast('댓글을 등록했어요.');
         }
 
         function startCommentEdit(commentId) {
@@ -1070,39 +1121,55 @@
         }
 
         function cancelCommentEdit() {
+            const draftKey = `edit:${state.editingCommentId}`;
             state.editingCommentId = null;
-            renderRequests();
+            renderRequests(draftKey);
         }
 
         async function saveCommentEdit(button) {
+            if (button.disabled) return;
             const commentId = Number(button.dataset.commentId);
+            const draftKey = `edit:${commentId}`;
+            if (commentPending.has(draftKey) || commentDiscardDrafts.has(draftKey)) return;
             const comment = findComment(commentId);
             if (!comment || !canManageComment(comment)) return;
             const textarea = button.closest('.comment-item')?.querySelector('.comment-edit-content');
-            const content = textarea?.value.trim() || '';
+            const composer = textarea?.closest('[data-comment-composer]');
+            if (!composer) return;
+            const content = BeadyoCommentEmoji.getContent(composer);
             if (!content) {
                 showToast('댓글 내용을 적어주세요.', 'error');
                 textarea?.focus();
                 return;
             }
-
-            button.disabled = true;
-            button.textContent = '저장 중...';
-            let query = db.from('development_request_comments').update({ content }).eq('id', commentId);
-            if (!state.isAdmin) query = query.eq('author_id', state.user.id);
-            const { error } = await query;
-            if (error) {
-                console.error(error);
-                button.disabled = false;
-                button.textContent = '저장';
-                showToast('댓글을 수정하지 못했어요.', 'error');
+            if (content.length > BeadyoCommentEmoji.MAX_LENGTH) {
+                showToast('댓글은 이모티콘을 포함해 최대 1,000자까지 입력할 수 있어요.', 'error');
                 return;
             }
 
-            comment.content = content;
-            state.editingCommentId = null;
-            renderRequests();
-            showToast('댓글을 수정했어요.');
+            button.disabled = true;
+            button.textContent = '저장 중...';
+            commentPending.add(draftKey);
+            applyCommentPending();
+            try {
+                let query = db.from('development_request_comments').update({ content }).eq('id', commentId);
+                if (!state.isAdmin) query = query.eq('author_id', state.user.id);
+                const { error } = await query;
+                if (error) throw error;
+                comment.content = content;
+                if (state.editingCommentId === commentId) state.editingCommentId = null;
+                renderRequests(draftKey);
+                showToast('댓글을 수정했어요.');
+            } catch (error) {
+                console.error(error);
+                showToast('댓글을 수정하지 못했어요.', 'error');
+            } finally {
+                commentPending.delete(draftKey);
+                button.disabled = false;
+                button.textContent = '저장';
+                BeadyoCommentEmoji.setBusy(composer, false);
+                applyCommentPending();
+            }
         }
 
         async function deleteComment(button) {
@@ -1131,6 +1198,15 @@
         }
 
         function bindEvents() {
+            BeadyoCommentEmoji.mount(document.getElementById('request-list'), { notify: showToast });
+            const commentList = document.getElementById('request-list');
+            commentList.addEventListener('compositionstart', event => {
+                if (event.target.closest('[data-comment-composer]')) commentComposing.add(event.target);
+            });
+            commentList.addEventListener('compositionend', event => {
+                commentComposing.delete(event.target);
+                if (commentRenderDeferred) setTimeout(() => { if (commentRenderDeferred) renderRequests(); }, 0);
+            });
             const textarea = document.getElementById('request-content');
             textarea.addEventListener('input', () => {
                 document.getElementById('character-count').textContent = String(textarea.value.length);
