@@ -21,14 +21,14 @@
     <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
     <link rel="preload" href="supabase.min.js?v=supabase-2-112-2" as="script">
-    <link rel="preload" href="app.js?v=release-20261017-all" as="script">
+    <link rel="preload" href="app.js?v=calendar-context-menu-20261017" as="script">
     <script defer src="supabase.min.js?v=supabase-2-112-2"></script>
     <script defer src="beadyo-common.js?v=release-20261011-all"></script>
     <script defer src="modal-focus.js?v=release-20261011-all"></script>
     <link rel="stylesheet" href="explore.css?v=release-20261011-all">
     <script defer src="explore-data.js?v=release-20261011-all"></script>
     <script defer src="explore.js?v=release-20261011-all"></script>
-    <script defer src="app.js?v=release-20261017-all"></script>
+    <script defer src="app.js?v=calendar-context-menu-20261017"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"></noscript>
@@ -1117,6 +1117,23 @@
         .cal-cell.cell-drop-target { background: rgba(139,195,74,0.10) !important; outline: 2px dashed var(--accent); outline-offset: -2px; }
         .cal-cell.copy-drop-target,
         .event-chip.copy-drop-target { outline: 3px solid var(--accent-dark); outline-offset: -3px; }
+        .schedule-copying, .schedule-copying * { cursor: copy !important; user-select: none; }
+        .schedule-copy-ghost {
+            position: fixed;
+            z-index: 10000;
+            pointer-events: none;
+            max-width: min(300px, calc(100vw - 24px));
+            padding: 10px 14px;
+            border: 2px solid var(--accent-dark);
+            border-radius: 10px;
+            background: var(--surface);
+            color: var(--text);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
         .schedule-drag-hint {
             display: none;
             margin: 0 12px 10px;
@@ -1126,6 +1143,45 @@
             text-align: center;
             flex-shrink: 0;
         }
+        .schedule-context-menu[hidden] { display: none; }
+        .schedule-context-menu {
+            position: fixed;
+            z-index: 10020;
+            width: 230px;
+            max-width: calc(100vw - 16px);
+            padding: 6px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            color: var(--text);
+            box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+        }
+        .schedule-context-title {
+            padding: 6px 8px 2px;
+            font-size: 12px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .schedule-context-date { padding: 0 8px 8px; font-size: 11px; color: var(--muted); }
+        .schedule-context-delete {
+            width: 100%;
+            padding: 10px 12px;
+            border: 0;
+            border-radius: 7px;
+            background: transparent;
+            color: #d93838;
+            font: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+        }
+        .schedule-context-delete:hover, .schedule-context-delete:focus-visible { background: rgba(255,82,82,0.12); outline: 2px solid currentColor; outline-offset: -2px; }
+        html[data-theme="dark"] .schedule-context-delete { color: #ff9999; }
         @media (min-width: 641px) and (pointer: fine) {
             .is-editor .schedule-drag-hint { display: block; }
         }
@@ -3529,6 +3585,12 @@
 </div>
 
 <p class="schedule-drag-hint" id="scheduleDragHint" role="status" aria-live="polite">⌘(Mac) / Ctrl(Windows) + 드래그로 날짜에 복사 · 그냥 드래그하면 이동</p>
+
+<div class="schedule-context-menu" id="scheduleContextMenu" hidden role="menu" aria-label="일정 메뉴" aria-describedby="scheduleContextTitle scheduleContextDate">
+    <div class="schedule-context-title" id="scheduleContextTitle"></div>
+    <div class="schedule-context-date" id="scheduleContextDate"></div>
+    <button type="button" class="schedule-context-delete" id="scheduleContextDelete" role="menuitem" onclick="deleteScheduleFromContextMenu()">삭제</button>
+</div>
 
 <!-- 복사한 일정 -->
 <div class="schedule-copy-bar" id="scheduleCopyBar" hidden aria-live="polite">

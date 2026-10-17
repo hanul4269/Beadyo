@@ -1036,6 +1036,7 @@ function downloadPaintCanvas() {
 let dragState = { id: null, dateStr: null };
 let _dragged = false;
 let _scheduleDropPending = false;
+let _schedulePointerCopy = null;
 let _eventsLoaded = false;
 let _retryTimer = null;
 let _loadRetryAttempt = 0;
@@ -1179,14 +1180,18 @@ function clearScheduleDragStyles() {
     });
 }
 function resetScheduleDrag() {
+    releaseSchedulePointerCopy();
     dragState = { id: null, dateStr: null };
     clearScheduleDragStyles();
     scheduleDragHint();
 }
 function dragStart(e, id, dateStr) {
+    // Command can cancel native HTML dragging on macOS. Modified gestures use
+    // pointer events instead, so a native drag must never take over mid-copy.
+    if (_schedulePointerCopy) { e.preventDefault(); return; }
     resetScheduleDrag();
     const source = state.events.find(ev => ev.id === id);
-    if (!state.isEditor || _savingEvent || _scheduleDropPending || !source || source.date !== dateStr) {
+    if (!state.isEditor || _savingEvent || _scheduleDeletePending || _scheduleDropPending || !source || source.date !== dateStr) {
         e.preventDefault();
         return;
     }
@@ -1233,6 +1238,115 @@ function cellDragLeave(e) {
     if (e.currentTarget.contains(e.relatedTarget)) return;
     e.currentTarget.classList.remove('cell-drop-target', 'copy-drop-target');
 }
+function releaseSchedulePointerCopy() {
+    const pointer = _schedulePointerCopy;
+    if (!pointer) return;
+    _schedulePointerCopy = null;
+    document.removeEventListener('pointermove', moveSchedulePointerCopy);
+    document.removeEventListener('pointerup', finishSchedulePointerCopy);
+    document.removeEventListener('pointercancel', cancelSchedulePointerCopy);
+    document.removeEventListener('keydown', schedulePointerCopyKey);
+    document.removeEventListener('visibilitychange', schedulePointerCopyVisibility);
+    window.removeEventListener('blur', cancelSchedulePointerCopy);
+    pointer.element.removeEventListener('lostpointercapture', cancelSchedulePointerCopy);
+    if (pointer.element.hasPointerCapture?.(pointer.id)) pointer.element.releasePointerCapture(pointer.id);
+    pointer.element.draggable = true;
+    pointer.ghost?.remove();
+    document.body.classList.remove('schedule-copying');
+    if (pointer.active) {
+        _dragged = true;
+        setTimeout(() => { _dragged = false; }, 100);
+        // Esc may be pressed long before mouse-up. Suppress that gesture's click
+        // without swallowing a new click or a keyboard activation afterwards.
+        const cleanup = () => {
+            document.removeEventListener('click', suppressClick, true);
+            document.removeEventListener('pointerdown', cleanup, true);
+        };
+        const suppressClick = event => {
+            cleanup();
+            if (event.detail !== 0) { event.preventDefault(); event.stopImmediatePropagation(); }
+        };
+        document.addEventListener('click', suppressClick, true);
+        document.addEventListener('pointerdown', cleanup, true);
+    }
+}
+function cancelSchedulePointerCopy(e) {
+    if (!_schedulePointerCopy || (e?.pointerId != null && e.pointerId !== _schedulePointerCopy.id)) return;
+    resetScheduleDrag();
+}
+function schedulePointerCopyKey(e) {
+    if (e.key === 'Escape' && _schedulePointerCopy) {
+        e.preventDefault();
+        cancelSchedulePointerCopy();
+    }
+}
+function schedulePointerCopyVisibility() {
+    if (document.hidden) cancelSchedulePointerCopy();
+}
+function schedulePointerCopyTarget(e) {
+    const cell = document.elementFromPoint(e.clientX, e.clientY)?.closest('#calGrid .cal-cell[data-date]');
+    return cell && !cell.classList.contains('other-month') ? cell : null;
+}
+function startSchedulePointerCopy(e, id, dateStr) {
+    if (e.button !== 0 || e.isPrimary === false || e.pointerType === 'touch' || !scheduleDragIsCopy(e)) return;
+    const source = state.events.find(ev => ev.id === id);
+    if (!state.isEditor || _savingEvent || _scheduleDeletePending || _scheduleDropPending || !source || source.date !== dateStr) return;
+    resetScheduleDrag();
+    e.preventDefault();
+    e.stopPropagation();
+    dragState = { id, dateStr, source: { ...source }, editor: scheduleDragEditor() };
+    const element = e.currentTarget;
+    _schedulePointerCopy = { id: e.pointerId, element, x: e.clientX, y: e.clientY, active: false };
+    element.draggable = false;
+    document.addEventListener('pointermove', moveSchedulePointerCopy);
+    document.addEventListener('pointerup', finishSchedulePointerCopy);
+    document.addEventListener('pointercancel', cancelSchedulePointerCopy);
+    document.addEventListener('keydown', schedulePointerCopyKey);
+    document.addEventListener('visibilitychange', schedulePointerCopyVisibility);
+    window.addEventListener('blur', cancelSchedulePointerCopy);
+    element.addEventListener('lostpointercapture', cancelSchedulePointerCopy);
+    // Pointer capture keeps receiving mouse-up outside the original card.
+    // Synthetic preview events have no active pointer to capture.
+    if (element.setPointerCapture) {
+        try { element.setPointerCapture(e.pointerId); } catch (_) { /* document listeners still handle release */ }
+    }
+}
+function moveSchedulePointerCopy(e) {
+    const pointer = _schedulePointerCopy;
+    if (!pointer || e.pointerId !== pointer.id) return;
+    if (!(e.buttons & 1) || !scheduleDragEditorMatches(dragState.editor)) { cancelSchedulePointerCopy(); return; }
+    if (!pointer.active && Math.hypot(e.clientX - pointer.x, e.clientY - pointer.y) < 5) return;
+    e.preventDefault();
+    if (!pointer.active) {
+        pointer.active = true;
+        _dragged = true;
+        hideMemoTooltip();
+        pointer.ghost = document.createElement('div');
+        pointer.ghost.className = 'schedule-copy-ghost';
+        pointer.ghost.textContent = `복사 · ${dragState.source.title}`;
+        pointer.ghost.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(pointer.ghost);
+        document.body.classList.add('schedule-copying');
+    }
+    const ghostWidth = pointer.ghost.offsetWidth;
+    pointer.ghost.style.left = `${Math.max(0, Math.min(e.clientX + 12, window.innerWidth - ghostWidth - 8))}px`;
+    pointer.ghost.style.top = `${Math.max(0, Math.min(e.clientY + 12, window.innerHeight - pointer.ghost.offsetHeight - 8))}px`;
+    clearScheduleDragStyles();
+    pointer.element.classList.add('dragging');
+    const cell = schedulePointerCopyTarget(e);
+    if (cell) cell.classList.add('cell-drop-target', 'copy-drop-target');
+    scheduleDragHint(!cell ? '날짜 칸에 놓으면 복사됩니다 · Esc로 취소'
+        : cell.dataset.date === dragState.dateStr ? '복사할 다른 날짜를 선택하세요 · Esc로 취소'
+        : `놓으면 ${cell.dataset.date}에 복사됩니다 · 원본 유지 · Esc로 취소`);
+}
+async function finishSchedulePointerCopy(e) {
+    const pointer = _schedulePointerCopy;
+    if (!pointer || e.pointerId !== pointer.id) return;
+    const cell = pointer.active && e.button === 0 ? schedulePointerCopyTarget(e) : null;
+    if (!cell) { cancelSchedulePointerCopy(); return; }
+    // Copy intent belongs to this gesture, not a native drop's unreliable metaKey.
+    await dropSchedule(e, cell.dataset.date, null, true);
+}
 async function cellDrop(e, dateStr) {
     await dropSchedule(e, dateStr);
 }
@@ -1253,14 +1367,13 @@ function draggedScheduleCopy(source, targetDate) {
     ].map(key => [key, source[key] ?? null]));
     return { ...payload, ...dates, sort_order: nextSortOrderForDate(targetDate) };
 }
-async function dropSchedule(e, targetDate, targetId = null) {
+async function dropSchedule(e, targetDate, targetId = null, copy = scheduleDragIsCopy(e)) {
     e.preventDefault();
     e.stopPropagation();
     const source = dragState;
-    const copy = scheduleDragIsCopy(e);
     // Consume once, before any await: nested card/cell drops cannot create two copies.
     resetScheduleDrag();
-    if (!source.id || _savingEvent || _scheduleDropPending || !scheduleDragEditorMatches(source.editor)) return;
+    if (!source.id || _savingEvent || _scheduleDeletePending || _scheduleDropPending || !scheduleDragEditorMatches(source.editor)) return;
     if (source.dateStr === targetDate && (copy || !targetId || source.id === targetId)) return;
     if (!draggedScheduleDates(source.source, targetDate)) { showToast('일정 날짜를 확인해주세요'); return; }
     _scheduleDropPending = true;
@@ -1481,6 +1594,7 @@ function calendarEventsForDate(dateStr) {
 }
 
 function renderMobileSchedule() {
+    closeScheduleContextMenu();
     const wrap = document.getElementById('mobileScheduleView');
     if (!wrap) return;
     const todayStr = dateToStr(new Date());
@@ -1502,7 +1616,7 @@ function renderMobileSchedule() {
                 const restSticker = isRestEvent(ev)
                     ? stickerImg(MOOD_STICKERS.fan, 'mobile-event-sticker', '선풍기')
                     : '';
-                return `<button class="mobile-event-pill" style="${eventCardStyle(t)}" onclick="openDayViewModal('${dateStr}')">
+                return `<button class="mobile-event-pill" style="${eventCardStyle(t)}" onclick="openDayViewModal('${dateStr}')" ${scheduleContextAttributes(ev)}>
                     ${restSticker}
                     <span class="mobile-event-time">${esc(time)}</span>
                     <span class="mobile-event-title">${esc(ev.title)}</span>
@@ -1528,6 +1642,7 @@ function renderSecondaryViews() {
 
 // ─── 캘린더 렌더링 ───
 function renderCalendar() {
+    closeScheduleContextMenu();
     if (state.viewMode === 'week' && state.weekStart) {
         const [wy, wm, wd] = state.weekStart.split('-').map(Number);
         const wStart = new Date(wy, wm - 1, wd);
@@ -1670,6 +1785,7 @@ function renderCalendar() {
 
             const dragAttrs = state.isEditor && isStart
                 ? `draggable="true"
+                   onpointerdown="startSchedulePointerCopy(event,'${esc(ev.id)}','${dateStr}')"
                    ondragstart="dragStart(event,'${esc(ev.id)}','${dateStr}')"
                    ondragend="dragEnd(event)"
                    ondragover="dragOver(event,'${esc(ev.id)}','${dateStr}')"
@@ -1681,7 +1797,7 @@ function renderCalendar() {
             return `<button class="event-chip ${titleSizeClass}${subtitleClass}${timeClass}${newlineClass}${restClass}${detailClass}"
                 style="${eventCardStyle(t)}border-radius:${br};"
                 onclick="if(!_dragged)openDayViewModal('${dateStr}')"
-                ${memoAttr} ${memoEvents} ${dragAttrs}
+                ${memoAttr} ${memoEvents} ${dragAttrs} ${scheduleContextAttributes(ev)}
                 title="${esc(ev.title)}">${timeBadge}${chipSticker}<div class="chip-body" style="${bodyStyle}">${vodDot}${esc(ev.title)}</div>${subtitleHtml}${collabHtml}</button>`;
         }).join('');
 
@@ -3044,6 +3160,7 @@ let _editReturnContext = null;
 let _copiedEvent = null;
 let _copyDraft = null;
 let _savingEvent = false;
+let _scheduleDeletePending = false;
 let _scheduleEditorEpoch = 0;
 let _scheduleAuthRequest = 0;
 
@@ -3253,7 +3370,7 @@ async function repeatWeekly(id) {
 }
 
 async function saveEvent() {
-    if (_savingEvent) return;
+    if (_savingEvent || _scheduleDeletePending) return;
     if (!state.isEditor) { showToast('일정 편집 권한이 필요합니다'); return; }
     const title = document.getElementById('editTitle').value.trim().replace(/\n{2,}/g, '\n');
     if (!title) { showToast('제목을 입력해주세요'); return; }
@@ -3329,14 +3446,118 @@ async function saveEvent() {
     if (state.isEditor && editorEpoch === _scheduleEditorEpoch) reopenEditReturnContext(returnContext);
 }
 
-async function deleteEvent(id) {
-    await _ensureDb();
-    if (!confirm('이 일정을 삭제하시겠습니까?')) return;
-    const { error } = await db.from('schedules').delete().eq('id', id);
-    if (error) { await handleSupabaseMutationError(error, '삭제 실패: ' + error.message); return; }
-    showToast('삭제되었습니다');
-    closeViewModal();
-    await loadEvents();
+// ─── 일정 우클릭 메뉴 ───
+let _scheduleContext = null;
+function scheduleContextAttributes(ev) {
+    if (!state.isEditor) return '';
+    return `data-schedule-id="${esc(ev.id)}" aria-haspopup="menu" aria-controls="scheduleContextMenu"
+        oncontextmenu="openScheduleContextMenu(event,${jsArg(ev.id)})"
+        onkeydown="scheduleContextTriggerKey(event,${jsArg(ev.id)})"`;
+}
+function closeScheduleContextMenu(restoreFocus = false) {
+    if (!_scheduleContext) return;
+    const { trigger } = _scheduleContext;
+    _scheduleContext = null;
+    document.getElementById('scheduleContextMenu').hidden = true;
+    document.removeEventListener('pointerdown', scheduleContextOutside, true);
+    window.removeEventListener('focusin', scheduleContextOutside, true);
+    window.removeEventListener('keydown', scheduleContextMenuKey, true);
+    document.removeEventListener('scroll', dismissScheduleContextMenu, true);
+    window.removeEventListener('resize', dismissScheduleContextMenu);
+    window.removeEventListener('blur', dismissScheduleContextMenu);
+    if (restoreFocus && trigger?.isConnected) trigger.focus({ preventScroll: true });
+}
+function dismissScheduleContextMenu() { closeScheduleContextMenu(); }
+function scheduleContextOutside(event) {
+    if (!document.getElementById('scheduleContextMenu').contains(event.target)) closeScheduleContextMenu();
+}
+function scheduleContextMenuKey(event) {
+    if ((event.metaKey || event.ctrlKey) && !event.altKey && event.key.toLowerCase() === 'k') {
+        // Close before the document's search handler remembers its return focus.
+        closeScheduleContextMenu(true);
+    } else if (event.key === 'Escape' || event.key === 'Tab') {
+        if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); }
+        closeScheduleContextMenu(true);
+    } else if (['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
+        event.preventDefault();
+        document.getElementById('scheduleContextDelete').focus();
+    }
+}
+function scheduleContextTriggerKey(event, id) {
+    if (event.key === 'ContextMenu' || (event.shiftKey && event.key === 'F10')) openScheduleContextMenu(event, id);
+}
+function openScheduleContextMenu(event, id) {
+    closeScheduleContextMenu();
+    const row = state.events.find(item => item.id === id);
+    if (!state.isEditor || !row) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (_savingEvent || _scheduleDropPending || _scheduleDeletePending) return;
+    resetScheduleDrag();
+    hideMemoTooltip();
+    const menu = document.getElementById('scheduleContextMenu');
+    const trigger = event.currentTarget;
+    _scheduleContext = { id, trigger, editor: scheduleDragEditor() };
+    document.getElementById('scheduleContextTitle').textContent = row.title;
+    document.getElementById('scheduleContextDate').textContent = row.end_date && row.end_date !== row.date
+        ? `${row.date} ~ ${row.end_date} · 전체 일정` : row.date;
+    menu.hidden = false;
+    const rect = trigger.getBoundingClientRect();
+    const keyboard = event.type === 'keydown' || !(event.clientX || event.clientY);
+    const x = keyboard ? rect.left : event.clientX;
+    const y = keyboard ? rect.bottom : event.clientY;
+    menu.style.left = '0px';
+    menu.style.top = '0px';
+    // Stable scrollbar gutters shift the fixed-position origin on desktop.
+    const origin = menu.getBoundingClientRect();
+    const width = document.documentElement.clientWidth;
+    const height = document.documentElement.clientHeight;
+    menu.style.left = `${Math.max(0, Math.max(8, Math.min(x, width - menu.offsetWidth - 8)) - origin.left)}px`;
+    menu.style.top = `${Math.max(0, Math.max(8, Math.min(y, height - menu.offsetHeight - 8)) - origin.top)}px`;
+    document.addEventListener('pointerdown', scheduleContextOutside, true);
+    window.addEventListener('focusin', scheduleContextOutside, true);
+    window.addEventListener('keydown', scheduleContextMenuKey, true);
+    document.addEventListener('scroll', dismissScheduleContextMenu, true);
+    window.addEventListener('resize', dismissScheduleContextMenu);
+    window.addEventListener('blur', dismissScheduleContextMenu);
+    document.getElementById('scheduleContextDelete').focus({ preventScroll: true });
+}
+async function deleteScheduleFromContextMenu() {
+    const target = _scheduleContext;
+    if (!target) return;
+    closeScheduleContextMenu(true);
+    return deleteEvent(target.id, target.editor);
+}
+async function deleteEvent(id, editor = scheduleDragEditor()) {
+    if (_scheduleDeletePending || _savingEvent || _scheduleDropPending || !scheduleDragEditorMatches(editor)) return false;
+    const row = state.events.find(item => item.id === id);
+    if (!row) return false;
+    const period = row.end_date && row.end_date !== row.date ? `${row.date} ~ ${row.end_date} 전체 일정` : row.date;
+    if (!confirm(`「${row.title}」\n${period}\n이 일정을 삭제하시겠습니까?`)) return false;
+    _scheduleDeletePending = true;
+    closeScheduleContextMenu();
+    resetScheduleDrag();
+    try {
+        await _ensureDb();
+        if (!scheduleDragEditorMatches(editor)) return false;
+        const { data, error } = await db.from('schedules').delete().eq('id', id).select('id');
+        if (error) { await handleSupabaseMutationError(error, '삭제 실패: ' + error.message); return false; }
+        if (!data?.some(item => item.id === id)) {
+            showToast('삭제되지 않았습니다. 일정이나 편집 권한이 변경되었는지 확인해주세요');
+            await loadEvents();
+            return false;
+        }
+        showToast('삭제되었습니다');
+        closeViewModal();
+        await loadEvents();
+        return true;
+    } catch (error) {
+        showToast('삭제하지 못했습니다. 연결 상태를 확인하고 다시 시도해주세요');
+        console.error('deleteEvent:', error);
+        return false;
+    } finally {
+        _scheduleDeletePending = false;
+    }
 }
 
 // ─── 편집자 관리 ───
@@ -4173,6 +4394,7 @@ async function initAuth() {
 }
 
 async function setSessionUser(user) {
+    closeScheduleContextMenu();
     const authRequest = ++_scheduleAuthRequest;
     const previousEmail = state.user?.email?.toLowerCase();
     const nextEmail = user?.email?.toLowerCase();

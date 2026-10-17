@@ -18,11 +18,21 @@ function deferred() {
 }
 function element() {
     const classes = new Set();
-    return { dataset: {}, style: {}, textContent: '', hidden: false,
+    const listeners = new Map();
+    return { dataset: {}, style: {}, textContent: '', hidden: false, draggable: true, removed: false, offsetWidth: 160, offsetHeight: 44,
         classList: { add: (...names) => names.forEach(name => classes.add(name)),
             remove: (...names) => names.forEach(name => classes.delete(name)), contains: name => classes.has(name),
             toggle(name, on) { on ? classes.add(name) : classes.delete(name); } },
         contains(other) { return this === other; }, setAttribute(name, value) { this[name] = value; },
+        getAttribute(name) { return this[name] ?? null; }, removeAttribute(name) { delete this[name]; },
+        closest(selector) { return selector.includes('cal-cell') && this.classList.contains('cal-cell') ? this : null; },
+        getBoundingClientRect: () => ({ left: 0, top: 0, width: 160, height: 44 }),
+        setPointerCapture(id) { this.capturedPointer = id; }, releasePointerCapture(id) { if (this.capturedPointer === id) delete this.capturedPointer; },
+        hasPointerCapture(id) { return this.capturedPointer === id; },
+        appendChild(child) { child.parentElement = this; }, remove() { this.removed = true; }, cloneNode: () => element(),
+        addEventListener(type, callback) { listeners.set(type, [...(listeners.get(type) || []), callback]); },
+        removeEventListener(type, callback) { listeners.set(type, (listeners.get(type) || []).filter(item => item !== callback)); },
+        dispatchEvent(event) { (listeners.get(event.type) || []).forEach(callback => callback(event)); },
     };
 }
 function dragEvent(modifiers = {}, currentTarget = element()) {
@@ -30,6 +40,7 @@ function dragEvent(modifiers = {}, currentTarget = element()) {
     return { metaKey: false, ctrlKey: false, altKey: false, shiftKey: false, ...modifiers,
         currentTarget, relatedTarget: null, prevented: false, stopped: false,
         preventDefault() { this.prevented = true; }, stopPropagation() { this.stopped = true; },
+        stopImmediatePropagation() { this.stopped = true; this.immediateStopped = true; },
         dataTransfer: { effectAllowed: 'uninitialized', dropEffect: 'none',
             setData: (type, value) => data.set(type, value), getData: type => data.get(type) || '' },
     };
@@ -44,9 +55,17 @@ function schedule(overrides = {}) {
 }
 function harness(options = {}) {
     const nodes = new Map(), toasts = [], writes = [], elements = [], timers = [];
+    const documentListeners = new Map(), windowListeners = new Map();
+    const listen = (listeners, type, callback) => {
+        if (!listeners.has(type)) listeners.set(type, []);
+        listeners.get(type).push(callback);
+    };
+    const unlisten = (listeners, type, callback) => {
+        listeners.set(type, (listeners.get(type) || []).filter(item => item !== callback));
+    };
     const node = id => { if (!nodes.has(id)) nodes.set(id, element()); return nodes.get(id); };
     const state = { events: [schedule()], isEditor: true, user: { email: 'editor@example.test' }, ...options.state };
-    let reloads = 0, renders = 0, mutation = options.mutation || (async () => ({ error: null }));
+    let reloads = 0, renders = 0, hitTarget = null, mutation = options.mutation || (async () => ({ error: null }));
     const navigator = { platform: options.platform || 'MacIntel', userAgent: options.userAgent || 'fixture',
         ...(options.userAgentPlatform ? { userAgentData: { platform: options.userAgentPlatform } } : {}) };
     const db = { from(table) {
@@ -56,18 +75,24 @@ function harness(options = {}) {
             update(payload) { return { eq(key, id) { assert.equal(key, 'id'); const write = { mode: 'update', id, payload: json(payload) }; writes.push(write); return mutation(write); } }; },
         };
     } };
-    const document = { body: element(), getElementById: node,
+    const document = { body: element(), visibilityState: 'visible', hidden: false, getElementById: node,
+        addEventListener: (type, callback) => listen(documentListeners, type, callback),
+        removeEventListener: (type, callback) => unlisten(documentListeners, type, callback),
+        createElement: () => element(), elementFromPoint: () => hitTarget,
         querySelectorAll(selector) {
             const alternatives = selector.split(',').map(part => part.match(/\.[\w-]+/g) || []);
             return elements.filter(el => alternatives.some(required =>
                 required.length && required.every(name => el.classList.contains(name.slice(1)))));
         },
     };
-    const context = vm.createContext({ state, db, navigator, document, window: { navigator },
+    const window = { navigator, innerWidth: 1280, innerHeight: 900, addEventListener: (type, callback) => listen(windowListeners, type, callback),
+        removeEventListener: (type, callback) => unlisten(windowListeners, type, callback) };
+    const context = vm.createContext({ state, db, navigator, document, window,
         Date, Promise, Array, Object, String, Number, console: { error() {}, warn() {} },
-        _scheduleEditorEpoch: 0, _savingEvent: false,
+        _scheduleEditorEpoch: 0, _savingEvent: false, _scheduleDeletePending: false,
         _ensureDb: options.ensureDb || (async () => {}),
         showToast: message => toasts.push(message),
+        hideMemoTooltip() {},
         handleSupabaseMutationError: async (_, message) => toasts.push(message),
         loadEvents: async () => { reloads++; }, renderCalendar: () => { renders++; },
         setTimeout: fn => { timers.push(fn); return timers.length; }, clearTimeout() {},
@@ -78,14 +103,37 @@ function harness(options = {}) {
         section('// ─── 드래그앤드랍 순서 ───', '// ─── 데이터 로드 ───') +
         section('function calendarEventsForDate(', 'function renderMobileSchedule(') +
         section('function scheduleDateMillis(', 'function refreshScheduleCopyUi('), context);
-    function start(modifiers = {}, id = 'source') {
+    function start(modifiers = {}, id = 'source', currentTarget = element()) {
         const row = state.events.find(ev => ev.id === id);
-        const event = dragEvent(modifiers);
+        const event = dragEvent(modifiers, currentTarget);
         elements.push(event.currentTarget);
         context.dragStart(event, id, row?.date || '2026-12-31');
         return event;
     }
-    return { context, state, node, toasts, writes, start, elements,
+    async function dispatch(type, values = {}, target = element()) {
+        const event = { ...dragEvent({ pointerType: 'mouse', pointerId: 1, isPrimary: true, button: 0, buttons: 1,
+            clientX: 220, clientY: 120, ...values }, target), type, target };
+        const results = [...(documentListeners.get(type) || []), ...(windowListeners.get(type) || [])].map(callback => callback(event));
+        await Promise.all(results);
+        await new Promise(resolve => setImmediate(resolve));
+        return event;
+    }
+    function pointerStart(modifiers = { metaKey: true }, id = 'source') {
+        const row = state.events.find(ev => ev.id === id);
+        const chip = element();
+        chip.classList.add('event-chip');
+        elements.push(chip);
+        const event = { ...dragEvent({ pointerType: 'mouse', pointerId: 1, isPrimary: true, button: 0, buttons: 1,
+            clientX: 20, clientY: 20, ...modifiers }, chip), type: 'pointerdown', target: chip };
+        context.startSchedulePointerCopy(event, id, row?.date || '2026-12-31');
+        return event;
+    }
+    function hitDate(date) {
+        hitTarget = date ? element() : null;
+        if (hitTarget) { hitTarget.classList.add('cal-cell'); hitTarget.dataset.date = date; elements.push(hitTarget); }
+        return hitTarget;
+    }
+    return { context, state, document, node, toasts, writes, start, pointerStart, hitDate, dispatch, elements,
         reloads: () => reloads, renders: () => renders, setMutation(fn) { mutation = fn; },
         advanceTimers() { timers.splice(0).forEach(fn => fn()); },
     };
@@ -167,6 +215,151 @@ test('copy uses the modifier at drop time, so pressing or releasing it during a 
         await h.context.cellDrop(dragEvent(dropModifier), '2026-10-17');
         assert.equal(h.writes[0].mode, mode);
     }
+});
+
+for (const fixture of [
+    { platform: 'MacIntel', modifier: { metaKey: true }, key: 'Meta', name: 'Mac Command' },
+    { platform: 'Win32', modifier: { ctrlKey: true }, key: 'Control', name: 'Windows Control' },
+]) test(`${fixture.name} pointer copy works without any native drag event and keeps its initial copy intent`, async () => {
+    const h = harness({ platform: fixture.platform });
+    const sourceBefore = json(h.state.events[0]);
+    const start = h.pointerStart(fixture.modifier);
+    assert.equal(start.currentTarget.draggable, false);
+    h.hitDate('2026-10-17');
+    await h.dispatch('pointermove');
+    // Native dragging can suppress modifier flags. Releasing the key must not turn this copy into a move.
+    await h.dispatch('keyup', { key: fixture.key });
+    await h.dispatch('pointerup');
+    assert.equal(h.writes.length, 1);
+    assert.equal(h.writes[0].mode, 'insert');
+    assert.equal(h.writes[0].payload.date, '2026-10-17');
+    assert.equal(h.writes[0].payload.end_date, '2026-10-19');
+    assert.equal(h.writes[0].payload.youtube_links, sourceBefore.youtube_links);
+    assert.deepEqual(json(h.state.events[0]), sourceBefore);
+    assert.equal(start.currentTarget.draggable, true);
+    assert.equal(start.currentTarget.hasPointerCapture(1), false);
+});
+
+test('a completed pointer copy cannot leave stale Command intent on the next ordinary drag', async () => {
+    const h = harness();
+    h.pointerStart();
+    h.hitDate('2026-10-17');
+    await h.dispatch('pointermove');
+    await h.dispatch('pointerup');
+    h.advanceTimers();
+    const normal = h.pointerStart({});
+    assert.equal(normal.currentTarget.draggable, true);
+    h.start({}, 'source', normal.currentTarget);
+    await h.context.cellDrop(dragEvent(), '2026-11-01');
+    assert.deepEqual(h.writes.map(write => write.mode), ['insert', 'update']);
+});
+
+for (const reason of ['Escape', 'pointercancel', 'lostpointercapture', 'buttons-released', 'blur', 'hidden', 'outside', 'other-month', 'same-date', 'no-movement']) {
+    test(`pointer copy ${reason} cancels without a write and restores ordinary dragging`, async () => {
+        const h = harness();
+        const start = h.pointerStart();
+        const cell = h.hitDate(reason === 'same-date' ? '2026-12-31' : '2026-10-17');
+        if (reason === 'other-month') cell.classList.add('other-month');
+        if (reason !== 'no-movement') await h.dispatch('pointermove');
+        if (reason === 'Escape') await h.dispatch('keydown', { key: 'Escape' });
+        else if (reason === 'pointercancel' || reason === 'blur') await h.dispatch(reason);
+        else if (reason === 'lostpointercapture') start.currentTarget.dispatchEvent({ type: 'lostpointercapture', pointerId: 1 });
+        else if (reason === 'buttons-released') await h.dispatch('pointermove', { buttons: 0 });
+        else if (reason === 'hidden') { h.document.visibilityState = 'hidden'; h.document.hidden = true; await h.dispatch('visibilitychange'); }
+        else if (reason === 'outside') h.hitDate(null);
+        await h.dispatch('pointerup', reason === 'no-movement' ? { clientX: 22, clientY: 22 } : {});
+        assert.equal(h.writes.length, 0);
+        assert.equal(start.currentTarget.draggable, true);
+        assert.equal(start.currentTarget.hasPointerCapture(1), false);
+        assert.equal(h.document.body.classList.contains('schedule-copying'), false);
+    });
+}
+
+test('a native dragstart cannot take over an active pointer copy gesture', async () => {
+    const h = harness();
+    const pointer = h.pointerStart();
+    const native = h.start({}, 'source', pointer.currentTarget);
+    assert.equal(native.prevented, true);
+    assert.equal(pointer.currentTarget.draggable, false);
+    h.hitDate('2026-10-17');
+    await h.dispatch('pointermove');
+    await h.dispatch('pointerup');
+    assert.equal(h.writes.length, 1);
+    assert.equal(h.writes[0].mode, 'insert');
+});
+
+test('a delayed mouse-up click after Escape is suppressed even after the drag timer expires', async () => {
+    const h = harness();
+    const pointer = h.pointerStart();
+    h.hitDate('2026-10-17');
+    await h.dispatch('pointermove');
+    await h.dispatch('keydown', { key: 'Escape' });
+    h.advanceTimers();
+    assert.equal(vm.runInContext('_dragged', h.context), false);
+    await h.dispatch('pointerup', {}, pointer.currentTarget);
+    const releasedClick = await h.dispatch('click', { detail: 1 }, pointer.currentTarget);
+    assert.equal(releasedClick.prevented, true);
+    assert.equal(releasedClick.immediateStopped, true);
+    assert.equal(h.writes.length, 0);
+    const laterClick = await h.dispatch('click', { detail: 1 }, pointer.currentTarget);
+    assert.equal(laterClick.prevented, false);
+});
+
+test('a new pointerdown clears the cancelled gesture click guard before an ordinary click', async () => {
+    const h = harness();
+    const pointer = h.pointerStart();
+    h.hitDate('2026-10-17');
+    await h.dispatch('pointermove');
+    await h.dispatch('keydown', { key: 'Escape' });
+    h.advanceTimers();
+    await h.dispatch('pointerdown', {}, pointer.currentTarget);
+    await h.dispatch('pointerup', {}, pointer.currentTarget);
+    const click = await h.dispatch('click', { detail: 1 }, pointer.currentTarget);
+    assert.equal(click.prevented, false);
+    assert.equal(click.immediateStopped, undefined);
+});
+
+test('keyboard activation after cancelling a pointer copy is not swallowed by the click guard', async () => {
+    const h = harness();
+    const pointer = h.pointerStart();
+    h.hitDate('2026-10-17');
+    await h.dispatch('pointermove');
+    await h.dispatch('keydown', { key: 'Escape' });
+    h.advanceTimers();
+    const click = await h.dispatch('click', { detail: 0 }, pointer.currentTarget);
+    assert.equal(click.prevented, false);
+    assert.equal(click.immediateStopped, undefined);
+});
+
+test('read-only and non-primary pointer gestures cannot start a copy', async () => {
+    for (const options of [
+        { state: { isEditor: false, user: null } }, { modifier: { metaKey: true, button: 2 } },
+        { modifier: { metaKey: true, isPrimary: false } }, { modifier: { metaKey: true, pointerType: 'touch' } },
+    ]) {
+        const h = harness(options);
+        const start = h.pointerStart(options.modifier);
+        h.hitDate('2026-10-17');
+        await h.dispatch('pointermove');
+        await h.dispatch('pointerup');
+        assert.equal(h.writes.length, 0);
+        assert.equal(start.currentTarget.draggable, true);
+    }
+});
+
+test('repeated pointer release and a new gesture cannot duplicate a pending copy', async () => {
+    const ready = deferred();
+    const h = harness({ ensureDb: () => ready.promise });
+    h.pointerStart();
+    h.hitDate('2026-10-17');
+    await h.dispatch('pointermove');
+    const first = h.dispatch('pointerup');
+    const duplicate = h.dispatch('pointerup');
+    const secondStart = h.pointerStart();
+    assert.equal(secondStart.currentTarget.draggable, true);
+    ready.resolve();
+    await Promise.all([first, duplicate]);
+    assert.equal(h.writes.length, 1);
+    assert.equal(h.writes[0].mode, 'insert');
 });
 
 test('copy leaves the source untouched and retains all editable details and registered links', async () => {
