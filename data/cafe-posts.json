@@ -3,8 +3,14 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-10-18T01:33:56.839Z",
+  "fetchedAt": "2026-10-18T06:37:47.810Z",
   "posts": [
+    {
+      "id": "40229",
+      "title": "자고 일어나니까",
+      "publishedAt": "2026-10-18T13:45:07.940+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40229"
+    },
     {
       "id": "40216",
       "title": "일어나써",
@@ -28,12 +34,6 @@
       "title": "집 더착!!",
       "publishedAt": "2026-10-16T00:35:11.400+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40203"
-    },
-    {
-      "id": "40195",
-      "title": "2일차의 끝",
-      "publishedAt": "2026-10-15T02:38:01.863+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40195"
     }
   ]
 }
