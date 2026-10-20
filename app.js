@@ -2541,6 +2541,7 @@ function readLocalUpRankingSnapshot(options = {}) {
 }
 
 async function openUpModal(options = {}) {
+    const generation = ++_upRenderGeneration;
     const startupOnly = options.startupOnly === true;
     const preloadedEvents = Array.isArray(options.sbEvents) ? options.sbEvents : null;
     _upModalIsAutoPrompt = options.auto === true;
@@ -2556,9 +2557,11 @@ async function openUpModal(options = {}) {
     } else {
         try {
             const data = await fetchActiveUpEvents();
+            if (generation !== _upRenderGeneration) return;
             sbEvents = (data || []).filter(e => !startupOnly || isUpStartupEvent(e));
             loadedActiveEvents = true;
         } catch {
+            if (generation !== _upRenderGeneration) return;
             document.getElementById('upModalContent').innerHTML =
                 upEmptyHtml('UP 이벤트 목록을 확인하지 못했습니다', 'empty');
             return;
@@ -2574,22 +2577,27 @@ async function openUpModal(options = {}) {
 
     // Supabase 활성 이벤트 목록을 기준으로만 캐시 랭킹을 병합한다.
     const cachedData = await loadUpRankingCache();
+    if (generation !== _upRenderGeneration) return;
     const localSnapshot = readLocalUpRankingSnapshot({ startupOnly });
     const cachedMap = {};
     for (const e of (cachedData.events || [])) cachedMap[e.id] = e;
     for (const e of (localSnapshot?.events || [])) cachedMap[e.id] = e;
 
-    const mergedEvents = sbEvents.map(e => ({
-        ...upEventFromRow(e),
-        ranking: cachedMap[e.id]?.ranking || [],
-        live_updated_at: cachedMap[e.id]?.live_updated_at || null,
-    }));
+    const mergedEvents = sbEvents.map(e => {
+        const cached = sameUpEventPost(e, cachedMap[e.id]) ? cachedMap[e.id] : null;
+        return {
+            ...upEventFromRow(e),
+            ranking: cached?.ranking || [],
+            live_updated_at: cached?.live_updated_at || null,
+        };
+    });
 
     _upCurrentData = { updated: localSnapshot?.updated || cachedData.updated || null, events: mergedEvents };
     writeLocalUpRankingSnapshot(_upCurrentData);
     renderUpModal(_upCurrentData, true);
 }
 function closeUpModal() {
+    ++_upRenderGeneration;
     document.getElementById('upModal').classList.remove('open');
     _upModalIsAutoPrompt = false;
 }
@@ -2625,6 +2633,12 @@ function parseSoopUrl(url) {
     const clean = url.split('#')[0];
     const m = clean.match(/\/(?:station\/)?(\w+)\/post\/(\d+)/);
     return m ? [m[1], m[2]] : [null, null];
+}
+
+function sameUpEventPost(event, cached) {
+    const [channel, post] = parseSoopUrl(String(event?.soop_url || ''));
+    const [cachedChannel, cachedPost] = parseSoopUrl(String(cached?.soop_url || ''));
+    return !!channel && !!post && channel === cachedChannel && post === cachedPost;
 }
 
 function normalizeUpCachePayload(payload) {
@@ -2749,7 +2763,9 @@ async function fetchSoopRankingLiveFresh(bjId, postNo) {
     return { ranking: allItems, updatedAt };
 }
 
+let _upRenderGeneration = 0;
 function renderUpModal(data, fetchLive = false) {
+    const generation = ++_upRenderGeneration;
     const events = data.events || [];
     if (!events.length) {
         document.getElementById('upModalContent').innerHTML =
@@ -2845,7 +2861,7 @@ function renderUpModal(data, fetchLive = false) {
 
     const liveRequested = new Set();
     async function refreshLiveRanking(idx, force = false) {
-        if (!fetchLive || liveRequested.has(idx)) return;
+        if (generation !== _upRenderGeneration || !fetchLive || liveRequested.has(idx)) return;
         const ev = events[idx];
         if (!ev) return;
         liveRequested.add(idx);
@@ -2856,6 +2872,7 @@ function renderUpModal(data, fetchLive = false) {
         try {
             if (bjId && postNo) result = await fetchSoopRankingLive(bjId, postNo, { force });
         } catch {}
+        if (generation !== _upRenderGeneration) return;
         liveStates.set(idx, result && !result.stale ? 'success' : 'error');
         if (result !== null) {
             ev.ranking = result.ranking;
@@ -4086,6 +4103,9 @@ async function removeCalendarNotice(id) {
 
 // ─── UP 이벤트 관리 ───
 let upEvents = [];
+let _upEditingId = null;
+let _savingUpEvent = false;
+let _upEventsLoadGeneration = 0;
 let _upCurrentData = null;
 let _upModalIsAutoPrompt = false;
 let _upAutoPopupChecked = false;
@@ -4133,27 +4153,34 @@ function displayUpRanking(ev) {
 
 function _refreshUpModalDisplay() {
     const modal = document.getElementById('upModal');
-    if (!modal || !modal.classList.contains('open')) return;
+    ++_upRenderGeneration;
     const rankingMap = {};
     if (_upCurrentData) {
-        for (const e of (_upCurrentData.events || [])) rankingMap[e.id] = e.ranking || [];
+        for (const e of (_upCurrentData.events || [])) rankingMap[e.id] = e;
     }
     const displayEvents = upEvents
         .filter(e => e.is_active)
-        .map(e => ({ ...upEventFromRow(e), ranking: rankingMap[e.id] || [] }));
+        .map(e => {
+            const cached = sameUpEventPost(e, rankingMap[e.id]) ? rankingMap[e.id] : null;
+            return { ...upEventFromRow(e), ranking: cached?.ranking || [], live_updated_at: cached?.live_updated_at || null };
+        });
     if (!displayEvents.length) clearLocalUpRankingSnapshot();
     _upCurrentData = { updated: _upCurrentData?.updated || null, events: displayEvents };
-    renderUpModal(_upCurrentData, false);
+    writeLocalUpRankingSnapshot(_upCurrentData);
+    if (modal?.classList.contains('open')) renderUpModal(_upCurrentData, true);
 }
 
 async function loadUpEvents() {
+    if (_savingUpEvent) return;
+    const generation = ++_upEventsLoadGeneration;
     await _ensureDb();
     const { data, error } = await db.from('up_events').select('*')
         .order('sort_order', { ascending: true });
-    if (!error) upEvents = data || [];
+    if (!error && generation === _upEventsLoadGeneration && !_savingUpEvent) upEvents = data || [];
 }
 
 function renderUpEventList() {
+    prepareUpEventForm();
     const list = document.getElementById('upEventList');
     if (!upEvents.length) {
         list.innerHTML = '<div class="editor-item" style="color:var(--muted);">등록된 UP 이벤트가 없습니다.</div>';
@@ -4166,7 +4193,7 @@ function renderUpEventList() {
                 <div class="up-event-row-subtitle">${esc(e.title)}</div>
                 <div class="up-event-row-state ${e.is_active ? 'active' : ''}">${e.is_active ? '● 활성' : '● 비활성'}</div>
             </div>
-            <div class="up-event-admin-actions">
+            <div class="up-event-admin-actions" style="flex-wrap:wrap;">
                 <div class="up-order-actions" aria-label="UP 이벤트 순서 변경">
                     <button class="up-order-btn" onclick="moveUpEvent(${jsArg(e.id)}, -1)" ${index === 0 ? 'disabled' : ''}>위</button>
                     <button class="up-order-btn" onclick="moveUpEvent(${jsArg(e.id)}, 1)" ${index === upEvents.length - 1 ? 'disabled' : ''}>아래</button>
@@ -4175,10 +4202,122 @@ function renderUpEventList() {
                     <input type="checkbox" ${isUpStartupEvent(e) ? 'checked' : ''} disabled title="현재 자동 팝업 대신 수동 UP 상세에서 확인합니다">
                     <span>이전 팝업 설정 · 현재 수동 UP 상세</span>
                 </label>
+                <button type="button" class="up-order-btn" onclick="editUpEvent(${jsArg(e.id)})" aria-label="${esc(e.tab_name)} 수정">수정</button>
                 <button class="editor-remove-btn" onclick="removeUpEvent(${jsArg(e.id)})">삭제</button>
             </div>
         </div>
     `).join('');
+}
+
+// Reuse the existing add form so new and registered events share one editor.
+function prepareUpEventForm() {
+    const field = document.getElementById('newUpTab')?.closest('.field');
+    if (!field) return;
+    if (!document.getElementById('newUpActive')) {
+        const label = document.createElement('label');
+        label.className = 'up-form-check';
+        label.id = 'upActiveField';
+        label.innerHTML = '<input type="checkbox" id="newUpActive" checked>활성 이벤트로 표시';
+        document.getElementById('newUpStartup').parentElement.before(label);
+        const save = field.querySelector('button[onclick="addUpEvent()"]');
+        save.id = 'upEventSaveBtn';
+        const cancel = document.createElement('button');
+        cancel.type = 'button';
+        cancel.id = 'upEventCancelBtn';
+        cancel.textContent = '취소';
+        cancel.addEventListener('click', cancelUpEventEdit);
+        save.after(cancel);
+        for (const [id, name] of Object.entries({
+            newUpTab: 'UP 이벤트 탭 이름', newUpTitle: 'UP 이벤트 제목',
+            newUpUrl: 'SOOP 게시글 또는 하이라이트 댓글 URL', newUpOrder: 'UP 이벤트 순서',
+        })) document.getElementById(id).setAttribute('aria-label', name);
+    }
+    const editing = _upEditingId !== null;
+    field.querySelector(':scope > label').textContent = editing ? '이벤트 수정' : '이벤트 추가';
+    document.getElementById('upEventSaveBtn').textContent = editing ? '저장' : '추가';
+    document.getElementById('upEventCancelBtn').hidden = !editing;
+    document.getElementById('upActiveField').style.display = editing ? '' : 'none';
+}
+
+function editUpEvent(id) {
+    if (!state.isEditor || _savingUpEvent) return;
+    const event = upEvents.find(item => String(item.id) === String(id));
+    if (!event) return;
+    _upEditingId = event.id;
+    prepareUpEventForm();
+    document.getElementById('newUpTab').value = event.tab_name || '';
+    document.getElementById('newUpTitle').value = event.title || '';
+    document.getElementById('newUpUrl').value = event.soop_url || '';
+    document.getElementById('newUpOrder').value = event.sort_order ?? 0;
+    document.getElementById('newUpActive').checked = event.is_active === true;
+    document.getElementById('newUpTab').focus();
+}
+
+function cancelUpEventEdit() {
+    if (_savingUpEvent) return;
+    _upEditingId = null;
+    for (const id of ['newUpTab', 'newUpTitle', 'newUpUrl', 'newUpOrder']) {
+        document.getElementById(id).value = '';
+    }
+    document.getElementById('newUpStartup').checked = false;
+    prepareUpEventForm();
+}
+
+async function saveUpEventEdit() {
+    if (!state.isEditor || _savingUpEvent || _upEditingId === null) return;
+    const id = _upEditingId;
+    const item = upEvents.find(event => String(event.id) === String(id));
+    if (!item) { showToast('수정할 이벤트를 찾지 못했습니다'); return; }
+    const tabName = document.getElementById('newUpTab').value.trim();
+    const title = document.getElementById('newUpTitle').value.trim();
+    const url = normalizeOptionalUrl(document.getElementById('newUpUrl').value);
+    const rawOrder = document.getElementById('newUpOrder').value.trim();
+    const sortOrder = rawOrder === '' ? 0 : Number(rawOrder);
+    if (!tabName || !title || !url) { showToast('탭 이름, 제목, URL을 모두 입력해주세요'); return; }
+    if (!isAllowedHostUrl(url, ['sooplive.com', 'sooplive.co.kr', 'afreecatv.com']) || !parseSoopUrl(url).every(Boolean)) {
+        showToast('올바른 SOOP 게시글 URL을 입력해주세요'); return;
+    }
+    if (!Number.isInteger(sortOrder) || sortOrder < -2147483648 || sortOrder > 2147483647) {
+        showToast('순서는 정수로 입력해주세요'); return;
+    }
+    const payload = {
+        tab_name: tabName, title, soop_url: url, sort_order: sortOrder,
+        is_active: document.getElementById('newUpActive').checked,
+    };
+    const editorEmail = state.user?.email;
+    const controls = [...document.getElementById('adminSectionUpevents').querySelectorAll('input, button')];
+    const disabledStates = controls.map(control => control.disabled);
+    _savingUpEvent = true;
+    ++_upEventsLoadGeneration;
+    controls.forEach(control => { control.disabled = true; });
+    let saved = false;
+    try {
+        await _ensureDb();
+        if (!state.isEditor || state.user?.email !== editorEmail) {
+            showToast('편집 권한을 다시 확인해주세요'); return;
+        }
+        const { data, error } = await db.from('up_events').update(payload).eq('id', id).select('id').single();
+        if (error) { await handleSupabaseMutationError(error, '수정 실패: ' + error.message); return; }
+        if (!data || String(data.id) !== String(id)) {
+            showToast('저장되지 않았습니다. 권한 또는 이벤트 상태를 확인해주세요'); return;
+        }
+        const current = upEvents.find(event => String(event.id) === String(id));
+        if (current) Object.assign(current, payload);
+        else upEvents.push({ ...item, ...payload });
+        upEvents.sort((a, b) => Number(a.sort_order || 0) - Number(b.sort_order || 0));
+        saved = true;
+    } catch {
+        showToast('수정하지 못했습니다. 연결 상태를 확인하고 다시 시도해주세요');
+    } finally {
+        _savingUpEvent = false;
+        controls.forEach((control, index) => { control.disabled = disabledStates[index]; });
+    }
+    if (saved) {
+        cancelUpEventEdit();
+        renderUpEventList();
+        _refreshUpModalDisplay();
+        showToast('UP 이벤트 수정됨');
+    }
 }
 
 function normalizeUpEventOrders() {
@@ -4202,6 +4341,7 @@ async function saveUpEventOrder() {
 }
 
 async function moveUpEvent(id, direction) {
+    if (_savingUpEvent) return;
     const from = upEvents.findIndex(event => String(event.id) === String(id));
     if (from < 0) return;
     const to = from + (direction < 0 ? -1 : 1);
@@ -4238,6 +4378,8 @@ async function toggleUpStartup(id, checked) {
 }
 
 async function addUpEvent() {
+    if (_savingUpEvent) return;
+    if (_upEditingId !== null) return saveUpEventEdit();
     await _ensureDb();
     const tabName  = document.getElementById('newUpTab').value.trim();
     const title    = document.getElementById('newUpTitle').value.trim();
@@ -4281,10 +4423,12 @@ async function addUpEvent() {
 }
 
 async function removeUpEvent(id) {
+    if (_savingUpEvent) return;
     await _ensureDb();
     if (!confirm('이 UP 이벤트를 삭제하시겠습니까?')) return;
     const { error } = await db.from('up_events').delete().eq('id', id);
     if (error) { showToast('삭제 실패'); return; }
+    if (String(_upEditingId) === String(id)) cancelUpEventEdit();
     await loadUpEvents();
     renderUpEventList();
     _refreshUpModalDisplay();
