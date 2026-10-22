@@ -3,8 +3,14 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-10-22T01:33:23.095Z",
+  "fetchedAt": "2026-10-22T06:37:45.088Z",
   "posts": [
+    {
+      "id": "40277",
+      "title": "우리팀",
+      "publishedAt": "2026-10-22T14:12:33.403+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40277"
+    },
     {
       "id": "40258",
       "title": "구슬요 입장곡",
@@ -28,12 +34,6 @@
       "title": "자고 일어나니까",
       "publishedAt": "2026-10-18T13:45:07.940+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40229"
-    },
-    {
-      "id": "40216",
-      "title": "일어나써",
-      "publishedAt": "2026-10-17T13:30:34.443+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40216"
     }
   ]
 }
