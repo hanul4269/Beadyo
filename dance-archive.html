@@ -970,11 +970,13 @@
 
         function getYouTubeId(urlValue) {
             try {
-                const url = new URL(urlValue);
-                if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
-                    return url.pathname.includes('/shorts/')
+                const url = new URL(safeUrl(urlValue));
+                const host = url.hostname.toLowerCase();
+                if (host === 'youtube.com' || host.endsWith('.youtube.com') || host === 'youtu.be') {
+                    const id = url.pathname.includes('/shorts/')
                         ? url.pathname.split('/shorts/')[1]?.split('/')[0]
                         : url.searchParams.get('v') || url.pathname.split('/').filter(Boolean).pop();
+                    return /^[A-Za-z0-9_-]{11}$/.test(id || '') ? id : '';
                 }
             } catch {
                 return '';
@@ -986,12 +988,15 @@
             const current = video.thumbnail || '';
 
             const backfilled = window.danceThumbnailBackfill?.[video.id];
-            if (backfilled) return backfilled;
+            const safeBackfilled = BeadyoCommon.safeUrl(backfilled, '', true);
+            if (safeBackfilled) return safeBackfilled;
 
             const mapped = window.danceThumbnailMap?.[video.url];
-            if (mapped) return mapped;
+            const safeMapped = BeadyoCommon.safeUrl(mapped, '', true);
+            if (safeMapped) return safeMapped;
 
-            if (!PLACEHOLDER_THUMBNAILS.has(current)) return current;
+            const safeCurrent = BeadyoCommon.safeUrl(current, '', true);
+            if (!PLACEHOLDER_THUMBNAILS.has(current) && safeCurrent) return safeCurrent;
 
             const youtubeId = getYouTubeId(video.url);
             if (youtubeId) return `https://img.youtube.com/vi/${encodeURIComponent(youtubeId)}/hqdefault.jpg`;
@@ -1010,6 +1015,7 @@
                 thumbnail: 'banner.jpg',
                 ...video,
             };
+            normalized.url = safeUrl(normalized.url);
             normalized.thumbnail = resolveThumbnail(normalized);
             return normalized;
         }
@@ -1159,20 +1165,19 @@
 
         function getVideoEmbedUrl(video) {
             try {
-                const url = new URL(video.url);
-                if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
-                    const id = url.pathname.includes('/shorts/')
-                        ? url.pathname.split('/shorts/')[1]?.split('/')[0]
-                        : url.searchParams.get('v') || url.pathname.split('/').filter(Boolean).pop();
-                    return id ? `https://www.youtube.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0` : video.url;
+                const url = new URL(safeUrl(video.url));
+                const host = url.hostname.toLowerCase();
+                if (host === 'youtube.com' || host.endsWith('.youtube.com') || host === 'youtu.be') {
+                    const id = getYouTubeId(url.href);
+                    return id ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0` : 'about:blank';
                 }
-                if (url.hostname.includes('sooplive.com')) {
+                if (host === 'sooplive.com' || host.endsWith('.sooplive.com')) {
                     const id = url.pathname.match(/\/player\/(\d+)/)?.[1];
-                    return id ? `https://vod.sooplive.com/player/${encodeURIComponent(id)}/embed?autoPlay=true&showChat=false&mutePlay=false` : video.url;
+                    return id ? `https://vod.sooplive.com/player/${id}/embed?autoPlay=true&showChat=false&mutePlay=false` : 'about:blank';
                 }
-                return video.url;
+                return 'about:blank';
             } catch {
-                return video.url;
+                return 'about:blank';
             }
         }
 
@@ -1187,7 +1192,7 @@
             modal.classList.remove('soop-crop');
             resetVideoFrame();
             frame.src = getVideoEmbedUrl(video);
-            document.getElementById('videoModalOriginal').href = video.url;
+            document.getElementById('videoModalOriginal').href = safeUrl(video.url);
             modal.hidden = false;
             window.BeadyoModalFocus.activate(modal, closeVideoModal);
         }
@@ -1339,15 +1344,19 @@
             document.getElementById('detailStatus').textContent = statusLabels[video.status];
             document.getElementById('detailSong').textContent = video.song;
             document.getElementById('detailTags').innerHTML = video.tags.map(tag => `<span class="tag">${esc(tag)}</span>`).join('');
-            openBtn.disabled = false;
-            copyBtn.disabled = false;
+            const originalUrl = safeUrl(video.url);
+            openBtn.disabled = originalUrl === '#';
+            copyBtn.disabled = originalUrl === '#';
             approveBtn.disabled = false;
             reviewBtn.disabled = false;
             hideBtn.disabled = false;
-            openBtn.onclick = () => window.open(video.url, '_blank', 'noopener,noreferrer');
+            openBtn.onclick = () => {
+                if (originalUrl !== '#') window.open(originalUrl, '_blank', 'noopener,noreferrer');
+            };
             copyBtn.onclick = async () => {
+                if (originalUrl === '#') return;
                 try {
-                    await navigator.clipboard.writeText(video.url);
+                    await navigator.clipboard.writeText(originalUrl);
                     copyBtn.textContent = '복사 완료';
                     setTimeout(() => { copyBtn.textContent = '링크 복사'; }, 1100);
                 } catch {

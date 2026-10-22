@@ -99,9 +99,9 @@ for (const file of ['gembox.html', 'tractor-service.html', 'dance-archive.html']
         const source = fs.readFileSync(require.resolve('../' + file), 'utf8');
         const start = source.indexOf('        function openVideoModal(');
         const end = source.indexOf(file === 'dance-archive.html' ? '        function filteredVideos()' : '        function handleVideoBackdrop(event)', start);
-        const api = new Function('document', 'window', 'esc', 'gemboxSafeUrl', 'resetVideoFrame', 'getVideoEmbedUrl',
+        const api = new Function('document', 'window', 'esc', 'gemboxSafeUrl', 'resetVideoFrame', 'getVideoEmbedUrl', 'safeUrl',
             source.slice(start, end) + '; return {open:openVideoModal, close:closeVideoModal};'
-        )(h.document, h.window, value => value, value => value, () => {}, value => value.url);
+        )(h.document, h.window, value => value, value => value, () => {}, value => value.url, value => value);
         if (file === 'dance-archive.html') api.open({ title: 'Fixture', url: 'https://www.youtube.com/watch?v=Jj4aR7ZxKZM' });
         else if (file === 'tractor-service.html') api.open('Jj4aR7ZxKZM', 'Fixture');
         else api.open('https://www.youtube.com/embed/Jj4aR7ZxKZM', 'Fixture');

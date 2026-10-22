@@ -182,7 +182,7 @@ const TABS = [
     { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'release-20261011-all' },
     { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'release-20261011-all' },
     { type: 'content', src: 'content.html', directUrl: 'content.html', assetVersion: 'release-20261011-all' },
-    { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'release-20261011-all' },
+    { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'security-20261022' },
     { type: 'home' },
 ];
 
@@ -1038,7 +1038,7 @@ function openCalendarAdmin() {
 
 function openDanceReviewPage() {
     closeAuthMenu();
-    window.location.href = withFrameAssetVersion('dance-archive.html', 'no-playlists-20261010');
+    window.location.href = withFrameAssetVersion('dance-archive.html', 'security-20261022');
 }
 
 function openDevelopmentRequestsPage() {
