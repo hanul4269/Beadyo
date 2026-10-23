@@ -3,8 +3,14 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-10-23T15:07:42.289Z",
+  "fetchedAt": "2026-10-23T19:17:27.292Z",
   "posts": [
+    {
+      "id": "40296",
+      "title": "방송 켜고 못할거 같아서",
+      "publishedAt": "2026-10-24T01:01:09.830+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40296"
+    },
     {
       "id": "40277",
       "title": "우리팀",
@@ -28,12 +34,6 @@
       "title": "후후",
       "publishedAt": "2026-10-19T13:36:42.347+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40240"
-    },
-    {
-      "id": "40229",
-      "title": "자고 일어나니까",
-      "publishedAt": "2026-10-18T13:45:07.940+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40229"
     }
   ]
 }
