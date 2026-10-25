@@ -62,7 +62,18 @@ def fetch_replies(bj_id, post_no):
 
 # ── Supabase 이벤트 조회 (supabase-py 우선, urllib 폴백) ──
 print('Fetching UP events from Supabase...')
-events = []
+
+def validate_supabase_events(payload):
+    if not isinstance(payload, list):
+        raise ValueError('UP event response must be a list')
+    for event in payload:
+        if (not isinstance(event, dict)
+                or not isinstance(event.get('id'), (int, str))
+                or isinstance(event.get('id'), bool)
+                or not all(isinstance(event.get(field), str)
+                           for field in ('tab_name', 'title', 'soop_url'))):
+            raise ValueError('UP event response contains an invalid row')
+    return payload
 
 def fetch_supabase_events_urllib():
     url = f'{SUPABASE_URL}/rest/v1/up_events?is_active=eq.true&order=sort_order'
@@ -78,16 +89,16 @@ try:
     from supabase import create_client
     sb = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
     resp = sb.table('up_events').select('*').eq('is_active', True).order('sort_order').execute()
-    events = resp.data or []
+    events = validate_supabase_events(resp.data)
     print(f'[supabase-py] Found {len(events)} events: {[e.get("tab_name") for e in events]}')
 except Exception as e:
     print(f'[supabase-py] Failed: {e}')
     try:
-        events = fetch_supabase_events_urllib()
+        events = validate_supabase_events(fetch_supabase_events_urllib())
         print(f'[urllib] Found {len(events)} events: {[e.get("tab_name") for e in events]}')
     except Exception as e2:
-        print(f'[urllib] Also failed: {e2}')
-        events = []
+        print(f'[urllib] Also failed: {e2}', file=sys.stderr)
+        sys.exit(1)
 
 # 이전 up.json 로드
 try:
