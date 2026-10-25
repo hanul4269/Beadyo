@@ -18,6 +18,7 @@ create policy "site_runtime_cache public read" on public.site_runtime_cache
   for select using (true);
 
 grant select on public.site_runtime_cache to anon, authenticated;
+grant select, insert, update on public.site_runtime_cache to service_role;
 
 comment on table public.site_runtime_cache is
   'Small public runtime cache updated by GitHub Actions through the service role key.';

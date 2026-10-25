@@ -793,7 +793,7 @@
         if (!item || !confirm(`“${item.title}” 콘텐츠를 삭제할까요?\n업로드한 이미지 파일은 삭제되지 않습니다.`)) return;
         state.saving = true;
         try {
-            const { error } = await db.from('content_archive').delete().eq('id', item.id);
+            const { error } = await db.from('content_archive').delete().eq('id', item.id).select('id').single();
             if (error) throw error;
             state.items = state.items.filter(candidate => candidate.id !== item.id);
             closeDetail();

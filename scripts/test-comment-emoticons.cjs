@@ -540,7 +540,7 @@ function commentHarness({ text = '[테스트용] 댓글 😀', stickers = [first
             },
             update(payload) {
                 const call = { kind: 'update', payload, eq: [] }; calls.push(call);
-                const query = { eq(key, value) { call.eq.push([key, value]); return query; }, then(resolve, reject) { return response(call).then(resolve, reject); } };
+                const query = { eq(key, value) { call.eq.push([key, value]); return query; }, select() { return query; }, single() { return response(call); }, then(resolve, reject) { return response(call).then(resolve, reject); } };
                 return query;
             },
         };

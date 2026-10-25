@@ -51,7 +51,7 @@ function harness(options = {}) {
         assert.equal(table, 'schedules');
         return {
             insert(payload) { writes.push({ mode: 'insert', payload: json(payload) }); return mutation(writes.at(-1)); },
-            update(payload) { return { eq(key, id) { assert.equal(key, 'id'); writes.push({ mode: 'update', id, payload: json(payload) }); return mutation(writes.at(-1)); } }; },
+            update(payload) { return { eq(key, id) { assert.equal(key, 'id'); writes.push({ mode: 'update', id, payload: json(payload) }); return { select() { return { single: () => mutation(writes.at(-1)) }; } }; } }; },
         };
     } };
     const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

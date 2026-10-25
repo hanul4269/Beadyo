@@ -9,7 +9,7 @@
     <title>개발요청란 | BEADYO</title>
     <link rel="icon" href="logo-icon.webp">
     <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
-    <script src="supabase.min.js"></script>
+    <script src="supabase.min.js?v=supabase-2-118-0"></script>
     <script src="beadyo-common.js?v=release-20261011-all"></script>
     <link rel="stylesheet" href="comment-emoticons.css?v=comment-emoji-full-20261017">
     <script src="comment-emoticons-data.js?v=comment-emoji-full-20261017"></script>
@@ -975,7 +975,7 @@
             if (!state.isAdmin || !current || !STATUS_LABELS[status]) return;
             const previous = current.status;
             select.disabled = true;
-            const { error } = await db.from('development_requests').update({ status }).eq('id', id);
+            const { error } = await db.from('development_requests').update({ status }).eq('id', id).select('id').single();
             select.disabled = false;
             if (error) {
                 console.error(error);
@@ -1019,7 +1019,7 @@
             button.textContent = '저장 중...';
             let query = db.from('development_requests').update({ content }).eq('id', id);
             if (!state.isAdmin) query = query.eq('requester_id', state.user.id);
-            const { error } = await query;
+            const { error } = await query.select('id').single();
             if (error) {
                 console.error(error);
                 button.disabled = false;
@@ -1044,7 +1044,7 @@
             button.textContent = '삭제 중...';
             let query = db.from('development_requests').delete().eq('id', id);
             if (!state.isAdmin) query = query.eq('requester_id', state.user.id);
-            const { error } = await query;
+            const { error } = await query.select('id').single();
             if (error) {
                 console.error(error);
                 button.disabled = false;
@@ -1154,7 +1154,7 @@
             try {
                 let query = db.from('development_request_comments').update({ content }).eq('id', commentId);
                 if (!state.isAdmin) query = query.eq('author_id', state.user.id);
-                const { error } = await query;
+                const { error } = await query.select('id').single();
                 if (error) throw error;
                 comment.content = content;
                 if (state.editingCommentId === commentId) state.editingCommentId = null;
@@ -1182,7 +1182,7 @@
             button.textContent = '삭제 중...';
             let query = db.from('development_request_comments').delete().eq('id', commentId);
             if (!state.isAdmin) query = query.eq('author_id', state.user.id);
-            const { error } = await query;
+            const { error } = await query.select('id').single();
             if (error) {
                 console.error(error);
                 button.disabled = false;

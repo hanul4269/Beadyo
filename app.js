@@ -1145,7 +1145,7 @@ async function saveDateOrder(dateStr, orderedEvents, editor = scheduleDragEditor
     orderedEvents.forEach((ev, i) => { ev.sort_order = i; });
     const updates = orderedEvents
         .filter(ev => ev.date === dateStr)
-        .map((ev, i) => db.from('schedules').update({ sort_order: i }).eq('id', ev.id));
+        .map((ev, i) => db.from('schedules').update({ sort_order: i }).eq('id', ev.id).select('id').single());
     if (!updates.length) return true;
     const results = await Promise.all(updates);
     const failed = results.find(res => res.error);
@@ -1417,7 +1417,7 @@ async function moveEventToDate(eventId, srcDate, targetDate, editor = scheduleDr
     const payload = { ...dates, sort_order: nextSortOrderForDate(targetDate) };
     await _ensureDb();
     if (!scheduleDragEditorMatches(editor)) return;
-    const { error } = await db.from('schedules').update(payload).eq('id', eventId);
+    const { error } = await db.from('schedules').update(payload).eq('id', eventId).select('id').single();
     if (error) { await handleSupabaseMutationError(error, '이동 실패: ' + error.message); return; }
     showToast('일정이 이동되었습니다');
     await loadEvents();
@@ -1963,9 +1963,9 @@ async function addMemoCard(source = 'sidebar') {
         const { data, error } = await db.from('memo_cards')
             .update({ content, url: normalizedUrl || null })
             .eq('id', _memoEditingId)
-            .select();
+            .select().single();
         if (error) { await handleSupabaseMutationError(error, '수정 실패: ' + error.message); return; }
-        const updated = data?.[0];
+        const updated = data;
         state.memoCards = state.memoCards.map(card => card.id === _memoEditingId ? { ...card, ...(updated || { content, url: normalizedUrl || null }) } : card);
         _resetMemoForm(source);
         renderMemoSidebar();
@@ -2007,7 +2007,7 @@ function cancelMemoEdit(source = 'sidebar') {
 
 async function deleteMemoCard(id) {
     await _ensureDb();
-    const { error } = await db.from('memo_cards').delete().eq('id', id);
+    const { error } = await db.from('memo_cards').delete().eq('id', id).select('id').single();
     if (error) { await handleSupabaseMutationError(error, '삭제 실패: ' + error.message); return; }
     state.memoCards = state.memoCards.filter(c => c.id !== id);
     renderMemoSidebar();
@@ -2042,6 +2042,7 @@ async function memoDrop(e, targetId) {
     const fromIdx = state.memoCards.findIndex(c => c.id === _memoDragId);
     const toIdx   = state.memoCards.findIndex(c => c.id === targetId);
     if (fromIdx === -1 || toIdx === -1) return;
+    const previous = state.memoCards.map(card => ({ ...card }));
     const reordered = [...state.memoCards];
     const [moved] = reordered.splice(fromIdx, 1);
     reordered.splice(toIdx, 0, moved);
@@ -2049,9 +2050,15 @@ async function memoDrop(e, targetId) {
     state.memoCards = reordered;
     renderMemoSidebar();
     await _ensureDb();
-    await Promise.all(reordered.map((c, i) =>
-        db.from('memo_cards').update({ sort_order: i }).eq('id', c.id)
+    const results = await Promise.allSettled(reordered.map((c, i) =>
+        db.from('memo_cards').update({ sort_order: i }).eq('id', c.id).select('id').single()
     ));
+    if (results.some(result => result.status === 'rejected' || result.value.error)) {
+        state.memoCards = previous;
+        renderMemoSidebar();
+        renderMemoModalList();
+        showToast('메모 순서를 일부 저장하지 못했습니다. 새로고침 후 다시 시도해주세요');
+    }
 }
 
 // 모바일 메모 모달
@@ -2156,7 +2163,7 @@ async function saveYtLink() {
 
 async function deleteYtLink(id) {
     await _ensureDb();
-    const { error } = await db.from('youtube_links').delete().eq('id', id);
+    const { error } = await db.from('youtube_links').delete().eq('id', id).select('id').single();
     if (error) { await handleSupabaseMutationError(error, '삭제 실패: ' + error.message); return; }
     state.ytLinks = state.ytLinks.filter(yl => yl.id !== id);
     renderYtLinkList();
@@ -2287,7 +2294,7 @@ async function deleteBroadcastInfo() {
     if (!_broadcastModalDate || !state.isEditor) return;
     if (!confirm('이 날짜의 방송정보를 삭제할까요?')) return;
     await _ensureDb();
-    const { error } = await db.from('broadcast_infos').delete().eq('date', _broadcastModalDate);
+    const { error } = await db.from('broadcast_infos').delete().eq('date', _broadcastModalDate).select('id').single();
     if (error) { await handleSupabaseMutationError(error, '삭제 실패: ' + error.message); return; }
     const dateStr = _broadcastModalDate;
     state.broadcastInfos = state.broadcastInfos.filter(info => info.date !== dateStr);
@@ -3443,7 +3450,7 @@ async function saveEvent() {
             return;
         }
         const { error } = id
-            ? await db.from('schedules').update(payload).eq('id', id)
+            ? await db.from('schedules').update(payload).eq('id', id).select('id').single()
             : await db.from('schedules').insert(payload);
         if (error) { await handleSupabaseMutationError(error, '저장 실패: ' + error.message); return; }
         saved = true;
@@ -3735,7 +3742,7 @@ async function addEditor() {
 async function removeEditor(id) {
     await _ensureDb();
     if (!confirm('이 편집자를 삭제하시겠습니까?')) return;
-    const { error } = await db.from('editors').delete().eq('id', id);
+    const { error } = await db.from('editors').delete().eq('id', id).select('id').single();
     if (error) { showToast('삭제 실패'); return; }
     await loadEditors();
     renderEditorList();
@@ -4079,7 +4086,7 @@ async function addCalendarNotice() {
 
 async function toggleCalendarNoticeActive(id, checked) {
     await _ensureDb();
-    const { error } = await db.from('calendar_notices').update({ is_active: checked }).eq('id', id);
+    const { error } = await db.from('calendar_notices').update({ is_active: checked }).eq('id', id).select('id').single();
     if (error) { showToast('공지 상태 저장 실패'); return; }
     const notice = state.calendarNotices.find(n => n.id === String(id));
     if (notice) notice.is_active = checked;
@@ -4094,7 +4101,7 @@ function previewCalendarNotice(id) {
 async function removeCalendarNotice(id) {
     await _ensureDb();
     if (!confirm('이 공지를 삭제하시겠습니까?')) return;
-    const { error } = await db.from('calendar_notices').delete().eq('id', id);
+    const { error } = await db.from('calendar_notices').delete().eq('id', id).select('id').single();
     if (error) { showToast('공지 삭제 실패'); return; }
     state.calendarNotices = state.calendarNotices.filter(n => n.id !== String(id));
     renderCalendarNoticeList();
@@ -4328,7 +4335,7 @@ async function saveUpEventOrder() {
     await _ensureDb();
     normalizeUpEventOrders();
     const results = await Promise.all(upEvents.map((event, index) =>
-        db.from('up_events').update({ sort_order: index }).eq('id', event.id)
+        db.from('up_events').update({ sort_order: index }).eq('id', event.id).select('id').single()
     ));
     const failed = results.find(result => result.error);
     if (failed) {
@@ -4364,7 +4371,7 @@ function isMissingUpStartupColumn(error) {
 
 async function toggleUpStartup(id, checked) {
     await _ensureDb();
-    const { error } = await db.from('up_events').update({ show_on_startup: checked }).eq('id', id);
+    const { error } = await db.from('up_events').update({ show_on_startup: checked }).eq('id', id).select('id').single();
     if (error) {
         showToast(isMissingUpStartupColumn(error) ? 'DB에 show_on_startup 컬럼을 먼저 추가해주세요' : '설정 저장 실패');
         await loadUpEvents();
@@ -4405,7 +4412,7 @@ async function addUpEvent() {
     );
     let startupWarning = false;
     if (showOnStartup && inserted?.id) {
-        const { error: startupError } = await db.from('up_events').update({ show_on_startup: true }).eq('id', inserted.id);
+        const { error: startupError } = await db.from('up_events').update({ show_on_startup: true }).eq('id', inserted.id).select('id').single();
         if (startupError && isMissingUpStartupColumn(startupError)) {
             showToast('추가됨. 먼저 띄우기는 DB 컬럼 추가 후 저장됩니다.');
             startupWarning = true;
@@ -4426,7 +4433,7 @@ async function removeUpEvent(id) {
     if (_savingUpEvent) return;
     await _ensureDb();
     if (!confirm('이 UP 이벤트를 삭제하시겠습니까?')) return;
-    const { error } = await db.from('up_events').delete().eq('id', id);
+    const { error } = await db.from('up_events').delete().eq('id', id).select('id').single();
     if (error) { showToast('삭제 실패'); return; }
     if (String(_upEditingId) === String(id)) cancelUpEventEdit();
     await loadUpEvents();

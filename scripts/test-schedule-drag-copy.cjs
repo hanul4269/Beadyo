@@ -72,7 +72,7 @@ function harness(options = {}) {
         assert.equal(table, 'schedules');
         return {
             insert(payload) { const write = { mode: 'insert', payload: json(payload) }; writes.push(write); return mutation(write); },
-            update(payload) { return { eq(key, id) { assert.equal(key, 'id'); const write = { mode: 'update', id, payload: json(payload) }; writes.push(write); return mutation(write); } }; },
+            update(payload) { return { eq(key, id) { assert.equal(key, 'id'); const write = { mode: 'update', id, payload: json(payload) }; writes.push(write); return { select() { return { single: () => mutation(write) }; } }; } }; },
         };
     } };
     const document = { body: element(), visibilityState: 'visible', hidden: false, getElementById: node,

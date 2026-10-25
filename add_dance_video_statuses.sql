@@ -47,3 +47,7 @@ create policy "dance_video_statuses editor update" on public.dance_video_statuse
 
 create policy "dance_video_statuses editor delete" on public.dance_video_statuses
   for delete to authenticated using (public.is_beadyo_editor());
+
+-- Data API privileges are separate from the editor-only RLS policies above.
+grant select on public.dance_video_statuses to anon, authenticated;
+grant insert, update, delete on public.dance_video_statuses to authenticated;

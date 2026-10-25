@@ -36,6 +36,11 @@ create table if not exists live_songs (
 alter table live_songs enable row level security;
 create policy "공개 읽기" on live_songs for select using (true);
 
+-- Data API privileges are explicit; RLS policies still decide which rows may be written.
+grant select on public.songbook, public.live_songs to anon, authenticated;
+grant insert, update, delete on public.songbook, public.live_songs to authenticated;
+grant usage on sequence public.songbook_id_seq, public.live_songs_id_seq to authenticated;
+
 -- 검색 성능을 위한 인덱스
 create index if not exists idx_songbook_category on songbook(category);
 create index if not exists idx_live_songs_year   on live_songs(year);

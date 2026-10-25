@@ -176,12 +176,12 @@ function markPwaGuideSeen() {
 }
 
 const TABS = [
-    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'up-event-edit-20261020' },
+    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'security-20261025' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
-    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'release-20261011-all' },
-    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'release-20261011-all' },
-    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'release-20261011-all' },
-    { type: 'content', src: 'content.html', directUrl: 'content.html', assetVersion: 'release-20261011-all' },
+    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'security-20261025' },
+    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'security-20261025' },
+    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'security-20261025' },
+    { type: 'content', src: 'content.html', directUrl: 'content.html', assetVersion: 'security-20261025' },
     { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'security-20261022' },
     { type: 'home' },
 ];
@@ -192,7 +192,7 @@ const HOME_TAB_INDEX = 7;
 const TAB_ROUTES = ['calendar', 'schedule', 'songbook', 'live', 'music', 'content', 'games', 'home'];
 const MUSIC_TAB_INDEX = 4;
 const MUSIC_PAGES = {
-    songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'release-20261011-all' },
+    songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'security-20261025' },
     dance: { src: 'dance.html', directUrl: 'dance.html', assetVersion: 'release-20261011-all' },
     gembox: { src: 'gembox.html', directUrl: 'gembox.html', assetVersion: 'release-20261011-all' },
     tractor: { src: 'tractor-service.html', directUrl: 'tractor-service.html', assetVersion: 'release-20261011-all' },
@@ -1038,12 +1038,12 @@ function openCalendarAdmin() {
 
 function openDanceReviewPage() {
     closeAuthMenu();
-    window.location.href = withFrameAssetVersion('dance-archive.html', 'security-20261022');
+    window.location.href = withFrameAssetVersion('dance-archive.html', 'security-20261025');
 }
 
 function openDevelopmentRequestsPage() {
     closeAuthMenu();
-    window.location.href = withFrameAssetVersion('development-requests.html', 'editor-rpc-20260918');
+    window.location.href = withFrameAssetVersion('development-requests.html', 'security-20261025');
 }
 
 function openPatchNotesModal() {

@@ -62,6 +62,10 @@ create policy "calendar_notices editor update" on calendar_notices
 create policy "calendar_notices editor delete" on calendar_notices
   for delete to authenticated using (public.is_beadyo_editor());
 
+-- Explicit Data API access; the editor policies continue to protect all writes.
+grant select on public.calendar_notices to anon, authenticated;
+grant insert, update, delete on public.calendar_notices to authenticated;
+
 insert into calendar_notices (
   slug,
   title,

@@ -699,7 +699,7 @@
 
     <div class="toast" id="toast"></div>
 
-    <script src="supabase.min.js?v=supabase-2-112-2"></script>
+    <script src="supabase.min.js?v=supabase-2-118-0"></script>
     <script src="beadyo-common.js?v=release-20261011-all"></script>
     <script>
         let db = null;
@@ -1027,7 +1027,7 @@
             if (url) payload.youtube_url = normalizedUrl;
             let error;
             if (state.editingId) {
-                ({ error } = await db.from('youtube_songs').update(payload).eq('id', state.editingId));
+                ({ error } = await db.from('youtube_songs').update(payload).eq('id', state.editingId).select('id').single());
             } else {
                 payload.youtube_url = normalizedUrl;
                 ({ error } = await db.from('youtube_songs').insert(payload));
@@ -1044,7 +1044,7 @@
             if (!state.isEditor) return;
             if (!confirm(`"${title}" 을(를) 삭제하시겠습니까?`)) return;
             await ensureDb();
-            const { error } = await db.from('youtube_songs').delete().eq('id', id);
+            const { error } = await db.from('youtube_songs').delete().eq('id', id).select('id').single();
             if (error) { showToast('삭제 실패: ' + error.message); return; }
             showToast('삭제되었습니다');
             await loadSongs();

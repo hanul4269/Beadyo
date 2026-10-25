@@ -3246,7 +3246,7 @@
     </div>
 </div>
 
-<script src="supabase.min.js?v=supabase-2-112-2"></script>
+<script src="supabase.min.js?v=supabase-2-118-0"></script>
 <script src="beadyo-common.js?v=release-20261011-all"></script>
 <link rel="stylesheet" href="explore.css?v=release-20261011-all">
 <script src="explore-data.js?v=release-20261011-all"></script>
@@ -3358,7 +3358,7 @@ function ensureDb() {
 
 let _liveExcludeColumnReady = null;
 async function ensureLiveExcludeColumn() {
-    if (_liveExcludeColumnReady !== null) return _liveExcludeColumnReady;
+    if (_liveExcludeColumnReady === true) return _liveExcludeColumnReady;
     await ensureDb();
     const { error } = await db.from('live_songs').select('exclude_from_stats').limit(1);
     _liveExcludeColumnReady = !error;
@@ -3367,7 +3367,7 @@ async function ensureLiveExcludeColumn() {
 
 let _songCoverColumnReady = null;
 async function ensureSongCoverColumn() {
-    if (_songCoverColumnReady !== null) return _songCoverColumnReady;
+    if (_songCoverColumnReady === true) return _songCoverColumnReady;
     await ensureDb();
     const { error } = await db.from('songbook').select('cover_url').limit(1);
     _songCoverColumnReady = !error;
@@ -5702,7 +5702,7 @@ async function saveCoverReviewCandidate(groupIndex, candidateIndex) {
     const candidate = group?.candidates?.[candidateIndex];
     if (!S.session || !group || !candidate || group.saved) return;
     await ensureDb();
-    const { error } = await db.from('songbook').update({ cover_url: candidate.coverUrl }).eq('id', group.songId);
+    const { error } = await db.from('songbook').update({ cover_url: candidate.coverUrl }).eq('id', group.songId).select('id').single();
     if (error) {
         await handleSongbookMutationError(error, `커버 저장 실패: ${error.message}`);
         return;
@@ -6345,7 +6345,7 @@ async function startCoverBackfill(scope) {
 
         if (source === 'YouTube') youtubeHit++;
         else itunesHit++;
-        const { error } = await db.from('songbook').update({ cover_url: match.coverUrl }).eq('id', song.id);
+        const { error } = await db.from('songbook').update({ cover_url: match.coverUrl }).eq('id', song.id).select('id').single();
         if (error) {
             failed++;
             appendCoverLog(`FAIL ${label} / ${error.message}`);
@@ -6385,28 +6385,45 @@ async function undoLastCoverBackfill() {
     if (_coverBackfillRunning || !_lastCoverBackfillSaved.length) return;
     const count = _lastCoverBackfillSaved.length;
     if (!confirm(`이번 자동채우기로 저장한 커버 ${count}곡을 비울까요? 노래는 삭제되지 않습니다.`)) return;
-    const ids = _lastCoverBackfillSaved.map(item => item.id).filter(Boolean);
-    if (!ids.length) return;
+    const entries = [...new Map(_lastCoverBackfillSaved
+        .filter(item => item.id && item.coverUrl)
+        .map(item => [String(item.id), { ...item }])).values()];
+    if (!entries.length) return;
     const btn = document.getElementById('cover-undo-btn');
     btn.disabled = true;
     btn.textContent = '되돌리는 중...';
     await ensureDb();
-    const { error } = await db.from('songbook').update({ cover_url: null }).in('id', ids);
-    if (error) {
-        await handleSongbookMutationError(error, '커버 되돌리기 실패: ' + error.message);
-        updateCoverRunActions();
-        return;
-    }
-    const idSet = new Set(ids);
+    const cleared = new Map(), failed = [], skipped = [];
+    let cursor = 0;
+    const worker = async () => {
+        while (cursor < entries.length) {
+            const entry = entries[cursor++];
+            try {
+                // Only undo this run's exact value; preserve a newer cover from another edit.
+                const { data, error } = await db.from('songbook').update({ cover_url: null })
+                    .eq('id', entry.id).eq('cover_url', entry.coverUrl).select('id');
+                if (error) failed.push({ entry, error });
+                else if (Array.isArray(data) && data.some(row => String(row.id) === String(entry.id))) cleared.set(String(entry.id), entry.coverUrl);
+                else skipped.push(entry);
+            } catch (error) {
+                failed.push({ entry, error });
+            }
+        }
+    };
+    await Promise.all(Array.from({ length: Math.min(3, entries.length) }, worker));
     (S.songbookData || []).forEach(song => {
-        if (idSet.has(song.id)) song.cover_url = null;
+        if (cleared.get(String(song.id)) === song.cover_url) song.cover_url = null;
     });
-    appendCoverLog(`UNDO 이번 저장분 ${count}곡 커버 삭제`);
-    _lastCoverBackfillSaved = [];
+    appendCoverLog(`UNDO ${cleared.size}곡 되돌림 · 변경된 자료 ${skipped.length}곡 유지 · 실패 ${failed.length}곡`);
+    _lastCoverBackfillSaved = failed.map(result => result.entry);
     updateCoverRunActions();
     updateCoverBackfillCounts();
     renderSongbook(!!S.query);
-    showToast(`커버 ${count}곡 되돌림`);
+    if (failed.length) {
+        await handleSongbookMutationError(failed[0].error, `커버 ${cleared.size}곡 되돌림 · ${failed.length}곡 실패. 실패한 항목만 다시 시도해주세요`);
+    } else {
+        showToast(`커버 ${cleared.size}곡 되돌림${skipped.length ? ` · 변경된 자료 ${skipped.length}곡 유지` : ''}`);
+    }
 }
 
 const BULK_CATS = ['KPOP','POP','JPOP','ETC','애교송','오리지널'];
@@ -6761,7 +6778,7 @@ async function clearEditingSongCover() {
     }
     if (!confirm('이 곡의 커버만 삭제할까요? 노래 정보는 유지됩니다.')) return;
     await ensureDb();
-    const { error } = await db.from('songbook').update({ cover_url: null }).eq('id', id);
+    const { error } = await db.from('songbook').update({ cover_url: null }).eq('id', id).select('id').single();
     if (error) { await handleSongbookMutationError(error, '커버 삭제 실패: ' + error.message); return; }
     const song = S.songbookData?.find(x => x.id === id);
     if (song) song.cover_url = null;
@@ -6845,7 +6862,7 @@ async function saveSong() {
     if (canUseTags) payload.tags = tagsChanged && !selectedTags.length ? [SONGBOOK_EMPTY_TAG_SENTINEL] : selectedTags;
     await ensureDb();
     const { error } = id
-        ? await db.from('songbook').update(payload).eq('id', parseInt(id))
+        ? await db.from('songbook').update(payload).eq('id', parseInt(id)).select('id').single()
         : await db.from('songbook').insert(payload);
 
     btn.disabled = false; btn.textContent = '저장';
@@ -6861,7 +6878,7 @@ async function deleteSong() {
     const id = parseInt(document.getElementById('ef-id').value);
     if (!id || !confirm('이 곡을 삭제할까요?')) return;
     await ensureDb();
-    const { error } = await db.from('songbook').delete().eq('id', id);
+    const { error } = await db.from('songbook').delete().eq('id', id).select('id').single();
     if (error) { await handleSongbookMutationError(error, '삭제 실패: ' + error.message); return; }
     showToast('삭제 완료');
     closeSongModal();
@@ -7040,7 +7057,7 @@ async function saveLiveRecord() {
     if (canUseExclude) payload.exclude_from_stats = excludeStats;
     await ensureDb();
     const { error } = id
-        ? await db.from('live_songs').update(payload).eq('id', parseInt(id))
+        ? await db.from('live_songs').update(payload).eq('id', parseInt(id)).select('id').single()
         : await db.from('live_songs').insert(payload);
 
     btn.disabled = false; btn.textContent = '저장';
@@ -7056,7 +7073,7 @@ async function deleteLiveRecord() {
     const year = parseInt(document.getElementById('lf-year').value);
     if (!id || !confirm('이 기록을 삭제할까요?')) return;
     await ensureDb();
-    const { error } = await db.from('live_songs').delete().eq('id', id);
+    const { error } = await db.from('live_songs').delete().eq('id', id).select('id').single();
     if (error) { await handleSongbookMutationError(error, '삭제 실패: ' + error.message); return; }
     showToast('삭제 완료');
     closeLiveModal();

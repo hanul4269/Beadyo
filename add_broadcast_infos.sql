@@ -46,5 +46,9 @@ TO authenticated
 USING (public.is_beadyo_editor())
 WITH CHECK (public.is_beadyo_editor());
 
+-- Explicit Data API access; the editor policy continues to protect all writes.
+GRANT SELECT ON public.broadcast_infos TO anon, authenticated;
+GRANT INSERT, UPDATE, DELETE ON public.broadcast_infos TO authenticated;
+
 ALTER TABLE schedules
 ADD COLUMN IF NOT EXISTS sort_order INTEGER;
