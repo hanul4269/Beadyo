@@ -3,8 +3,14 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-10-25T00:33:39.757Z",
+  "fetchedAt": "2026-10-25T05:22:13.018Z",
   "posts": [
+    {
+      "id": "40311",
+      "title": "기상",
+      "publishedAt": "2026-10-25T13:57:43.943+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40311"
+    },
     {
       "id": "40307",
       "title": "샤워하고 누워써",
@@ -28,12 +34,6 @@
       "title": "구슬요 입장곡",
       "publishedAt": "2026-10-20T21:21:12.183+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40258"
-    },
-    {
-      "id": "40256",
-      "title": "허리아파서",
-      "publishedAt": "2026-10-20T19:51:48.770+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40256"
     }
   ]
 }
