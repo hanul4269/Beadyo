@@ -58,15 +58,16 @@
             const config = await E.deadline(response.json());
             if (!Array.isArray(config.musicIds) || !Array.isArray(config.contentIds) || !Array.isArray(config.terms)) throw new Error('Invalid guide');
             const photoUrl = window.BeadyoCommon.safeUrl(config.photo?.src, '', true);
-            const facts = [
-                ['생년월일', config.birthDate],
-                ['MBTI', config.mbti],
-                ['첫 방송', config.firstBroadcast],
-                ['팬 이름', config.fanName],
-            ].filter(([, value]) => value);
+            const facts = (Array.isArray(config.profileFacts) ? config.profileFacts : [
+                { label: '생년월일', value: config.birthDate },
+                { label: 'MBTI', value: config.mbti },
+                { label: '첫 방송', value: config.firstBroadcast },
+                { label: '팬 이름', value: config.fanName },
+            ]).filter(fact => fact?.label && fact?.value);
             const photo = photoUrl ? `<img class="start-profile-photo" src="${esc(photoUrl)}" alt="${esc(config.photo?.alt || '구슬요 캐릭터 사진')}" width="${esc(config.photo?.width || 2048)}" height="${esc(config.photo?.height || 1152)}" decoding="async">` : '';
-            const profileSource = config.profileSource?.url ? `<p>생년월일·MBTI: ${E.link(config.profileSource.url, config.profileSource.label || '공개 프로필 자료')} · 확인 ${esc(config.profileSource.checkedAt || '')}</p>` : '';
-            body.innerHTML = `<section class="start-profile"><h2>${esc(config.intro)}</h2><div class="start-profile-overview${photoUrl ? '' : ' without-photo'}">${photo}</div><dl>${facts.map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl></section><section class="start-selection"><h2>먼저 만나볼 곡과 콘텐츠</h2><p class="explore-note">${esc(config.selectionNote)}</p><div id="start-picks"></div></section><section class="start-terms"><h2>별명 및 방송에서 자주 쓰는 단어</h2><dl>${config.terms.map(term => `<div><dt>${esc(term.term)}</dt><dd>${esc(term.meaning)}</dd></div>`).join('')}</dl></section><section class="start-channels"><h2>공식 채널과 팬카페</h2><div>${E.link('https://www.sooplive.co.kr/station/beadyo97','SOOP · 구슬요')}${E.link('https://www.youtube.com/@beadyo97','YouTube · 구슬요')}${E.link('https://www.youtube.com/@beadyoo/shorts','YouTube · 마마마')}${E.link('https://cafe.naver.com/beadyo','떼굴떼굴 팬카페')}</div></section><section class="start-source"><h2>출처</h2><p>${E.link(config.source?.url, '나무위키 「구슬요」')} · ${esc(config.source?.credit)}</p>${profileSource}</section>`;
+            const factsHtml = `<dl class="start-profile-facts" aria-label="구슬요 소개">${facts.map(fact => `<div><dt>${fact.icon ? `<span aria-hidden="true">${esc(fact.icon)}</span>` : ''}${esc(fact.label)}</dt><dd>${esc(fact.value)}</dd></div>`).join('')}</dl>`;
+            const profileSource = config.profileSource?.label ? `<p>소개 정보: ${config.profileSource.url ? E.link(config.profileSource.url, config.profileSource.label) : esc(config.profileSource.label)} · 확인 ${esc(config.profileSource.checkedAt || '')}</p>` : '';
+            body.innerHTML = `<section class="start-profile"><h2>${esc(config.intro)}</h2><div class="start-profile-overview${photoUrl ? '' : ' without-photo'}">${photo}${factsHtml}</div></section><section class="start-selection"><h2>먼저 만나볼 곡과 콘텐츠</h2><p class="explore-note">${esc(config.selectionNote)}</p><div id="start-picks"></div></section><section class="start-terms"><h2>별명 및 방송에서 자주 쓰는 단어</h2><dl>${config.terms.map(term => `<div><dt>${esc(term.term)}</dt><dd>${esc(term.meaning)}</dd></div>`).join('')}</dl></section><section class="start-channels"><h2>공식 채널과 팬카페</h2><div>${E.link('https://www.sooplive.co.kr/station/beadyo97','SOOP · 구슬요')}${E.link('https://www.youtube.com/@beadyo97','YouTube · 구슬요')}${E.link('https://www.youtube.com/@beadyoo/shorts','YouTube · 마마마')}${E.link('https://cafe.naver.com/beadyo','떼굴떼굴 팬카페')}</div></section><section class="start-source"><h2>출처</h2><p>${E.link(config.source?.url, '나무위키 「구슬요」')} · ${esc(config.source?.credit)}</p>${profileSource}</section>`;
             const profilePhoto = body.querySelector('.start-profile-photo');
             profilePhoto?.addEventListener('error', () => {
                 profilePhoto.closest('.start-profile-overview')?.classList.add('without-photo');

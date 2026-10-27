@@ -10,21 +10,28 @@
   },
   "intro": "안녕하세요 떼굴떼굴 구슬요입니다~!",
   "photo": {
-    "src": "assets/profile/beadyo-start-here.png",
-    "alt": "초록색 머리의 구슬요 캐릭터 사진",
-    "width": 2048,
-    "height": 1152
+    "src": "assets/profile/beadyo-start-here.webp",
+    "alt": "초록색 머리의 구슬요 캐릭터가 윙크하는 사진",
+    "width": 1200,
+    "height": 1034
   },
-  "birthDate": "1997-08-18",
-  "mbti": "ISFP",
+  "profileFacts": [
+    { "icon": "🌱", "label": "이름", "value": "구슬요" },
+    { "icon": "🏡", "label": "RP", "value": "시골 육덕 청순 여사친 (시육청사친)" },
+    { "icon": "🍊", "label": "별명", "value": "감나무 · 계산의 구슬요" },
+    { "icon": "🎂", "label": "생일", "value": "8월 18일" },
+    { "icon": "📏", "label": "키", "value": "2M" },
+    { "icon": "🩸", "label": "혈액형", "value": "AB형" },
+    { "icon": "💚", "label": "MBTI", "value": "ISFP" },
+    { "icon": "🎤", "label": "데뷔", "value": "2021년 7월 24일" },
+    { "icon": "🐢", "label": "팬네임", "value": "구북이" },
+    { "icon": "✨", "label": "오시마크", "value": "🔮 🐢" },
+    { "icon": "📺", "label": "활동", "value": "SOOP · YouTube" }
+  ],
   "profileSource": {
-    "label": "구슬요 공개 프로필 · 나무위키 미러",
-    "url": "https://namu.moe/w/%EA%B5%AC%EC%8A%AC%EC%9A%94",
-    "revision": "2026-08-19 20:05:13",
-    "checkedAt": "2026-10-11"
+    "label": "사용자가 제공한 프로필 소개 이미지",
+    "checkedAt": "2026-10-28"
   },
-  "firstBroadcast": "2021-07-24",
-  "fanName": "구북이",
   "selectionNote": "구슬요의 노래를 듣고, 함께 웃고 떠드는 콘텐츠도 만나보세요!",
   "musicIds": [
     "d4eea21e-217c-4d24-a665-8bd75f334f9b"

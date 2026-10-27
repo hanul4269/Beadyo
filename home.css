@@ -96,7 +96,7 @@ body.home-view .explore-bottom { background: var(--home-control-surface); border
 
 /* User-supplied HOME artwork. Keep all text on solid surfaces. */
 .home-root .home-hero { margin-bottom: 22px; overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); }
-.home-root .home-banner { display: block; width: 100%; height: auto; aspect-ratio: 1600 / 233; object-fit: contain; background: var(--accent-light); }
+.home-root .home-banner { display: block; width: 100%; height: auto; aspect-ratio: 1600 / 233; object-fit: contain; background: var(--accent-light); user-select: none; -webkit-user-select: none; -webkit-user-drag: none; -webkit-touch-callout: none; }
 .home-root .home-hero .home-intro { display: grid; grid-template-columns: minmax(220px, .8fr) minmax(0, 1.4fr); align-items: center; padding: 20px 24px; margin: 0; gap: 24px; }
 .home-root .home-soop-notice { min-width: 0; }
 .home-root .home-soop-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }

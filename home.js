@@ -39,7 +39,7 @@
     }
     function shell() {
         const card = (id, title, link, wide = '') => `<article class="home-card ${wide}" data-home-card="${id}" aria-labelledby="home-title-${id}"><div class="home-card-head"><h2 id="home-title-${id}">${title}</h2>${link}</div><div id="home-${id}" aria-live="polite"></div>${id === 'live' ? liveMedia() : ''}</article>`;
-        root.innerHTML = `<div class="home-wrap"><header class="home-hero"><img class="home-banner" src="assets/home/banner.webp" alt="구슬요 beadyo 캐릭터 배너" width="1600" height="233" fetchpriority="high"><div class="home-intro"><div class="home-intro-copy"><h1>오늘도 구슬요와 함께</h1><p id="home-today"></p><button class="home-action home-primary home-guide-link" type="button" data-start-here><span>뉴북이 입문가이드</span></button></div><section class="home-soop-notice" aria-labelledby="home-soop-title"><div class="home-soop-head"><h2 id="home-soop-title">SOOP 공지사항</h2>${external(window.BeadyoHomeSoop.boardUrl, '전체 보기')}</div><div id="home-soop" aria-live="polite"></div></section></div></header><div class="home-grid">
+        root.innerHTML = `<div class="home-wrap"><header class="home-hero"><img class="home-banner" src="assets/home/banner.webp?v=banner-20261028" alt="구슬요 beadyo 캐릭터 배너" width="1600" height="233" fetchpriority="high" draggable="false"><div class="home-intro"><div class="home-intro-copy"><h1>오늘도 구슬요와 함께</h1><p id="home-today"></p><button class="home-action home-primary home-guide-link" type="button" data-start-here><span>뉴북이 입문가이드</span></button></div><section class="home-soop-notice" aria-labelledby="home-soop-title"><div class="home-soop-head"><h2 id="home-soop-title">SOOP 공지사항</h2>${external(window.BeadyoHomeSoop.boardUrl, '전체 보기')}</div><div id="home-soop" aria-live="polite"></div></section></div></header><div class="home-grid">
             ${card('live', '지금 방송은?', '', '')}
             ${card('schedule', '오늘과 다음 일정', tabLink('calendar', 'CALENDAR →'), 'home-wide')}
             ${card('news', '최신 소식', tabLink('music', 'MUSIC →'), 'home-news-wide')}
@@ -231,6 +231,11 @@
             shell();
             window.BeadyoMonthly?.mount(root);
             initialized = true;
+            const preventBannerSave = event => {
+                if (event.target.matches?.('.home-banner')) event.preventDefault();
+            };
+            root.addEventListener('contextmenu', preventBannerSave);
+            root.addEventListener('dragstart', preventBannerSave);
             root.addEventListener('error', event => {
                 const image = event.target;
                 if (image.matches?.('[data-home-soop-profile]')) { image.hidden = true; return; }

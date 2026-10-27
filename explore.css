@@ -11,6 +11,7 @@
 .explore-related :is(a,button):focus-visible, .explore-dialog :is(a,button,summary):focus-visible, .explore-bottom button:focus-visible { outline: 3px solid var(--accent-dark, #4f7f25); outline-offset: 3px; }
 .explore-bottom { display: none; }
 .explore-dialog { width: min(760px, calc(100vw - 28px)); max-height: min(88dvh, 900px); margin: auto; border: 1px solid var(--line); border-radius: 18px; padding: 0; background: var(--surface); color: var(--ink); box-shadow: 0 12px 48px #0003; overflow-y: auto; font-family: inherit; }
+#start-here { width: min(1040px, calc(100vw - 28px)); }
 .explore-dialog::backdrop { background: #17231488; }
 .explore-dialog-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1; padding: 12px 20px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .explore-dialog-head h1, .explore-dialog-head h2 { font-size: 18px; line-height: 1.5; }
@@ -23,15 +24,17 @@
 .explore-kicker { font-size: 11px; font-weight: 700; color: var(--accent-dark); letter-spacing: 1px; }
 .start-profile h2 { font-size: 24px; margin: 6px 0 10px; }
 .start-profile p { font-size: 15px; }
-.start-profile-overview { display: grid; grid-template-columns: minmax(0, 1fr); margin-top: 14px; }
+.start-profile-overview { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); align-items: start; gap: 24px; margin-top: 14px; }
 .start-profile-overview:empty { display: none; }
 .start-profile-overview.without-photo { grid-template-columns: 1fr; }
 .start-profile-photo { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 12px; }
 .start-profile-overview p { margin: 0; word-break: keep-all; overflow-wrap: anywhere; }
-.start-profile dl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 18px; padding: 14px; background: var(--accent-light); border-radius: 12px; }
-.start-profile dl > div { min-width: 0; }
-.start-profile dt { font-size: 12px; color: var(--muted); }
-.start-profile dd { font-weight: 700; overflow-wrap: anywhere; }
+.start-profile-facts { min-width: 0; margin: 0; padding: 12px 18px; border: 1px solid var(--line); background: var(--accent-light); border-radius: 14px; }
+.start-profile-facts > div { display: grid; grid-template-columns: 112px minmax(0, 1fr); align-items: baseline; gap: 16px; min-width: 0; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 14px; line-height: 1.5; }
+.start-profile-facts > div:last-child { border-bottom: 0; }
+.start-profile-facts dt { display: flex; align-items: baseline; gap: 8px; min-width: 0; color: var(--muted); }
+.start-profile-facts dt span { flex: 0 0 20px; text-align: center; }
+.start-profile-facts dd { min-width: 0; margin: 0; font-weight: 600; overflow-wrap: anywhere; word-break: keep-all; }
 .start-selection, .start-terms, .start-channels { margin-top: 26px; }
 .start-selection h2, .start-terms h2, .start-channels h2 { font-size: 18px; }
 .start-content-meta a { display: inline; margin: 0; font: inherit; }
@@ -52,6 +55,9 @@
     #song-detail-panel .song-detail-cover-wrap,
     #song-detail-panel .song-detail-cover { height: 160px; min-height: 0; }
 }
+@media (max-width: 800px) {
+    .start-profile-overview { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+}
 @media (max-width: 640px) {
     .header .tabs { display: none; }
     .explore-bottom { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); flex-shrink: 0; padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); background: var(--surface); border-top: 1px solid var(--line); }
@@ -63,5 +69,6 @@
     .explore-dialog-body { padding: 18px; }
     .start-profile h2 { font-size: 23px; line-height: 1.4; word-break: keep-all; }
     .start-profile-overview { grid-template-columns: 1fr; gap: 14px; }
-    .start-profile dl { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
+    .start-profile-facts { padding: 10px 14px; }
+    .start-profile-facts > div { grid-template-columns: 96px minmax(0, 1fr); gap: 8px; }
 }
