@@ -646,8 +646,8 @@
                 </button>
                 <button class="guide-card" type="button" role="tab" aria-selected="false" data-guide="skill">
                     <span class="guide-number">FILE 02</span>
-                    <span class="guide-name">스킬작</span>
-                    <span class="guide-desc">버스트별 투자 가이드</span>
+                    <span class="guide-name">육성가이드</span>
+                    <span class="guide-desc">니케별 육성 가이드</span>
                 </button>
                 <button class="guide-card" type="button" role="tab" aria-selected="false" data-guide="wish">
                     <span class="guide-number">FILE 03</span>
@@ -693,8 +693,8 @@
                 page: 'nikke-notion/tier.html?v=3'
             },
             skill: {
-                title: '스킬작',
-                page: 'nikke-notion/skill.html'
+                title: '육성가이드',
+                page: 'nikke-notion/skill.html?v=20261028-multi'
             },
             wish: {
                 title: '위시',
@@ -854,6 +854,12 @@
 
         if (location.hash === '#guide') {
             document.querySelector('[data-view="guide"]')?.click();
+        }
+
+        const initialGuide = new URLSearchParams(location.search).get('guide');
+        if (Object.prototype.hasOwnProperty.call(guides, initialGuide)) {
+            document.querySelector('[data-view="guide"]')?.click();
+            document.querySelector(`.guide-card[data-guide="${initialGuide}"]`)?.click();
         }
 
         window.addEventListener('resize', scheduleLayoutSync);
