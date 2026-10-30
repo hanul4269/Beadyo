@@ -41,6 +41,9 @@
 .guide-primary { color: var(--ink); font-weight: 750; font-variant-numeric: tabular-nums; }
 .guide-secondary { color: var(--surface-text); font-size: 12px; }
 .guide-missing { color: var(--muted); font-size: 12px; font-weight: 500; }
+.guide-case + .guide-case { margin-top: 13px; padding-top: 12px; border-top: 1px solid var(--line); }
+.guide-case-label { display: block; width: fit-content; margin: 0 0 5px; padding: 1px 5px; border-radius: 3px; background: var(--panel-2); color: var(--muted); font-size: 10px; font-weight: 750; line-height: 1.7; }
+.guide-note-group { margin-top: 12px; }
 .guide-notes { margin-top: 11px; color: var(--surface-text); font-size: 11px; }
 .guide-notes summary { display: inline-block; color: var(--muted); cursor: pointer; font-weight: 650; list-style: none; }
 .guide-notes summary::-webkit-details-marker { display: none; }

@@ -49,11 +49,7 @@
             }, window.location.origin);
         });
     }
-    function renderValue(value, label) {
-        const cell = element('td', 'guide-value');
-        cell.setAttribute('role', 'cell');
-        cell.append(element('span', 'mobile-cell-label', label));
-        const copy = element('div', 'guide-copy');
+    function appendValue(copy, value, label) {
         const values = lines(value).flatMap(text => {
             const budget = label === '스킬작' && text.match(/^(.*?)\s*\(가성비\s*([\d/]+)\)$/);
             return budget ? [budget[1], '가성비: ' + budget[2]] : [text];
@@ -62,6 +58,21 @@
             const missing = /^(권장 (?:수치|세팅|옵션) 미제시|자료 미확인|미제시|미확인|—)$/.test(text);
             copy.append(element('p', 'guide-line ' + (missing ? 'guide-missing' : index ? 'guide-secondary' : 'guide-primary'), formatLine(text, label)));
         });
+    }
+    function renderValue(value, label) {
+        const cell = element('td', 'guide-value');
+        cell.setAttribute('role', 'cell');
+        cell.append(element('span', 'mobile-cell-label', label));
+        const copy = element('div', 'guide-copy');
+        const cases = Array.isArray(value) && value.every(item => item && typeof item === 'object' && 'value' in item) ? value : null;
+        if (cases && cases.length) {
+            cases.forEach(item => {
+                const group = element('div', 'guide-case');
+                group.append(element('span', 'guide-case-label', item.label));
+                appendValue(group, item.value, label);
+                copy.append(group);
+            });
+        } else appendValue(copy, value, label);
         cell.append(copy);
         return cell;
     }
@@ -95,14 +106,21 @@
         main.append(portrait, identity);
         cell.append(main);
         const notes = lines(character.notes);
+        const noteGroups = character.noteGroups || [];
         const sources = (character.references || []).filter(source => {
             try { return ['https:', 'http:'].includes(new URL(source.url).protocol); }
             catch (_) { return false; }
         });
-        if (notes.length || sources.length) {
+        if (notes.length || noteGroups.length || sources.length) {
             const details = element('details', 'guide-notes');
             details.append(element('summary', '', '운용·참고'));
             notes.forEach(note => details.append(element('p', '', note)));
+            noteGroups.forEach(item => {
+                const group = element('div', 'guide-note-group');
+                group.append(element('h3', 'guide-case-label', item.label));
+                lines(item.notes).forEach(note => group.append(element('p', '', note)));
+                details.append(group);
+            });
             if (sources.length) {
                 const references = element('p', 'guide-references');
                 references.append(document.createTextNode('참고: '));

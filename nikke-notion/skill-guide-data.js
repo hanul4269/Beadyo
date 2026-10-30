@@ -1,5 +1,7 @@
 window.NIKKE_GROWTH_GUIDE = {
   "updatedAt": "2026-10-28",
+  "presentationUpdatedAt": "2026-10-30",
+  "sourceRowCount": 168,
   "characters": [
     {
       "id": "nikke-4a73926ced",
@@ -284,37 +286,107 @@ window.NIKKE_GROWTH_GUIDE = {
     {
       "id": "nikke-36676e1a83",
       "name": "로산나",
-      "variant": "기본",
+      "variant": "일반·애장품",
       "burst": [
         1
       ],
-      "skills": "7/7/7",
-      "overload": "공격력 4줄 · 우월 코드 4줄\n남는 칸: 크리티컬 확률",
-      "notes": [
-        "스페란도: PvP 전용, 세팅 미달 시 사용 곤란.",
-        "김진서 2026-07-15 · 아레나 절약 육성: 오버로드 옵션작 생략 저투자 아레나용 권장. 이 영상은 애장품 로산나 가이드가 아니다.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 / PvP 스킬 1/1/1 → 4/1/1 → 4/7/7 (→ 7/10/10) / 역할: 중첩 활용 / 현재 평가: 스토리E·보스F·PvPSS"
+      "skills": [
+        {
+          "label": "일반",
+          "value": "7/7/7"
+        },
+        {
+          "label": "애장품",
+          "value": "4/4/4 → 7/9/9 → 7/10/10\n최고점: 10/10/10"
+        }
       ],
+      "overload": [
+        {
+          "label": "일반",
+          "value": "공격력 4줄 · 우월 코드 4줄\n남는 칸: 크리티컬 확률"
+        },
+        {
+          "label": "애장품",
+          "value": "우월 코드4·장탄2 권장.\n수니스·크라운 동반 시 장탄 생략·타협 가능."
+        }
+      ],
+      "notes": [],
       "image": "assets/characters/7037c8d6787ea4d4.png",
       "aliases": [
         "Rosanna",
-        "로산나(원본)"
+        "로산나(원본)",
+        "애장품 로산나",
+        "Rosanna (Treasure)",
+        "일반 로산나",
+        "로산나 일반",
+        "기본 로산나",
+        "로산나 기본",
+        "로산나 애장품"
       ],
       "references": [
         {
-          "label": "스페란도 GAME TV 2025-05-07",
+          "label": "스페란도 GAME TV 2025-05-07 · 일반",
           "url": "https://www.youtube.com/watch?v=wGAqRrjSVjQ",
           "title": "출시된 모든 니케들의 스킬작 및 큐브 추천 가이드/세이렌, 미하라 추가/2025년 최신 스킬작 초보자 가이드 [승리의 여신: 니케]"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 일반",
           "url": "https://www.prydwen.gg/nikke/characters/rosanna",
           "title": "Rosanna Best Build Guide | NIKKE"
         },
         {
-          "label": "김진서 2026-07-15",
+          "label": "김진서 2026-07-15 · 일반",
           "url": "https://www.youtube.com/watch?v=GDpiXTWPV5o",
           "title": "조금만 키워도 성능 좋은 아레나 니케 정리"
+        },
+        {
+          "label": "Prydwen · 애장품",
+          "url": "https://www.prydwen.gg/nikke/characters/rosanna-treasure",
+          "title": "Rosanna (Treasure) Best Build Guide | NIKKE"
+        },
+        {
+          "label": "뚜레 2026-10-16 · 애장품",
+          "url": "https://www.youtube.com/watch?v=CPsKySvAwWo",
+          "title": "[니케] 전격 육성 가이드 - 특) 전푸어임"
+        },
+        {
+          "label": "뚜레 2026-07-26 · 애장품",
+          "url": "https://www.youtube.com/watch?v=jKev3nnROHY",
+          "title": "[니케] 로산나 애장품 리뷰 - 이제 내가 전격덱이야"
+        },
+        {
+          "label": "김진서 2026-10-13 · 애장품",
+          "url": "https://www.youtube.com/watch?v=j7TLOyqYlWc",
+          "title": "로산나 어디까지 육성해야 쓸만할까? | 애장품 로산나 성능, 사용 조합, 최소 육성 가이드 정리"
+        },
+        {
+          "label": "김붕붕 2026-07-23 · 애장품",
+          "url": "https://www.youtube.com/watch?v=wck80TMgbXo",
+          "title": "[니케] 10시간 걸렸습니다ㅣ신규 애장품 4종 성능 테스트 결과!"
+        }
+      ],
+      "sourceIds": [
+        "nikke-36676e1a83",
+        "nikke-88cadec0b1"
+      ],
+      "noteGroups": [
+        {
+          "label": "일반",
+          "notes": [
+            "스페란도: PvP 전용, 세팅 미달 시 사용 곤란.",
+            "김진서 2026-07-15 · 아레나 절약 육성: 오버로드 옵션작 생략 저투자 아레나용 권장. 이 영상은 애장품 로산나 가이드가 아니다.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 / PvP 스킬 1/1/1 → 4/1/1 → 4/7/7 (→ 7/10/10) / 역할: 중첩 활용 / 현재 평가: 스토리E·보스F·PvPSS"
+          ]
+        },
+        {
+          "label": "애장품",
+          "notes": [
+            "뚜레 2026-10-16 · 전격 솔로 레이드 육성: 스킬 4/4/4 → 7/9/9 → 7/10/10 오버로드 최소우월 코드4 → 우코4·장탄2 + 공격력/크리티컬 피해 애장품2단계부터 짬덱 운용. 프리바티 없는 조합은 장탄 중요.1스킬 추가 투자 후순위.",
+            "김진서 2026-10-13: 스킬 7/10/10 오버로드 우월 코드 대미지 → 최대 장탄 수 → 공격력. 줄 수 미제시. 애장품 최소2단계 필수. 2스킬 스택을 빠르게 쌓는 것이 중요하며 자체 공격력 버프가 커서 공격력 옵션 효율은 낮다고 설명. 40초1버스트이므로 다른1버스트와 쿨타임 감소를 보완한다.",
+            "뚜레 2026-07-26: 스킬 권장 숫자 미확인 오버로드 수니스/크라운 동반은 장탄 저격 불필요. 수니스 재장전 버프+탄 관리 시0장탄도 가능. 두 지원을 함께 쓰지 못하는 짬덱은 별도 판단. 시험 장비 수치는 권장으로 사용하지 않음.",
+            "김붕붕 2026-07-23 · 일반: 스킬 7/10/10 → 10/10/10 오버로드 우월 코드4·장탄 우선. / 장탄 완성 줄 수는 미제시. 애장품 초기 리뷰는 장탄을 많이 확보하는 방향. 수니스·크라운 동반 예외는 후속 가이드와 함께 구분.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 4/4/4 → 4/7/7 → 7/10/10 (→ 10/10/10) / PvP 스킬 4/4/4 → 7/10/10 → 7/10/10 (→ 7/10/10) / 오버로드 우월 코드 4줄 · 장탄 2줄 / 남는 칸: 우월 코드 / 장탄 / 크리티컬 확률 / 공격력 / 역할: 디버퍼·중첩 활용 / 현재 평가: 스토리E·보스A·PvPSS"
+          ]
         }
       ]
     },
@@ -548,167 +620,207 @@ window.NIKKE_GROWTH_GUIDE = {
     {
       "id": "nikke-e3d1f7c52a",
       "name": "목단",
-      "variant": "기본",
+      "variant": "일반·애장품",
       "burst": [
         1
       ],
-      "skills": "7/7/7",
-      "overload": "기본 오버로드·강화 우선. 방어력·공격력 고려.\n장탄 피함.",
-      "notes": [
-        "스페란도: PvP",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 / PvP 스킬 1/1/1 → 4/4/4 → 4/7/7 (→ 4/7/10) / 오버로드 지정 권장 옵션 없음 / 역할: 버퍼·도발 / 현재 평가: 스토리D·보스D·PvPSS"
+      "skills": [
+        {
+          "label": "일반",
+          "value": "7/7/7"
+        },
+        {
+          "label": "애장품",
+          "value": "7/7/7 → 7/7/9 → 7/10/10"
+        }
       ],
+      "overload": [
+        {
+          "label": "일반",
+          "value": "기본 오버로드·강화 우선. 방어력·공격력 고려.\n장탄 피함."
+        },
+        {
+          "label": "애장품",
+          "value": "기본 오버로드·전투력 위주. 옵션 저격 시 우월 코드·방어력.\n장탄은 원칙적으로 피하되 PvE 다중 옵션은 보존 가능."
+        }
+      ],
+      "notes": [],
       "image": "assets/characters/b6d676c122e00a67.png",
       "aliases": [
         "Moran",
-        "목단(애장품 이전)"
+        "목단(애장품 이전)",
+        "목단(애장품)",
+        "애장품 목단",
+        "Moran (Treasure)",
+        "일반 목단",
+        "목단 일반",
+        "기본 목단",
+        "목단 기본",
+        "목단 애장품"
       ],
       "references": [
         {
-          "label": "스페란도 GAME TV 2024-07-14",
+          "label": "스페란도 GAME TV 2024-07-14 · 일반",
           "url": "https://www.youtube.com/watch?v=94kMdyNdCGA",
           "title": "[승리의 여신: 니케] 모든 니케의 스킬작 가이드 및 초보자 뉴비 추천 니케/ver.2024.07"
         },
         {
-          "label": "스페란도 GAME TV 2024-01-25",
+          "label": "스페란도 GAME TV 2024-01-25 · 일반",
           "url": "https://www.youtube.com/watch?v=4xSkNpKqp9g",
           "title": "목단 실사용 후기 및 사용 가이드/몸빵은 0티어/덱추천, 스킬작, 큐브, 오버로드, 한돌"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 일반",
           "url": "https://www.prydwen.gg/nikke/characters/moran",
           "title": "Moran Best Build Guide | NIKKE"
-        }
-      ]
-    },
-    {
-      "id": "nikke-34abbba88e",
-      "name": "목단",
-      "variant": "애장품",
-      "burst": [
-        1
-      ],
-      "skills": "7/7/7 → 7/7/9 → 7/10/10",
-      "overload": "기본 오버로드·전투력 위주. 옵션 저격 시 우월 코드·방어력.\n장탄은 원칙적으로 피하되 PvE 다중 옵션은 보존 가능.",
-      "notes": [
-        "스페란도: 애장품3단계 목표. 막탄 도발 조건과 PvE 장탄 예외 구분.",
-        "뚜레 2026-06-19 · 풍압 솔로레이드 · 범용 서포터 목표: 스킬 4/10/10 오버로드 오버로드 장착 권장. 옵션 종류·줄 수는 이 표에서 미제시. 풍압 솔로레이드 준비 목표. 최소·가성비 육성은 별도 가이드를 참고하고, 레이드 시작 뒤 우선순위를 보고 투자하라는 전제.",
-        "뚜레 2026-06-08 · 중반 스테이지 가성비: 스킬 4/10/7 → 7/10/10 오버로드 이 페이지의 별도 옵션 목표 미제시. 애장품3단계.36·40챕터 보스 등 생존 지원.",
-        "김진서 2026-05-17: 사용 조합과 기믹 설명 위주이며 별도 권장 스킬 수치·옵션 표를 확인하지 못함. 버스트 충전이 매우 느리므로 톡톡이/버충 우수 니케로 보완해야 함.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 4/4/4 → 4/7/7 → 7/10/10 (→ 10/10/10) / PvP 스킬 4/4/4 → 4/4/4 → 4/7/7 (→ 10/10/10) / 오버로드 우월 코드 4줄 · 공격력 4줄 / 남는 칸: 크리티컬 피해 / 크리티컬 확률 / 방어력 / 역할: 버퍼·버스트 쿨타임 감소·도발 / 현재 평가: 스토리SS·보스SS·PvPSSS"
-      ],
-      "image": "assets/characters/b6d676c122e00a67.png",
-      "aliases": [
-        "Moran",
-        "목단(애장품)",
-        "애장품 목단",
-        "Moran (Treasure)"
-      ],
-      "references": [
+        },
         {
-          "label": "스페란도 GAME TV 2026-04-26",
+          "label": "스페란도 GAME TV 2026-04-26 · 애장품",
           "url": "https://www.youtube.com/watch?v=mPz3SnV13qw",
           "title": "[승리의 여신: 니케] 모든 니케 스킬작 가이드 및 큐브 추천/3.5주년 초보자 뉴비 가이드"
         },
         {
-          "label": "스페란도 GAME TV 2026-02-13",
+          "label": "스페란도 GAME TV 2026-02-13 · 애장품",
           "url": "https://www.youtube.com/watch?v=eNbMp-ZKgYw",
           "title": "[승리의 여신: 니케] 스테이지 0티어 목단 애장품 가이드｜성능 평가·덱 추천·스킬작·오버 세팅"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 애장품",
           "url": "https://www.prydwen.gg/nikke/characters/moran-treasure",
           "title": "Moran (Treasure) Best Build Guide | NIKKE"
         },
         {
-          "label": "뚜레 2026-06-19",
+          "label": "뚜레 2026-06-19 · 애장품",
           "url": "https://www.youtube.com/watch?v=a7a-S2WsPlo",
           "title": "[니케] 풍압 솔로레이드 준비하기 - 육성 우선순위, 스킬작, 옵션작 등"
         },
         {
-          "label": "뚜레 2026-06-08",
+          "label": "뚜레 2026-06-08 · 애장품",
           "url": "https://www.youtube.com/watch?v=2h2O_OoTFOo",
           "title": "[니케] 육성 가이드 A to Z - 뉴비부터 솔레 3%까지!"
         },
         {
-          "label": "김진서 2026-05-17",
+          "label": "김진서 2026-05-17 · 애장품",
           "url": "https://www.youtube.com/watch?v=YCgbJDWc1Fs",
           "title": "니케 어디든지 쓰이는 애장품 목단 사용 가이드"
+        }
+      ],
+      "sourceIds": [
+        "nikke-e3d1f7c52a",
+        "nikke-34abbba88e"
+      ],
+      "noteGroups": [
+        {
+          "label": "일반",
+          "notes": [
+            "스페란도: PvP",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 / PvP 스킬 1/1/1 → 4/4/4 → 4/7/7 (→ 4/7/10) / 오버로드 지정 권장 옵션 없음 / 역할: 버퍼·도발 / 현재 평가: 스토리D·보스D·PvPSS"
+          ]
+        },
+        {
+          "label": "애장품",
+          "notes": [
+            "스페란도: 애장품3단계 목표. 막탄 도발 조건과 PvE 장탄 예외 구분.",
+            "뚜레 2026-06-19 · 풍압 솔로레이드 · 범용 서포터 목표: 스킬 4/10/10 오버로드 오버로드 장착 권장. 옵션 종류·줄 수는 이 표에서 미제시. 풍압 솔로레이드 준비 목표. 최소·가성비 육성은 별도 가이드를 참고하고, 레이드 시작 뒤 우선순위를 보고 투자하라는 전제.",
+            "뚜레 2026-06-08 · 중반 스테이지 가성비: 스킬 4/10/7 → 7/10/10 오버로드 이 페이지의 별도 옵션 목표 미제시. 애장품3단계.36·40챕터 보스 등 생존 지원.",
+            "김진서 2026-05-17: 사용 조합과 기믹 설명 위주이며 별도 권장 스킬 수치·옵션 표를 확인하지 못함. 버스트 충전이 매우 느리므로 톡톡이/버충 우수 니케로 보완해야 함.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 4/4/4 → 4/7/7 → 7/10/10 (→ 10/10/10) / PvP 스킬 4/4/4 → 4/4/4 → 4/7/7 (→ 10/10/10) / 오버로드 우월 코드 4줄 · 공격력 4줄 / 남는 칸: 크리티컬 피해 / 크리티컬 확률 / 방어력 / 역할: 버퍼·버스트 쿨타임 감소·도발 / 현재 평가: 스토리SS·보스SS·PvPSSS"
+          ]
         }
       ]
     },
     {
       "id": "nikke-e9a3d353d6",
       "name": "미란다",
-      "variant": "기본",
+      "variant": "일반·애장품",
       "burst": [
         1
       ],
-      "skills": "1/4/7 → 가성비 1/7/7 → 1/9/9",
-      "overload": "지정 권장 옵션 없음",
-      "notes": [
-        "스페란도: 스노우 화이트 전용 버퍼. 후반용이며 초보자 비추천.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 1/4/4 → 4/4/7 (→ 4/7/10) / PvP 스킬 1/1/1 / 역할: 버퍼 / 현재 평가: 스토리C·보스C·PvPC"
-      ],
-      "image": "assets/characters/4dbd3441f0572a3c.png",
-      "aliases": [
-        "Miranda"
-      ],
-      "references": [
+      "skills": [
         {
-          "label": "스페란도 GAME TV 2024-11-07",
-          "url": "https://www.youtube.com/watch?v=I-9U7RaA9sI",
-          "title": "모든 니케들의 스킬작과 큐브 추천 초보자 추천 니케까지/니케 초보자 뉴비 가이드/그레이브, 신데렐라 스킬작"
+          "label": "일반",
+          "value": "1/4/7 → 가성비 1/7/7 → 1/9/9"
         },
         {
-          "label": "Prydwen",
-          "url": "https://www.prydwen.gg/nikke/characters/miranda",
-          "title": "Miranda Best Build Guide | NIKKE"
+          "label": "애장품",
+          "value": "1/10/10"
         }
-      ]
-    },
-    {
-      "id": "nikke-1bb5c24dc4",
-      "name": "미란다",
-      "variant": "애장품",
-      "burst": [
-        1
       ],
-      "skills": "1/10/10",
-      "overload": "우월 코드 4줄 · 공격력 4줄",
-      "notes": [
-        "스페란도: 솔로 레이드부터 고려",
-        "뚜레 2026-06-19 · 풍압 솔로레이드 · 범용 서포터 목표: 오버로드 이 준비표에서는 오버로드 생략. 풍압 솔로레이드 준비 목표. 최소·가성비 육성은 별도 가이드를 참고하고, 레이드 시작 뒤 우선순위를 보고 투자하라는 전제.",
-        "뚜레 2026-06-08 · 서포터 가성비: 오버로드 장비 투자 생략. 애장품2단계. 천천히 육성할 수 있는 지원 요원.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 1/4/4 → 1/7/7 (→ 7/10/10) / PvP 스킬 1/1/1 → 1/4/4 → 1/7/7 (→ 1/10/10) / 역할: 버퍼 / 현재 평가: 스토리A·보스S·PvPB"
+      "overload": [
+        {
+          "label": "일반",
+          "value": "지정 권장 옵션 없음"
+        },
+        {
+          "label": "애장품",
+          "value": "우월 코드 4줄 · 공격력 4줄"
+        }
       ],
+      "notes": [],
       "image": "assets/characters/4dbd3441f0572a3c.png",
       "aliases": [
         "Miranda",
         "미란다(애장품)",
         "애장품 미란다",
-        "Miranda (Treasure)"
+        "Miranda (Treasure)",
+        "일반 미란다",
+        "미란다 일반",
+        "기본 미란다",
+        "미란다 기본",
+        "미란다 애장품"
       ],
       "references": [
         {
-          "label": "스페란도 GAME TV 2026-04-26",
+          "label": "스페란도 GAME TV 2024-11-07 · 일반",
+          "url": "https://www.youtube.com/watch?v=I-9U7RaA9sI",
+          "title": "모든 니케들의 스킬작과 큐브 추천 초보자 추천 니케까지/니케 초보자 뉴비 가이드/그레이브, 신데렐라 스킬작"
+        },
+        {
+          "label": "Prydwen · 일반",
+          "url": "https://www.prydwen.gg/nikke/characters/miranda",
+          "title": "Miranda Best Build Guide | NIKKE"
+        },
+        {
+          "label": "스페란도 GAME TV 2026-04-26 · 애장품",
           "url": "https://www.youtube.com/watch?v=mPz3SnV13qw",
           "title": "[승리의 여신: 니케] 모든 니케 스킬작 가이드 및 큐브 추천/3.5주년 초보자 뉴비 가이드"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 애장품",
           "url": "https://www.prydwen.gg/nikke/characters/miranda-treasure",
           "title": "Miranda (Treasure) Best Build Guide | NIKKE"
         },
         {
-          "label": "뚜레 2026-06-19",
+          "label": "뚜레 2026-06-19 · 애장품",
           "url": "https://www.youtube.com/watch?v=a7a-S2WsPlo",
           "title": "[니케] 풍압 솔로레이드 준비하기 - 육성 우선순위, 스킬작, 옵션작 등"
         },
         {
-          "label": "뚜레 2026-06-08",
+          "label": "뚜레 2026-06-08 · 애장품",
           "url": "https://www.youtube.com/watch?v=2h2O_OoTFOo",
           "title": "[니케] 육성 가이드 A to Z - 뉴비부터 솔레 3%까지!"
+        }
+      ],
+      "sourceIds": [
+        "nikke-e9a3d353d6",
+        "nikke-1bb5c24dc4"
+      ],
+      "noteGroups": [
+        {
+          "label": "일반",
+          "notes": [
+            "스페란도: 스노우 화이트 전용 버퍼. 후반용이며 초보자 비추천.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 1/4/4 → 4/4/7 (→ 4/7/10) / PvP 스킬 1/1/1 / 역할: 버퍼 / 현재 평가: 스토리C·보스C·PvPC"
+          ]
+        },
+        {
+          "label": "애장품",
+          "notes": [
+            "스페란도: 솔로 레이드부터 고려",
+            "뚜레 2026-06-19 · 풍압 솔로레이드 · 범용 서포터 목표: 오버로드 이 준비표에서는 오버로드 생략. 풍압 솔로레이드 준비 목표. 최소·가성비 육성은 별도 가이드를 참고하고, 레이드 시작 뒤 우선순위를 보고 투자하라는 전제.",
+            "뚜레 2026-06-08 · 서포터 가성비: 오버로드 장비 투자 생략. 애장품2단계. 천천히 육성할 수 있는 지원 요원.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 1/4/4 → 1/7/7 (→ 7/10/10) / PvP 스킬 1/1/1 → 1/4/4 → 1/7/7 (→ 1/10/10) / 역할: 버퍼 / 현재 평가: 스토리A·보스S·PvPB"
+          ]
         }
       ]
     },
@@ -1036,7 +1148,8 @@ window.NIKKE_GROWTH_GUIDE = {
         "엑시아 ·애장품",
         "엑시아(애장품)",
         "애장품 엑시아",
-        "Exia (Treasure)"
+        "Exia (Treasure)",
+        "엑시아 애장품"
       ],
       "references": [
         {
@@ -1155,69 +1268,89 @@ window.NIKKE_GROWTH_GUIDE = {
     {
       "id": "nikke-8abbbea4cc",
       "name": "츠바이",
-      "variant": "기본",
+      "variant": "일반·애장품",
       "burst": [
         1
       ],
-      "skills": "4/4/4 → 7/7/7 → 고점10/10/10",
-      "overload": "공격력·명중·우월 코드, 장탄1 선택.\n츠바이에게 차지 속도·차지 피해 저격하지 않음.",
-      "notes": [
-        "스페란도: 스노우 화이트가 풀 버스트 후5초 안에 발사하도록 딜러 차속 확보.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/1/4 → 7/4/7 (→ 10/7/10) / PvP 스킬 1/1/1 / 오버로드 지정 권장 옵션 없음 / 역할: 버퍼·엄폐물 회복·관통 / 현재 평가: 스토리C·보스C·PvPC"
-      ],
-      "image": "assets/characters/a005e638b777b570.png",
-      "aliases": [
-        "Zwei"
-      ],
-      "references": [
+      "skills": [
         {
-          "label": "스페란도 GAME TV 2024-08-08",
-          "url": "https://www.youtube.com/watch?v=rIR4Od26Qk0",
-          "title": "[승리의 여신: 니케] 뉴비는 뽑지마세요! 츠바이 실사용 후기 및 사용 가이드/상세 딜비교/풀스작 풀오버/스킬작/오버로드/큐브/덱추천"
+          "label": "일반",
+          "value": "4/4/4 → 7/7/7 → 고점10/10/10"
         },
         {
-          "label": "Prydwen",
-          "url": "https://www.prydwen.gg/nikke/characters/zwei",
-          "title": "Zwei Best Build Guide | NIKKE"
+          "label": "애장품",
+          "value": "7/10/7 → 10/10/10"
         }
-      ]
-    },
-    {
-      "id": "nikke-841de843d5",
-      "name": "츠바이",
-      "variant": "애장품",
-      "burst": [
-        1
       ],
-      "skills": "7/10/7 → 10/10/10",
-      "overload": "서포터 운용은 오버로드 옵션작 불필요.",
-      "notes": [
-        "스페란도: 덱의 크리티컬 확률에 따라2스킬 조절. 기본형과 구분.",
-        "김진서 2026-05-22: 애장품 최소2단계. 범용성을 위해2스킬10을 먼저 확보한다. 장비 강화 필요X 표기와 가 함께 제시됨.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 7/4/7 → 10/7/7 (→ 10/10/10) / PvP 스킬 1/1/1 → 4/4/4 → 10/7/7 (→ 10/10/10) / 오버로드 선택 투자: 우월 코드 4줄 · 공격력 4줄 / 남는 칸: 명중 / 크리티컬 확률 / 크리티컬 피해 / 역할: 버퍼·엄폐물 회복·관통·중첩 활용 / 현재 평가: 스토리B·보스S·PvPB"
+      "overload": [
+        {
+          "label": "일반",
+          "value": "공격력·명중·우월 코드, 장탄1 선택.\n츠바이에게 차지 속도·차지 피해 저격하지 않음."
+        },
+        {
+          "label": "애장품",
+          "value": "서포터 운용은 오버로드 옵션작 불필요."
+        }
       ],
+      "notes": [],
       "image": "assets/characters/a005e638b777b570.png",
       "aliases": [
         "Zwei",
         "츠바이(애장품)",
         "애장품 츠바이",
-        "Zwei (Treasure)"
+        "Zwei (Treasure)",
+        "일반 츠바이",
+        "츠바이 일반",
+        "기본 츠바이",
+        "츠바이 기본",
+        "츠바이 애장품"
       ],
       "references": [
         {
-          "label": "스페란도 GAME TV 2026-04-26",
+          "label": "스페란도 GAME TV 2024-08-08 · 일반",
+          "url": "https://www.youtube.com/watch?v=rIR4Od26Qk0",
+          "title": "[승리의 여신: 니케] 뉴비는 뽑지마세요! 츠바이 실사용 후기 및 사용 가이드/상세 딜비교/풀스작 풀오버/스킬작/오버로드/큐브/덱추천"
+        },
+        {
+          "label": "Prydwen · 일반",
+          "url": "https://www.prydwen.gg/nikke/characters/zwei",
+          "title": "Zwei Best Build Guide | NIKKE"
+        },
+        {
+          "label": "스페란도 GAME TV 2026-04-26 · 애장품",
           "url": "https://www.youtube.com/watch?v=mPz3SnV13qw",
           "title": "[승리의 여신: 니케] 모든 니케 스킬작 가이드 및 큐브 추천/3.5주년 초보자 뉴비 가이드"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 애장품",
           "url": "https://www.prydwen.gg/nikke/characters/zwei-treasure",
           "title": "Zwei (Treasure) Best Build Guide | NIKKE"
         },
         {
-          "label": "김진서 2026-05-22",
+          "label": "김진서 2026-05-22 · 애장품",
           "url": "https://www.youtube.com/watch?v=1D_9X7HpqAk",
           "title": "니케 관통을 담당하는 애장품 츠바이 사용 가이드"
+        }
+      ],
+      "sourceIds": [
+        "nikke-8abbbea4cc",
+        "nikke-841de843d5"
+      ],
+      "noteGroups": [
+        {
+          "label": "일반",
+          "notes": [
+            "스페란도: 스노우 화이트가 풀 버스트 후5초 안에 발사하도록 딜러 차속 확보.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/1/4 → 7/4/7 (→ 10/7/10) / PvP 스킬 1/1/1 / 오버로드 지정 권장 옵션 없음 / 역할: 버퍼·엄폐물 회복·관통 / 현재 평가: 스토리C·보스C·PvPC"
+          ]
+        },
+        {
+          "label": "애장품",
+          "notes": [
+            "스페란도: 덱의 크리티컬 확률에 따라2스킬 조절. 기본형과 구분.",
+            "김진서 2026-05-22: 애장품 최소2단계. 범용성을 위해2스킬10을 먼저 확보한다. 장비 강화 필요X 표기와 가 함께 제시됨.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 7/4/7 → 10/7/7 (→ 10/10/10) / PvP 스킬 1/1/1 → 4/4/4 → 10/7/7 (→ 10/10/10) / 오버로드 선택 투자: 우월 코드 4줄 · 공격력 4줄 / 남는 칸: 명중 / 크리티컬 확률 / 크리티컬 피해 / 역할: 버퍼·엄폐물 회복·관통·중첩 활용 / 현재 평가: 스토리B·보스S·PvPB"
+          ]
         }
       ]
     },
@@ -1254,29 +1387,51 @@ window.NIKKE_GROWTH_GUIDE = {
     {
       "id": "nikke-3b94a2b877",
       "name": "토브",
-      "variant": "기본",
+      "variant": "일반·애장품",
       "burst": [
         1
       ],
-      "skills": "7/4/4→권장9/7/7→9/10/10",
-      "overload": "장탄 1~4줄",
-      "notes": [
-        "스페란도: 샷건 덱 필수 파츠. 애장품 출시 전 시점의 표.",
-        "김진서 2026-05-19: 애장품이 없어도 샷건 공속 버프를 사용해 샷건덱을 운용할 수 있음. 애장품은 버프 유지 난이도를 낮추며, 이 자료에서는 일반 토브용 별도 숫자 권장으로 분리 확정하지 않음.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 9/4/4 → 9/7/7 (→ 9/10/10) / PvP 스킬 1/1/1 / 역할: 버퍼 / 현재 평가: 스토리D·보스A·PvPD"
+      "skills": [
+        {
+          "label": "일반",
+          "value": "7/4/4→권장9/7/7→9/10/10"
+        },
+        {
+          "label": "애장품",
+          "value": "6/7/7 → 9/10/10"
+        }
       ],
+      "overload": [
+        {
+          "label": "일반",
+          "value": "장탄 1~4줄"
+        },
+        {
+          "label": "애장품",
+          "value": "기본 오버로드만, 옵션 저격 불필요.\n우월 코드는 붙으면 사용."
+        }
+      ],
+      "notes": [],
       "image": "assets/characters/bdbe60a0792a3988.png",
       "aliases": [
-        "Tove"
+        "Tove",
+        "토브(애장품)",
+        "애장품 토브",
+        "Tove (Treasure)",
+        "일반 토브",
+        "토브 일반",
+        "기본 토브",
+        "토브 기본",
+        "토브 애장품"
       ],
       "references": [
         {
-          "label": "스페란도 GAME TV 2025-05-07",
+          "label": "스페란도 GAME TV 2025-05-07 · 일반",
           "url": "https://www.youtube.com/watch?v=wGAqRrjSVjQ",
           "title": "출시된 모든 니케들의 스킬작 및 큐브 추천 가이드/세이렌, 미하라 추가/2025년 최신 스킬작 초보자 가이드 [승리의 여신: 니케]"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 일반",
           "url": "https://www.prydwen.gg/nikke/characters/tove",
           "title": "Tove Best Build Guide | NIKKE"
         },
@@ -1284,74 +1439,67 @@ window.NIKKE_GROWTH_GUIDE = {
           "label": "김진서 2026-05-19",
           "url": "https://www.youtube.com/watch?v=e22buWa84BQ",
           "title": "니케 애장품 토브가 아니여도 샷건덱을 쓸 수 있다!"
-        }
-      ]
-    },
-    {
-      "id": "nikke-42c7cb77ac",
-      "name": "토브",
-      "variant": "애장품",
-      "burst": [
-        1
-      ],
-      "skills": "6/7/7 → 9/10/10",
-      "overload": "기본 오버로드만, 옵션 저격 불필요.\n우월 코드는 붙으면 사용.",
-      "notes": [
-        "스페란도: 샷건 덱. 애장품 이후 중첩만을 위한 장탄 저격 불필요.",
-        "뚜레 2026-08-21 · 2026-08 작열 레이드 서포터: 스킬 9/10/7 → 9/10/10 오버로드 기본 오버로드·소장품 적용(옵션 수 미제시). 해당 조합에 채용될 경우 육성.",
-        "뚜레 2026-06-19 · 풍압 솔로레이드 · 범용 서포터 목표: 스킬 9/10/10 오버로드 오버로드 장착 권장. 옵션 종류·줄 수는 이 표에서 미제시. 풍압 솔로레이드 준비 목표. 최소·가성비 육성은 별도 가이드를 참고하고, 레이드 시작 뒤 우선순위를 보고 투자하라는 전제.",
-        "뚜레 2026-06-08 · 샷건 덱 가성비: 스킬 9/10/10 오버로드 옵션 재설정 투자 불필요. 샷건 덱 가성비. 애장품 적용 기준.",
-        "김진서 2026-05-19: 스킬 9/7/7 → 9/10/10 오버로드 서포터 운용은 오버로드 옵션작 불필요. 애장품 성장표. 버스트 충전3초 안에 최대 스택을 만들기 위해1스킬9 권장.",
-        "김붕붕 2026-04-20 · 일반: 1스킬은6 또는9레벨 분기점 우선;10레벨은 필수가 아님.2스킬·버스트의 지원 효과를 함께 강화.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 3/4/4 → 6/7/7 (→ 9/10/10) / 오버로드 우월 코드 4줄 · 공격력 4줄 · 장탄 1줄 / 남는 칸: 장탄 / 역할: 버퍼·중첩 활용 / 현재 평가: 스토리C·보스S·PvPB"
-      ],
-      "image": "assets/characters/bdbe60a0792a3988.png",
-      "aliases": [
-        "Tove",
-        "토브(애장품)",
-        "애장품 토브",
-        "Tove (Treasure)"
-      ],
-      "references": [
+        },
         {
-          "label": "스페란도 GAME TV 2026-04-26",
+          "label": "스페란도 GAME TV 2026-04-26 · 애장품",
           "url": "https://www.youtube.com/watch?v=mPz3SnV13qw",
           "title": "[승리의 여신: 니케] 모든 니케 스킬작 가이드 및 큐브 추천/3.5주년 초보자 뉴비 가이드"
         },
         {
-          "label": "스페란도 GAME TV 2025-07-18",
+          "label": "스페란도 GAME TV 2025-07-18 · 애장품",
           "url": "https://www.youtube.com/watch?v=YuBDPKdj0LY",
           "title": "[승리의 여신: 니케] 샷건덱의 희망! 토브 애장품 사용 가이드/애장품 변화 차이/스킬작/오버로드/큐브/덱추천"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 애장품",
           "url": "https://www.prydwen.gg/nikke/characters/tove-treasure",
           "title": "Tove (Treasure) Best Build Guide | NIKKE"
         },
         {
-          "label": "뚜레 2026-08-21",
+          "label": "뚜레 2026-08-21 · 애장품",
           "url": "https://www.youtube.com/watch?v=8HnjZFQn7F4",
           "title": "[니케] 작열 솔로레이드 준비하기 - 육성 우선순위, 스킬작, 옵션작 등"
         },
         {
-          "label": "뚜레 2026-06-19",
+          "label": "뚜레 2026-06-19 · 애장품",
           "url": "https://www.youtube.com/watch?v=a7a-S2WsPlo",
           "title": "[니케] 풍압 솔로레이드 준비하기 - 육성 우선순위, 스킬작, 옵션작 등"
         },
         {
-          "label": "뚜레 2026-06-08",
+          "label": "뚜레 2026-06-08 · 애장품",
           "url": "https://www.youtube.com/watch?v=2h2O_OoTFOo",
           "title": "[니케] 육성 가이드 A to Z - 뉴비부터 솔레 3%까지!"
         },
         {
-          "label": "김진서 2026-05-19",
-          "url": "https://www.youtube.com/watch?v=e22buWa84BQ",
-          "title": "니케 애장품 토브가 아니여도 샷건덱을 쓸 수 있다!"
-        },
-        {
-          "label": "김붕붕 2026-04-20",
+          "label": "김붕붕 2026-04-20 · 애장품",
           "url": "https://www.youtube.com/watch?v=2oRYOTa437Q",
           "title": "[니케] 소총 쏘면서 샷건 버프 주는 니케ㅣ애장품 토브 사용법"
+        }
+      ],
+      "sourceIds": [
+        "nikke-3b94a2b877",
+        "nikke-42c7cb77ac"
+      ],
+      "noteGroups": [
+        {
+          "label": "일반",
+          "notes": [
+            "스페란도: 샷건 덱 필수 파츠. 애장품 출시 전 시점의 표.",
+            "김진서 2026-05-19: 애장품이 없어도 샷건 공속 버프를 사용해 샷건덱을 운용할 수 있음. 애장품은 버프 유지 난이도를 낮추며, 이 자료에서는 일반 토브용 별도 숫자 권장으로 분리 확정하지 않음.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 9/4/4 → 9/7/7 (→ 9/10/10) / PvP 스킬 1/1/1 / 역할: 버퍼 / 현재 평가: 스토리D·보스A·PvPD"
+          ]
+        },
+        {
+          "label": "애장품",
+          "notes": [
+            "스페란도: 샷건 덱. 애장품 이후 중첩만을 위한 장탄 저격 불필요.",
+            "뚜레 2026-08-21 · 2026-08 작열 레이드 서포터: 스킬 9/10/7 → 9/10/10 오버로드 기본 오버로드·소장품 적용(옵션 수 미제시). 해당 조합에 채용될 경우 육성.",
+            "뚜레 2026-06-19 · 풍압 솔로레이드 · 범용 서포터 목표: 스킬 9/10/10 오버로드 오버로드 장착 권장. 옵션 종류·줄 수는 이 표에서 미제시. 풍압 솔로레이드 준비 목표. 최소·가성비 육성은 별도 가이드를 참고하고, 레이드 시작 뒤 우선순위를 보고 투자하라는 전제.",
+            "뚜레 2026-06-08 · 샷건 덱 가성비: 스킬 9/10/10 오버로드 옵션 재설정 투자 불필요. 샷건 덱 가성비. 애장품 적용 기준.",
+            "김진서 2026-05-19: 스킬 9/7/7 → 9/10/10 오버로드 서포터 운용은 오버로드 옵션작 불필요. 애장품 성장표. 버스트 충전3초 안에 최대 스택을 만들기 위해1스킬9 권장.",
+            "김붕붕 2026-04-20 · 일반: 1스킬은6 또는9레벨 분기점 우선;10레벨은 필수가 아님.2스킬·버스트의 지원 효과를 함께 강화.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 3/4/4 → 6/7/7 (→ 9/10/10) / 오버로드 우월 코드 4줄 · 공격력 4줄 · 장탄 1줄 / 남는 칸: 장탄 / 역할: 버퍼·중첩 활용 / 현재 평가: 스토리C·보스S·PvPB"
+          ]
         }
       ]
     },
@@ -1763,64 +1911,84 @@ window.NIKKE_GROWTH_GUIDE = {
     {
       "id": "nikke-69b55b9ba2",
       "name": "디젤",
-      "variant": "기본",
+      "variant": "일반·애장품",
       "burst": [
         2
       ],
-      "skills": "후반 사용은10/10/10수준까지",
-      "overload": "장탄 3~4줄",
-      "notes": [
-        "스페란도: 스킬 투자에 따른 도발 지속 증가. 초보자 우선 육성용은 아님.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 (→ 4/10/4) / PvP 스킬 1/1/1 / 역할: 버퍼·도발 / 현재 평가: 스토리E·보스D·PvPC"
+      "skills": [
+        {
+          "label": "일반",
+          "value": "후반 사용은10/10/10수준까지"
+        },
+        {
+          "label": "애장품",
+          "value": "4/4/4 → PvP7/7/7 (추가 과투자 비추천)"
+        }
       ],
+      "overload": [
+        {
+          "label": "일반",
+          "value": "장탄 3~4줄"
+        },
+        {
+          "label": "애장품",
+          "value": "체력 부위 강화 우선. 장탄2·방어력 위주.\n장탄4를 무리하게 노리지 않음."
+        }
+      ],
+      "notes": [],
       "image": "assets/characters/21d73a6fb5dd3028.png",
       "aliases": [
         "Diesel",
-        "디젤 ·애장품 이전"
+        "디젤 ·애장품 이전",
+        "디젤(애장품)",
+        "애장품 디젤",
+        "Diesel (Treasure)",
+        "일반 디젤",
+        "디젤 일반",
+        "기본 디젤",
+        "디젤 기본",
+        "디젤 애장품"
       ],
       "references": [
         {
-          "label": "스페란도 GAME TV 2023-04-30",
+          "label": "스페란도 GAME TV 2023-04-30 · 일반",
           "url": "https://www.youtube.com/watch?v=ePORU3KOhc8",
           "title": "손해 보기 전에 꼭 보세요!/초보자 니케 추천 및 스킬작 가이드/현재 나온 모든 니케들의 우선도와 스킬작하는 방법/위시리스트 참고용/뽑아야 하는 니케"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 일반",
           "url": "https://www.prydwen.gg/nikke/characters/diesel",
           "title": "Diesel Best Build Guide | NIKKE"
-        }
-      ]
-    },
-    {
-      "id": "nikke-e00016037e",
-      "name": "디젤",
-      "variant": "애장품",
-      "burst": [
-        2
-      ],
-      "skills": "4/4/4 → PvP7/7/7 (추가 과투자 비추천)",
-      "overload": "체력 부위 강화 우선. 장탄2·방어력 위주.\n장탄4를 무리하게 노리지 않음.",
-      "notes": [
-        "스페란도: 장탄2줄부터 탄 유지 가능. 옵션보다 체력 부위 강화 우선.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 1/4/4 → 1/7/4 (→ 4/10/7) / 오버로드 옵션작 매우 후순위: 장탄 2~3줄 / 역할: 버퍼·도발 / 현재 평가: 스토리C·보스C·PvPC"
-      ],
-      "image": "assets/characters/21d73a6fb5dd3028.png",
-      "aliases": [
-        "Diesel",
-        "디젤(애장품)",
-        "애장품 디젤",
-        "Diesel (Treasure)"
-      ],
-      "references": [
+        },
         {
-          "label": "스페란도 GAME TV 2024-06-17",
+          "label": "스페란도 GAME TV 2024-06-17 · 애장품",
           "url": "https://www.youtube.com/watch?v=A_kPe6eGVSA",
           "title": "[승리의 여신: 니케] 좀비 그 자체 디젤 애장품 사용 후기 및 사용 가이드/딜비교/스킬작, 오버로드, 큐브, 덱 추천"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 애장품",
           "url": "https://www.prydwen.gg/nikke/characters/diesel-treasure",
           "title": "Diesel (Treasure) Best Build Guide | NIKKE"
+        }
+      ],
+      "sourceIds": [
+        "nikke-69b55b9ba2",
+        "nikke-e00016037e"
+      ],
+      "noteGroups": [
+        {
+          "label": "일반",
+          "notes": [
+            "스페란도: 스킬 투자에 따른 도발 지속 증가. 초보자 우선 육성용은 아님.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 (→ 4/10/4) / PvP 스킬 1/1/1 / 역할: 버퍼·도발 / 현재 평가: 스토리E·보스D·PvPC"
+          ]
+        },
+        {
+          "label": "애장품",
+          "notes": [
+            "스페란도: 장탄2줄부터 탄 유지 가능. 옵션보다 체력 부위 강화 우선.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 1/4/4 → 1/7/4 (→ 4/10/7) / 오버로드 옵션작 매우 후순위: 장탄 2~3줄 / 역할: 버퍼·도발 / 현재 평가: 스토리C·보스C·PvPC"
+          ]
         }
       ]
     },
@@ -2211,134 +2379,178 @@ window.NIKKE_GROWTH_GUIDE = {
     {
       "id": "nikke-ea139b283b",
       "name": "바이퍼",
-      "variant": "기본",
+      "variant": "일반·애장품",
       "burst": [
         2
       ],
-      "skills": "4/1/4",
-      "overload": "공격력 4줄 · 우월 코드 4줄 · 장탄 1~2줄",
-      "notes": [
-        "스페란도: 가성비 사용",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 / PvP 스킬 1/1/1 (→ 4/4/4) / 역할: 버퍼·디버퍼 / 현재 평가: 스토리E·보스D·PvPA"
+      "skills": [
+        {
+          "label": "일반",
+          "value": "4/1/4"
+        },
+        {
+          "label": "애장품",
+          "value": "권장7/7/7→9/9/9→여유 시10/10/10"
+        }
       ],
+      "overload": [
+        {
+          "label": "일반",
+          "value": "공격력 4줄 · 우월 코드 4줄 · 장탄 1~2줄"
+        },
+        {
+          "label": "애장품",
+          "value": "선택 투자: 장탄 0~4줄 · 공격력 4줄 · 우월 코드 4줄\n남는 칸: 명중"
+        }
+      ],
+      "notes": [],
       "image": "assets/characters/bd29ae518fec23d3.png",
       "aliases": [
         "Viper",
-        "바이퍼 ·애장품 이전"
+        "바이퍼 ·애장품 이전",
+        "바이퍼 ·애장품",
+        "바이퍼(애장품)",
+        "애장품 바이퍼",
+        "Viper (Treasure)",
+        "일반 바이퍼",
+        "바이퍼 일반",
+        "기본 바이퍼",
+        "바이퍼 기본",
+        "바이퍼 애장품"
       ],
       "references": [
         {
-          "label": "스페란도 GAME TV 2024-01-28",
+          "label": "스페란도 GAME TV 2024-01-28 · 일반",
           "url": "https://www.youtube.com/watch?v=GFhzJ3lVlZU",
           "title": "[승리의 여신:니케] 초보자 캐릭 추천 및 스킬작 가이드Ver.2024/현재 나온 모든 니케들의 우선도와 스킬작하는 방법/니케 2024 초보자 가이드"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 일반",
           "url": "https://www.prydwen.gg/nikke/characters/viper",
           "title": "Viper Best Build Guide | NIKKE"
-        }
-      ]
-    },
-    {
-      "id": "nikke-3f58802131",
-      "name": "바이퍼",
-      "variant": "애장품",
-      "burst": [
-        2
-      ],
-      "skills": "권장7/7/7→9/9/9→여유 시10/10/10",
-      "overload": "선택 투자: 장탄 0~4줄 · 공격력 4줄 · 우월 코드 4줄\n남는 칸: 명중",
-      "notes": [
-        "스페란도: 2버스트 수냉 샷건 딜러.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 → 7/4/7 (→ 10/4/10) / 역할: 버퍼·디버퍼 / 현재 평가: 스토리D·보스B·PvPA"
-      ],
-      "image": "assets/characters/bd29ae518fec23d3.png",
-      "aliases": [
-        "Viper",
-        "바이퍼 ·애장품",
-        "바이퍼(애장품)",
-        "애장품 바이퍼",
-        "Viper (Treasure)"
-      ],
-      "references": [
+        },
         {
-          "label": "스페란도 GAME TV 2025-05-07",
+          "label": "스페란도 GAME TV 2025-05-07 · 애장품",
           "url": "https://www.youtube.com/watch?v=wGAqRrjSVjQ",
           "title": "출시된 모든 니케들의 스킬작 및 큐브 추천 가이드/세이렌, 미하라 추가/2025년 최신 스킬작 초보자 가이드 [승리의 여신: 니케]"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 애장품",
           "url": "https://www.prydwen.gg/nikke/characters/viper-treasure",
           "title": "Viper (Treasure) Best Build Guide | NIKKE"
+        }
+      ],
+      "sourceIds": [
+        "nikke-ea139b283b",
+        "nikke-3f58802131"
+      ],
+      "noteGroups": [
+        {
+          "label": "일반",
+          "notes": [
+            "스페란도: 가성비 사용",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 / PvP 스킬 1/1/1 (→ 4/4/4) / 역할: 버퍼·디버퍼 / 현재 평가: 스토리E·보스D·PvPA"
+          ]
+        },
+        {
+          "label": "애장품",
+          "notes": [
+            "스페란도: 2버스트 수냉 샷건 딜러.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 → 7/4/7 (→ 10/4/10) / 역할: 버퍼·디버퍼 / 현재 평가: 스토리D·보스B·PvPA"
+          ]
         }
       ]
     },
     {
       "id": "nikke-68f7492e88",
       "name": "베이",
-      "variant": "기본",
+      "variant": "일반·애장품",
       "burst": [
         2
       ],
-      "skills": "4/4/4",
-      "overload": "선택 투자: 차지 속도 4줄\n남는 칸: 공격력 / 우월 코드 / 방어력",
-      "notes": [
-        "스페란도: PvP 광역기 방어 탱커, 노아 대체 가능.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 / 역할: 버퍼·엄폐물 회복 / 현재 평가: 스토리D·보스D·PvPS"
-      ],
-      "image": "assets/characters/9641e9fd9747a811.jpg",
-      "aliases": [
-        "Bay"
-      ],
-      "references": [
+      "skills": [
         {
-          "label": "스페란도 GAME TV 2025-05-07",
-          "url": "https://www.youtube.com/watch?v=wGAqRrjSVjQ",
-          "title": "출시된 모든 니케들의 스킬작 및 큐브 추천 가이드/세이렌, 미하라 추가/2025년 최신 스킬작 초보자 가이드 [승리의 여신: 니케]"
+          "label": "일반",
+          "value": "4/4/4"
         },
         {
-          "label": "Prydwen",
-          "url": "https://www.prydwen.gg/nikke/characters/bay",
-          "title": "Bay Best Build Guide | NIKKE"
+          "label": "애장품",
+          "value": "4/4/4 → 7/7/7"
         }
-      ]
-    },
-    {
-      "id": "nikke-c15a651150",
-      "name": "베이",
-      "variant": "애장품",
-      "burst": [
-        2
       ],
-      "skills": "4/4/4 → 7/7/7",
-      "overload": "차지 속도 4줄\n남는 칸: 공격력 / 우월 코드 / 방어력",
-      "notes": [
-        "스페란도: PvP·챔피언 아레나",
-        "김진서 2026-05-23 · PVP: 스킬 4/4/4 또는 7/7/7 → 10/10/10 오버로드 차지 속도 → 방어력. 나머지는 +@, 줄 수 미제시. PVP 기준. 애장품3단계,  일반 베이와 구분. 도표의 쉼표는4/4/4와7/7/7 시작점 병기이며, 이를 반드시 거치는 단계로 단정하지 않음.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 / PvP 스킬 1/1/1 → 4/4/4 → 7/4/4 / 역할: 버퍼·엄폐물 회복·힐러 / 현재 평가: 스토리D·보스D·PvPSS"
+      "overload": [
+        {
+          "label": "공통",
+          "value": "남는 칸: 공격력 / 우월 코드 / 방어력"
+        },
+        {
+          "label": "일반",
+          "value": "선택 투자: 차지 속도 4줄"
+        },
+        {
+          "label": "애장품",
+          "value": "차지 속도 4줄"
+        }
       ],
+      "notes": [],
       "image": "assets/characters/9641e9fd9747a811.jpg",
       "aliases": [
         "Bay",
         "베이(애장품)",
         "애장품 베이",
-        "Bay (Treasure)"
+        "Bay (Treasure)",
+        "일반 베이",
+        "베이 일반",
+        "기본 베이",
+        "베이 기본",
+        "베이 애장품"
       ],
       "references": [
         {
-          "label": "스페란도 GAME TV 2026-04-26",
+          "label": "스페란도 GAME TV 2025-05-07 · 일반",
+          "url": "https://www.youtube.com/watch?v=wGAqRrjSVjQ",
+          "title": "출시된 모든 니케들의 스킬작 및 큐브 추천 가이드/세이렌, 미하라 추가/2025년 최신 스킬작 초보자 가이드 [승리의 여신: 니케]"
+        },
+        {
+          "label": "Prydwen · 일반",
+          "url": "https://www.prydwen.gg/nikke/characters/bay",
+          "title": "Bay Best Build Guide | NIKKE"
+        },
+        {
+          "label": "스페란도 GAME TV 2026-04-26 · 애장품",
           "url": "https://www.youtube.com/watch?v=mPz3SnV13qw",
           "title": "[승리의 여신: 니케] 모든 니케 스킬작 가이드 및 큐브 추천/3.5주년 초보자 뉴비 가이드"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 애장품",
           "url": "https://www.prydwen.gg/nikke/characters/bay-treasure",
           "title": "Bay (Treasure) Best Build Guide | NIKKE"
         },
         {
-          "label": "김진서 2026-05-23",
+          "label": "김진서 2026-05-23 · 애장품",
           "url": "https://www.youtube.com/watch?v=Vi1tR2oc-UU",
           "title": "PVP 애장품 니케! 센티와 베이 어떻게 써야 할까?"
+        }
+      ],
+      "sourceIds": [
+        "nikke-68f7492e88",
+        "nikke-c15a651150"
+      ],
+      "noteGroups": [
+        {
+          "label": "일반",
+          "notes": [
+            "스페란도: PvP 광역기 방어 탱커, 노아 대체 가능.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 / 역할: 버퍼·엄폐물 회복 / 현재 평가: 스토리D·보스D·PvPS"
+          ]
+        },
+        {
+          "label": "애장품",
+          "notes": [
+            "스페란도: PvP·챔피언 아레나",
+            "김진서 2026-05-23 · PVP: 스킬 4/4/4 또는 7/7/7 → 10/10/10 오버로드 차지 속도 → 방어력. 나머지는 +@, 줄 수 미제시. PVP 기준. 애장품3단계,  일반 베이와 구분. 도표의 쉼표는4/4/4와7/7/7 시작점 병기이며, 이를 반드시 거치는 단계로 단정하지 않음.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 / PvP 스킬 1/1/1 → 4/4/4 → 7/4/4 / 역할: 버퍼·엄폐물 회복·힐러 / 현재 평가: 스토리D·보스D·PvPSS"
+          ]
         }
       ]
     },
@@ -2494,30 +2706,95 @@ window.NIKKE_GROWTH_GUIDE = {
     {
       "id": "nikke-bc266ee153",
       "name": "센티",
-      "variant": "기본",
+      "variant": "일반·애장품",
       "burst": [
         2
       ],
-      "skills": "4/1/4",
-      "overload": "선택 투자: 차지 속도 4줄\n남는 칸: 우월 코드 / 공격력",
-      "notes": [
-        "스페란도: 버스트 수급·보호막·PvP",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 / 역할: 디버퍼·보호막 / 현재 평가: 스토리C·보스D·PvPSS"
+      "skills": [
+        {
+          "label": "일반",
+          "value": "4/1/4"
+        },
+        {
+          "label": "애장품",
+          "value": "10/10/1"
+        }
       ],
+      "overload": [
+        {
+          "label": "일반",
+          "value": "선택 투자: 차지 속도 4줄\n남는 칸: 우월 코드 / 공격력"
+        },
+        {
+          "label": "애장품",
+          "value": "신발을 제외한 장비 강화. 옵션 재설정 투자 비추천."
+        }
+      ],
+      "notes": [],
       "image": "assets/characters/dd2dc0d911e20ea4.png",
       "aliases": [
-        "Centi"
+        "Centi",
+        "애장품 센티",
+        "Centi (Treasure)",
+        "일반 센티",
+        "센티 일반",
+        "기본 센티",
+        "센티 기본",
+        "센티 애장품"
       ],
       "references": [
         {
-          "label": "스페란도 GAME TV 2026-04-26",
+          "label": "스페란도 GAME TV 2026-04-26 · 일반",
           "url": "https://www.youtube.com/watch?v=mPz3SnV13qw",
           "title": "[승리의 여신: 니케] 모든 니케 스킬작 가이드 및 큐브 추천/3.5주년 초보자 뉴비 가이드"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 일반",
           "url": "https://www.prydwen.gg/nikke/characters/centi",
           "title": "Centi Best Build Guide | NIKKE"
+        },
+        {
+          "label": "Prydwen · 애장품",
+          "url": "https://www.prydwen.gg/nikke/characters/centi-treasure",
+          "title": "Centi (Treasure) Best Build Guide | NIKKE"
+        },
+        {
+          "label": "뚜레 2026-07-27 · 애장품",
+          "url": "https://www.youtube.com/watch?v=ZtMf92YtbYA",
+          "title": "[니케] 센티 애장품 리뷰 - 좋지만, 천천히 올리세요"
+        },
+        {
+          "label": "김진서 2026-05-23 · 애장품",
+          "url": "https://www.youtube.com/watch?v=Vi1tR2oc-UU",
+          "title": "PVP 애장품 니케! 센티와 베이 어떻게 써야 할까?"
+        },
+        {
+          "label": "김붕붕 2026-07-27 · 애장품",
+          "url": "https://www.youtube.com/watch?v=BigxAHnPKKM",
+          "title": "[니케] 아쉬운 부분이 있음ㅣ애장품 센티 성능 테스트 결과!"
+        }
+      ],
+      "sourceIds": [
+        "nikke-bc266ee153",
+        "nikke-da5f12fb4f"
+      ],
+      "noteGroups": [
+        {
+          "label": "일반",
+          "notes": [
+            "스페란도: 버스트 수급·보호막·PvP",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 / 역할: 디버퍼·보호막 / 현재 평가: 스토리C·보스D·PvPSS"
+          ]
+        },
+        {
+          "label": "애장품",
+          "notes": [
+            "기본 표는7월 후속 PvE 가이드.5월 PvP 권장은 상향 전 기록이므로 현재 종결 권장으로 사용하지 않음.",
+            "김붕붕 2026-07-27 · 일반: 영상의10/7/7·장탄2줄은 사용한 실험 스펙이며 권장 목표로 채택하지 않음.",
+            "뚜레 2026-07-27: 철갑 조합의 후순위 고점 지원.1·2스킬 투자 필요; 일반 센티와 구분.",
+            "김진서 2026-05-23 · PVP: 스킬 4/4/4 또는 7/7/7 → 7/7/10 오버로드 차지 속도 → 방어력. 나머지는 +@, 줄 수 미제시. PVP 기준. 애장품 최소2단계,3단계 목표. 2026-05-23 영상의 조정 전/당시 권장으로 보존하고 후속 센티 스킬조정 가이드가 있음을 표시.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 4/4/4 → 7/7/4 → 10/10/4 (→ 10/10/7) / PvP 스킬 4/4/4 → 7/4/4 → 10/4/4 (→ 10/4/10) / 오버로드 차지 속도 4줄 · 장탄 2줄 / 남는 칸: 우월 코드 / 공격력 / 역할: 디버퍼·힐러·보호막 / 현재 평가: 스토리C·보스A·PvPSSS"
+          ]
         }
       ]
     },
@@ -3246,7 +3523,8 @@ window.NIKKE_GROWTH_GUIDE = {
         "Flora",
         "플로라(애장품)",
         "애장품 플로라",
-        "Flora (Treasure)"
+        "Flora (Treasure)",
+        "플로라 애장품"
       ],
       "references": [
         {
@@ -3659,94 +3937,114 @@ window.NIKKE_GROWTH_GUIDE = {
     {
       "id": "nikke-8adca797df",
       "name": "드레이크",
-      "variant": "기본",
+      "variant": "일반·애장품",
       "burst": [
         3
       ],
-      "skills": "1/1/5~7",
-      "overload": "선택 투자: 공격력 4줄 · 우월 코드 4줄",
-      "notes": [
-        "스페란도: 영상 시점 사용 우선순위 낮음",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 / 역할: 버퍼 / 현재 평가: 스토리D·보스C·PvPA"
+      "skills": [
+        {
+          "label": "일반",
+          "value": "1/1/5~7"
+        },
+        {
+          "label": "애장품",
+          "value": "10/7/7 → 10/7/10 → 10/10/10"
+        }
       ],
+      "overload": [
+        {
+          "label": "일반",
+          "value": "선택 투자: 공격력 4줄 · 우월 코드 4줄"
+        },
+        {
+          "label": "애장품",
+          "value": "우월 코드4·장탄 최소2.\n공격력·크리티컬은 추가 옵션."
+        }
+      ],
+      "notes": [],
       "image": "assets/characters/c034066044105b63.png",
       "aliases": [
         "Drake",
-        "드레이크 ·애장품 이전"
+        "드레이크 ·애장품 이전",
+        "드레이크 ·애장품",
+        "드레이크(애장품)",
+        "애장품 드레이크",
+        "Drake (Treasure)",
+        "일반 드레이크",
+        "드레이크 일반",
+        "기본 드레이크",
+        "드레이크 기본",
+        "드레이크 애장품"
       ],
       "references": [
         {
-          "label": "스페란도 GAME TV 2024-04-26",
+          "label": "스페란도 GAME TV 2024-04-26 · 일반",
           "url": "https://www.youtube.com/watch?v=Ehp1ArROOw0",
           "title": "[승리의 여신: 니케] 초보자 캐릭 추천 및 스킬작 가이드 Ver.1.5주년/현재 나온 모든 니케들의 우선도와 스킬작하는 방법/니케 2024 초보자 가이드"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 일반",
           "url": "https://www.prydwen.gg/nikke/characters/drake",
           "title": "Drake Best Build Guide | NIKKE"
-        }
-      ]
-    },
-    {
-      "id": "nikke-41d9fa2612",
-      "name": "드레이크",
-      "variant": "애장품",
-      "burst": [
-        3
-      ],
-      "skills": "10/7/7 → 10/7/10 → 10/10/10",
-      "overload": "우월 코드4·장탄 최소2.\n공격력·크리티컬은 추가 옵션.",
-      "notes": [
-        "스페란도: 샷건 파츠",
-        "김붕붕 2026-09-01 · 일반: 스킬 우선순위 1스킬 > 버스트 > 2스킬 1스킬 우선. 장탄은 샷건 운용에 유효하며,4우월 코드와2장탄부터 확보.",
-        "뚜레 2026-08-21 · 2026-08 작열 솔로 레이드: 스킬 10/10/10 오버로드 최소우코4·장탄1~2 → 우코4·장탄2+공격력/크리티컬. 작열 샷건 덱에서는 최소 투자로 써도 된다는 설명.",
-        "뚜레 2026-07-25: 스킬 1스킬 최우선(목표 숫자 미명시) 오버로드 이 영상에서 별도 목표 미명시 슈가와 비교한 수냉 샷건 조합의 투자 순서. 원본·이격 드레이크와 구분.",
-        "뚜레 2026-06-08 · 샷건 덱 가성비: 스킬 7/4/4 → 10/7/7 → 작열10/10/10 오버로드 작열 솔로 레이드 때 옵션 투자. 별도 줄수 미제시. 애장품 재료 별도 파밍은 필요 없다는 설명.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 → 10/4/7 (→ 10/10/10) / 오버로드 장탄 1줄 · 우월 코드 4줄 · 공격력 4줄 / 남는 칸: 장탄 3줄 / 크리티컬 확률 3줄 / 크리티컬 피해 3줄 / 명중 3줄 / 역할: 버퍼 / 현재 평가: 스토리C·보스S·PvPA"
-      ],
-      "image": "assets/characters/c034066044105b63.png",
-      "aliases": [
-        "Drake",
-        "드레이크 ·애장품",
-        "드레이크(애장품)",
-        "애장품 드레이크",
-        "Drake (Treasure)"
-      ],
-      "references": [
+        },
         {
-          "label": "스페란도 GAME TV 2026-04-26",
+          "label": "스페란도 GAME TV 2026-04-26 · 애장품",
           "url": "https://www.youtube.com/watch?v=mPz3SnV13qw",
           "title": "[승리의 여신: 니케] 모든 니케 스킬작 가이드 및 큐브 추천/3.5주년 초보자 뉴비 가이드"
         },
         {
-          "label": "스페란도 GAME TV 2025-01-16",
+          "label": "스페란도 GAME TV 2025-01-16 · 애장품",
           "url": "https://www.youtube.com/watch?v=9UULG7aX5S8",
           "title": "[승리의 여신: 니케] 드레이크 애장품 가이드/샷건덱이 강해졌어요!/오버, 스킬작, 덱 조합"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 애장품",
           "url": "https://www.prydwen.gg/nikke/characters/drake-treasure",
           "title": "Drake (Treasure) Best Build Guide | NIKKE"
         },
         {
-          "label": "뚜레 2026-08-21",
+          "label": "뚜레 2026-08-21 · 애장품",
           "url": "https://www.youtube.com/watch?v=8HnjZFQn7F4",
           "title": "[니케] 작열 솔로레이드 준비하기 - 육성 우선순위, 스킬작, 옵션작 등"
         },
         {
-          "label": "뚜레 2026-07-25",
+          "label": "뚜레 2026-07-25 · 애장품",
           "url": "https://www.youtube.com/watch?v=S-VGRulOWtk",
           "title": "[니케] 슈가 애장품 리뷰 - 팀원 3명을 녹였지만, 그 정돈 아니었다"
         },
         {
-          "label": "뚜레 2026-06-08",
+          "label": "뚜레 2026-06-08 · 애장품",
           "url": "https://www.youtube.com/watch?v=2h2O_OoTFOo",
           "title": "[니케] 육성 가이드 A to Z - 뉴비부터 솔레 3%까지!"
         },
         {
-          "label": "김붕붕 2026-09-01",
+          "label": "김붕붕 2026-09-01 · 애장품",
           "url": "https://www.youtube.com/watch?v=waXs2Mr8l0Y",
           "title": "[니케] 로드 투 빌런 또 해라ㅣ애장품 드레이크 사용법"
+        }
+      ],
+      "sourceIds": [
+        "nikke-8adca797df",
+        "nikke-41d9fa2612"
+      ],
+      "noteGroups": [
+        {
+          "label": "일반",
+          "notes": [
+            "스페란도: 영상 시점 사용 우선순위 낮음",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 / 역할: 버퍼 / 현재 평가: 스토리D·보스C·PvPA"
+          ]
+        },
+        {
+          "label": "애장품",
+          "notes": [
+            "스페란도: 샷건 파츠",
+            "김붕붕 2026-09-01 · 일반: 스킬 우선순위 1스킬 > 버스트 > 2스킬 1스킬 우선. 장탄은 샷건 운용에 유효하며,4우월 코드와2장탄부터 확보.",
+            "뚜레 2026-08-21 · 2026-08 작열 솔로 레이드: 스킬 10/10/10 오버로드 최소우코4·장탄1~2 → 우코4·장탄2+공격력/크리티컬. 작열 샷건 덱에서는 최소 투자로 써도 된다는 설명.",
+            "뚜레 2026-07-25: 스킬 1스킬 최우선(목표 숫자 미명시) 오버로드 이 영상에서 별도 목표 미명시 슈가와 비교한 수냉 샷건 조합의 투자 순서. 원본·이격 드레이크와 구분.",
+            "뚜레 2026-06-08 · 샷건 덱 가성비: 스킬 7/4/4 → 10/7/7 → 작열10/10/10 오버로드 작열 솔로 레이드 때 옵션 투자. 별도 줄수 미제시. 애장품 재료 별도 파밍은 필요 없다는 설명.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 → 10/4/7 (→ 10/10/10) / 오버로드 장탄 1줄 · 우월 코드 4줄 · 공격력 4줄 / 남는 칸: 장탄 3줄 / 크리티컬 확률 3줄 / 크리티컬 피해 3줄 / 명중 3줄 / 역할: 버퍼 / 현재 평가: 스토리C·보스S·PvPA"
+          ]
         }
       ]
     },
@@ -3794,77 +4092,97 @@ window.NIKKE_GROWTH_GUIDE = {
     {
       "id": "nikke-9a17701f92",
       "name": "라플라스",
-      "variant": "기본",
+      "variant": "일반·애장품",
       "burst": [
         3
       ],
-      "skills": "1/1/5→1/1/7",
-      "overload": "옵션작 매우 후순위: 공격력 4줄 · 우월 코드 4줄\n남는 칸: 차지 속도",
-      "notes": [
-        "스페란도: 애장품 출시 전 평가",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 / 역할: 관통·방어 무시 / 현재 평가: 스토리D·보스D·PvPD"
+      "skills": [
+        {
+          "label": "일반",
+          "value": "1/1/5→1/1/7"
+        },
+        {
+          "label": "애장품",
+          "value": "4/4/4 → 7/7/7 → 7/9/9"
+        }
       ],
+      "overload": [
+        {
+          "label": "일반",
+          "value": "옵션작 매우 후순위: 공격력 4줄 · 우월 코드 4줄\n남는 칸: 차지 속도"
+        },
+        {
+          "label": "애장품",
+          "value": "우월 코드4·공격력4·장탄2 + 차지 속도/피해2.\n장탄1~2 확보 후 두 줄 세팅 타협 가능."
+        }
+      ],
+      "notes": [],
       "image": "assets/characters/f112bd68371bda13.png",
       "aliases": [
         "Laplace",
         "라플라스 ·애장품 이전",
-        "라플라스(애장품 이전)"
+        "라플라스(애장품 이전)",
+        "라플라스 ·애장품",
+        "라플라스(애장품)",
+        "애장품 라플라스",
+        "Laplace (Treasure)",
+        "일반 라플라스",
+        "라플라스 일반",
+        "기본 라플라스",
+        "라플라스 기본",
+        "라플라스 애장품"
       ],
       "references": [
         {
-          "label": "스페란도 GAME TV 2024-04-26",
+          "label": "스페란도 GAME TV 2024-04-26 · 일반",
           "url": "https://www.youtube.com/watch?v=Ehp1ArROOw0",
           "title": "[승리의 여신: 니케] 초보자 캐릭 추천 및 스킬작 가이드 Ver.1.5주년/현재 나온 모든 니케들의 우선도와 스킬작하는 방법/니케 2024 초보자 가이드"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 일반",
           "url": "https://www.prydwen.gg/nikke/characters/laplace",
           "title": "Laplace Best Build Guide | NIKKE"
-        }
-      ]
-    },
-    {
-      "id": "nikke-88289ae0f2",
-      "name": "라플라스",
-      "variant": "애장품",
-      "burst": [
-        3
-      ],
-      "skills": "4/4/4 → 7/7/7 → 7/9/9",
-      "overload": "우월 코드4·공격력4·장탄2 + 차지 속도/피해2.\n장탄1~2 확보 후 두 줄 세팅 타협 가능.",
-      "notes": [
-        "스페란도: 관통 철갑 딜러",
-        "뚜레 2026-07-15 · 철갑 솔로레이드 · 향후 방어 무시 덱(이번 레이드 비권장): 스킬 4/10/10 오버로드 우월 코드4와 추가 공격력·크리티컬·장탄. 유효 옵션 총4~6줄 목표. 철갑 솔로레이드의 준비 목표. 영상 시점과 레이드 사용 조합을 전제로 하며 모든 계정의 공통 최소 요구는 아님. 향후 방어 무시 덱용 참고이며 이번 레이드에서는 우선 육성 대상으로 보지 않는다고 명시한다.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/7 → 4/7/10 (→ 4/10/10) / PvP 스킬 1/1/1 → 4/4/7 → 4/7/7 (→ 4/10/10) / 오버로드 우월 코드 4줄 · 공격력 4줄 · 차지 속도 4줄 / 남는 칸: 장탄 / 역할: 관통·방어 무시 / 현재 평가: 스토리S·보스A·PvPSS"
-      ],
-      "image": "assets/characters/f112bd68371bda13.png",
-      "aliases": [
-        "Laplace",
-        "라플라스 ·애장품",
-        "라플라스(애장품)",
-        "애장품 라플라스",
-        "Laplace (Treasure)"
-      ],
-      "references": [
+        },
         {
-          "label": "스페란도 GAME TV 2026-04-26",
+          "label": "스페란도 GAME TV 2026-04-26 · 애장품",
           "url": "https://www.youtube.com/watch?v=mPz3SnV13qw",
           "title": "[승리의 여신: 니케] 모든 니케 스킬작 가이드 및 큐브 추천/3.5주년 초보자 뉴비 가이드"
         },
         {
-          "label": "스페란도 GAME TV 2024-06-15",
+          "label": "스페란도 GAME TV 2024-06-15 · 애장품",
           "url": "https://www.youtube.com/watch?v=SeC2tMbN-us",
           "title": "[승리의 여신: 니케] 일반 니케의 희망? 라플라스 애장품 사용 후기 및 사용 가이드/딜비교/스킬작, 오버로드, 큐브, 덱 추천"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 애장품",
           "url": "https://www.prydwen.gg/nikke/characters/laplace-treasure",
           "title": "Laplace (Treasure) Best Build Guide | NIKKE"
         },
         {
-          "label": "뚜레 2026-07-15",
+          "label": "뚜레 2026-07-15 · 애장품",
           "url": "https://www.youtube.com/watch?v=N7PWCSaI--4",
           "title": "[니케] 철갑 솔로레이드 준비하기 - 육성 우선순위, 스킬작, 옵션작 등"
+        }
+      ],
+      "sourceIds": [
+        "nikke-9a17701f92",
+        "nikke-88289ae0f2"
+      ],
+      "noteGroups": [
+        {
+          "label": "일반",
+          "notes": [
+            "스페란도: 애장품 출시 전 평가",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 / 역할: 관통·방어 무시 / 현재 평가: 스토리D·보스D·PvPD"
+          ]
+        },
+        {
+          "label": "애장품",
+          "notes": [
+            "스페란도: 관통 철갑 딜러",
+            "뚜레 2026-07-15 · 철갑 솔로레이드 · 향후 방어 무시 덱(이번 레이드 비권장): 스킬 4/10/10 오버로드 우월 코드4와 추가 공격력·크리티컬·장탄. 유효 옵션 총4~6줄 목표. 철갑 솔로레이드의 준비 목표. 영상 시점과 레이드 사용 조합을 전제로 하며 모든 계정의 공통 최소 요구는 아님. 향후 방어 무시 덱용 참고이며 이번 레이드에서는 우선 육성 대상으로 보지 않는다고 명시한다.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/7 → 4/7/10 (→ 4/10/10) / PvP 스킬 1/1/1 → 4/4/7 → 4/7/7 (→ 4/10/10) / 오버로드 우월 코드 4줄 · 공격력 4줄 · 차지 속도 4줄 / 남는 칸: 장탄 / 역할: 관통·방어 무시 / 현재 평가: 스토리S·보스A·PvPSS"
+          ]
         }
       ]
     },
@@ -4549,31 +4867,95 @@ window.NIKKE_GROWTH_GUIDE = {
     {
       "id": "nikke-1b91c9d54c",
       "name": "슈가",
-      "variant": "기본",
+      "variant": "일반·애장품",
       "burst": [
         3
       ],
-      "skills": "가성비1/7/7→1/9/9",
-      "overload": "옵션작 매우 후순위: 장탄 2~3줄 · 우월 코드 4줄 · 공격력 4줄",
-      "notes": [
-        "스페란도: 고점 세팅 중심, 초보자 비추천.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 1/5/5 / PvP 스킬 1/1/1 → 4/5/5 / 역할: 버퍼 / 현재 평가: 스토리E·보스C·PvPA"
+      "skills": [
+        {
+          "label": "일반",
+          "value": "가성비1/7/7→1/9/9"
+        },
+        {
+          "label": "애장품",
+          "value": "7/10/10 → 10/10/10"
+        }
       ],
+      "overload": [
+        {
+          "label": "일반",
+          "value": "옵션작 매우 후순위: 장탄 2~3줄 · 우월 코드 4줄 · 공격력 4줄"
+        },
+        {
+          "label": "애장품",
+          "value": "우월 코드4·장탄 최소2.\n최고점은 장탄3 이상, 공격력·크리티컬 추가."
+        }
+      ],
+      "notes": [],
       "image": "assets/characters/57bd3f4aca0ab261.png",
       "aliases": [
         "Suger",
-        "Sugar"
+        "Sugar",
+        "애장품 슈가",
+        "Sugar (Treasure)",
+        "일반 슈가",
+        "슈가 일반",
+        "기본 슈가",
+        "슈가 기본",
+        "슈가 애장품"
       ],
       "references": [
         {
-          "label": "스페란도 GAME TV 2025-05-07",
+          "label": "스페란도 GAME TV 2025-05-07 · 일반",
           "url": "https://www.youtube.com/watch?v=wGAqRrjSVjQ",
           "title": "출시된 모든 니케들의 스킬작 및 큐브 추천 가이드/세이렌, 미하라 추가/2025년 최신 스킬작 초보자 가이드 [승리의 여신: 니케]"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 일반",
           "url": "https://www.prydwen.gg/nikke/characters/sugar",
           "title": "Sugar Best Build Guide | NIKKE"
+        },
+        {
+          "label": "Prydwen · 애장품",
+          "url": "https://www.prydwen.gg/nikke/characters/sugar-treasure",
+          "title": "Sugar (Treasure) Best Build Guide | NIKKE"
+        },
+        {
+          "label": "뚜레 2026-09-25 · 애장품",
+          "url": "https://www.youtube.com/watch?v=gQ4DaTis5PI",
+          "title": "[니케] 수냉 육성 가이드 - 선택과 집중이 중요하다. 방무? 이번엔 그 정도 아님"
+        },
+        {
+          "label": "뚜레 2026-07-25 · 애장품",
+          "url": "https://www.youtube.com/watch?v=S-VGRulOWtk",
+          "title": "[니케] 슈가 애장품 리뷰 - 팀원 3명을 녹였지만, 그 정돈 아니었다"
+        },
+        {
+          "label": "김붕붕 2026-09-08 · 애장품",
+          "url": "https://www.youtube.com/watch?v=YUIrYENJCtU",
+          "title": "[니케] 초특급 샷건 조미료ㅣ애장품 슈가 사용법"
+        }
+      ],
+      "sourceIds": [
+        "nikke-1b91c9d54c",
+        "nikke-f221ad191f"
+      ],
+      "noteGroups": [
+        {
+          "label": "일반",
+          "notes": [
+            "스페란도: 고점 세팅 중심, 초보자 비추천.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 1/5/5 / PvP 스킬 1/1/1 → 4/5/5 / 역할: 버퍼 / 현재 평가: 스토리E·보스C·PvPA"
+          ]
+        },
+        {
+          "label": "애장품",
+          "notes": [
+            "뚜레 2026-09-25 · 수냉 솔로 레이드 육성: 오버로드 최소·타협우월 코드4·장탄2 → 종결우코4·장탄2~3+공/크리티컬. 애장품3단계·SR15 기준. 장탄3의 배수로 조절, 아니면 수동 운용 필요.",
+            "김붕붕 2026-09-08 · 일반: 스킬 우선순위 2스킬·버스트 > 1스킬 2스킬·버스트 우선. 샷건 조합은 이미 공격력 버프가 많아 공격력 옵션만 고집하지 않음.",
+            "뚜레 2026-07-25: 스킬 1스킬 타협 가능(권장 숫자 미명시) 오버로드 우월 코드 기반 + 장탄·공격력·크리티컬. 레오나 동반 수냉은 장탄·공격력 중요. 애장품3단계와 높은 투자 전제. 우월 코드 미세 수치보다 하위 유효 옵션 확보.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 4/4/4 → 4/7/7 → 7/10/10 (→ 10/10/10) / PvP 스킬 4/4/4 → 4/7/4 → 7/10/7 (→ 10/10/10) / 오버로드 우월 코드 4줄 · 공격력 4줄 · 장탄 1~2줄 / 남는 칸: 장탄 / 역할: 버퍼 / 현재 평가: 스토리C·보스S·PvPA"
+          ]
         }
       ]
     },
@@ -5271,7 +5653,8 @@ window.NIKKE_GROWTH_GUIDE = {
         "Julia",
         "율리아(애장품)",
         "애장품 율리아",
-        "Julia (Treasure)"
+        "Julia (Treasure)",
+        "율리아 애장품"
       ],
       "references": [
         {
@@ -5602,166 +5985,206 @@ window.NIKKE_GROWTH_GUIDE = {
     {
       "id": "nikke-14d2b1f68f",
       "name": "팬텀",
-      "variant": "기본",
+      "variant": "일반·애장품",
       "burst": [
         3
       ],
-      "skills": "4/4/4→권장7/7/7",
-      "overload": "가성비:공격력4·우월 코드4·장탄1.\n고점:남은3칸 명중 또는 크리티컬.",
-      "notes": [
-        "스페란도: 수냉 전용 딜러, 애장품 이전.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 → 7/7/4 (→ 10/10/7) / PvP 스킬 1/1/1 → 1/7/7 → 1/10/10 / 오버로드 선택 투자: 우월 코드 4줄 · 공격력 4줄 · 장탄 2~3줄 / 남는 칸: 명중 / 크리티컬 피해 / 크리티컬 확률 / 장탄 / 역할: 디버퍼·전체 공격·중첩 활용 / 현재 평가: 스토리B·보스B·PvPB"
-      ],
-      "image": "assets/characters/3b36fa490344dd2a.png",
-      "aliases": [
-        "Phantom"
-      ],
-      "references": [
+      "skills": [
         {
-          "label": "스페란도 GAME TV 2025-05-07",
-          "url": "https://www.youtube.com/watch?v=wGAqRrjSVjQ",
-          "title": "출시된 모든 니케들의 스킬작 및 큐브 추천 가이드/세이렌, 미하라 추가/2025년 최신 스킬작 초보자 가이드 [승리의 여신: 니케]"
+          "label": "일반",
+          "value": "4/4/4→권장7/7/7"
         },
         {
-          "label": "스페란도 GAME TV 2024-10-10",
-          "url": "https://www.youtube.com/watch?v=LfRIFyoI78o",
-          "title": "[승리의 여신:니케] 엘리시온의 희망! 팬텀 실사용 후기 및 사용 가이드/스킬작,오버로드, 큐브 추천"
-        },
-        {
-          "label": "Prydwen",
-          "url": "https://www.prydwen.gg/nikke/characters/phantom",
-          "title": "Phantom Best Build Guide | NIKKE"
+          "label": "애장품",
+          "value": "7/7/7 → 7/10/10"
         }
-      ]
-    },
-    {
-      "id": "nikke-fd7a61d542",
-      "name": "팬텀",
-      "variant": "애장품",
-      "burst": [
-        3
       ],
-      "skills": "7/7/7 → 7/10/10",
-      "overload": "우월 코드4로 가성비. 기믹 필요 시 공격력2~4 추가.\n고점:우월 코드4·공격력3~4·장탄1.",
-      "notes": [
-        "뚜레 2026-09-25 · 수냉 솔로 레이드 육성: 스킬 10/10/10 오버로드 최소우월 코드4. 종결:우코4+공격력/크리티컬. 타협6옵션. 애장품3단계·SR15 기준.",
-        "김진서 2026-09-20: 오버로드 우월 코드 대미지 → 공격력 → 최대 장탄 수·크리티컬 대미지·크리티컬 확률. 줄 수 미제시. 2스킬과 버스트를 우선 올리는 경로. 최대 장탄은 분배 대미지 운용 조건에서 유용하다고 명시하며 무조건 몇 줄이라고 정하지 않는다. SR15단계와 애장품 전제.",
-        "김붕붕 2026-07-23 · 일반: 오버로드 장탄 최소2 우선. / 우월 코드·공격력은 추가 투자. 여러 애장품을 함께 검토한 초기 리뷰. 후속 개별 가이드의 명시 권장을 우선.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 4/4/4 → 4/7/7 → 7/10/10 (→ 10/10/10) / PvP 스킬 4/4/4 → 4/7/7 → 7/10/10 / 오버로드 우월 코드 4줄 · 공격력 4줄 · 장탄 1~2줄 / 남는 칸: 크리티컬 확률 / 크리티컬 피해 / 장탄 / 역할: 디버퍼·전체 공격·중첩 활용 / 현재 평가: 스토리S·보스A·PvPB"
+      "overload": [
+        {
+          "label": "일반",
+          "value": "가성비:공격력4·우월 코드4·장탄1.\n고점:남은3칸 명중 또는 크리티컬."
+        },
+        {
+          "label": "애장품",
+          "value": "우월 코드4로 가성비. 기믹 필요 시 공격력2~4 추가.\n고점:우월 코드4·공격력3~4·장탄1."
+        }
       ],
+      "notes": [],
       "image": "assets/characters/3b36fa490344dd2a.png",
       "aliases": [
         "Phantom",
         "팬텀(애장품)",
         "애장품 팬텀",
-        "Phantom (Treasure)"
+        "Phantom (Treasure)",
+        "일반 팬텀",
+        "팬텀 일반",
+        "기본 팬텀",
+        "팬텀 기본",
+        "팬텀 애장품"
       ],
       "references": [
         {
-          "label": "스페란도 GAME TV 2026-07-28",
+          "label": "스페란도 GAME TV 2025-05-07 · 일반",
+          "url": "https://www.youtube.com/watch?v=wGAqRrjSVjQ",
+          "title": "출시된 모든 니케들의 스킬작 및 큐브 추천 가이드/세이렌, 미하라 추가/2025년 최신 스킬작 초보자 가이드 [승리의 여신: 니케]"
+        },
+        {
+          "label": "스페란도 GAME TV 2024-10-10 · 일반",
+          "url": "https://www.youtube.com/watch?v=LfRIFyoI78o",
+          "title": "[승리의 여신:니케] 엘리시온의 희망! 팬텀 실사용 후기 및 사용 가이드/스킬작,오버로드, 큐브 추천"
+        },
+        {
+          "label": "Prydwen · 일반",
+          "url": "https://www.prydwen.gg/nikke/characters/phantom",
+          "title": "Phantom Best Build Guide | NIKKE"
+        },
+        {
+          "label": "스페란도 GAME TV 2026-07-28 · 애장품",
           "url": "https://www.youtube.com/watch?v=zeCLMWqQhBI",
           "title": "[승리의 여신: 니케] 팬텀 애장품 사용 가이드 및 성능 평가/똥총의 희망!/수냉 필수 니케?/스킬작, 오버 세팅, 딜 비교/팬텀 애장품 리뷰"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 애장품",
           "url": "https://www.prydwen.gg/nikke/characters/phantom-treasure",
           "title": "Phantom (Treasure) Best Build Guide | NIKKE"
         },
         {
-          "label": "뚜레 2026-09-25",
+          "label": "뚜레 2026-09-25 · 애장품",
           "url": "https://www.youtube.com/watch?v=gQ4DaTis5PI",
           "title": "[니케] 수냉 육성 가이드 - 선택과 집중이 중요하다. 방무? 이번엔 그 정도 아님"
         },
         {
-          "label": "김진서 2026-09-20",
+          "label": "김진서 2026-09-20 · 애장품",
           "url": "https://www.youtube.com/watch?v=20HZhvLlLFU",
           "title": "팬텀 어디까지 육성해야 쓸만할까 ? | 애장품 팬텀 성능, 분배 댐 큐브 효율, 최소 육성 가이드"
         },
         {
-          "label": "김붕붕 2026-07-23",
+          "label": "김붕붕 2026-07-23 · 애장품",
           "url": "https://www.youtube.com/watch?v=wck80TMgbXo",
           "title": "[니케] 10시간 걸렸습니다ㅣ신규 애장품 4종 성능 테스트 결과!"
+        }
+      ],
+      "sourceIds": [
+        "nikke-14d2b1f68f",
+        "nikke-fd7a61d542"
+      ],
+      "noteGroups": [
+        {
+          "label": "일반",
+          "notes": [
+            "스페란도: 수냉 전용 딜러, 애장품 이전.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/1 → 4/4/4 → 7/7/4 (→ 10/10/7) / PvP 스킬 1/1/1 → 1/7/7 → 1/10/10 / 오버로드 선택 투자: 우월 코드 4줄 · 공격력 4줄 · 장탄 2~3줄 / 남는 칸: 명중 / 크리티컬 피해 / 크리티컬 확률 / 장탄 / 역할: 디버퍼·전체 공격·중첩 활용 / 현재 평가: 스토리B·보스B·PvPB"
+          ]
+        },
+        {
+          "label": "애장품",
+          "notes": [
+            "뚜레 2026-09-25 · 수냉 솔로 레이드 육성: 스킬 10/10/10 오버로드 최소우월 코드4. 종결:우코4+공격력/크리티컬. 타협6옵션. 애장품3단계·SR15 기준.",
+            "김진서 2026-09-20: 오버로드 우월 코드 대미지 → 공격력 → 최대 장탄 수·크리티컬 대미지·크리티컬 확률. 줄 수 미제시. 2스킬과 버스트를 우선 올리는 경로. 최대 장탄은 분배 대미지 운용 조건에서 유용하다고 명시하며 무조건 몇 줄이라고 정하지 않는다. SR15단계와 애장품 전제.",
+            "김붕붕 2026-07-23 · 일반: 오버로드 장탄 최소2 우선. / 우월 코드·공격력은 추가 투자. 여러 애장품을 함께 검토한 초기 리뷰. 후속 개별 가이드의 명시 권장을 우선.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 4/4/4 → 4/7/7 → 7/10/10 (→ 10/10/10) / PvP 스킬 4/4/4 → 4/7/7 → 7/10/10 / 오버로드 우월 코드 4줄 · 공격력 4줄 · 장탄 1~2줄 / 남는 칸: 크리티컬 확률 / 크리티컬 피해 / 장탄 / 역할: 디버퍼·전체 공격·중첩 활용 / 현재 평가: 스토리S·보스A·PvPB"
+          ]
         }
       ]
     },
     {
       "id": "nikke-ebef9d42be",
       "name": "프리바티",
-      "variant": "기본",
+      "variant": "일반·애장품",
       "burst": [
         3
       ],
-      "skills": "7/1/1→10/1/1",
-      "overload": "지정 권장 옵션 없음",
-      "notes": [
-        "스페란도: 해당 영상의 기본형 프리바티 표.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 4/1/1 → 7/1/1 (→ 10/4/4) / PvP 스킬 4/1/1 → 7/7/4 (→ 7/10/4) / 역할: 버퍼·군중 제어 / 현재 평가: 스토리B·보스B·PvPB"
-      ],
-      "image": "assets/characters/c32d4f2716dd334e.png",
-      "aliases": [
-        "Privaty"
-      ],
-      "references": [
+      "skills": [
         {
-          "label": "스페란도 GAME TV 2025-05-07",
-          "url": "https://www.youtube.com/watch?v=wGAqRrjSVjQ",
-          "title": "출시된 모든 니케들의 스킬작 및 큐브 추천 가이드/세이렌, 미하라 추가/2025년 최신 스킬작 초보자 가이드 [승리의 여신: 니케]"
+          "label": "일반",
+          "value": "7/1/1→10/1/1"
         },
         {
-          "label": "Prydwen",
-          "url": "https://www.prydwen.gg/nikke/characters/privaty",
-          "title": "Privaty Best Build Guide | NIKKE"
+          "label": "애장품",
+          "value": "10/10/7 → 10/10/10"
         }
-      ]
-    },
-    {
-      "id": "nikke-9b79c30877",
-      "name": "프리바티",
-      "variant": "애장품",
-      "burst": [
-        3
       ],
-      "skills": "10/10/7 → 10/10/10",
-      "overload": "가성비: 우월 코드·공격력 합계4줄 → 우월 코드4·공격력2.\n최고점: 우월 코드4·공격력4·크리티컬4, 장탄 금지.",
-      "notes": [
-        "스페란도: 토템은 버스트 생략, 수냉에서 서브 딜러",
-        "뚜레 2026-09-25 · 수냉 솔로 레이드 육성: 오버로드 최소우코+공격력 합계4 → 타협우코4·공격력2 → 종결우코4·공4·크리4. 장탄 금지. 애장품3단계·SR15. 헤비암즈 동반에서는 추가 옵션작 효율이 낮음.",
-        "뚜레 2026-08-21 · 2026-08 작열 레이드 서포터: 스킬 10/10/4 → 수냉 운용10/10/10 오버로드 기본 오버로드·소장품 적용(옵션 수 미제시). 작열 버퍼/토템과 수냉 딜러 운용을 구분.",
-        "뚜레 2026-06-08 · 서포터 가성비: 스킬 10/10/4 → 수냉10/10/10 오버로드 수냉 솔로 레이드 때 옵션 투자. 별도 줄수 미제시. 애장품2~3단계. 스테이지 토템과 수냉 딜러 경로 구분.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 4/4/4 → 7/7/7 → 10/10/7 (→ 10/10/10) / PvP 스킬 4/4/4 → 4/4/3 → 7/7/7 (→ 10/10/10) / 오버로드 우월 코드 4줄 · 공격력 4줄 / 남는 칸: 크리티컬 확률 / 크리티컬 피해 / 역할: 버퍼·군중 제어·디버퍼·전체 공격 / 현재 평가: 스토리SS·보스SS·PvPSS"
+      "overload": [
+        {
+          "label": "일반",
+          "value": "지정 권장 옵션 없음"
+        },
+        {
+          "label": "애장품",
+          "value": "가성비: 우월 코드·공격력 합계4줄 → 우월 코드4·공격력2.\n최고점: 우월 코드4·공격력4·크리티컬4, 장탄 금지."
+        }
       ],
+      "notes": [],
       "image": "assets/characters/c32d4f2716dd334e.png",
       "aliases": [
         "Privaty",
         "프리바티(애장품)",
         "애장품 프리바티",
-        "Privaty (Treasure)"
+        "Privaty (Treasure)",
+        "일반 프리바티",
+        "프리바티 일반",
+        "기본 프리바티",
+        "프리바티 기본",
+        "프리바티 애장품"
       ],
       "references": [
         {
-          "label": "스페란도 GAME TV 2026-04-26",
+          "label": "스페란도 GAME TV 2025-05-07 · 일반",
+          "url": "https://www.youtube.com/watch?v=wGAqRrjSVjQ",
+          "title": "출시된 모든 니케들의 스킬작 및 큐브 추천 가이드/세이렌, 미하라 추가/2025년 최신 스킬작 초보자 가이드 [승리의 여신: 니케]"
+        },
+        {
+          "label": "Prydwen · 일반",
+          "url": "https://www.prydwen.gg/nikke/characters/privaty",
+          "title": "Privaty Best Build Guide | NIKKE"
+        },
+        {
+          "label": "스페란도 GAME TV 2026-04-26 · 애장품",
           "url": "https://www.youtube.com/watch?v=mPz3SnV13qw",
           "title": "[승리의 여신: 니케] 모든 니케 스킬작 가이드 및 큐브 추천/3.5주년 초보자 뉴비 가이드"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 애장품",
           "url": "https://www.prydwen.gg/nikke/characters/privaty-treasure",
           "title": "Privaty (Treasure) Best Build Guide | NIKKE"
         },
         {
-          "label": "뚜레 2026-09-25",
+          "label": "뚜레 2026-09-25 · 애장품",
           "url": "https://www.youtube.com/watch?v=gQ4DaTis5PI",
           "title": "[니케] 수냉 육성 가이드 - 선택과 집중이 중요하다. 방무? 이번엔 그 정도 아님"
         },
         {
-          "label": "뚜레 2026-08-21",
+          "label": "뚜레 2026-08-21 · 애장품",
           "url": "https://www.youtube.com/watch?v=8HnjZFQn7F4",
           "title": "[니케] 작열 솔로레이드 준비하기 - 육성 우선순위, 스킬작, 옵션작 등"
         },
         {
-          "label": "뚜레 2026-06-08",
+          "label": "뚜레 2026-06-08 · 애장품",
           "url": "https://www.youtube.com/watch?v=2h2O_OoTFOo",
           "title": "[니케] 육성 가이드 A to Z - 뉴비부터 솔레 3%까지!"
+        }
+      ],
+      "sourceIds": [
+        "nikke-ebef9d42be",
+        "nikke-9b79c30877"
+      ],
+      "noteGroups": [
+        {
+          "label": "일반",
+          "notes": [
+            "스페란도: 해당 영상의 기본형 프리바티 표.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 4/1/1 → 7/1/1 (→ 10/4/4) / PvP 스킬 4/1/1 → 7/7/4 (→ 7/10/4) / 역할: 버퍼·군중 제어 / 현재 평가: 스토리B·보스B·PvPB"
+          ]
+        },
+        {
+          "label": "애장품",
+          "notes": [
+            "스페란도: 토템은 버스트 생략, 수냉에서 서브 딜러",
+            "뚜레 2026-09-25 · 수냉 솔로 레이드 육성: 오버로드 최소우코+공격력 합계4 → 타협우코4·공격력2 → 종결우코4·공4·크리4. 장탄 금지. 애장품3단계·SR15. 헤비암즈 동반에서는 추가 옵션작 효율이 낮음.",
+            "뚜레 2026-08-21 · 2026-08 작열 레이드 서포터: 스킬 10/10/4 → 수냉 운용10/10/10 오버로드 기본 오버로드·소장품 적용(옵션 수 미제시). 작열 버퍼/토템과 수냉 딜러 운용을 구분.",
+            "뚜레 2026-06-08 · 서포터 가성비: 스킬 10/10/4 → 수냉10/10/10 오버로드 수냉 솔로 레이드 때 옵션 투자. 별도 줄수 미제시. 애장품2~3단계. 스테이지 토템과 수냉 딜러 경로 구분.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 4/4/4 → 7/7/7 → 10/10/7 (→ 10/10/10) / PvP 스킬 4/4/4 → 4/4/3 → 7/7/7 (→ 10/10/10) / 오버로드 우월 코드 4줄 · 공격력 4줄 / 남는 칸: 크리티컬 확률 / 크리티컬 피해 / 역할: 버퍼·군중 제어·디버퍼·전체 공격 / 현재 평가: 스토리SS·보스SS·PvPSS"
+          ]
         }
       ]
     },
@@ -5835,95 +6258,115 @@ window.NIKKE_GROWTH_GUIDE = {
     {
       "id": "nikke-747ede9555",
       "name": "헬름",
-      "variant": "기본",
+      "variant": "일반·애장품",
       "burst": [
         3
       ],
-      "skills": "4/4/4 → 4/7/4 → 7/9/7",
-      "overload": "선택 투자: 장탄 1~2줄\n남는 칸: 우월 코드 / 공격력",
-      "notes": [
-        "스페란도: 흡혈 방식의 힐 버퍼.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 1/1/4 → 4/4/4 → 4/4/7 (→ 7/7/7) / PvP 스킬 1/1/4 / 역할: 버퍼·힐러 / 현재 평가: 스토리B·보스B·PvPC"
+      "skills": [
+        {
+          "label": "일반",
+          "value": "4/4/4 → 4/7/4 → 7/9/7"
+        },
+        {
+          "label": "애장품",
+          "value": "7/10/7 → 7/10/10 → 10/10/10"
+        }
       ],
+      "overload": [
+        {
+          "label": "일반",
+          "value": "선택 투자: 장탄 1~2줄\n남는 칸: 우월 코드 / 공격력"
+        },
+        {
+          "label": "애장품",
+          "value": "수냉: 우월 코드4 → 공격력2 추가, 장탄 피함.\nPvP: 차지 속도4."
+        }
+      ],
+      "notes": [],
       "image": "assets/characters/1c71da12520ed1a4.png",
       "aliases": [
         "Helm",
         "헬름 ·애장품 이전",
-        "헬름(원본)"
+        "헬름(원본)",
+        "헬름 ·애장품",
+        "헬름(애장품)",
+        "애장품 헬름",
+        "Helm (Treasure)",
+        "일반 헬름",
+        "헬름 일반",
+        "기본 헬름",
+        "헬름 기본",
+        "헬름 애장품"
       ],
       "references": [
         {
-          "label": "스페란도 GAME TV 2024-11-07",
+          "label": "스페란도 GAME TV 2024-11-07 · 일반",
           "url": "https://www.youtube.com/watch?v=I-9U7RaA9sI",
           "title": "모든 니케들의 스킬작과 큐브 추천 초보자 추천 니케까지/니케 초보자 뉴비 가이드/그레이브, 신데렐라 스킬작"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 일반",
           "url": "https://www.prydwen.gg/nikke/characters/helm",
           "title": "Helm Best Build Guide | NIKKE"
-        }
-      ]
-    },
-    {
-      "id": "nikke-7712f0e75d",
-      "name": "헬름",
-      "variant": "애장품",
-      "burst": [
-        3
-      ],
-      "skills": "7/10/7 → 7/10/10 → 10/10/10",
-      "overload": "수냉: 우월 코드4 → 공격력2 추가, 장탄 피함.\nPvP: 차지 속도4.",
-      "notes": [
-        "스페란도: 버스트 수급·회복 지원",
-        "뚜레 2026-09-25 · 수냉 솔로 레이드 육성: 스킬 10/10/9 → 10/10/10 오버로드 최소우월 코드4 → 타협우코4·공격력2(6옵션). 장탄 금지. 애장품3단계·SR15. 우코4·공4·크리4 고점은 명시적으로 투자 비추천.",
-        "김붕붕 2026-09-21 · 일반: 스킬 우선순위 2스킬 > 버스트 > 1스킬 오버로드 PvE: 우월 코드4, 장탄 피함. / PvP: 차지 속도4. 2스킬 → 버스트 → 1스킬. 막탄 버프 때문에 장탄은 없는 편이 좋고,1줄은 타협 가능하나2줄 이상은 정리 권장.",
-        "뚜레 2026-08-21 · 2026-08 작열 레이드 서포터: 스킬 10/10/4 → 수냉 운용10/10/10 오버로드 기본 오버로드·소장품 적용(옵션 수 미제시). 작열 버퍼/토템과 수냉 딜러 운용을 구분.",
-        "뚜레 2026-06-08 · 중반 스테이지 가성비: 스킬 10/10/4 → 추후 버스트 추가 오버로드 초반에는 추가 장비 강화 생략. 옵션 수치 미제시. 중반 스테이지. 애장품2단계까지 파견하고 나머지 재료는 뮤지엄 파밍.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 4/4/4 → 7/7/7 → 7/10/10 (→ 10/10/10) / PvP 스킬 4/4/4 → 7/4/4 → 10/7/7 (→ 10/10/10) / 오버로드 우월 코드 4줄 · 공격력 4줄 / 남는 칸: 크리티컬 확률 / 피해 / 차지 속도 / 장탄 / 역할: 버퍼·힐러 / 현재 평가: 스토리S·보스S·PvPSSS"
-      ],
-      "image": "assets/characters/1c71da12520ed1a4.png",
-      "aliases": [
-        "Helm",
-        "헬름 ·애장품",
-        "헬름(애장품)",
-        "애장품 헬름",
-        "Helm (Treasure)"
-      ],
-      "references": [
+        },
         {
-          "label": "스페란도 GAME TV 2026-04-26",
+          "label": "스페란도 GAME TV 2026-04-26 · 애장품",
           "url": "https://www.youtube.com/watch?v=mPz3SnV13qw",
           "title": "[승리의 여신: 니케] 모든 니케 스킬작 가이드 및 큐브 추천/3.5주년 초보자 뉴비 가이드"
         },
         {
-          "label": "스페란도 GAME TV 2026-02-06",
+          "label": "스페란도 GAME TV 2026-02-06 · 애장품",
           "url": "https://www.youtube.com/watch?v=EDxNHT33rXo",
           "title": "[승리의 여신: 니케] 어떤 캐릭을 키울지 모르겠다면? 2026년 키울 니케 추천 초보자 뉴비 복귀 필독!/스킬작, 큐브, 오버 세팅 포함/니케 초보자 뉴비 가이드"
         },
         {
-          "label": "Prydwen",
+          "label": "Prydwen · 애장품",
           "url": "https://www.prydwen.gg/nikke/characters/helm-treasure",
           "title": "Helm (Treasure) Best Build Guide | NIKKE"
         },
         {
-          "label": "뚜레 2026-09-25",
+          "label": "뚜레 2026-09-25 · 애장품",
           "url": "https://www.youtube.com/watch?v=gQ4DaTis5PI",
           "title": "[니케] 수냉 육성 가이드 - 선택과 집중이 중요하다. 방무? 이번엔 그 정도 아님"
         },
         {
-          "label": "뚜레 2026-08-21",
+          "label": "뚜레 2026-08-21 · 애장품",
           "url": "https://www.youtube.com/watch?v=8HnjZFQn7F4",
           "title": "[니케] 작열 솔로레이드 준비하기 - 육성 우선순위, 스킬작, 옵션작 등"
         },
         {
-          "label": "뚜레 2026-06-08",
+          "label": "뚜레 2026-06-08 · 애장품",
           "url": "https://www.youtube.com/watch?v=2h2O_OoTFOo",
           "title": "[니케] 육성 가이드 A to Z - 뉴비부터 솔레 3%까지!"
         },
         {
-          "label": "김붕붕 2026-09-21",
+          "label": "김붕붕 2026-09-21 · 애장품",
           "url": "https://www.youtube.com/watch?v=zYrgq_iN-_Q",
           "title": "[니케] 일단 애헬름을 써봐ㅣ애장품 헬름 사용법"
+        }
+      ],
+      "sourceIds": [
+        "nikke-747ede9555",
+        "nikke-7712f0e75d"
+      ],
+      "noteGroups": [
+        {
+          "label": "일반",
+          "notes": [
+            "스페란도: 흡혈 방식의 힐 버퍼.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 1/1/4 → 4/4/4 → 4/4/7 (→ 7/7/7) / PvP 스킬 1/1/4 / 역할: 버퍼·힐러 / 현재 평가: 스토리B·보스B·PvPC"
+          ]
+        },
+        {
+          "label": "애장품",
+          "notes": [
+            "스페란도: 버스트 수급·회복 지원",
+            "뚜레 2026-09-25 · 수냉 솔로 레이드 육성: 스킬 10/10/9 → 10/10/10 오버로드 최소우월 코드4 → 타협우코4·공격력2(6옵션). 장탄 금지. 애장품3단계·SR15. 우코4·공4·크리4 고점은 명시적으로 투자 비추천.",
+            "김붕붕 2026-09-21 · 일반: 스킬 우선순위 2스킬 > 버스트 > 1스킬 오버로드 PvE: 우월 코드4, 장탄 피함. / PvP: 차지 속도4. 2스킬 → 버스트 → 1스킬. 막탄 버프 때문에 장탄은 없는 편이 좋고,1줄은 타협 가능하나2줄 이상은 정리 권장.",
+            "뚜레 2026-08-21 · 2026-08 작열 레이드 서포터: 스킬 10/10/4 → 수냉 운용10/10/10 오버로드 기본 오버로드·소장품 적용(옵션 수 미제시). 작열 버퍼/토템과 수냉 딜러 운용을 구분.",
+            "뚜레 2026-06-08 · 중반 스테이지 가성비: 스킬 10/10/4 → 추후 버스트 추가 오버로드 초반에는 추가 장비 강화 생략. 옵션 수치 미제시. 중반 스테이지. 애장품2단계까지 파견하고 나머지 재료는 뮤지엄 파밍.",
+            "Prydwen (2026.10.28 확인): PvE 스킬 4/4/4 → 7/7/7 → 7/10/10 (→ 10/10/10) / PvP 스킬 4/4/4 → 7/4/4 → 10/7/7 (→ 10/10/10) / 오버로드 우월 코드 4줄 · 공격력 4줄 / 남는 칸: 크리티컬 확률 / 피해 / 차지 속도 / 장탄 / 역할: 버퍼·힐러 / 현재 평가: 스토리S·보스S·PvPSSS"
+          ]
         }
       ]
     },
@@ -6054,51 +6497,6 @@ window.NIKKE_GROWTH_GUIDE = {
           "label": "김붕붕 2026-10-08",
           "url": "https://www.youtube.com/watch?v=F2JZmmXlVcA",
           "title": "[니케] 그렇게 됐다 벨로타야ㅣ벨로타 : 펌킨 위치 성능 테스트 결과!"
-        }
-      ]
-    },
-    {
-      "id": "nikke-da5f12fb4f",
-      "name": "센티",
-      "variant": "애장품",
-      "burst": [
-        2
-      ],
-      "skills": "10/10/1",
-      "overload": "신발을 제외한 장비 강화. 옵션 재설정 투자 비추천.",
-      "notes": [
-        "기본 표는7월 후속 PvE 가이드.5월 PvP 권장은 상향 전 기록이므로 현재 종결 권장으로 사용하지 않음.",
-        "김붕붕 2026-07-27 · 일반: 영상의10/7/7·장탄2줄은 사용한 실험 스펙이며 권장 목표로 채택하지 않음.",
-        "뚜레 2026-07-27: 철갑 조합의 후순위 고점 지원.1·2스킬 투자 필요; 일반 센티와 구분.",
-        "김진서 2026-05-23 · PVP: 스킬 4/4/4 또는 7/7/7 → 7/7/10 오버로드 차지 속도 → 방어력. 나머지는 +@, 줄 수 미제시. PVP 기준. 애장품 최소2단계,3단계 목표. 2026-05-23 영상의 조정 전/당시 권장으로 보존하고 후속 센티 스킬조정 가이드가 있음을 표시.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 4/4/4 → 7/7/4 → 10/10/4 (→ 10/10/7) / PvP 스킬 4/4/4 → 7/4/4 → 10/4/4 (→ 10/4/10) / 오버로드 차지 속도 4줄 · 장탄 2줄 / 남는 칸: 우월 코드 / 공격력 / 역할: 디버퍼·힐러·보호막 / 현재 평가: 스토리C·보스A·PvPSSS"
-      ],
-      "image": "assets/characters/dd2dc0d911e20ea4.png",
-      "aliases": [
-        "Centi",
-        "애장품 센티",
-        "Centi (Treasure)"
-      ],
-      "references": [
-        {
-          "label": "Prydwen",
-          "url": "https://www.prydwen.gg/nikke/characters/centi-treasure",
-          "title": "Centi (Treasure) Best Build Guide | NIKKE"
-        },
-        {
-          "label": "뚜레 2026-07-27",
-          "url": "https://www.youtube.com/watch?v=ZtMf92YtbYA",
-          "title": "[니케] 센티 애장품 리뷰 - 좋지만, 천천히 올리세요"
-        },
-        {
-          "label": "김진서 2026-05-23",
-          "url": "https://www.youtube.com/watch?v=Vi1tR2oc-UU",
-          "title": "PVP 애장품 니케! 센티와 베이 어떻게 써야 할까?"
-        },
-        {
-          "label": "김붕붕 2026-07-27",
-          "url": "https://www.youtube.com/watch?v=BigxAHnPKKM",
-          "title": "[니케] 아쉬운 부분이 있음ㅣ애장품 센티 성능 테스트 결과!"
         }
       ]
     },
@@ -6271,56 +6669,6 @@ window.NIKKE_GROWTH_GUIDE = {
       ]
     },
     {
-      "id": "nikke-88cadec0b1",
-      "name": "로산나",
-      "variant": "애장품",
-      "burst": [
-        1
-      ],
-      "skills": "4/4/4 → 7/9/9 → 7/10/10\n최고점: 10/10/10",
-      "overload": "우월 코드4·장탄2 권장.\n수니스·크라운 동반 시 장탄 생략·타협 가능.",
-      "notes": [
-        "뚜레 2026-10-16 · 전격 솔로 레이드 육성: 스킬 4/4/4 → 7/9/9 → 7/10/10 오버로드 최소우월 코드4 → 우코4·장탄2 + 공격력/크리티컬 피해 애장품2단계부터 짬덱 운용. 프리바티 없는 조합은 장탄 중요.1스킬 추가 투자 후순위.",
-        "김진서 2026-10-13: 스킬 7/10/10 오버로드 우월 코드 대미지 → 최대 장탄 수 → 공격력. 줄 수 미제시. 애장품 최소2단계 필수. 2스킬 스택을 빠르게 쌓는 것이 중요하며 자체 공격력 버프가 커서 공격력 옵션 효율은 낮다고 설명. 40초1버스트이므로 다른1버스트와 쿨타임 감소를 보완한다.",
-        "뚜레 2026-07-26: 스킬 권장 숫자 미확인 오버로드 수니스/크라운 동반은 장탄 저격 불필요. 수니스 재장전 버프+탄 관리 시0장탄도 가능. 두 지원을 함께 쓰지 못하는 짬덱은 별도 판단. 시험 장비 수치는 권장으로 사용하지 않음.",
-        "김붕붕 2026-07-23 · 일반: 스킬 7/10/10 → 10/10/10 오버로드 우월 코드4·장탄 우선. / 장탄 완성 줄 수는 미제시. 애장품 초기 리뷰는 장탄을 많이 확보하는 방향. 수니스·크라운 동반 예외는 후속 가이드와 함께 구분.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 4/4/4 → 4/7/7 → 7/10/10 (→ 10/10/10) / PvP 스킬 4/4/4 → 7/10/10 → 7/10/10 (→ 7/10/10) / 오버로드 우월 코드 4줄 · 장탄 2줄 / 남는 칸: 우월 코드 / 장탄 / 크리티컬 확률 / 공격력 / 역할: 디버퍼·중첩 활용 / 현재 평가: 스토리E·보스A·PvPSS"
-      ],
-      "image": "assets/characters/7037c8d6787ea4d4.png",
-      "aliases": [
-        "Rosanna",
-        "애장품 로산나",
-        "Rosanna (Treasure)"
-      ],
-      "references": [
-        {
-          "label": "Prydwen",
-          "url": "https://www.prydwen.gg/nikke/characters/rosanna-treasure",
-          "title": "Rosanna (Treasure) Best Build Guide | NIKKE"
-        },
-        {
-          "label": "뚜레 2026-10-16",
-          "url": "https://www.youtube.com/watch?v=CPsKySvAwWo",
-          "title": "[니케] 전격 육성 가이드 - 특) 전푸어임"
-        },
-        {
-          "label": "뚜레 2026-07-26",
-          "url": "https://www.youtube.com/watch?v=jKev3nnROHY",
-          "title": "[니케] 로산나 애장품 리뷰 - 이제 내가 전격덱이야"
-        },
-        {
-          "label": "김진서 2026-10-13",
-          "url": "https://www.youtube.com/watch?v=j7TLOyqYlWc",
-          "title": "로산나 어디까지 육성해야 쓸만할까? | 애장품 로산나 성능, 사용 조합, 최소 육성 가이드 정리"
-        },
-        {
-          "label": "김붕붕 2026-07-23",
-          "url": "https://www.youtube.com/watch?v=wck80TMgbXo",
-          "title": "[니케] 10시간 걸렸습니다ㅣ신규 애장품 4종 성능 테스트 결과!"
-        }
-      ]
-    },
-    {
       "id": "nikke-a1507882e6",
       "name": "신: 스위프트 바니",
       "variant": "스위프트 바니",
@@ -6404,50 +6752,6 @@ window.NIKKE_GROWTH_GUIDE = {
           "label": "Prydwen",
           "url": "https://www.prydwen.gg/nikke/characters/sora",
           "title": "Sora Best Build Guide | NIKKE"
-        }
-      ]
-    },
-    {
-      "id": "nikke-f221ad191f",
-      "name": "슈가",
-      "variant": "애장품",
-      "burst": [
-        3
-      ],
-      "skills": "7/10/10 → 10/10/10",
-      "overload": "우월 코드4·장탄 최소2.\n최고점은 장탄3 이상, 공격력·크리티컬 추가.",
-      "notes": [
-        "뚜레 2026-09-25 · 수냉 솔로 레이드 육성: 오버로드 최소·타협우월 코드4·장탄2 → 종결우코4·장탄2~3+공/크리티컬. 애장품3단계·SR15 기준. 장탄3의 배수로 조절, 아니면 수동 운용 필요.",
-        "김붕붕 2026-09-08 · 일반: 스킬 우선순위 2스킬·버스트 > 1스킬 2스킬·버스트 우선. 샷건 조합은 이미 공격력 버프가 많아 공격력 옵션만 고집하지 않음.",
-        "뚜레 2026-07-25: 스킬 1스킬 타협 가능(권장 숫자 미명시) 오버로드 우월 코드 기반 + 장탄·공격력·크리티컬. 레오나 동반 수냉은 장탄·공격력 중요. 애장품3단계와 높은 투자 전제. 우월 코드 미세 수치보다 하위 유효 옵션 확보.",
-        "Prydwen (2026.10.28 확인): PvE 스킬 4/4/4 → 4/7/7 → 7/10/10 (→ 10/10/10) / PvP 스킬 4/4/4 → 4/7/4 → 7/10/7 (→ 10/10/10) / 오버로드 우월 코드 4줄 · 공격력 4줄 · 장탄 1~2줄 / 남는 칸: 장탄 / 역할: 버퍼 / 현재 평가: 스토리C·보스S·PvPA"
-      ],
-      "image": "assets/characters/57bd3f4aca0ab261.png",
-      "aliases": [
-        "Sugar",
-        "애장품 슈가",
-        "Sugar (Treasure)"
-      ],
-      "references": [
-        {
-          "label": "Prydwen",
-          "url": "https://www.prydwen.gg/nikke/characters/sugar-treasure",
-          "title": "Sugar (Treasure) Best Build Guide | NIKKE"
-        },
-        {
-          "label": "뚜레 2026-09-25",
-          "url": "https://www.youtube.com/watch?v=gQ4DaTis5PI",
-          "title": "[니케] 수냉 육성 가이드 - 선택과 집중이 중요하다. 방무? 이번엔 그 정도 아님"
-        },
-        {
-          "label": "뚜레 2026-07-25",
-          "url": "https://www.youtube.com/watch?v=S-VGRulOWtk",
-          "title": "[니케] 슈가 애장품 리뷰 - 팀원 3명을 녹였지만, 그 정돈 아니었다"
-        },
-        {
-          "label": "김붕붕 2026-09-08",
-          "url": "https://www.youtube.com/watch?v=YUIrYENJCtU",
-          "title": "[니케] 초특급 샷건 조미료ㅣ애장품 슈가 사용법"
         }
       ]
     },
