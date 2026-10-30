@@ -3,8 +3,20 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-10-30T00:27:18.716Z",
+  "fetchedAt": "2026-10-30T06:30:54.619Z",
   "posts": [
+    {
+      "id": "40401",
+      "title": "오프라인 콘서트 가는 사람 주목",
+      "publishedAt": "2026-10-30T13:26:00.723+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40401"
+    },
+    {
+      "id": "40400",
+      "title": "커튼이 없으니까",
+      "publishedAt": "2026-10-30T13:08:39.107+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40400"
+    },
     {
       "id": "40387",
       "title": "안녀어오오오",
@@ -22,18 +34,6 @@
       "title": "귿모닝",
       "publishedAt": "2026-10-27T13:20:06.770+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40348"
-    },
-    {
-      "id": "40330",
-      "title": "대박인거",
-      "publishedAt": "2026-10-26T15:12:40.867+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40330"
-    },
-    {
-      "id": "40311",
-      "title": "기상",
-      "publishedAt": "2026-10-25T13:57:43.943+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40311"
     }
   ]
 }
