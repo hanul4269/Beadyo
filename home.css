@@ -42,6 +42,23 @@ html body.home-view .site-footer,
 body.home-view .explore-bottom { background: var(--home-control-surface); border-color: var(--home-control-line); }
 .home-root *, .home-root *::before, .home-root *::after { box-sizing: border-box; }
 .home-root .home-wrap { max-width: 1160px; margin: 0 auto; padding: 28px 28px 36px; }
+.home-root .home-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+.home-root .home-main { min-width: 0; }
+.home-root .home-photostrip { width: min(240px, 100%); justify-self: center; align-self: start; }
+.home-root .home-photostrip-open { display: block; width: 100%; padding: 0; border: 0; background: transparent; color: var(--ink); cursor: zoom-in; border-radius: 14px; }
+.home-root .home-photostrip-open img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 3; border-radius: 14px; box-shadow: 0 8px 24px rgba(24, 44, 32, .18); }
+.home-root .home-photostrip-hint { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; padding: 7px 13px; border: 1px solid var(--home-control-line); border-radius: 99px; background: var(--home-control-surface); font-size: 12px; font-weight: 700; }
+.home-root .home-photostrip-open:hover .home-photostrip-hint { background: var(--surface); }
+.home-root .home-photo-dialog { position: fixed; inset: 0; width: min(640px, calc(100% - 24px)); max-width: none; max-height: calc(100dvh - 24px); margin: auto; padding: 0; overflow: auto; overscroll-behavior: contain; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink); box-shadow: 0 20px 80px rgba(0, 0, 0, .3); }
+.home-root .home-photo-dialog::backdrop { background: rgba(12, 20, 16, .76); }
+.home-root .home-photo-toolbar { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.home-root .home-photo-toolbar h2 { font-size: 15px; }
+.home-root .home-photo-toolbar h2 span { display: block; color: var(--muted); font-size: 11px; font-weight: 500; }
+.home-root .home-photo-close { min-width: 66px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--ink); font: inherit; font-size: 13px; }
+.home-root .home-photo-dialog > img { display: block; width: 100%; height: auto; }
+@media (min-width: 1440px) {
+    .home-root .home-wrap.home-layout { max-width: 1424px; grid-template-columns: minmax(0, 1104px) 240px; gap: 24px; }
+}
 .home-root h1 { font-size: 26px; line-height: 1.35; letter-spacing: -.8px; }
 .home-root .home-intro p { font-size: 14px; color: var(--muted); margin-top: 6px; line-height: 1.6; }
 .home-root .home-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px; }
