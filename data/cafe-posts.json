@@ -3,8 +3,14 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-11-01T09:23:07.678Z",
+  "fetchedAt": "2026-11-01T16:26:27.678Z",
   "posts": [
+    {
+      "id": "40461",
+      "title": "멀미나서",
+      "publishedAt": "2026-11-01T22:16:15.090+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40461"
+    },
     {
       "id": "40422",
       "title": "부기들..",
@@ -28,12 +34,6 @@
       "title": "오프라인 콘서트 가는 사람 주목",
       "publishedAt": "2026-10-30T13:26:00.723+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40401"
-    },
-    {
-      "id": "40400",
-      "title": "커튼이 없으니까",
-      "publishedAt": "2026-10-30T13:08:39.107+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40400"
     }
   ]
 }
