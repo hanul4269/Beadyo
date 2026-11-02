@@ -12,25 +12,33 @@
         const menu = menuByIndex(Number(tab.dataset.tabIndex));
         if (menu) { tab.title = menu.description; tab.setAttribute('aria-description', menu.description); }
     });
-    document.getElementById('explore-more-items').innerHTML = D.menus.filter(menu => !menu.hidden).map(menu =>
-        `<button type="button" class="explore-menu-item" data-explore-tab="${menu.index}"><strong>${menu.label}</strong><span>${esc(menu.description)}</span></button>`).join('');
+    const menuButton = menu => `<button type="button" class="explore-menu-item" data-explore-tab="${menu.index}"><strong>${esc(menu.label)}</strong><span>${esc(menu.description)}</span></button>`;
+    document.getElementById('explore-more-items').innerHTML = D.menus.filter(menu => !menu.hidden && menu.parentIndex === undefined).map(menu => {
+        const children = D.menus.filter(child => !child.hidden && child.parentIndex === menu.index);
+        return children.length
+            ? `<div class="explore-menu-group" role="group" aria-label="${esc(menu.label)} 하위 메뉴">${menuButton(menu)}<div class="explore-menu-children">${children.map(menuButton).join('')}</div></div>`
+            : menuButton(menu);
+    }).join('');
     function update(index) {
         const menu = menuByIndex(index);
         if (!menu) return;
+        const parentIndex = menu.parentIndex ?? index;
         document.querySelectorAll('[data-explore-tab]').forEach(button => {
-            const active = Number(button.dataset.exploreTab) === index;
+            const activeIndex = button.closest('.explore-bottom') ? parentIndex : index;
+            const active = Number(button.dataset.exploreTab) === activeIndex;
             button.classList.toggle('active', active);
             if (active) button.setAttribute('aria-current', 'page');
             else button.removeAttribute('aria-current');
         });
         const moreButton = document.getElementById('explore-more-toggle');
-        const isMore = !primary.includes(index);
+        const isMore = !primary.includes(parentIndex);
         moreButton.classList.toggle('active', isMore);
         if (isMore) moreButton.setAttribute('aria-current', 'page');
         else moreButton.removeAttribute('aria-current');
     }
     window.addEventListener('beadyo-tab-change', event => update(event.detail.index));
-    update(Number(document.querySelector('.tab.active')?.dataset.tabIndex || 0));
+    const activeFrame = document.querySelector('.sheet-frame.active');
+    update(activeFrame ? Number(activeFrame.id.replace('frame-', '')) : Number(document.querySelector('.tab.active')?.dataset.tabIndex || 0));
     function showDialog(dialog) { if (!dialog.open) dialog.showModal(); }
     document.addEventListener('click', event => {
         const button = event.target.closest('button');

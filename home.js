@@ -11,6 +11,7 @@
     let loadedDay = '';
     let pending = 0;
     let lastLoad = 0;
+    let photoOpener = null;
     const scheduleColumns = 'id,date,end_date,start_time,title,type,subtitle,collab,is_rest';
     const typeNames = { chat: '소통', song: '노래', solo: '슬요 컨텐츠', collab: '참여 컨텐츠', watch: '같이 보기', game: '게임', ad: '광고', rest: '휴방', cover: '커버곡', relay: '중계', pre: '방송 전', general: '기타' };
     const esc = C.esc;
@@ -37,9 +38,21 @@
     function liveMedia() {
         return `<div data-home-live-media><a class="home-live-thumbnail" data-home-live-thumbnail href="${SOOP}" target="_blank" rel="noopener noreferrer" hidden><img data-home-broadcast-image alt="현재 구슬요 SOOP 방송 썸네일" width="640" height="360" decoding="async"></a>${motionImage('wave', '손을 흔드는 구슬요', 480, 480)}</div>`;
     }
+    function photoStrip() {
+        return `<aside class="home-photostrip" aria-label="슬요네컷">
+            <button type="button" class="home-photostrip-open" data-home-photo-open aria-label="슬요네컷 사진 크게 보기" aria-haspopup="dialog" aria-controls="home-photo-dialog">
+                <img src="assets/home/photostrip-20261026.jpg" alt="네 가지 표정의 구슬요가 담긴 홀로그램 네컷 사진, 2026년 10월 26일" width="600" height="1800" decoding="async">
+                <span class="home-photostrip-hint">크게 보기 <span aria-hidden="true">↗</span></span>
+            </button>
+        </aside>
+        <dialog class="home-photo-dialog" id="home-photo-dialog" aria-labelledby="home-photo-title">
+            <div class="home-photo-toolbar"><h2 id="home-photo-title">슬요네컷 <span>2026.10.26</span></h2><button type="button" class="home-photo-close" data-home-photo-close autofocus aria-label="사진 닫기">닫기 <span aria-hidden="true">×</span></button></div>
+            <img data-home-photo-full alt="구슬요 슬요네컷 전체 사진" width="1448" height="4344" decoding="async">
+        </dialog>`;
+    }
     function shell() {
         const card = (id, title, link, wide = '') => `<article class="home-card ${wide}" data-home-card="${id}" aria-labelledby="home-title-${id}"><div class="home-card-head"><h2 id="home-title-${id}">${title}</h2>${link}</div><div id="home-${id}" aria-live="polite"></div>${id === 'live' ? liveMedia() : ''}</article>`;
-        root.innerHTML = `<div class="home-wrap"><header class="home-hero"><img class="home-banner" src="assets/home/banner.webp?v=banner-20261028" alt="구슬요 beadyo 캐릭터 배너" width="1600" height="233" fetchpriority="high" draggable="false"><div class="home-intro"><div class="home-intro-copy"><h1>오늘도 구슬요와 함께</h1><p id="home-today"></p><button class="home-action home-primary home-guide-link" type="button" data-start-here><span>뉴북이 입문가이드</span></button></div><section class="home-soop-notice" aria-labelledby="home-soop-title"><div class="home-soop-head"><h2 id="home-soop-title">SOOP 공지사항</h2>${external(window.BeadyoHomeSoop.boardUrl, '전체 보기')}</div><div id="home-soop" aria-live="polite"></div></section></div></header><div class="home-grid">
+        root.innerHTML = `<div class="home-wrap home-layout"><div class="home-main"><header class="home-hero"><img class="home-banner" src="assets/home/banner.webp?v=banner-20261028" alt="구슬요 beadyo 캐릭터 배너" width="1600" height="233" fetchpriority="high" draggable="false"><div class="home-intro"><div class="home-intro-copy"><h1>오늘도 구슬요와 함께</h1><p id="home-today"></p><button class="home-action home-primary home-guide-link" type="button" data-start-here><span>뉴북이 입문가이드</span></button></div><section class="home-soop-notice" aria-labelledby="home-soop-title"><div class="home-soop-head"><h2 id="home-soop-title">SOOP 공지사항</h2>${external(window.BeadyoHomeSoop.boardUrl, '전체 보기')}</div><div id="home-soop" aria-live="polite"></div></section></div></header><div class="home-grid">
             ${card('live', '지금 방송은?', '', '')}
             ${card('schedule', '오늘과 다음 일정', tabLink('calendar', 'CALENDAR →'), 'home-wide')}
             ${card('news', '최신 소식', tabLink('music', 'MUSIC →'), 'home-news-wide')}
@@ -47,7 +60,7 @@
             ${card('cafe', '슬요 똥글', `<div class="home-cafe-actions"><button class="home-action home-cafe-refresh" id="home-cafe-refresh" type="button" data-home-refresh="cafe" aria-label="슬요 똥글 새로고침" title="최근 목록 새로고침">새로고침</button>${external(window.BeadyoHomeCafe?.boardUrl || 'https://cafe.naver.com/f-e/cafes/31098081/menus/21?viewType=L', '전체 보기')}</div>`)}
             ${card('monthly', '이번 달 돌아보기', '', 'home-wide')}
             ${card('events', '주요 이벤트', tabLink('calendar', '전체 일정 →'))}
-        </div></div>`;
+        </div></div>${photoStrip()}</div>`;
     }
     function stateHtml(key, empty) {
         const state = sources[key];
@@ -236,6 +249,11 @@
             };
             root.addEventListener('contextmenu', preventBannerSave);
             root.addEventListener('dragstart', preventBannerSave);
+            root.addEventListener('close', event => {
+                if (event.target.id !== 'home-photo-dialog') return;
+                if (root.classList.contains('active')) photoOpener?.focus({ preventScroll: true });
+                photoOpener = null;
+            }, true);
             root.addEventListener('error', event => {
                 const image = event.target;
                 if (image.matches?.('[data-home-soop-profile]')) { image.hidden = true; return; }
@@ -246,9 +264,23 @@
                 message.textContent = '이미지를 불러올 수 없습니다';
             }, true);
             root.addEventListener('click', event => {
+                if (event.target.id === 'home-photo-dialog') {
+                    const box = event.target.getBoundingClientRect();
+                    if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) event.target.close();
+                    return;
+                }
                 const target = event.target.closest('a,button');
                 if (!target) return;
-                if (target.dataset.homeDate && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
+                if (target.hasAttribute('data-home-photo-open')) {
+                    const dialog = document.getElementById('home-photo-dialog');
+                    const image = dialog.querySelector('[data-home-photo-full]');
+                    if (!image.getAttribute('src')) image.src = 'assets/home/photostrip-20261026-full.jpg';
+                    photoOpener = target;
+                    dialog.showModal();
+                    dialog.scrollTop = 0;
+                } else if (target.hasAttribute('data-home-photo-close')) {
+                    document.getElementById('home-photo-dialog').close();
+                } else if (target.dataset.homeDate && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
                     event.preventDefault();
                     openCalendarDate(target.dataset.homeDate);
                 } else if (target.dataset.homeRoute && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
@@ -265,6 +297,11 @@
         else if (sources.live?.status !== 'loading') void load('live');
     }
     window.BeadyoHome = Object.freeze({ activate });
+    window.addEventListener('beadyo-tab-change', event => {
+        if (event.detail.index === 7) return;
+        const dialog = document.getElementById('home-photo-dialog');
+        if (dialog?.open) dialog.close();
+    });
     setInterval(() => {
         if (!root.classList.contains('active') || document.hidden) return;
         if (loadedDay !== D.dayKey() || Date.now() - lastLoad >= 120000) refresh();

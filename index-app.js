@@ -95,7 +95,7 @@ function applyTheme(theme, options = {}) {
 
 function syncThemeToFrames(targetFrame = null) {
     const msg = { type: 'beadyo-theme-sync', theme: currentTheme };
-    const ids = ['frame-0', 'frame-2', 'frame-3', 'frame-4', 'frame-5', 'frame-6', 'guide-frame'];
+    const ids = ['frame-0', 'frame-2', 'frame-3', 'frame-4', 'frame-5', 'frame-6', 'frame-8', 'guide-frame'];
     const frames = targetFrame
         ? (ids.includes(targetFrame.id) ? [targetFrame] : [])
         : ids.map(id => document.getElementById(id));
@@ -184,12 +184,14 @@ const TABS = [
     { type: 'content', src: 'content.html', directUrl: 'content.html', assetVersion: 'security-20261025' },
     { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'security-20261022' },
     { type: 'home' },
+    { type: 'game-log', src: 'game-log.html', directUrl: 'game-log.html', assetVersion: '20261028' },
 ];
 
 const CONTENT_TAB_INDEX = 5;
+const GAME_LOG_TAB_INDEX = 8;
 const GAME_TAB_INDEX = 6;
 const HOME_TAB_INDEX = 7;
-const TAB_ROUTES = ['calendar', 'schedule', 'songbook', 'live', 'music', 'content', 'games', 'home'];
+const TAB_ROUTES = ['calendar', 'schedule', 'songbook', 'live', 'music', 'content', 'games', 'home', 'game-log'];
 const MUSIC_TAB_INDEX = 4;
 const MUSIC_PAGES = {
     songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'security-20261025' },
@@ -409,7 +411,7 @@ function getFrameUrl(index) {
         });
         return withFrameAssetVersion(child.pathname + child.search, tab.assetVersion);
     }
-    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'content' || tab.type === 'games') {
+    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'content' || tab.type === 'games' || tab.type === 'game-log') {
         return withFrameAssetVersion(tab.src, tab.assetVersion);
     }
     if (tab.type === 'schedule') return scheduleUrl(tab);
@@ -422,7 +424,7 @@ function getSheetDirectUrl(index) {
         return (MUSIC_PAGES[currentMusicPage] || MUSIC_PAGES.songs).directUrl;
     }
     const tab = TABS[index];
-    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'content' || tab.type === 'games') return tab.directUrl;
+    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'content' || tab.type === 'games' || tab.type === 'game-log') return tab.directUrl;
     if (tab.type === 'schedule') return scheduleUrl(tab);
     return `https://docs.google.com/spreadsheets/d/${tab.id}/edit#gid=${tab.gid}`;
 }
@@ -534,7 +536,7 @@ function updateMobileFab(index) {
     if (!isMobile) return;
     if (index === HOME_TAB_INDEX) { fab.classList.remove('show'); return; }
     const type = TABS[index]?.type;
-    if (type === 'calendar' || type === 'songs' || type === 'songbook' || type === 'content' || type === 'games') {
+    if (type === 'calendar' || type === 'songs' || type === 'songbook' || type === 'content' || type === 'games' || type === 'game-log') {
         fab.classList.remove('show');
         return;
     }
@@ -579,6 +581,18 @@ function updateMusicSubnav(activeIndex) {
     nav.classList.toggle('open', activeIndex === MUSIC_TAB_INDEX);
     nav.querySelectorAll('.subtab').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.musicPage === currentMusicPage);
+    });
+}
+
+function updateContentSubnav(activeIndex) {
+    const nav = document.getElementById('content-subnav');
+    if (!nav) return;
+    nav.classList.toggle('open', activeIndex === CONTENT_TAB_INDEX || activeIndex === GAME_LOG_TAB_INDEX);
+    nav.querySelectorAll('[data-content-tab]').forEach(button => {
+        const active = Number(button.dataset.contentTab) === activeIndex;
+        button.classList.toggle('active', active);
+        if (active) button.setAttribute('aria-current', 'page');
+        else button.removeAttribute('aria-current');
     });
 }
 
@@ -1121,7 +1135,8 @@ function switchTab(index, options = {}) {
     document.body.classList.toggle('home-view', index === HOME_TAB_INDEX);
     document.querySelector('.content').classList.toggle('external-sheet-view', index === 1);
     document.querySelectorAll('.tab').forEach((t, i) => {
-        const active = Number(t.dataset.tabIndex ?? i) === index;
+        const tabIndex = Number(t.dataset.tabIndex ?? i);
+        const active = tabIndex === index || (tabIndex === CONTENT_TAB_INDEX && index === GAME_LOG_TAB_INDEX);
         t.classList.toggle('active', active);
         if (active) t.setAttribute('aria-current', 'page');
         else t.removeAttribute('aria-current');
@@ -1133,6 +1148,7 @@ function switchTab(index, options = {}) {
     if (home) home.hidden = index !== HOME_TAB_INDEX;
     document.querySelectorAll('.sheet-frame').forEach((f, i) => f.classList.toggle('active', i === index));
     updateMusicSubnav(index);
+    updateContentSubnav(index);
 
     updateMobileFab(index);
     window.dispatchEvent(new CustomEvent('beadyo-tab-change', { detail: { index } }));

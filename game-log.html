@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko" data-page="game-log">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="구슬요가 플레이한 게임과 날짜를 모아 보는 게임 기록장">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+    <meta name="theme-color" content="#76ad39">
+    <title>플레이한 게임 — BEADYO</title>
+    <link rel="icon" href="logo-icon.webp">
+    <script src="site-backdrop.js?v=release-20261011-all"></script>
+    <link rel="stylesheet" href="game-log.css?v=reaudit-20261031">
+    <script defer src="game-log.js?v=full-audit-20261101"></script>
+</head>
+<body>
+    <a class="skip-link" href="#games">게임 목록으로 건너뛰기</a>
+    <header class="standalone-nav" id="standalone-nav">
+        <a class="brand" href="./#home"><img src="logo-icon.webp" width="28" height="28" alt="">BEADYO</a>
+        <a class="home-link" href="./#home">홈으로 <span aria-hidden="true">↗</span></a>
+    </header>
+    <main class="page">
+        <header class="page-heading">
+            <div>
+                <p class="eyebrow">BEADYO GAME LOG</p>
+                <h1>플레이한 게임<span class="heading-dot" aria-hidden="true">.</span></h1>
+                <p class="lead">구슬요가 만난 게임들, 날짜별로 차곡차곡.</p>
+            </div>
+            <div class="heading-symbol" aria-hidden="true">
+                <svg viewBox="0 0 80 80"><path d="M25 26h30c7 0 10 7 12 16l3 12c2 10-6 14-12 7L48 51H32L22 61c-6 7-14 3-12-7l3-12c2-9 5-16 12-16Z"/><path d="M25 34v13M19 40.5h12M51 36h.1M59 44h.1"/><path class="wire" d="M40 26V15c0-5 8-3 8-9"/></svg>
+            </div>
+        </header>
+
+        <div class="archive-summary" id="archive-summary" aria-live="polite"><span>기록을 불러오고 있어요.</span></div>
+
+        <section class="toolbar" aria-label="게임 검색과 필터">
+            <label class="search-field">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="7.3"/><path d="m16.2 16.2 4.4 4.4"/></svg>
+                <span class="sr-only">게임 이름 검색</span>
+                <input id="game-search" type="search" placeholder="어떤 게임을 찾고 있나요?" autocomplete="off" maxlength="100">
+            </label>
+            <label class="select-field"><span class="sr-only">플레이 연도</span><select id="year-filter"><option value="">전체 연도</option></select></label>
+            <label class="select-field"><span class="sr-only">정렬</span><select id="sort-filter"><option value="recent">최근 기록순</option><option value="name">이름순</option><option value="oldest">오래된 기록순</option></select></label>
+        </section>
+
+        <div class="list-heading">
+            <div class="record-tabs" role="group" aria-label="날짜 등록 여부">
+                <button type="button" data-status="all" aria-pressed="true">전체 게임</button>
+                <button type="button" data-status="dated" aria-pressed="false">날짜 있는 게임</button>
+                <button type="button" data-status="undated" aria-pressed="false">날짜 미확인</button>
+            </div>
+            <div class="list-controls">
+                <span id="result-count" class="result-count" role="status"></span>
+                <div class="view-toggle" role="group" aria-label="게임 목록 보기 방식">
+                    <button type="button" data-view="grid" aria-label="카드로 보기" aria-pressed="true" title="카드로 보기">
+                        <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="12" y="3" width="5" height="5" rx="1"/><rect x="3" y="12" width="5" height="5" rx="1"/><rect x="12" y="12" width="5" height="5" rx="1"/></svg><span>카드</span>
+                    </button>
+                    <button type="button" data-view="list" aria-label="리스트로 보기" aria-pressed="false" title="리스트로 보기">
+                        <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="3" height="3" rx=".6"/><rect x="3" y="8.5" width="3" height="3" rx=".6"/><rect x="3" y="14" width="3" height="3" rx=".6"/><path d="M9 4.5h8M9 10h8M9 15.5h8"/></svg><span>리스트</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <section id="games" class="game-grid" aria-label="플레이한 게임 목록" aria-busy="true"></section>
+        <div id="empty-state" class="empty-state" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="7.3"/><path d="m16.2 16.2 4.4 4.4"/></svg>
+            <h2>찾는 게임이 없어요</h2>
+            <p>다른 이름으로 검색하거나 필터를 바꿔보세요.</p>
+            <button id="reset-filters" type="button">전체 게임 보기</button>
+        </div>
+        <div id="load-error" class="empty-state" hidden><h2>기록을 불러오지 못했어요</h2><p>잠시 후 다시 시도해 주세요.</p><button id="retry-load" type="button">다시 불러오기</button></div>
+
+        <footer class="archive-footer">
+            <p><span class="source-dot" aria-hidden="true"></span>방송 영상·캘린더·나무위키에 남아 있는 기록을 모았어요. 날짜가 없는 게임은 확인되는 대로 채워갑니다.</p>
+            <details><summary>기록과 이미지 출처</summary><div id="source-info"><p>게임 이미지는 공식 스토어·제작사 자료를 사용하며, 권리는 각 권리자에게 있습니다.</p></div></details>
+            <span class="footer-brand">BEADYO · GAME LOG</span>
+        </footer>
+    </main>
+
+    <dialog id="game-dialog" class="game-dialog" aria-labelledby="detail-title">
+        <div class="detail-top"><p>GAME RECORD</p><button type="button" id="close-detail" aria-label="게임 상세 닫기">×</button></div>
+        <div id="detail-body"></div>
+    </dialog>
+</body>
+</html>

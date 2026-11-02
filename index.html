@@ -47,12 +47,12 @@
     <script defer src="supabase.min.js?v=supabase-2-118-0"></script>
     <script defer src="beadyo-common.js?v=release-20261011-all"></script>
     <script defer src="patch-notes.js?v=common-20260918"></script>
-    <link rel="stylesheet" href="explore.css?v=profile-balance-20261028">
-    <script defer src="explore-data.js?v=release-20261011-all"></script>
+    <link rel="stylesheet" href="explore.css?v=content-game-log-20261031">
+    <script defer src="explore-data.js?v=content-game-log-20261031"></script>
     <script defer src="explore.js?v=release-20261011-all"></script>
-    <script defer src="index-app.js?v=security-20261025"></script>
-    <script defer src="explore-shell.js?v=profile-20261028"></script>
-    <link rel="stylesheet" href="home.css?v=banner-20261028">
+    <script defer src="index-app.js?v=content-game-log-20261031"></script>
+    <script defer src="explore-shell.js?v=content-game-log-20261031"></script>
+    <link rel="stylesheet" href="home.css?v=photostrip-centered-20261102">
     <script defer src="home-data.js?v=release-20261011-all"></script>
     <script defer src="home-visual.js?v=release-20261011-all"></script>
     <script defer src="home-soop.js?v=release-20261011-all"></script>
@@ -60,7 +60,7 @@
     <script defer src="monthly-data.js?v=release-20261011-all"></script>
     <script defer src="monthly.js?v=release-20261011-all"></script>
     <script defer src="video-metadata.js?v=release-20261011-all"></script>
-    <script defer src="home.js?v=banner-20261028"></script>
+    <script defer src="home.js?v=photostrip-20261101"></script>
     <link rel="stylesheet" href="page-footer.css?v=release-20261011-all">
     <script defer src="page-footer.js?v=release-20261011-all"></script>
     <script>
@@ -1992,6 +1992,10 @@
         <button class="subtab" data-music-page="gembox" onclick="switchMusicPage('gembox')">보석함</button>
         <button class="subtab" data-music-page="tractor" onclick="switchMusicPage('tractor')">트랙터서비스</button>
     </div>
+    <nav class="tab-subnav" id="content-subnav" aria-label="CONTENT 하위 메뉴">
+        <button type="button" class="subtab" data-content-tab="5" onclick="switchTab(5)">기획 콘텐츠</button>
+        <button type="button" class="subtab" data-content-tab="8" onclick="switchTab(8)">플레이한 게임</button>
+    </nav>
     </div>
 
     <dialog class="explore-dialog" id="explore-more" aria-labelledby="explore-more-title">
@@ -2174,6 +2178,7 @@
             <iframe class="sheet-frame local-frame-host" id="frame-5" title="콘텐츠 아카이브" loading="lazy"></iframe>
             <iframe class="sheet-frame local-frame-host" id="frame-6" title="게임" loading="lazy" allow="fullscreen" allowfullscreen></iframe>
             <section class="sheet-frame home-root" id="frame-7" aria-label="HOME" hidden></section>
+            <iframe class="sheet-frame local-frame-host" id="frame-8" title="플레이한 게임" loading="lazy"></iframe>
         </div>
     </div>
 

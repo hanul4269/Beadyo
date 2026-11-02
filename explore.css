@@ -20,6 +20,9 @@
 .explore-menu-item { display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 4px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); font: inherit; cursor: pointer; }
 .explore-menu-item span { font-size: 12px; line-height: 1.6; color: var(--muted); }
 .explore-menu-item.active { border-color: var(--accent-dark); background: var(--accent-light); }
+.explore-menu-group { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.explore-menu-group > .explore-menu-item { flex: 1; }
+.explore-menu-children { display: grid; gap: 6px; margin-left: 14px; padding-left: 10px; border-left: 2px solid var(--line); }
 .explore-more-footer { padding: 0 18px 18px; }
 .explore-kicker { font-size: 11px; font-weight: 700; color: var(--accent-dark); letter-spacing: 1px; }
 .start-profile h2 { font-size: 24px; margin: 6px 0 10px; }

@@ -1,0 +1,3800 @@
+{
+  "gamesBefore": 189,
+  "gamesAfter": 310,
+  "newGameIds": [
+    "a-dance-of-fire-and-ice",
+    "a-game-about-digging-a-hole",
+    "a-little-to-the-left",
+    "a-night-duty",
+    "agrou",
+    "all-about-chopsticks",
+    "assetto-corsa",
+    "baby-steps",
+    "backseat-drivers",
+    "beadyo-christmas-watermelon",
+    "bits-and-bops",
+    "bogos-binted",
+    "buckshot-roulette",
+    "catch-mind",
+    "chopchop",
+    "cloverpit",
+    "comic-book-store-simulator",
+    "content-warning",
+    "cooking-simulator",
+    "count-the-fingers",
+    "death-note-killer-within",
+    "dont-pee",
+    "dont-scream",
+    "dont-scream-together",
+    "escape-simulator",
+    "everybody-1-2-switch",
+    "fc-24",
+    "fc-25",
+    "feather-party",
+    "fingerdance",
+    "fling-to-the-finish",
+    "forbidden-art",
+    "gartic-phone",
+    "getting-over-goombas",
+    "getting-over-it",
+    "golf-with-your-friends",
+    "gone-fishing",
+    "grand-theft-auto-v",
+    "green-hell",
+    "headbangers-rhythm-royale",
+    "heartopia",
+    "heavy-spoilers-rpg",
+    "holy-crap-in-law-survival",
+    "house-flipper",
+    "how-much-quiz",
+    "igedol-game",
+    "incantation",
+    "it-takes-two",
+    "lapidary-jewel-craft-simulator",
+    "liars-bar",
+    "lively-chair-simulator",
+    "lockdown-protocol",
+    "mage-arena",
+    "magical-mic-duel",
+    "marbles-on-stream",
+    "mario-party-superstars",
+    "mimesis",
+    "mini-motorways",
+    "motesolo",
+    "my-voice-zoo",
+    "national-quiz-of-common-sense",
+    "netmarble-sachunsung",
+    "netmarble-spot-the-difference",
+    "night-security",
+    "night-shippers",
+    "nintendo-switch-sports",
+    "no-case-should-remain-unsolved",
+    "oh-deer",
+    "omelet-you-cook",
+    "onigiri-shop-simulator",
+    "outlast",
+    "outlast-2",
+    "overwatch",
+    "patapon-1-2-replay",
+    "pavlov-vr",
+    "pojangmacha",
+    "pokemon-pokopia",
+    "poppy-playtime-chapter-3",
+    "powerwash-simulator",
+    "powerwash-simulator-2",
+    "pratfall",
+    "prisoners",
+    "q-remastered",
+    "red-or-blue",
+    "revenge-of-the-colon",
+    "rush-only-up-multiplayer",
+    "salted",
+    "scam-line",
+    "school-labyrinth",
+    "shadow-corridor",
+    "side-effects",
+    "silent-breath",
+    "slither-io",
+    "slow-and-steady",
+    "soop-stock",
+    "sooper-shot",
+    "sputnika-game",
+    "strawberry-game-multiplayer",
+    "summers-heartbeat",
+    "tavern-keeper",
+    "tcg-card-shop-simulator",
+    "teamfight-tactics",
+    "tekken-8",
+    "thats-not-my-neighbor",
+    "the-binding-of-isaac-rebirth",
+    "the-kidnap",
+    "the-spike-cross",
+    "the-stubborn-of-wakgood",
+    "toreba",
+    "ultimate-chicken-horse",
+    "unpacking",
+    "until-dawn",
+    "vampire-crawlers",
+    "watermelon-broken-head",
+    "welcome-to-kowloon",
+    "whos-next",
+    "windrose",
+    "wjmax",
+    "wwme-lemon-game",
+    "yakiniku-simulator",
+    "yapyap"
+  ],
+  "dateRecordsBefore": 293,
+  "dateRecordsAfter": 1143,
+  "addedGameDates": [
+    {
+      "gameId": "60-seconds",
+      "date": "2025-04-20"
+    },
+    {
+      "gameId": "60-seconds",
+      "date": "2025-04-25"
+    },
+    {
+      "gameId": "7-days-to-die",
+      "date": "2025-08-11"
+    },
+    {
+      "gameId": "7-days-to-die",
+      "date": "2025-08-12"
+    },
+    {
+      "gameId": "7-days-to-die",
+      "date": "2025-08-13"
+    },
+    {
+      "gameId": "a-dance-of-fire-and-ice",
+      "date": "2023-11-09"
+    },
+    {
+      "gameId": "a-dance-of-fire-and-ice",
+      "date": "2023-11-10"
+    },
+    {
+      "gameId": "a-game-about-digging-a-hole",
+      "date": "2025-02-28"
+    },
+    {
+      "gameId": "a-little-to-the-left",
+      "date": "2024-09-29"
+    },
+    {
+      "gameId": "a-night-duty",
+      "date": "2024-12-06"
+    },
+    {
+      "gameId": "agrou",
+      "date": "2023-06-08"
+    },
+    {
+      "gameId": "agrou",
+      "date": "2023-06-09"
+    },
+    {
+      "gameId": "all-about-chopsticks",
+      "date": "2025-06-07"
+    },
+    {
+      "gameId": "among-us-3d",
+      "date": "2025-06-15"
+    },
+    {
+      "gameId": "apple-game-plus",
+      "date": "2026-04-16"
+    },
+    {
+      "gameId": "arma-3",
+      "date": "2024-03-16"
+    },
+    {
+      "gameId": "arma-3",
+      "date": "2024-03-17"
+    },
+    {
+      "gameId": "arma-3",
+      "date": "2024-03-27"
+    },
+    {
+      "gameId": "arma-3",
+      "date": "2024-03-28"
+    },
+    {
+      "gameId": "arma-3",
+      "date": "2024-03-29"
+    },
+    {
+      "gameId": "arma-3",
+      "date": "2025-10-26"
+    },
+    {
+      "gameId": "assetto-corsa",
+      "date": "2024-05-10"
+    },
+    {
+      "gameId": "baby-steps",
+      "date": "2025-09-27"
+    },
+    {
+      "gameId": "backseat-drivers",
+      "date": "2026-01-01"
+    },
+    {
+      "gameId": "beadyo-christmas-watermelon",
+      "date": "2023-12-25"
+    },
+    {
+      "gameId": "big-brain-academy-brain-vs-brain",
+      "date": "2025-02-08"
+    },
+    {
+      "gameId": "bits-and-bops",
+      "date": "2025-12-14"
+    },
+    {
+      "gameId": "bits-and-bops",
+      "date": "2025-12-15"
+    },
+    {
+      "gameId": "bogos-binted",
+      "date": "2025-08-23"
+    },
+    {
+      "gameId": "brotato",
+      "date": "2025-05-10"
+    },
+    {
+      "gameId": "brotato",
+      "date": "2025-05-11"
+    },
+    {
+      "gameId": "buckshot-roulette",
+      "date": "2024-04-18"
+    },
+    {
+      "gameId": "buckshot-roulette",
+      "date": "2024-12-01"
+    },
+    {
+      "gameId": "buried-stars",
+      "date": "2025-03-22"
+    },
+    {
+      "gameId": "cairn",
+      "date": "2026-01-31"
+    },
+    {
+      "gameId": "carry-the-glass",
+      "date": "2025-05-01"
+    },
+    {
+      "gameId": "catch-mind",
+      "date": "2025-08-04"
+    },
+    {
+      "gameId": "chopchop",
+      "date": "2025-04-16"
+    },
+    {
+      "gameId": "cloverpit",
+      "date": "2025-05-12"
+    },
+    {
+      "gameId": "cloverpit",
+      "date": "2025-09-30"
+    },
+    {
+      "gameId": "cloverpit",
+      "date": "2025-10-01"
+    },
+    {
+      "gameId": "clubhouse-games-51-worldwide-classics",
+      "date": "2024-12-08"
+    },
+    {
+      "gameId": "clubhouse-games-51-worldwide-classics",
+      "date": "2025-10-07"
+    },
+    {
+      "gameId": "comic-book-store-simulator",
+      "date": "2026-03-09"
+    },
+    {
+      "gameId": "content-warning",
+      "date": "2024-04-08"
+    },
+    {
+      "gameId": "cooking-simulator",
+      "date": "2024-11-24"
+    },
+    {
+      "gameId": "count-the-fingers",
+      "date": "2026-01-12"
+    },
+    {
+      "gameId": "crab-game",
+      "date": "2024-01-29"
+    },
+    {
+      "gameId": "death-note-killer-within",
+      "date": "2024-11-18"
+    },
+    {
+      "gameId": "detroit-become-human",
+      "date": "2025-01-05"
+    },
+    {
+      "gameId": "detroit-become-human",
+      "date": "2025-01-06"
+    },
+    {
+      "gameId": "detroit-become-human",
+      "date": "2025-01-07"
+    },
+    {
+      "gameId": "dont-pee",
+      "date": "2025-05-12"
+    },
+    {
+      "gameId": "dont-scream",
+      "date": "2023-11-03"
+    },
+    {
+      "gameId": "dont-scream-together",
+      "date": "2026-01-10"
+    },
+    {
+      "gameId": "dont-scream-together",
+      "date": "2026-01-11"
+    },
+    {
+      "gameId": "dooms-hair-salon",
+      "date": "2025-04-16"
+    },
+    {
+      "gameId": "dooms-hair-salon",
+      "date": "2025-04-17"
+    },
+    {
+      "gameId": "drainsim",
+      "date": "2026-04-20"
+    },
+    {
+      "gameId": "drainsim",
+      "date": "2026-04-21"
+    },
+    {
+      "gameId": "drainsim",
+      "date": "2026-04-27"
+    },
+    {
+      "gameId": "drainsim",
+      "date": "2026-04-28"
+    },
+    {
+      "gameId": "escape-from-duckov",
+      "date": "2025-10-29"
+    },
+    {
+      "gameId": "escape-from-duckov",
+      "date": "2025-10-30"
+    },
+    {
+      "gameId": "escape-from-duckov",
+      "date": "2025-11-08"
+    },
+    {
+      "gameId": "escape-from-duckov",
+      "date": "2025-11-10"
+    },
+    {
+      "gameId": "escape-simulator",
+      "date": "2023-06-09"
+    },
+    {
+      "gameId": "euro-truck-simulator-2",
+      "date": "2024-05-27"
+    },
+    {
+      "gameId": "euro-truck-simulator-2",
+      "date": "2025-01-28"
+    },
+    {
+      "gameId": "euro-truck-simulator-2",
+      "date": "2025-10-03"
+    },
+    {
+      "gameId": "everybody-1-2-switch",
+      "date": "2024-02-09"
+    },
+    {
+      "gameId": "everybody-1-2-switch",
+      "date": "2024-12-03"
+    },
+    {
+      "gameId": "everybody-1-2-switch",
+      "date": "2025-10-07"
+    },
+    {
+      "gameId": "fantasy-life-i",
+      "date": "2025-09-08"
+    },
+    {
+      "gameId": "fc-24",
+      "date": "2024-07-23"
+    },
+    {
+      "gameId": "fc-24",
+      "date": "2024-08-25"
+    },
+    {
+      "gameId": "fc-24",
+      "date": "2024-08-31"
+    },
+    {
+      "gameId": "fc-24",
+      "date": "2024-09-01"
+    },
+    {
+      "gameId": "fc-24",
+      "date": "2024-09-16"
+    },
+    {
+      "gameId": "fc-25",
+      "date": "2024-09-21"
+    },
+    {
+      "gameId": "fc-25",
+      "date": "2024-09-22"
+    },
+    {
+      "gameId": "feather-party",
+      "date": "2024-10-13"
+    },
+    {
+      "gameId": "feather-party",
+      "date": "2025-11-29"
+    },
+    {
+      "gameId": "fingerdance",
+      "date": "2025-09-02"
+    },
+    {
+      "gameId": "fling-to-the-finish",
+      "date": "2023-05-13"
+    },
+    {
+      "gameId": "fling-to-the-finish",
+      "date": "2023-05-14"
+    },
+    {
+      "gameId": "forbidden-art",
+      "date": "2024-04-19"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-02-01"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-02-02"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-02-04"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-02-08"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-02-09"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-02-10"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-02-11"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-03-16"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-04-01"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-05-20"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-07-04"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-07-05"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-08-03"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-08-10"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-10-26"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-12-04"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-12-06"
+    },
+    {
+      "gameId": "fruit-box",
+      "date": "2025-12-08"
+    },
+    {
+      "gameId": "gartic-phone",
+      "date": "2023-10-05"
+    },
+    {
+      "gameId": "geoguessr",
+      "date": "2025-07-03"
+    },
+    {
+      "gameId": "get-to-work",
+      "date": "2025-01-31"
+    },
+    {
+      "gameId": "get-to-work",
+      "date": "2025-02-01"
+    },
+    {
+      "gameId": "getting-over-goombas",
+      "date": "2024-02-20"
+    },
+    {
+      "gameId": "getting-over-it",
+      "date": "2025-02-05"
+    },
+    {
+      "gameId": "golf-with-your-friends",
+      "date": "2023-10-14"
+    },
+    {
+      "gameId": "gone-fishing",
+      "date": "2025-10-29"
+    },
+    {
+      "gameId": "goose-goose-duck",
+      "date": "2024-04-03"
+    },
+    {
+      "gameId": "goose-goose-duck",
+      "date": "2024-04-06"
+    },
+    {
+      "gameId": "goose-goose-duck",
+      "date": "2024-08-12"
+    },
+    {
+      "gameId": "goose-goose-duck",
+      "date": "2024-09-02"
+    },
+    {
+      "gameId": "grand-theft-auto-v",
+      "date": "2024-02-27"
+    },
+    {
+      "gameId": "grand-theft-auto-v",
+      "date": "2024-10-13"
+    },
+    {
+      "gameId": "grand-theft-auto-v",
+      "date": "2024-10-17"
+    },
+    {
+      "gameId": "grand-theft-auto-v",
+      "date": "2024-10-18"
+    },
+    {
+      "gameId": "grand-theft-auto-v",
+      "date": "2024-10-19"
+    },
+    {
+      "gameId": "grand-theft-auto-v",
+      "date": "2024-10-20"
+    },
+    {
+      "gameId": "grand-theft-auto-v",
+      "date": "2024-11-25"
+    },
+    {
+      "gameId": "grand-theft-auto-v",
+      "date": "2024-11-26"
+    },
+    {
+      "gameId": "grand-theft-auto-v",
+      "date": "2025-08-20"
+    },
+    {
+      "gameId": "grand-theft-auto-v",
+      "date": "2025-08-21"
+    },
+    {
+      "gameId": "grand-theft-auto-v",
+      "date": "2025-08-22"
+    },
+    {
+      "gameId": "grand-theft-auto-v",
+      "date": "2025-08-23"
+    },
+    {
+      "gameId": "grand-theft-auto-v",
+      "date": "2025-08-24"
+    },
+    {
+      "gameId": "grand-theft-auto-v",
+      "date": "2025-08-25"
+    },
+    {
+      "gameId": "green-hell",
+      "date": "2024-07-18"
+    },
+    {
+      "gameId": "headbangers-rhythm-royale",
+      "date": "2023-11-09"
+    },
+    {
+      "gameId": "headbangers-rhythm-royale",
+      "date": "2023-11-12"
+    },
+    {
+      "gameId": "heartopia",
+      "date": "2026-02-18"
+    },
+    {
+      "gameId": "heavy-spoilers-rpg",
+      "date": "2024-04-22"
+    },
+    {
+      "gameId": "heavy-spoilers-rpg",
+      "date": "2024-04-23"
+    },
+    {
+      "gameId": "holy-crap-in-law-survival",
+      "date": "2026-04-21"
+    },
+    {
+      "gameId": "house-flipper",
+      "date": "2025-01-04"
+    },
+    {
+      "gameId": "how-much-quiz",
+      "date": "2023-04-16"
+    },
+    {
+      "gameId": "igedol-game",
+      "date": "2025-02-09"
+    },
+    {
+      "gameId": "incantation",
+      "date": "2024-12-13"
+    },
+    {
+      "gameId": "into-the-dead-our-darkest-days",
+      "date": "2025-04-24"
+    },
+    {
+      "gameId": "inzoi",
+      "date": "2025-03-23"
+    },
+    {
+      "gameId": "inzoi",
+      "date": "2025-03-27"
+    },
+    {
+      "gameId": "inzoi",
+      "date": "2025-03-29"
+    },
+    {
+      "gameId": "inzoi",
+      "date": "2025-03-30"
+    },
+    {
+      "gameId": "it-takes-two",
+      "date": "2024-06-07"
+    },
+    {
+      "gameId": "it-takes-two",
+      "date": "2024-06-08"
+    },
+    {
+      "gameId": "it-takes-two",
+      "date": "2024-06-09"
+    },
+    {
+      "gameId": "judofuri",
+      "date": "2025-11-29"
+    },
+    {
+      "gameId": "kartrider-drift",
+      "date": "2024-04-16"
+    },
+    {
+      "gameId": "kartrider-drift",
+      "date": "2024-04-17"
+    },
+    {
+      "gameId": "kartrider-drift",
+      "date": "2024-05-03"
+    },
+    {
+      "gameId": "kartrider-drift",
+      "date": "2024-12-19"
+    },
+    {
+      "gameId": "kartrider-drift",
+      "date": "2025-04-01"
+    },
+    {
+      "gameId": "kibitz-bugs",
+      "date": "2023-12-25"
+    },
+    {
+      "gameId": "kibitz-bugs",
+      "date": "2024-04-01"
+    },
+    {
+      "gameId": "kuukiyomi-series",
+      "date": "2025-04-07"
+    },
+    {
+      "gameId": "kuukiyomi-series",
+      "date": "2025-05-13"
+    },
+    {
+      "gameId": "lapidary-jewel-craft-simulator",
+      "date": "2025-03-17"
+    },
+    {
+      "gameId": "league-of-legends",
+      "date": "2026-01-30"
+    },
+    {
+      "gameId": "league-of-legends",
+      "date": "2026-02-01"
+    },
+    {
+      "gameId": "liar-game",
+      "date": "2025-04-12"
+    },
+    {
+      "gameId": "liar-game",
+      "date": "2025-04-13"
+    },
+    {
+      "gameId": "liar-game",
+      "date": "2026-03-10"
+    },
+    {
+      "gameId": "liar-game",
+      "date": "2026-04-24"
+    },
+    {
+      "gameId": "liar-game",
+      "date": "2026-04-25"
+    },
+    {
+      "gameId": "liars-bar",
+      "date": "2024-11-28"
+    },
+    {
+      "gameId": "liars-bar",
+      "date": "2024-12-31"
+    },
+    {
+      "gameId": "liars-bar",
+      "date": "2025-01-01"
+    },
+    {
+      "gameId": "lively-chair-simulator",
+      "date": "2025-03-28"
+    },
+    {
+      "gameId": "lockdown-protocol",
+      "date": "2024-12-07"
+    },
+    {
+      "gameId": "mabinogi-mobile",
+      "date": "2025-04-19"
+    },
+    {
+      "gameId": "machugi-io",
+      "date": "2024-02-24"
+    },
+    {
+      "gameId": "machugi-io",
+      "date": "2024-04-21"
+    },
+    {
+      "gameId": "machugi-io",
+      "date": "2025-03-07"
+    },
+    {
+      "gameId": "machugi-io",
+      "date": "2025-03-23"
+    },
+    {
+      "gameId": "machugi-io",
+      "date": "2025-04-25"
+    },
+    {
+      "gameId": "mage-arena",
+      "date": "2025-09-02"
+    },
+    {
+      "gameId": "magical-mic-duel",
+      "date": "2024-05-30"
+    },
+    {
+      "gameId": "maplestory",
+      "date": "2025-06-09"
+    },
+    {
+      "gameId": "maplestory",
+      "date": "2025-06-10"
+    },
+    {
+      "gameId": "maplestory",
+      "date": "2025-06-17"
+    },
+    {
+      "gameId": "maplestory",
+      "date": "2025-06-18"
+    },
+    {
+      "gameId": "maplestory",
+      "date": "2025-06-23"
+    },
+    {
+      "gameId": "maplestory",
+      "date": "2025-06-24"
+    },
+    {
+      "gameId": "maplestory",
+      "date": "2025-06-25"
+    },
+    {
+      "gameId": "marbles-on-stream",
+      "date": "2023-12-25"
+    },
+    {
+      "gameId": "marbles-on-stream",
+      "date": "2024-06-02"
+    },
+    {
+      "gameId": "marbles-on-stream",
+      "date": "2024-06-03"
+    },
+    {
+      "gameId": "marbles-on-stream",
+      "date": "2024-11-17"
+    },
+    {
+      "gameId": "marbles-on-stream",
+      "date": "2025-02-14"
+    },
+    {
+      "gameId": "marbles-on-stream",
+      "date": "2025-05-20"
+    },
+    {
+      "gameId": "marbles-on-stream",
+      "date": "2025-05-23"
+    },
+    {
+      "gameId": "marbles-on-stream",
+      "date": "2025-11-10"
+    },
+    {
+      "gameId": "marbles-on-stream",
+      "date": "2026-03-12"
+    },
+    {
+      "gameId": "mario-kart-world",
+      "date": "2025-06-22"
+    },
+    {
+      "gameId": "mario-kart-world",
+      "date": "2025-08-07"
+    },
+    {
+      "gameId": "mario-kart-world",
+      "date": "2025-08-08"
+    },
+    {
+      "gameId": "mario-kart-world",
+      "date": "2025-09-08"
+    },
+    {
+      "gameId": "mario-kart-world",
+      "date": "2026-03-05"
+    },
+    {
+      "gameId": "mario-party-superstars",
+      "date": "2024-06-16"
+    },
+    {
+      "gameId": "megabonk",
+      "date": "2025-10-20"
+    },
+    {
+      "gameId": "megabonk",
+      "date": "2025-10-24"
+    },
+    {
+      "gameId": "megabonk",
+      "date": "2025-10-28"
+    },
+    {
+      "gameId": "mimesis",
+      "date": "2025-11-06"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-03-28"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-03-29"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-03-30"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-03-31"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-04-14"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-04-15"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-04-16"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-04-18"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-04-19"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-05-08"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-05-09"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-05-11"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-05-12"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-05-13"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-05-14"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-06-01"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-06-03"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-06-04"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-06-08"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-06-09"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-06-12"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-06-13"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-06-23"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-06-24"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-06-25"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-07-15"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-07-16"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-07-25"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-07-26"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-08-07"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-08-08"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-08-17"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-08-18"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-09-07"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-10-04"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-10-10"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-11-21"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-11-22"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-11-28"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-11-29"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-11-30"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-01"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-02"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-04"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-08"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-09"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-10"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-11"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-12"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-15"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-16"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-20"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-21"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-23"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-24"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-25"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-26"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-27"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-29"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-30"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2023-12-31"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-01-01"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-01-02"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-01-03"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-01-08"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-01-15"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-01-16"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-01-19"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-01-20"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-01-21"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-01-25"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-01-26"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-01-28"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-01-30"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-01-31"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-02-01"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-02-02"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-02-03"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-02-05"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-02-12"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-02-13"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-02-19"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-02-20"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-02-23"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-03-03"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-03-04"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-03-09"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-03-10"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-03-11"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-03-12"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-03-14"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-03-15"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-03-19"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-03-20"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-03-21"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-03-22"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-03-26"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-04-05"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-04-27"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-04-28"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-05-10"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-05-11"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-05-23"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-05-24"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-05-26"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-05-27"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-07-29"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-08-11"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-08-18"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-08-19"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-08-20"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-08-21"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-08-25"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-08-26"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-08-29"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-08-30"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-09-05"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-09-06"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-09-09"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-09-10"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-12-10"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-12-11"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-12-12"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-12-13"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-12-14"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-12-15"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-12-17"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-12-20"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-12-21"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-12-23"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-12-24"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2024-12-27"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-01-06"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-01-15"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-01-25"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-01-26"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-01-27"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-01-30"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-01-31"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-03-08"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-03-09"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-03-10"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-03-12"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-03-13"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-03-16"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-03-17"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-03-18"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-03-20"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-03-24"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-03-25"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-03-30"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-03-31"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-04-01"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-04-02"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-04-03"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-04-04"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-04-05"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-04-06"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-05-21"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-05-22"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-05-23"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-05-24"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-05-25"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-05-27"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-05-28"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-05-29"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-05-30"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-06-05"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-06-06"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-06-07"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-06-08"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-06-09"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-06-15"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-07-21"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-07-22"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-07-23"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-07-24"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-07-25"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-07-26"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-07-27"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-07-28"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-07-29"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-07-30"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-07-31"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-08-01"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-08-02"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-08-03"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-08-04"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-10-08"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-10-09"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-10-10"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-10-11"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-10-29"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-11-02"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-11-13"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-11-14"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-11-15"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-11-16"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-11-17"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-12-04"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-12-05"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-12-06"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-12-07"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-12-08"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-12-09"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-12-11"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-12-12"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-12-14"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-12-15"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-12-16"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2025-12-18"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2026-01-26"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2026-01-31"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2026-02-01"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2026-02-03"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2026-02-04"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2026-02-05"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2026-02-06"
+    },
+    {
+      "gameId": "minecraft",
+      "date": "2026-02-13"
+    },
+    {
+      "gameId": "mini-motorways",
+      "date": "2025-07-15"
+    },
+    {
+      "gameId": "miside",
+      "date": "2024-12-30"
+    },
+    {
+      "gameId": "miside",
+      "date": "2024-12-31"
+    },
+    {
+      "gameId": "monster-hunter-wilds",
+      "date": "2025-03-02"
+    },
+    {
+      "gameId": "monster-hunter-wilds",
+      "date": "2025-03-03"
+    },
+    {
+      "gameId": "monster-hunter-wilds",
+      "date": "2025-03-04"
+    },
+    {
+      "gameId": "monster-hunter-wilds",
+      "date": "2025-03-05"
+    },
+    {
+      "gameId": "monster-hunter-wilds",
+      "date": "2025-03-07"
+    },
+    {
+      "gameId": "monster-hunter-wilds",
+      "date": "2025-03-08"
+    },
+    {
+      "gameId": "motesolo",
+      "date": "2024-02-16"
+    },
+    {
+      "gameId": "my-little-puppy",
+      "date": "2025-11-11"
+    },
+    {
+      "gameId": "my-little-puppy",
+      "date": "2025-11-12"
+    },
+    {
+      "gameId": "my-summer-car",
+      "date": "2026-02-08"
+    },
+    {
+      "gameId": "my-voice-zoo",
+      "date": "2025-11-24"
+    },
+    {
+      "gameId": "national-quiz-of-common-sense",
+      "date": "2024-05-20"
+    },
+    {
+      "gameId": "national-quiz-of-common-sense-advanced",
+      "date": "2025-12-11"
+    },
+    {
+      "gameId": "netmarble-sachunsung",
+      "date": "2025-08-04"
+    },
+    {
+      "gameId": "netmarble-spot-the-difference",
+      "date": "2025-02-16"
+    },
+    {
+      "gameId": "night-security",
+      "date": "2023-12-10"
+    },
+    {
+      "gameId": "night-shippers",
+      "date": "2026-04-24"
+    },
+    {
+      "gameId": "nintendo-switch-sports",
+      "date": "2024-06-09"
+    },
+    {
+      "gameId": "nintendo-switch-sports",
+      "date": "2024-08-11"
+    },
+    {
+      "gameId": "no-case-should-remain-unsolved",
+      "date": "2026-01-18"
+    },
+    {
+      "gameId": "oh-deer",
+      "date": "2026-02-09"
+    },
+    {
+      "gameId": "old-market-simulator",
+      "date": "2024-10-19"
+    },
+    {
+      "gameId": "omelet-you-cook",
+      "date": "2026-04-21"
+    },
+    {
+      "gameId": "onigiri-shop-simulator",
+      "date": "2025-11-24"
+    },
+    {
+      "gameId": "only-climb",
+      "date": "2023-10-04"
+    },
+    {
+      "gameId": "only-climb",
+      "date": "2023-10-05"
+    },
+    {
+      "gameId": "only-up",
+      "date": "2023-06-18"
+    },
+    {
+      "gameId": "only-up",
+      "date": "2023-06-19"
+    },
+    {
+      "gameId": "outlast",
+      "date": "2023-10-13"
+    },
+    {
+      "gameId": "outlast",
+      "date": "2023-10-14"
+    },
+    {
+      "gameId": "outlast-2",
+      "date": "2023-11-07"
+    },
+    {
+      "gameId": "overwatch",
+      "date": "2026-02-13"
+    },
+    {
+      "gameId": "overwatch",
+      "date": "2026-04-12"
+    },
+    {
+      "gameId": "overwatch",
+      "date": "2026-04-13"
+    },
+    {
+      "gameId": "overwatch",
+      "date": "2026-04-16"
+    },
+    {
+      "gameId": "overwatch",
+      "date": "2026-04-19"
+    },
+    {
+      "gameId": "overwatch",
+      "date": "2026-04-27"
+    },
+    {
+      "gameId": "palworld",
+      "date": "2024-01-21"
+    },
+    {
+      "gameId": "palworld",
+      "date": "2024-01-22"
+    },
+    {
+      "gameId": "palworld",
+      "date": "2024-01-27"
+    },
+    {
+      "gameId": "palworld",
+      "date": "2024-01-28"
+    },
+    {
+      "gameId": "party-animals",
+      "date": "2024-01-29"
+    },
+    {
+      "gameId": "party-animals",
+      "date": "2025-03-03"
+    },
+    {
+      "gameId": "party-animals",
+      "date": "2025-03-04"
+    },
+    {
+      "gameId": "party-animals",
+      "date": "2026-01-24"
+    },
+    {
+      "gameId": "patapon-1-2-replay",
+      "date": "2025-08-07"
+    },
+    {
+      "gameId": "pavlov-vr",
+      "date": "2025-07-26"
+    },
+    {
+      "gameId": "peak",
+      "date": "2025-07-21"
+    },
+    {
+      "gameId": "peglin",
+      "date": "2026-01-23"
+    },
+    {
+      "gameId": "pojangmacha",
+      "date": "2026-04-13"
+    },
+    {
+      "gameId": "pojangmacha",
+      "date": "2026-04-14"
+    },
+    {
+      "gameId": "pokemon-legends-z-a",
+      "date": "2025-10-19"
+    },
+    {
+      "gameId": "pokemon-pokopia",
+      "date": "2026-03-05"
+    },
+    {
+      "gameId": "pokemon-pokopia",
+      "date": "2026-03-06"
+    },
+    {
+      "gameId": "poppy-playtime-chapter-3",
+      "date": "2024-01-31"
+    },
+    {
+      "gameId": "poppy-playtime-chapter-3",
+      "date": "2024-02-01"
+    },
+    {
+      "gameId": "poppy-playtime-chapter-3",
+      "date": "2024-02-02"
+    },
+    {
+      "gameId": "powerwash-simulator",
+      "date": "2024-05-03"
+    },
+    {
+      "gameId": "powerwash-simulator-2",
+      "date": "2025-10-26"
+    },
+    {
+      "gameId": "powerwash-simulator-2",
+      "date": "2025-10-27"
+    },
+    {
+      "gameId": "pratfall",
+      "date": "2026-04-23"
+    },
+    {
+      "gameId": "pratfall",
+      "date": "2026-04-24"
+    },
+    {
+      "gameId": "prisoners",
+      "date": "2024-12-10"
+    },
+    {
+      "gameId": "professor-layton-and-the-curious-village",
+      "date": "2025-02-06"
+    },
+    {
+      "gameId": "professor-layton-and-the-curious-village",
+      "date": "2025-02-07"
+    },
+    {
+      "gameId": "project-zomboid",
+      "date": "2024-11-03"
+    },
+    {
+      "gameId": "project-zomboid",
+      "date": "2024-11-04"
+    },
+    {
+      "gameId": "project-zomboid",
+      "date": "2024-11-05"
+    },
+    {
+      "gameId": "project-zomboid",
+      "date": "2024-11-10"
+    },
+    {
+      "gameId": "project-zomboid",
+      "date": "2024-11-12"
+    },
+    {
+      "gameId": "project-zomboid",
+      "date": "2024-11-13"
+    },
+    {
+      "gameId": "project-zomboid",
+      "date": "2024-11-20"
+    },
+    {
+      "gameId": "project-zomboid",
+      "date": "2024-11-21"
+    },
+    {
+      "gameId": "project-zomboid",
+      "date": "2024-11-22"
+    },
+    {
+      "gameId": "project-zomboid",
+      "date": "2024-11-23"
+    },
+    {
+      "gameId": "project-zomboid",
+      "date": "2024-11-24"
+    },
+    {
+      "gameId": "project-zomboid",
+      "date": "2025-01-07"
+    },
+    {
+      "gameId": "project-zomboid",
+      "date": "2025-01-08"
+    },
+    {
+      "gameId": "project-zomboid",
+      "date": "2025-01-09"
+    },
+    {
+      "gameId": "project-zomboid",
+      "date": "2025-01-10"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2023-06-03"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2023-06-30"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2023-09-11"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-02-22"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-02-25"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-02-26"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-03-17"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-03-18"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-03-27"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-03-28"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-04-11"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-04-12"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-04-13"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-04-14"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-04-15"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-04-19"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-04-20"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-04-21"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-04-22"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-04-23"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-04-24"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-05-18"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-05-19"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-06-16"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-06-17"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-07-20"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-07-21"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-07-22"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-09-01"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-09-02"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-10-31"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-11-01"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-11-28"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-11-29"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-12-01"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-12-03"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-12-04"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-12-05"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-12-06"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-12-07"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-12-08"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2024-12-09"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-01-04"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-01-05"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-01-27"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-02-02"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-02-03"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-02-04"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-02-05"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-03-04"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-03-18"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-03-19"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-03-27"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-03-28"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-04-12"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-04-21"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-06-13"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-06-18"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-06-19"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-06-30"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-07-04"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-07-09"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-07-10"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-07-18"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-08-08"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-08-13"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-09-09"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-09-25"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-09-26"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-09-30"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-10-10"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-11-11"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-11-12"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-11-13"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2025-12-02"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2026-03-19"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2026-03-28"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2026-04-03"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2026-04-04"
+    },
+    {
+      "gameId": "pubg-battlegrounds",
+      "date": "2026-04-06"
+    },
+    {
+      "gameId": "pummel-party",
+      "date": "2025-12-20"
+    },
+    {
+      "gameId": "pummel-party",
+      "date": "2025-12-21"
+    },
+    {
+      "gameId": "q-remastered",
+      "date": "2024-01-25"
+    },
+    {
+      "gameId": "raft",
+      "date": "2026-01-06"
+    },
+    {
+      "gameId": "reanimal",
+      "date": "2026-02-19"
+    },
+    {
+      "gameId": "red-or-blue",
+      "date": "2025-04-18"
+    },
+    {
+      "gameId": "repo",
+      "date": "2025-03-31"
+    },
+    {
+      "gameId": "restaurats",
+      "date": "2026-01-05"
+    },
+    {
+      "gameId": "revenge-of-the-colon",
+      "date": "2025-03-17"
+    },
+    {
+      "gameId": "ring-fit-adventure",
+      "date": "2025-02-11"
+    },
+    {
+      "gameId": "roblox",
+      "date": "2025-11-10"
+    },
+    {
+      "gameId": "rush-only-up-multiplayer",
+      "date": "2025-04-03"
+    },
+    {
+      "gameId": "rush-only-up-multiplayer",
+      "date": "2025-04-07"
+    },
+    {
+      "gameId": "rust",
+      "date": "2023-06-14"
+    },
+    {
+      "gameId": "salted",
+      "date": "2025-06-28"
+    },
+    {
+      "gameId": "scam-line",
+      "date": "2026-04-20"
+    },
+    {
+      "gameId": "school-labyrinth",
+      "date": "2024-06-02"
+    },
+    {
+      "gameId": "scritchy-scratchy",
+      "date": "2026-03-30"
+    },
+    {
+      "gameId": "scritchy-scratchy",
+      "date": "2026-04-04"
+    },
+    {
+      "gameId": "sephiria",
+      "date": "2025-05-14"
+    },
+    {
+      "gameId": "sephiria",
+      "date": "2025-05-20"
+    },
+    {
+      "gameId": "shadow-corridor",
+      "date": "2024-03-16"
+    },
+    {
+      "gameId": "shadow-corridor",
+      "date": "2024-03-17"
+    },
+    {
+      "gameId": "side-effects",
+      "date": "2025-11-24"
+    },
+    {
+      "gameId": "side-effects",
+      "date": "2025-12-02"
+    },
+    {
+      "gameId": "silent-breath",
+      "date": "2024-04-19"
+    },
+    {
+      "gameId": "slay-the-spire",
+      "date": "2025-05-24"
+    },
+    {
+      "gameId": "slay-the-spire",
+      "date": "2025-05-29"
+    },
+    {
+      "gameId": "slay-the-spire",
+      "date": "2025-06-07"
+    },
+    {
+      "gameId": "slay-the-spire",
+      "date": "2025-06-08"
+    },
+    {
+      "gameId": "slay-the-spire-2",
+      "date": "2026-03-06"
+    },
+    {
+      "gameId": "slay-the-spire-2",
+      "date": "2026-03-07"
+    },
+    {
+      "gameId": "slay-the-spire-2",
+      "date": "2026-03-15"
+    },
+    {
+      "gameId": "slither-io",
+      "date": "2025-01-04"
+    },
+    {
+      "gameId": "slow-and-steady",
+      "date": "2025-04-07"
+    },
+    {
+      "gameId": "soop-stock",
+      "date": "2026-03-16"
+    },
+    {
+      "gameId": "sooper-shot",
+      "date": "2024-03-01"
+    },
+    {
+      "gameId": "sooper-shot",
+      "date": "2024-05-14"
+    },
+    {
+      "gameId": "split-fiction",
+      "date": "2025-03-24"
+    },
+    {
+      "gameId": "split-fiction",
+      "date": "2025-03-25"
+    },
+    {
+      "gameId": "sputnika-game",
+      "date": "2024-04-08"
+    },
+    {
+      "gameId": "sputnika-game",
+      "date": "2024-04-09"
+    },
+    {
+      "gameId": "starcraft",
+      "date": "2024-02-29"
+    },
+    {
+      "gameId": "starcraft",
+      "date": "2024-03-02"
+    },
+    {
+      "gameId": "starcraft",
+      "date": "2024-03-04"
+    },
+    {
+      "gameId": "starcraft",
+      "date": "2024-03-07"
+    },
+    {
+      "gameId": "starcraft",
+      "date": "2024-03-08"
+    },
+    {
+      "gameId": "starcraft",
+      "date": "2024-03-09"
+    },
+    {
+      "gameId": "starcraft-meundi",
+      "date": "2025-05-18"
+    },
+    {
+      "gameId": "starcraft-meundi",
+      "date": "2025-10-09"
+    },
+    {
+      "gameId": "starcraft-meundi",
+      "date": "2025-10-24"
+    },
+    {
+      "gameId": "starcraft-meundi",
+      "date": "2025-10-25"
+    },
+    {
+      "gameId": "starcraft-meundi",
+      "date": "2025-10-27"
+    },
+    {
+      "gameId": "stardew-valley",
+      "date": "2025-05-25"
+    },
+    {
+      "gameId": "stardew-valley",
+      "date": "2025-05-26"
+    },
+    {
+      "gameId": "strawberry-game-multiplayer",
+      "date": "2025-12-09"
+    },
+    {
+      "gameId": "street-fighter-6",
+      "date": "2025-04-13"
+    },
+    {
+      "gameId": "subnautica",
+      "date": "2025-06-25"
+    },
+    {
+      "gameId": "subnautica",
+      "date": "2025-06-26"
+    },
+    {
+      "gameId": "summers-heartbeat",
+      "date": "2026-04-14"
+    },
+    {
+      "gameId": "super-mario-party-jamboree",
+      "date": "2024-10-18"
+    },
+    {
+      "gameId": "super-mario-party-jamboree",
+      "date": "2024-11-16"
+    },
+    {
+      "gameId": "super-mario-party-jamboree",
+      "date": "2025-04-21"
+    },
+    {
+      "gameId": "tabletop-simulator",
+      "date": "2024-04-30"
+    },
+    {
+      "gameId": "tavern-keeper",
+      "date": "2025-11-11"
+    },
+    {
+      "gameId": "tcg-card-shop-simulator",
+      "date": "2026-02-20"
+    },
+    {
+      "gameId": "tcg-card-shop-simulator",
+      "date": "2026-02-21"
+    },
+    {
+      "gameId": "teamfight-tactics",
+      "date": "2023-11-21"
+    },
+    {
+      "gameId": "tekken-8",
+      "date": "2024-02-04"
+    },
+    {
+      "gameId": "tekken-8",
+      "date": "2024-02-05"
+    },
+    {
+      "gameId": "tekken-8",
+      "date": "2024-02-08"
+    },
+    {
+      "gameId": "thats-not-my-neighbor",
+      "date": "2025-04-07"
+    },
+    {
+      "gameId": "the-binding-of-isaac-rebirth",
+      "date": "2025-06-14"
+    },
+    {
+      "gameId": "the-exit-8",
+      "date": "2023-12-10"
+    },
+    {
+      "gameId": "the-game-of-life-nintendo-switch",
+      "date": "2026-03-09"
+    },
+    {
+      "gameId": "the-kidnap",
+      "date": "2023-11-07"
+    },
+    {
+      "gameId": "the-spell-brigade",
+      "date": "2025-11-04"
+    },
+    {
+      "gameId": "the-spell-brigade",
+      "date": "2025-11-05"
+    },
+    {
+      "gameId": "the-spell-brigade",
+      "date": "2025-12-24"
+    },
+    {
+      "gameId": "the-spell-brigade",
+      "date": "2026-01-30"
+    },
+    {
+      "gameId": "the-spike-cross",
+      "date": "2025-09-14"
+    },
+    {
+      "gameId": "the-stubborn-of-wakgood",
+      "date": "2025-04-28"
+    },
+    {
+      "gameId": "toreba",
+      "date": "2024-04-16"
+    },
+    {
+      "gameId": "trine-4",
+      "date": "2025-11-03"
+    },
+    {
+      "gameId": "ultimate-chicken-horse",
+      "date": "2023-06-03"
+    },
+    {
+      "gameId": "undusted",
+      "date": "2025-07-09"
+    },
+    {
+      "gameId": "unpacking",
+      "date": "2024-12-02"
+    },
+    {
+      "gameId": "until-dawn",
+      "date": "2024-11-17"
+    },
+    {
+      "gameId": "until-dawn",
+      "date": "2024-11-18"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2024-09-01"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-03-28"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-04-20"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-04-21"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-04-22"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-04-25"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-04-26"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-04-27"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-04-28"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-05-01"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-05-04"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-05-05"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-05-06"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-05-11"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-05-12"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-05-14"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-05-19"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-05-20"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-05-26"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-05-27"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-06-02"
+    },
+    {
+      "gameId": "valorant",
+      "date": "2025-10-27"
+    },
+    {
+      "gameId": "vampire-crawlers",
+      "date": "2026-04-26"
+    },
+    {
+      "gameId": "visage",
+      "date": "2025-06-18"
+    },
+    {
+      "gameId": "void-crew",
+      "date": "2025-01-03"
+    },
+    {
+      "gameId": "void-crew",
+      "date": "2025-01-29"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2023-08-18"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2023-10-07"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2023-11-12"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2023-11-13"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2023-11-18"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-01-15"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-02-07"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-02-08"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-02-13"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-02-15"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-02-17"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-02-18"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-03-07"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-03-26"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-04-01"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-04-27"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-05-03"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-05-27"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-07-08"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-07-23"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-07-24"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-07-27"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-07-28"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-07-29"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-07-30"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-07-31"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-08-07"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-08-25"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-09-05"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-10-31"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-11-04"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-11-05"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-11-06"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-11-07"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-11-08"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-11-09"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-11-10"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-12-22"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-12-23"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2024-12-31"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-01-01"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-01-27"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-01-30"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-02-04"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-02-17"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-02-18"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-02-19"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-02-20"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-02-21"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-02-22"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-02-23"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-02-24"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-02-25"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-02-26"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-03-16"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-04-25"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-07-03"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-07-08"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-09-13"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-09-14"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-09-15"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-09-16"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-09-17"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-09-18"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-09-19"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-09-20"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-09-21"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-09-22"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-09-23"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-09-26"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-10-04"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-10-05"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-10-11"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-10-12"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-10-13"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-10-15"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-10-29"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-11-11"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-12-09"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-12-18"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-12-20"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-12-21"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-12-26"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-12-29"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2025-12-31"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2026-01-01"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2026-01-12"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2026-02-01"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2026-02-19"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2026-02-20"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2026-02-23"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2026-02-24"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2026-02-25"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2026-02-26"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2026-02-27"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2026-02-28"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2026-03-21"
+    },
+    {
+      "gameId": "vrchat",
+      "date": "2026-03-30"
+    },
+    {
+      "gameId": "watermelon-broken-head",
+      "date": "2025-04-10"
+    },
+    {
+      "gameId": "webfishing",
+      "date": "2024-11-14"
+    },
+    {
+      "gameId": "webfishing",
+      "date": "2024-11-15"
+    },
+    {
+      "gameId": "webfishing",
+      "date": "2024-11-16"
+    },
+    {
+      "gameId": "webfishing",
+      "date": "2024-11-27"
+    },
+    {
+      "gameId": "welcome-to-kowloon",
+      "date": "2023-09-11"
+    },
+    {
+      "gameId": "whos-next",
+      "date": "2025-04-04"
+    },
+    {
+      "gameId": "whos-next",
+      "date": "2025-04-05"
+    },
+    {
+      "gameId": "windrose",
+      "date": "2026-04-28"
+    },
+    {
+      "gameId": "windrose",
+      "date": "2026-04-29"
+    },
+    {
+      "gameId": "wjmax",
+      "date": "2024-12-17"
+    },
+    {
+      "gameId": "wjmax",
+      "date": "2024-12-18"
+    },
+    {
+      "gameId": "world-of-tanks",
+      "date": "2024-07-16"
+    },
+    {
+      "gameId": "world-of-tanks",
+      "date": "2024-07-20"
+    },
+    {
+      "gameId": "world-of-tanks",
+      "date": "2024-07-21"
+    },
+    {
+      "gameId": "world-of-tanks",
+      "date": "2025-05-12"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-02-18"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-10"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-11"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-12"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-13"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-14"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-15"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-16"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-17"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-19"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-21"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-22"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-23"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-24"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-25"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-26"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-27"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-28"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-29"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-30"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-03-31"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-04-01"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-04-02"
+    },
+    {
+      "gameId": "world-of-warcraft",
+      "date": "2026-04-03"
+    },
+    {
+      "gameId": "wuthering-waves",
+      "date": "2026-01-17"
+    },
+    {
+      "gameId": "wwme-lemon-game",
+      "date": "2025-02-01"
+    },
+    {
+      "gameId": "wwme-lemon-game",
+      "date": "2025-02-02"
+    },
+    {
+      "gameId": "yacht-dice",
+      "date": "2025-10-05"
+    },
+    {
+      "gameId": "yakiniku-simulator",
+      "date": "2025-03-17"
+    },
+    {
+      "gameId": "yapyap",
+      "date": "2026-02-09"
+    },
+    {
+      "gameId": "zelda-breath-of-the-wild",
+      "date": "2025-07-01"
+    },
+    {
+      "gameId": "zelda-breath-of-the-wild",
+      "date": "2025-07-02"
+    }
+  ],
+  "correctedDates": [
+    {
+      "gameId": "nikke",
+      "vodId": 197951687,
+      "seconds": 3600.0,
+      "previousDate": "2026-06-06",
+      "correctedDate": "2026-06-07"
+    }
+  ],
+  "newVerifiedEvidenceCount": 1062,
+  "officialImages": 293,
+  "missingOfficialImageIds": [
+    "yacht-dice",
+    "walk-the-stork",
+    "gohyang-mandu",
+    "side-kick-2007",
+    "shu-ramen-shop",
+    "mingming-vs-wangtta",
+    "jukrim-gosu",
+    "jjiksin",
+    "soop-who-are-ya",
+    "soop-stock",
+    "strawberry-game-multiplayer",
+    "the-stubborn-of-wakgood",
+    "igedol-game",
+    "wwme-lemon-game",
+    "wjmax",
+    "sooper-shot",
+    "how-much-quiz"
+  ],
+  "coverage": {
+    "period": "방송국 전체 목록 2023–2026년 · 2026-10-31 수집 기준",
+    "totalVods": 1073,
+    "reviewedVods": 1024,
+    "restrictedVods": 47,
+    "partialVods": 0,
+    "pendingVods": 0,
+    "unresolvedVods": 0,
+    "sampleIntervalSeconds": 60,
+    "continuousPlaybackReviewed": false,
+    "reviewComplete": false,
+    "replayVods": 1039,
+    "clipVods": 34,
+    "recheckedOn": "2026-11-02",
+    "baseSampleIntervalSeconds": 60,
+    "candidateScanIntervalSeconds": 15,
+    "gapCandidateReviewedVods": 1020,
+    "full15SecondSampleReviewedVods": 4,
+    "audioReviewed": false,
+    "reviewCompleteMeaning": "공개 재생 가능한 영상의 장면 표본 검토를 완료했습니다. 접근 제한·재생 불가 영상과 삭제 구간은 확인하지 못했으며 전편 연속 시청이 아닙니다.",
+    "stationInventoryCount": 1073,
+    "stationInventoryIsVisualReview": false,
+    "addedGamesInReaudit": 121,
+    "addedGameDatesInReaudit": 850,
+    "unavailableVods": 2,
+    "newPeriodSampleReviewedVods": 843,
+    "newPeriodDirectlyViewedFrames": 623991,
+    "publicSampleReviewComplete": true,
+    "unavailableRecheckedOn": "2026-11-02"
+  },
+  "previousReaudit": {
+    "gamesBefore": 168,
+    "gamesAfter": 189,
+    "newGameIds": [
+      "apple-game-plus",
+      "color-tile-multiplayer",
+      "color-tiles-plus",
+      "common-sense-championship",
+      "extreme-common-sense-check",
+      "gohyang-mandu",
+      "hello-kitty-party-land",
+      "higher-or-lower-game",
+      "hozy",
+      "jjiksin",
+      "jukrim-gosu",
+      "librarian-tidy-up-the-arcane-library",
+      "machugi-io",
+      "mingming-vs-wangtta",
+      "national-quiz-of-common-sense-advanced",
+      "quiz-bubble",
+      "shu-ramen-shop",
+      "side-kick-2007",
+      "soop-who-are-ya",
+      "walk-the-stork",
+      "which-one-live"
+    ],
+    "dateRecordsBefore": 259,
+    "dateRecordsAfter": 293,
+    "addedGameDates": [
+      {
+        "gameId": "apple-game-plus",
+        "date": "2026-05-12"
+      },
+      {
+        "gameId": "apple-game-plus",
+        "date": "2026-07-13"
+      },
+      {
+        "gameId": "apple-game-plus",
+        "date": "2026-09-15"
+      },
+      {
+        "gameId": "color-tile-multiplayer",
+        "date": "2026-07-13"
+      },
+      {
+        "gameId": "color-tile-multiplayer",
+        "date": "2026-09-15"
+      },
+      {
+        "gameId": "color-tiles-plus",
+        "date": "2026-09-15"
+      },
+      {
+        "gameId": "common-sense-championship",
+        "date": "2026-09-04"
+      },
+      {
+        "gameId": "extreme-common-sense-check",
+        "date": "2026-09-04"
+      },
+      {
+        "gameId": "fruit-box",
+        "date": "2026-08-25"
+      },
+      {
+        "gameId": "gohyang-mandu",
+        "date": "2026-08-21"
+      },
+      {
+        "gameId": "hello-kitty-party-land",
+        "date": "2026-10-29"
+      },
+      {
+        "gameId": "higher-or-lower-game",
+        "date": "2026-08-21"
+      },
+      {
+        "gameId": "how-to-fish",
+        "date": "2026-08-24"
+      },
+      {
+        "gameId": "hozy",
+        "date": "2026-04-30"
+      },
+      {
+        "gameId": "hozy",
+        "date": "2026-05-01"
+      },
+      {
+        "gameId": "jjiksin",
+        "date": "2026-08-22"
+      },
+      {
+        "gameId": "jukrim-gosu",
+        "date": "2026-08-21"
+      },
+      {
+        "gameId": "librarian-tidy-up-the-arcane-library",
+        "date": "2026-06-19"
+      },
+      {
+        "gameId": "machugi-io",
+        "date": "2026-08-21"
+      },
+      {
+        "gameId": "minecraft",
+        "date": "2026-10-29"
+      },
+      {
+        "gameId": "minecraft",
+        "date": "2026-10-30"
+      },
+      {
+        "gameId": "mingming-vs-wangtta",
+        "date": "2026-08-22"
+      },
+      {
+        "gameId": "national-quiz-of-common-sense-advanced",
+        "date": "2026-05-05"
+      },
+      {
+        "gameId": "nikke",
+        "date": "2026-08-20"
+      },
+      {
+        "gameId": "nikke",
+        "date": "2026-10-29"
+      },
+      {
+        "gameId": "nikke",
+        "date": "2026-10-30"
+      },
+      {
+        "gameId": "only-climb",
+        "date": "2026-05-17"
+      },
+      {
+        "gameId": "quiz-bubble",
+        "date": "2026-08-22"
+      },
+      {
+        "gameId": "shu-ramen-shop",
+        "date": "2026-08-22"
+      },
+      {
+        "gameId": "side-kick-2007",
+        "date": "2026-08-21"
+      },
+      {
+        "gameId": "side-kick-2007",
+        "date": "2026-08-22"
+      },
+      {
+        "gameId": "soop-who-are-ya",
+        "date": "2026-08-14"
+      },
+      {
+        "gameId": "walk-the-stork",
+        "date": "2026-08-21"
+      },
+      {
+        "gameId": "which-one-live",
+        "date": "2026-04-30"
+      }
+    ],
+    "newVerifiedEvidenceCount": 36,
+    "officialImages": 178,
+    "missingOfficialImageIds": [
+      "yacht-dice",
+      "pokebonk",
+      "color-tile-multiplayer",
+      "walk-the-stork",
+      "gohyang-mandu",
+      "side-kick-2007",
+      "shu-ramen-shop",
+      "mingming-vs-wangtta",
+      "jukrim-gosu",
+      "jjiksin",
+      "soop-who-are-ya"
+    ],
+    "coverage": {
+      "period": "2026.05.01–10.30 방송 · 4.30 자정 경계 포함",
+      "totalVods": 190,
+      "reviewedVods": 181,
+      "restrictedVods": 9,
+      "partialVods": 0,
+      "pendingVods": 0,
+      "unresolvedVods": 0,
+      "sampleIntervalSeconds": 60,
+      "continuousPlaybackReviewed": false,
+      "reviewComplete": true,
+      "replayVods": 187,
+      "clipVods": 3,
+      "recheckedOn": "2026-10-31",
+      "baseSampleIntervalSeconds": 60,
+      "candidateScanIntervalSeconds": 15,
+      "gapCandidateReviewedVods": 177,
+      "full15SecondSampleReviewedVods": 4,
+      "scriptScannedFrames": 240654,
+      "retainedCandidateFrames": 68813,
+      "audioReviewed": false,
+      "reviewCompleteMeaning": "정의된 장면 표본·변화 후보 검토 완료. 전편 연속 시청이나 모든 게임 식별 완료를 뜻하지 않음.",
+      "stationInventoryCount": 1073,
+      "stationInventoryIsVisualReview": false,
+      "addedGamesInReaudit": 21,
+      "addedGameDatesInReaudit": 34
+    }
+  }
+}

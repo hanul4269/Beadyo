@@ -22,13 +22,14 @@ function element() {
         },
         append(...nodes) { this.children.push(...nodes); },
         setAttribute(name, value) { this[name] = value; },
+        removeAttribute(name) { delete this[name]; },
         addEventListener(name, fn) { listeners.set(name, fn); },
         click() { listeners.get('click')?.(); },
         getAttribute(name) { return this[name]; },
     };
 }
-function harness({ deferAnimation = false } = {}) {
-    const frames = Array.from({ length: 8 }, (_, i) => {
+function harness({ deferAnimation = false, url = 'http://localhost:3000/#content' } = {}) {
+    const frames = Array.from({ length: 9 }, (_, i) => {
         const frame = element();
         frame.id = `frame-${i}`;
         frame.requests = [];
@@ -38,23 +39,46 @@ function harness({ deferAnimation = false } = {}) {
         return frame;
     });
     const loading = element(), text = element(), content = element();
+    const tabs = [7, 0, 2, 3, 4, 5, 6].map(index => {
+        const tab = element(); tab.dataset.tabIndex = String(index); return tab;
+    });
+    const contentNav = element();
+    const contentButtons = [5, 8].map(index => {
+        const button = element(); button.dataset.contentTab = String(index); return button;
+    });
+    contentNav.querySelectorAll = () => contentButtons;
     loading.querySelector = selector => selector === '.loading-text' ? text : loading.children.find(node => 'frameLoadRetry' in node.dataset);
     const timers = new Map(), auth = [], themes = [], animations = [];
+    const listeners = new Map(), location = new URL(url), entries = [url];
+    let entryIndex = 0;
+    const history = {
+        pushState(_state, _title, next) {
+            location.href = new URL(next, location).href;
+            entries.splice(++entryIndex, entries.length, location.href);
+        },
+        replaceState(_state, _title, next) {
+            location.href = new URL(next, location).href; entries[entryIndex] = location.href;
+        },
+        back() { if (entryIndex > 0) { location.href = entries[--entryIndex]; listeners.get('popstate')?.(); } },
+        forward() { if (entryIndex + 1 < entries.length) { location.href = entries[++entryIndex]; listeners.get('popstate')?.(); } },
+    };
     let nextTimer = 0;
     const ctx = vm.createContext({
-        HOME_TAB_INDEX: 7, SONGBOOK_TAB_INDEX: 2, CONTENT_TAB_INDEX: 5, MUSIC_TAB_INDEX: 4,
+        HOME_TAB_INDEX: 7, SONGBOOK_TAB_INDEX: 2, CONTENT_TAB_INDEX: 5, GAME_LOG_TAB_INDEX: 8, GAME_TAB_INDEX: 6, MUSIC_TAB_INDEX: 4,
+        TAB_ROUTES: ['calendar', 'schedule', 'songbook', 'live', 'music', 'content', 'games', 'home', 'game-log'],
         MUSIC_PAGES: { songs: {}, dance: {}, gembox: {} },
+        URLSearchParams, location, history, authServiceUnavailable: false,
         document: {
             title: 'BEADYO', body: element(), createElement: element,
-            getElementById(id) { return id === 'loading' ? loading : frames[Number(id.replace('frame-', ''))]; },
+            getElementById(id) { return id === 'loading' ? loading : id === 'content-subnav' ? contentNav : frames[Number(id.replace('frame-', ''))]; },
             querySelector: () => content,
-            querySelectorAll: selector => selector === '.sheet-frame' ? frames : [],
+            querySelectorAll: selector => selector === '.sheet-frame' ? frames : selector === '.tab' ? tabs : [],
         },
-        window: { matchMedia: () => ({ matches: false }), dispatchEvent() {}, BeadyoHome: { activate() {} } },
+        window: { location, matchMedia: () => ({ matches: false }), dispatchEvent() {}, addEventListener: (name, fn) => listeners.set(name, fn), BeadyoHome: { activate() {} } },
         CustomEvent: class {}, requestAnimationFrame: fn => deferAnimation ? animations.push(fn) : fn(),
         setTimeout(fn, ms) { const id = ++nextTimer; timers.set(id, { fn, ms }); return id; },
         clearTimeout: id => timers.delete(id),
-        updateMusicSubnav() {}, updateMobileFab() {}, syncTabUrl() {},
+        updateMusicSubnav() {}, updateMobileFab() {},
         resetFrameScrollAfterLoad() {}, syncCalendarAuth: frame => auth.push(frame?.id),
         syncThemeToFrames: frame => themes.push(frame?.id),
         deliverPendingSongbookSong() {}, deliverPendingLiveDate() {},
@@ -63,10 +87,13 @@ function harness({ deferAnimation = false } = {}) {
     vm.runInContext(
         section(app, 'const loaded =', 'const authDb =') +
         "let currentMusicPage = 'songs'; function getFrameUrl(index) { return index === 4 ? currentMusicPage + '.html' : 'page-' + index + '.html'; }\n" +
+        section(app, 'function routeToMusicPage(', 'const readOnlyUrl =') +
+        app.match(/function updateContentSubnav\([^]*?\n\}/)[0] + '\n' +
         section(app, 'function hideLoading(', 'function resetFrameScroll(') +
-        section(app, 'function switchTab(', '// 첫 탭 초기 로드'), ctx);
+        section(app, 'function switchTab(', '// 첫 탭 초기 로드') +
+        section(app, 'function handleTabRouteChange(', "window.addEventListener('storage'"), ctx);
     return {
-        ctx, frames, loading, text, timers, auth, themes,
+        ctx, frames, loading, text, timers, auth, themes, tabs, contentNav, contentButtons, location,
         flushAnimations() { while (animations.length) animations.shift()(); },
         isLoaded: index => vm.runInContext(`loaded.has(${index})`, ctx),
         expire(index) {
@@ -167,6 +194,48 @@ test('a pending completion leaves HOME visible and a completed tab is reused', (
     h.ctx.switchTab(2);
     assert.equal(h.frames[2].requests.length, 1);
     assert.equal(h.loading.style.display, 'none');
+});
+
+test('direct game-log routes select CONTENT and only its played-games subpage', () => {
+    for (const url of ['http://localhost:3000/#game-log', 'http://localhost:3000/?tab=game-log']) {
+        const h = harness({ url });
+        assert.equal(h.ctx.routeToTabIndex(), 8);
+        h.ctx.switchTab(h.ctx.routeToTabIndex(), { replaceUrl: true });
+        assert.deepEqual(h.tabs.filter(tab => tab.classList.contains('active')).map(tab => tab.dataset.tabIndex), ['5']);
+        assert.equal(h.tabs.find(tab => tab.dataset.tabIndex === '5').getAttribute('aria-current'), 'page');
+        assert.equal(h.contentNav.classList.contains('open'), true);
+        assert.deepEqual(h.contentButtons.filter(button => button.classList.contains('active')).map(button => button.dataset.contentTab), ['8']);
+        assert.equal(h.contentButtons[1].getAttribute('aria-current'), 'page');
+        assert.equal(h.frames[8].classList.contains('active'), true);
+        assert.equal(h.frames[5].classList.contains('active'), false);
+        assert.equal(h.frames[5].requests.length, 0);
+    }
+});
+
+test('content subpages preserve browser back and forward without reloading completed frames', () => {
+    const h = harness({ url: 'http://localhost:3000/#game-log' });
+    h.ctx.switchTab(8, { replaceUrl: true }); h.frames[8].onload();
+    h.ctx.switchTab(5); h.frames[5].onload();
+    assert.equal(h.location.hash, '#content');
+    assert.equal(h.contentButtons[0].getAttribute('aria-current'), 'page');
+    assert.equal(h.contentButtons[1].getAttribute('aria-current'), undefined);
+    h.ctx.history.back();
+    assert.equal(h.location.hash, '#game-log');
+    assert.equal(h.frames[8].classList.contains('active'), true);
+    assert.equal(h.contentButtons[1].getAttribute('aria-current'), 'page');
+    h.ctx.history.forward();
+    assert.equal(h.location.hash, '#content');
+    assert.equal(h.frames[5].classList.contains('active'), true);
+    assert.equal(h.contentButtons[0].getAttribute('aria-current'), 'page');
+    assert.equal(h.frames[5].requests.length, 1);
+    assert.equal(h.frames[8].requests.length, 1);
+});
+
+test('leaving CONTENT closes its subnavigation and clears its parent selection', () => {
+    const h = harness(); h.ctx.switchTab(8); h.ctx.switchTab(6);
+    assert.equal(h.contentNav.classList.contains('open'), false);
+    assert.equal(h.tabs.find(tab => tab.dataset.tabIndex === '5').classList.contains('active'), false);
+    assert.equal(h.tabs.find(tab => tab.dataset.tabIndex === '6').getAttribute('aria-current'), 'page');
 });
 
 test('standalone brand and whole-home actions both target the HOME route', () => {

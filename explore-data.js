@@ -11,7 +11,8 @@
         { index: 2, route: 'songbook', label: 'SONGBOOK', description: '신청 가능한 노래를 검색하고 즐겨찾기에 저장' },
         { index: 3, route: 'live', label: 'LIVE RECORD', description: '방송에서 부른 곡, 부른 날짜와 등록된 클립' },
         { index: 4, route: 'music', label: 'MUSIC', description: '오리지널·커버·라이브 영상과 음악 시리즈' },
-        { index: 5, route: 'content', label: 'CONTENT', description: '기획 방송의 출연자, 상세 기록과 다시보기' },
+        { index: 5, route: 'content', label: 'CONTENT', description: '기획 콘텐츠와 플레이한 게임의 방송 기록·다시보기' },
+        { index: 8, route: 'game-log', label: '플레이한 게임', parentIndex: 5, description: '구슬요가 플레이한 게임과 날짜를 모아 보는 기록장' },
         { index: 6, route: 'games', label: 'GAME', description: '기존 팬 게임을 골라 즐기는 공간' },
     ]);
     function safeUrl(value) {

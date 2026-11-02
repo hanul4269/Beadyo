@@ -27,11 +27,49 @@ test('date targets reject invalid dates and accept leap days', () => {
     assert.equal(D.validDate('2024-02-29'), '2024-02-29');
     for (const value of ['2025-02-29', '2026-02-30', '2026-13-01', '2026-01-01<script>', '', null]) assert.equal(D.validDate(value), '');
 });
-test('navigation retains route identities and moves SCHEDULE out of MORE', () => {
-    assert.deepEqual(D.menus.map(m => m.index).sort((a,b) => a-b), [0,1,2,3,4,5,6,7]);
-    assert.deepEqual(D.menus.map(m => m.route).sort(), ['calendar','content','games','home','live','music','schedule','songbook']);
-    assert.ok(D.menus.every(m => /^[A-Z ]+$/.test(m.label) && m.description));
-    assert.deepEqual(D.menus.filter(m => !m.hidden).map(m => m.index).sort((a,b) => a-b), [0,2,3,4,5,6,7]);
+test('navigation retains game-log links under CONTENT and keeps SCHEDULE out of MORE', () => {
+    assert.deepEqual(D.menus.map(m => m.index).sort((a,b) => a-b), [0,1,2,3,4,5,6,7,8]);
+    assert.deepEqual(D.menus.map(m => m.route).sort(), ['calendar','content','game-log','games','home','live','music','schedule','songbook']);
+    assert.ok(D.menus.every(m => m.label && m.description));
+    assert.deepEqual(D.menus.filter(m => !m.hidden && m.parentIndex === undefined).map(m => m.index).sort((a,b) => a-b), [0,2,3,4,5,6,7]);
+    const gameLog = D.menus.find(m => m.route === 'game-log');
+    assert.equal(gameLog.parentIndex, 5);
+    assert.equal(gameLog.label, '플레이한 게임');
+});
+test('mobile CONTENT stays selected for a game-log deep link while MORE selects the exact child', () => {
+    function button(index, bottom = false) {
+        const classes = new Set(), attributes = {};
+        return {
+            dataset: { exploreTab: String(index), tabIndex: String(index) },
+            classList: { toggle(name, active) { active ? classes.add(name) : classes.delete(name); }, contains: name => classes.has(name) },
+            setAttribute(name, value) { attributes[name] = value; },
+            removeAttribute(name) { delete attributes[name]; },
+            getAttribute: name => attributes[name],
+            closest: selector => selector === '.explore-bottom' && bottom ? {} : null,
+        };
+    }
+    const bottomContent = button(5, true), moreContent = button(5), moreGames = button(8), morePlay = button(6), moreToggle = button(-1);
+    const items = {}, listeners = new Map();
+    const document = {
+        getElementById: id => id === 'explore-more-items' ? items : moreToggle,
+        querySelectorAll: selector => selector === '.tab[data-tab-index]' ? [button(5)] : [bottomContent, moreContent, moreGames, morePlay],
+        querySelector: selector => selector === '.sheet-frame.active' ? { id: 'frame-8' } : { dataset: { tabIndex: '5' } },
+    };
+    const source = fs.readFileSync(path.join(root, 'explore-shell.js'), 'utf8');
+    const ctx = vm.createContext({ D, esc: String, document, window: { addEventListener: (name, fn) => listeners.set(name, fn) } });
+    vm.runInContext(source.slice(source.indexOf('    const menuByIndex ='), source.indexOf('    function showDialog(')), ctx);
+    assert.equal(bottomContent.getAttribute('aria-current'), 'page');
+    assert.equal(moreGames.getAttribute('aria-current'), 'page');
+    assert.equal(moreContent.getAttribute('aria-current'), undefined);
+    assert.equal(moreToggle.classList.contains('active'), false);
+    listeners.get('beadyo-tab-change')({ detail: { index: 5 } });
+    assert.equal(bottomContent.getAttribute('aria-current'), 'page');
+    assert.equal(moreContent.getAttribute('aria-current'), 'page');
+    assert.equal(moreGames.getAttribute('aria-current'), undefined);
+    listeners.get('beadyo-tab-change')({ detail: { index: 6 } });
+    assert.equal(bottomContent.getAttribute('aria-current'), undefined);
+    assert.equal(morePlay.getAttribute('aria-current'), 'page');
+    assert.equal(moreToggle.getAttribute('aria-current'), 'page');
 });
 test('automatic UP policy never opens a modal or reads/writes the old hide preference', async () => {
     const source = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
