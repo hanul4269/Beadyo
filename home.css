@@ -56,8 +56,11 @@ body.home-view .explore-bottom { background: var(--home-control-surface); border
 .home-root .home-photo-toolbar h2 span { display: block; color: var(--muted); font-size: 11px; font-weight: 500; }
 .home-root .home-photo-close { min-width: 66px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--ink); font: inherit; font-size: 13px; }
 .home-root .home-photo-dialog > img { display: block; width: 100%; height: auto; }
-@media (min-width: 1440px) {
-    .home-root .home-wrap.home-layout { max-width: 1424px; grid-template-columns: minmax(0, 1104px) 240px; gap: 24px; }
+@media (min-width: 1720px) {
+    /* Equal side tracks keep the main content centered when the photo is beside it. */
+    .home-root .home-wrap.home-layout { max-width: 1688px; grid-template-columns: 240px minmax(0, 1104px) 240px; gap: 24px; }
+    .home-root .home-main { grid-column: 2; grid-row: 1; }
+    .home-root .home-photostrip { grid-column: 3; grid-row: 1; }
 }
 .home-root h1 { font-size: 26px; line-height: 1.35; letter-spacing: -.8px; }
 .home-root .home-intro p { font-size: 14px; color: var(--muted); margin-top: 6px; line-height: 1.6; }
