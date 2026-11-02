@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="구슬요가 플레이한 게임과 날짜를 모아 보는 게임 기록장">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://qlmcwobfldgmhwhptkfz.supabase.co; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
     <meta name="theme-color" content="#76ad39">
     <title>플레이한 게임 — BEADYO</title>
     <link rel="icon" href="logo-icon.webp">
     <script src="site-backdrop.js?v=release-20261011-all"></script>
-    <link rel="stylesheet" href="game-log.css?v=reaudit-20261031">
-    <script defer src="game-log.js?v=full-audit-20261101"></script>
+    <link rel="stylesheet" href="game-log.css?v=filter-buttons-20261102">
+    <script defer src="supabase.min.js?v=supabase-2-118-0"></script>
+    <script defer src="beadyo-common.js?v=release-20261011-all"></script>
+    <script defer src="game-log-store.js?v=add-games-20261102"></script>
+    <script defer src="game-log.js?v=filter-buttons-20261102"></script>
 </head>
 <body>
     <a class="skip-link" href="#games">게임 목록으로 건너뛰기</a>
@@ -32,15 +35,25 @@
         </header>
 
         <div class="archive-summary" id="archive-summary" aria-live="polite"><span>기록을 불러오고 있어요.</span></div>
+        <div class="archive-actions">
+            <p id="custom-load-status" role="status" hidden></p>
+            <button id="retry-custom-games" class="secondary-action" type="button" hidden>다시 불러오기</button>
+            <button id="add-game-btn" class="primary-action" type="button" hidden>+ 게임 추가</button>
+        </div>
+        <p id="game-save-notice" class="save-notice" role="status" hidden></p>
 
         <section class="toolbar" aria-label="게임 검색과 필터">
             <label class="search-field">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="7.3"/><path d="m16.2 16.2 4.4 4.4"/></svg>
                 <span class="sr-only">게임 이름 검색</span>
-                <input id="game-search" type="search" placeholder="어떤 게임을 찾고 있나요?" autocomplete="off" maxlength="100">
+                <input id="game-search" type="search" placeholder="게임 이름 검색" autocomplete="off" maxlength="100">
             </label>
-            <label class="select-field"><span class="sr-only">플레이 연도</span><select id="year-filter"><option value="">전체 연도</option></select></label>
             <label class="select-field"><span class="sr-only">정렬</span><select id="sort-filter"><option value="recent">최근 기록순</option><option value="name">이름순</option><option value="oldest">오래된 기록순</option></select></label>
+            <div class="filter-groups">
+                <div class="button-filter"><span class="filter-label" id="year-filter-label">연도</span><div class="filter-options" id="year-filter" role="group" aria-labelledby="year-filter-label"><button class="filter-chip" type="button" data-filter="year" data-value="" aria-pressed="true">전체 연도</button></div></div>
+                <div class="button-filter"><span class="filter-label" id="month-filter-label">월</span><div class="filter-options" id="month-filter" role="group" aria-labelledby="month-filter-label"></div></div>
+                <div class="button-filter"><span class="filter-label" id="genre-filter-label">장르</span><div class="filter-options" id="genre-filter" role="group" aria-labelledby="genre-filter-label"><button class="filter-chip" type="button" disabled>장르 불러오는 중</button></div></div>
+            </div>
         </section>
 
         <div class="list-heading">
@@ -72,7 +85,7 @@
         <div id="load-error" class="empty-state" hidden><h2>기록을 불러오지 못했어요</h2><p>잠시 후 다시 시도해 주세요.</p><button id="retry-load" type="button">다시 불러오기</button></div>
 
         <footer class="archive-footer">
-            <p><span class="source-dot" aria-hidden="true"></span>방송 영상·캘린더·나무위키에 남아 있는 기록을 모았어요. 날짜가 없는 게임은 확인되는 대로 채워갑니다.</p>
+            <p><span class="source-dot" aria-hidden="true"></span>방송 영상·캘린더·나무위키와 직접 등록한 기록을 모았어요. 날짜가 없는 게임은 확인되는 대로 채워갑니다.</p>
             <details><summary>기록과 이미지 출처</summary><div id="source-info"><p>게임 이미지는 공식 스토어·제작사 자료를 사용하며, 권리는 각 권리자에게 있습니다.</p></div></details>
             <span class="footer-brand">BEADYO · GAME LOG</span>
         </footer>
@@ -81,6 +94,21 @@
     <dialog id="game-dialog" class="game-dialog" aria-labelledby="detail-title">
         <div class="detail-top"><p>GAME RECORD</p><button type="button" id="close-detail" aria-label="게임 상세 닫기">×</button></div>
         <div id="detail-body"></div>
+    </dialog>
+    <dialog id="game-add-dialog" class="game-dialog game-add-dialog" aria-labelledby="game-add-title">
+        <form id="game-add-form">
+            <div class="detail-top"><h2 id="game-add-title">새 게임 추가</h2><button type="button" id="close-add-game" aria-label="게임 추가 닫기">×</button></div>
+            <fieldset id="game-add-fields" class="game-add-fields">
+                <label><span>게임 이름 <span aria-hidden="true">*</span></span><input id="new-game-title" name="title" required maxlength="160" autocomplete="off" placeholder="추가할 게임 이름" autofocus></label>
+                <label><span>플레이 날짜</span><input id="new-game-date" name="played_date" type="date"><span class="field-help">정확한 날짜를 모르면 비워두세요.</span></label>
+                <fieldset class="genre-fieldset"><legend>장르 <span class="field-help">여러 개 선택할 수 있어요.</span></legend><div id="new-game-genres" class="genre-options"></div></fieldset>
+                <label><span>공식 게임 페이지 <span class="field-help">선택</span></span><input id="new-game-official" name="official_url" type="url" maxlength="2048" placeholder="https://" autocomplete="off"></label>
+                <label><span>플레이 기록 링크 <span class="field-help">선택</span></span><input id="new-game-source" name="source_url" type="url" maxlength="2048" placeholder="방송 영상이나 관련 기록의 주소" autocomplete="off"></label>
+                <label><span>메모 <span class="field-help">선택</span></span><textarea id="new-game-notes" name="notes" rows="3" maxlength="2000" placeholder="함께 남길 내용"></textarea></label>
+            </fieldset>
+            <p id="game-add-message" class="game-add-message" role="alert"></p>
+            <div class="game-add-footer"><button id="cancel-new-game" class="secondary-action" type="button">취소</button><button id="save-new-game" class="primary-action" type="submit">게임 추가</button></div>
+        </form>
     </dialog>
 </body>
 </html>

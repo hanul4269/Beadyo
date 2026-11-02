@@ -1,0 +1,6145 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-11-02",
+  "categories": [
+    {
+      "id": "action",
+      "label": "액션"
+    },
+    {
+      "id": "adventure",
+      "label": "어드벤처"
+    },
+    {
+      "id": "rpg",
+      "label": "RPG"
+    },
+    {
+      "id": "strategy",
+      "label": "전략"
+    },
+    {
+      "id": "simulation",
+      "label": "시뮬레이션"
+    },
+    {
+      "id": "horror",
+      "label": "공포"
+    },
+    {
+      "id": "puzzle",
+      "label": "퍼즐"
+    },
+    {
+      "id": "shooter",
+      "label": "슈팅"
+    },
+    {
+      "id": "sports",
+      "label": "스포츠"
+    },
+    {
+      "id": "racing",
+      "label": "레이싱"
+    },
+    {
+      "id": "rhythm",
+      "label": "리듬"
+    },
+    {
+      "id": "board-card",
+      "label": "보드·카드"
+    },
+    {
+      "id": "party-social",
+      "label": "파티·추리"
+    },
+    {
+      "id": "platformer",
+      "label": "플랫포머"
+    },
+    {
+      "id": "survival",
+      "label": "생존"
+    },
+    {
+      "id": "quiz",
+      "label": "퀴즈·상식"
+    }
+  ],
+  "games": {
+    "minecraft": {
+      "genres": [
+        "action",
+        "adventure",
+        "survival"
+      ],
+      "sourceUrl": "https://www.minecraft.net/en-us/about-minecraft",
+      "sourceTags": [
+        "action-adventure sandbox game",
+        "Survival mode"
+      ]
+    },
+    "rust": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/252490/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "Survival",
+        "Open World Survival Craft"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie",
+        "Massively Multiplayer",
+        "RPG"
+      ],
+      "sourceUserTags": [
+        "Survival",
+        "Open World Survival Craft"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=252490&l=english&cc=US"
+    },
+    "valorant": {
+      "genres": [
+        "shooter"
+      ],
+      "sourceUrl": "https://playvalorant.com/en-us/",
+      "sourceTags": [
+        "tactical FPS",
+        "tactical shooter"
+      ]
+    },
+    "vrchat": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "sports"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/438100/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Sports"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Casual",
+        "Massively Multiplayer",
+        "Simulation",
+        "Sports",
+        "Free To Play",
+        "Early Access"
+      ],
+      "sourceUserTags": [],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=438100&l=english&cc=US"
+    },
+    "pubg-battlegrounds": {
+      "genres": [
+        "action",
+        "adventure",
+        "shooter",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/578080/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Survival",
+        "Shooter",
+        "FPS",
+        "Third-Person Shooter"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Massively Multiplayer",
+        "Free To Play"
+      ],
+      "sourceUserTags": [
+        "Survival",
+        "Shooter",
+        "FPS",
+        "Third-Person Shooter",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=578080&l=english&cc=US"
+    },
+    "vampire-survivors": {
+      "genres": [
+        "action",
+        "rpg",
+        "shooter"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1794680/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "RPG",
+        "Action Roguelike",
+        "Bullet Hell"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie",
+        "RPG"
+      ],
+      "sourceUserTags": [
+        "Action Roguelike",
+        "Bullet Hell"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1794680&l=english&cc=US"
+    },
+    "mario-kart-world": {
+      "genres": [
+        "racing",
+        "party-social"
+      ],
+      "sourceUrl": "https://www.nintendo.com/us/store/products/mario-kart-world-switch-2/",
+      "sourceTags": [
+        "Party",
+        "Racing"
+      ]
+    },
+    "webfishing": {
+      "genres": [],
+      "sourceUrl": "https://store.steampowered.com/app/3146520/?l=english&cc=US",
+      "sourceTags": [],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Massively Multiplayer"
+      ],
+      "sourceUserTags": [],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3146520&l=english&cc=US"
+    },
+    "turmoil": {
+      "genres": [
+        "strategy",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/361280/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Strategy",
+        "Turn-Based Strategy"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Strategy",
+        "Turn-Based Strategy"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=361280&l=english&cc=US"
+    },
+    "propnight": {
+      "genres": [
+        "action",
+        "adventure",
+        "horror",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1549180/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Horror",
+        "Survival Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Casual"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Survival Horror",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1549180&l=english&cc=US"
+    },
+    "dread-hunger": {
+      "genres": [
+        "action",
+        "adventure",
+        "horror",
+        "party-social",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1418630/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Survival",
+        "Social Deduction",
+        "Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Survival",
+        "Social Deduction",
+        "Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1418630&l=english&cc=US"
+    },
+    "goose-goose-duck": {
+      "genres": [
+        "strategy",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1568590/?l=english&cc=US",
+      "sourceTags": [
+        "Strategy",
+        "Social Deduction"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Massively Multiplayer",
+        "Strategy",
+        "Free To Play"
+      ],
+      "sourceUserTags": [
+        "Social Deduction"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1568590&l=english&cc=US"
+    },
+    "league-of-legends": {
+      "genres": [
+        "strategy"
+      ],
+      "sourceUrl": "https://www.leagueoflegends.com/en-us/how-to-play/",
+      "sourceTags": [
+        "team-based strategy game"
+      ]
+    },
+    "longvinter": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg",
+        "simulation",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1635450/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "Simulation",
+        "Survival",
+        "Open World Survival Craft"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Massively Multiplayer",
+        "RPG",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Survival",
+        "Open World Survival Craft"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1635450&l=english&cc=US"
+    },
+    "only-up": {
+      "genres": [],
+      "sourceUrl": "https://steamcommunity.com/app/2381590",
+      "sourceTags": []
+    },
+    "pummel-party": {
+      "genres": [
+        "action",
+        "board-card",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/880940/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Party Game",
+        "Board Game"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Party Game",
+        "Board Game"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=880940&l=english&cc=US"
+    },
+    "raft": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/648800/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Survival",
+        "Open World Survival Craft"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Survival",
+        "Open World Survival Craft"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=648800&l=english&cc=US"
+    },
+    "super-mario-maker-2": {
+      "genres": [
+        "action",
+        "platformer"
+      ],
+      "sourceUrl": "https://www.nintendo.com/us/store/products/super-mario-maker-2-switch/",
+      "sourceTags": [
+        "Action",
+        "Platforming"
+      ]
+    },
+    "kibitz-bugs": {
+      "genres": [
+        "board-card"
+      ],
+      "sourceUrl": "https://kibitz-bugs.xyz/",
+      "sourceTags": [
+        "오목 게임",
+        "gomoku"
+      ]
+    },
+    "only-climb": {
+      "genres": [
+        "action",
+        "adventure",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2500750/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Precision Platformer",
+        "3D Platformer",
+        "Platformer"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Precision Platformer",
+        "3D Platformer",
+        "Platformer"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2500750&l=english&cc=US"
+    },
+    "party-animals": {
+      "genres": [
+        "action",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1260320/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Party Game",
+        "Fighting"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Party Game",
+        "Fighting",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1260320&l=english&cc=US"
+    },
+    "palworld": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1623730/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "Survival",
+        "Open World Survival Craft"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie",
+        "RPG"
+      ],
+      "sourceUserTags": [
+        "Survival",
+        "Open World Survival Craft"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1623730&l=english&cc=US"
+    },
+    "crab-game": {
+      "genres": [
+        "action",
+        "horror",
+        "racing"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1782210/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Racing",
+        "Psychological Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Free To Play",
+        "Indie",
+        "Racing"
+      ],
+      "sourceUserTags": [
+        "Psychological Horror",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1782210&l=english&cc=US"
+    },
+    "arma-3": {
+      "genres": [
+        "action",
+        "strategy",
+        "simulation",
+        "shooter"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/107410/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Simulation",
+        "Strategy",
+        "Shooter"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Action",
+        "Shooter",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=107410&l=english&cc=US"
+    },
+    "kartrider-drift": {
+      "genres": [
+        "racing"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1184140/?l=english&cc=US",
+      "sourceTags": [
+        "Racing"
+      ],
+      "sourceGenres": [
+        "Racing"
+      ],
+      "sourceUserTags": [
+        "Racing"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1184140&l=english&cc=US"
+    },
+    "shinkansen-0": {
+      "genres": [
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2793370/?l=english&cc=US",
+      "sourceTags": [
+        "Horror",
+        "Psychological Horror",
+        "Immersive Sim"
+      ],
+      "sourceGenres": [
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Psychological Horror",
+        "Immersive Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2793370&l=english&cc=US"
+    },
+    "the-exit-8": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "horror",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2653790/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Puzzle",
+        "Horror",
+        "Psychological Horror",
+        "Immersive Sim"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Puzzle",
+        "Horror",
+        "Psychological Horror",
+        "Immersive Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2653790&l=english&cc=US"
+    },
+    "60-seconds": {
+      "genres": [
+        "adventure",
+        "strategy",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/368360/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Strategy",
+        "Turn-Based Tactics",
+        "Choose Your Own Adventure",
+        "Outbreak Sim",
+        "Immersive Sim"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Casual",
+        "Indie",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Turn-Based Tactics",
+        "Choose Your Own Adventure",
+        "Outbreak Sim",
+        "Immersive Sim",
+        "Strategy"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=368360&l=english&cc=US"
+    },
+    "carry-the-glass": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "puzzle",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3263320/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Puzzle Platformer",
+        "Platformer",
+        "3D Platformer"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Puzzle Platformer",
+        "Adventure",
+        "Platformer",
+        "3D Platformer"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3263320&l=english&cc=US"
+    },
+    "project-zomboid": {
+      "genres": [
+        "rpg",
+        "simulation",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/108600/?l=english&cc=US",
+      "sourceTags": [
+        "RPG",
+        "Simulation",
+        "Survival",
+        "Open World Survival Craft"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "RPG",
+        "Simulation",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Survival",
+        "Open World Survival Craft"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=108600&l=english&cc=US"
+    },
+    "visage": {
+      "genres": [
+        "action",
+        "adventure",
+        "simulation",
+        "horror",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/594330/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Simulation",
+        "Horror",
+        "Psychological Horror",
+        "Survival Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Psychological Horror",
+        "Survival Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=594330&l=english&cc=US"
+    },
+    "professor-layton-and-the-curious-village": {
+      "genres": [
+        "adventure",
+        "puzzle"
+      ],
+      "sourceUrl": "https://www.nintendo.com/en-gb/Games/Nintendo-DS/Professor-Layton-and-the-Curious-Village-272563.html",
+      "sourceTags": [
+        "puzzle-solving",
+        "adventure"
+      ]
+    },
+    "old-market-simulator": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2878420/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Life Sim",
+        "Immersive Sim"
+      ],
+      "sourceGenres": [
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Life Sim",
+        "Immersive Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2878420&l=english&cc=US"
+    },
+    "keep-talking-and-nobody-explodes": {
+      "genres": [
+        "puzzle",
+        "board-card",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/341800/?l=english&cc=US",
+      "sourceTags": [
+        "Puzzle",
+        "Party Game",
+        "Board Game",
+        "Party"
+      ],
+      "sourceGenres": [
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Puzzle",
+        "Party Game",
+        "Board Game",
+        "Party"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=341800&l=english&cc=US"
+    },
+    "miside": {
+      "genres": [
+        "adventure",
+        "rpg",
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2527500/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "RPG",
+        "Simulation",
+        "Psychological Horror",
+        "Horror"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Indie",
+        "RPG",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Psychological Horror",
+        "Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2527500&l=english&cc=US"
+    },
+    "void-crew": {
+      "genres": [
+        "action",
+        "adventure",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1063420/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Space Sim"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure"
+      ],
+      "sourceUserTags": [
+        "Space Sim",
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1063420&l=english&cc=US"
+    },
+    "detroit-become-human": {
+      "genres": [
+        "action",
+        "adventure"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1222140/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure"
+      ],
+      "sourceUserTags": [],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1222140&l=english&cc=US"
+    },
+    "get-to-work": {
+      "genres": [
+        "action",
+        "adventure",
+        "racing",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2706170/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Racing",
+        "Precision Platformer",
+        "3D Platformer"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Racing"
+      ],
+      "sourceUserTags": [
+        "Adventure",
+        "Precision Platformer",
+        "3D Platformer"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2706170&l=english&cc=US"
+    },
+    "monster-hunter-wilds": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2246340/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "RPG"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "RPG"
+      ],
+      "sourceUserTags": [
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2246340&l=english&cc=US"
+    },
+    "buried-stars": {
+      "genres": [
+        "adventure"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1025960/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Casual"
+      ],
+      "sourceUserTags": [],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1025960&l=english&cc=US"
+    },
+    "ring-fit-adventure": {
+      "genres": [
+        "adventure"
+      ],
+      "sourceUrl": "https://www.nintendo.com/us/store/products/ring-fit-adventure-switch/",
+      "sourceTags": [
+        "long-form adventure"
+      ]
+    },
+    "split-fiction": {
+      "genres": [
+        "action",
+        "adventure",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2001120/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Action-Adventure",
+        "3D Platformer"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure"
+      ],
+      "sourceUserTags": [
+        "Action-Adventure",
+        "3D Platformer"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2001120&l=english&cc=US"
+    },
+    "inzoi": {
+      "genres": [
+        "adventure",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2456740/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Life Sim"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Casual",
+        "Simulation",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Life Sim",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2456740&l=english&cc=US"
+    },
+    "dooms-hair-salon": {
+      "genres": [
+        "adventure",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3398870/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Life Sim",
+        "Immersive Sim"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Life Sim",
+        "Immersive Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3398870&l=english&cc=US"
+    },
+    "into-the-dead-our-darkest-days": {
+      "genres": [
+        "action",
+        "strategy",
+        "simulation",
+        "horror",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2239710/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Simulation",
+        "Strategy",
+        "Survival Horror",
+        "Horror",
+        "Psychological Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Simulation",
+        "Strategy",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Survival Horror",
+        "Horror",
+        "Action",
+        "Psychological Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2239710&l=english&cc=US"
+    },
+    "sephiria": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2436940/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "Action Roguelike"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie",
+        "RPG"
+      ],
+      "sourceUserTags": [
+        "Action Roguelike",
+        "Action",
+        "RPG"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2436940&l=english&cc=US"
+    },
+    "mabinogi-mobile": {
+      "genres": [
+        "rpg"
+      ],
+      "sourceUrl": "https://mabinogimobile.nexon.com/News/Devnote/2999055",
+      "sourceTags": [
+        "MMORPG"
+      ]
+    },
+    "world-of-tanks": {
+      "genres": [
+        "action",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1407200/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Massively Multiplayer",
+        "Simulation",
+        "Free To Play"
+      ],
+      "sourceUserTags": [],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1407200&l=english&cc=US"
+    },
+    "liar-game": {
+      "genres": [
+        "rpg",
+        "strategy",
+        "board-card"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3555700/?l=english&cc=US",
+      "sourceTags": [
+        "RPG",
+        "Strategy",
+        "RTS",
+        "Board Game",
+        "Turn-Based Strategy"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "RPG",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Strategy",
+        "RTS",
+        "Board Game",
+        "Turn-Based Strategy"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3555700&l=english&cc=US"
+    },
+    "brotato": {
+      "genres": [
+        "action",
+        "rpg",
+        "shooter",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1942280/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "RPG",
+        "Bullet Hell",
+        "Action Roguelike",
+        "Survival"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie",
+        "RPG"
+      ],
+      "sourceUserTags": [
+        "Bullet Hell",
+        "Action Roguelike",
+        "Survival"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1942280&l=english&cc=US"
+    },
+    "starcraft-meundi": {
+      "genres": [],
+      "sourceUrl": "https://blizzard.gamespress.com/BlizzConline-Co-Streamer-Asset-Pack",
+      "sourceTags": []
+    },
+    "kuukiyomi-series": {
+      "genres": [],
+      "sourceUrl": "https://kuukiyomi.com/",
+      "sourceTags": []
+    },
+    "stardew-valley": {
+      "genres": [
+        "rpg",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/413150/?l=english&cc=US",
+      "sourceTags": [
+        "RPG",
+        "Simulation",
+        "Farming Sim",
+        "Life Sim"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "RPG",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Farming Sim",
+        "Life Sim",
+        "RPG",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=413150&l=english&cc=US"
+    },
+    "street-fighter-6": {
+      "genres": [
+        "action",
+        "adventure"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1364780/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "2D Fighter",
+        "Fighting"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure"
+      ],
+      "sourceUserTags": [
+        "2D Fighter",
+        "Fighting",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1364780&l=english&cc=US"
+    },
+    "slay-the-spire": {
+      "genres": [
+        "strategy",
+        "board-card"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/646570/?l=english&cc=US",
+      "sourceTags": [
+        "Strategy",
+        "Roguelike Deckbuilder",
+        "Card Game",
+        "Card Battler",
+        "Deckbuilding"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Roguelike Deckbuilder",
+        "Card Game",
+        "Card Battler",
+        "Deckbuilding",
+        "Strategy"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=646570&l=english&cc=US"
+    },
+    "maplestory": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/216150/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "MMORPG",
+        "2D Platformer"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Casual",
+        "Massively Multiplayer",
+        "RPG",
+        "Free To Play"
+      ],
+      "sourceUserTags": [
+        "MMORPG",
+        "2D Platformer"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=216150&l=english&cc=US"
+    },
+    "among-us-3d": {
+      "genres": [
+        "strategy"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3168600/?l=english&cc=US",
+      "sourceTags": [
+        "Strategy"
+      ],
+      "sourceGenres": [
+        "Casual"
+      ],
+      "sourceUserTags": [
+        "Strategy"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3168600&l=english&cc=US"
+    },
+    "yacht-dice": {
+      "genres": [],
+      "sourceUrl": "",
+      "sourceTags": []
+    },
+    "subnautica": {
+      "genres": [
+        "adventure",
+        "horror",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/264710/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Open World Survival Craft",
+        "Survival",
+        "Horror"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Open World Survival Craft",
+        "Survival",
+        "Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=264710&l=english&cc=US"
+    },
+    "worms-clan-wars": {
+      "genres": [
+        "action",
+        "strategy"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/233840/?l=english&cc=US",
+      "sourceTags": [
+        "Strategy",
+        "Action"
+      ],
+      "sourceGenres": [
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Strategy",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=233840&l=english&cc=US"
+    },
+    "zelda-breath-of-the-wild": {
+      "genres": [
+        "action",
+        "adventure",
+        "puzzle",
+        "survival"
+      ],
+      "sourceUrl": "https://www.nintendo.com/us/store/products/the-legend-of-zelda-breath-of-the-wild-switch/",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Puzzle-solving elements",
+        "Survival"
+      ]
+    },
+    "geoguessr": {
+      "genres": [
+        "action",
+        "strategy"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3478870/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Strategy"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Strategy",
+        "Free To Play",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Strategy",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3478870&l=english&cc=US"
+    },
+    "peak": {
+      "genres": [
+        "action",
+        "adventure"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3527290/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3527290&l=english&cc=US"
+    },
+    "7-days-to-die": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg",
+        "strategy",
+        "simulation",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/251570/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "Simulation",
+        "Strategy",
+        "Survival",
+        "Open World Survival Craft"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie",
+        "RPG",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Survival",
+        "Open World Survival Craft"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=251570&l=english&cc=US"
+    },
+    "whos-at-the-door": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3690010/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Horror",
+        "Immersive Sim",
+        "Choose Your Own Adventure"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Adventure",
+        "Horror",
+        "Immersive Sim",
+        "Choose Your Own Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3690010&l=english&cc=US"
+    },
+    "death-sees-twice": {
+      "genres": [
+        "adventure",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3723720/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Hidden Object"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Hidden Object"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3723720&l=english&cc=US"
+    },
+    "one-mans-trash": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3692070/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Farming Sim",
+        "Horror"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Farming Sim",
+        "Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3692070&l=english&cc=US"
+    },
+    "fantasy-life-i": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2993780/?l=english&cc=US",
+      "sourceTags": [
+        "RPG",
+        "JRPG",
+        "City Builder",
+        "Action",
+        "Action-Adventure"
+      ],
+      "sourceGenres": [
+        "RPG"
+      ],
+      "sourceUserTags": [
+        "RPG",
+        "JRPG",
+        "City Builder",
+        "Action",
+        "Action-Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2993780&l=english&cc=US"
+    },
+    "pokemon-legends-z-a": {
+      "genres": [
+        "action",
+        "rpg"
+      ],
+      "sourceUrl": "https://www.nintendo.com/us/store/products/pokemon-legends-z-a-switch/",
+      "sourceTags": [
+        "Action",
+        "Role playing"
+      ]
+    },
+    "little-nightmares-3": {
+      "genres": [
+        "adventure",
+        "horror",
+        "puzzle",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1392860/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Horror",
+        "Puzzle",
+        "Platformer"
+      ],
+      "sourceGenres": [
+        "Adventure"
+      ],
+      "sourceUserTags": [
+        "Adventure",
+        "Horror",
+        "Puzzle",
+        "Platformer"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1392860&l=english&cc=US"
+    },
+    "megabonk": {
+      "genres": [
+        "action",
+        "shooter",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3405340/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Action Roguelike",
+        "Bullet Hell",
+        "Survival"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Action Roguelike",
+        "Bullet Hell",
+        "Survival"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3405340&l=english&cc=US"
+    },
+    "escape-simulator-2": {
+      "genres": [
+        "action",
+        "adventure",
+        "simulation",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2879840/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Simulation",
+        "Puzzle",
+        "Escape Room"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Casual",
+        "Indie",
+        "Massively Multiplayer",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Puzzle",
+        "Escape Room"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2879840&l=english&cc=US"
+    },
+    "judofuri": {
+      "genres": [
+        "action",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3013460/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Party Game"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Party Game"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3013460&l=english&cc=US"
+    },
+    "keep-digging": {
+      "genres": [
+        "adventure",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3585800/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3585800&l=english&cc=US"
+    },
+    "trine-4": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg",
+        "puzzle",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/690640/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "Puzzle Platformer",
+        "Action-Adventure"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie",
+        "RPG"
+      ],
+      "sourceUserTags": [
+        "Puzzle Platformer",
+        "Action-Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=690640&l=english&cc=US"
+    },
+    "the-spell-brigade": {
+      "genres": [
+        "action",
+        "shooter"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2904000/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Bullet Hell",
+        "Action Roguelike"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Bullet Hell",
+        "Action Roguelike"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2904000&l=english&cc=US"
+    },
+    "escape-from-duckov": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg",
+        "shooter"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3167020/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "Extraction Shooter",
+        "Top-Down Shooter",
+        "Looter Shooter",
+        "Shooter",
+        "Third-Person Shooter"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie",
+        "RPG"
+      ],
+      "sourceUserTags": [
+        "Adventure",
+        "Action",
+        "Extraction Shooter",
+        "Top-Down Shooter",
+        "Looter Shooter",
+        "Shooter",
+        "Third-Person Shooter"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3167020&l=english&cc=US"
+    },
+    "my-little-puppy": {
+      "genres": [
+        "action",
+        "adventure"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2102040/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2102040&l=english&cc=US"
+    },
+    "five-hearts-under-one-roof-season-2": {
+      "genres": [
+        "adventure",
+        "rpg",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3731020/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "RPG",
+        "Simulation",
+        "Choose Your Own Adventure",
+        "Immersive Sim",
+        "Dating Sim"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "RPG",
+        "Simulation",
+        "Free To Play"
+      ],
+      "sourceUserTags": [
+        "Choose Your Own Adventure",
+        "Immersive Sim",
+        "Dating Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3731020&l=english&cc=US"
+    },
+    "alley-ghost": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4181410/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Horror",
+        "Psychological Horror"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Psychological Horror",
+        "Adventure",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4181410&l=english&cc=US"
+    },
+    "2xko": {
+      "genres": [
+        "action"
+      ],
+      "sourceUrl": "https://2xko.riotgames.com/en-us/",
+      "sourceTags": [
+        "fighting game"
+      ]
+    },
+    "leaf-it-alone": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3981100/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3981100&l=english&cc=US"
+    },
+    "storebound": {
+      "genres": [
+        "action",
+        "adventure",
+        "horror",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3417410/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Puzzle",
+        "Horror",
+        "Psychological Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Puzzle",
+        "Horror",
+        "Psychological Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3417410&l=english&cc=US"
+    },
+    "egging-on": {
+      "genres": [
+        "action",
+        "adventure",
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2897610/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Simulation",
+        "Psychological Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Psychological Horror",
+        "Action",
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2897610&l=english&cc=US"
+    },
+    "shelldiver": {
+      "genres": [
+        "action",
+        "adventure"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3862670/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure"
+      ],
+      "sourceUserTags": [],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3862670&l=english&cc=US"
+    },
+    "bonfire-simulator": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3920940/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Immersive Sim",
+        "Life Sim"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Immersive Sim",
+        "Life Sim",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3920940&l=english&cc=US"
+    },
+    "after-school-playground": {
+      "genres": [
+        "action",
+        "shooter"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3966360/?l=english&cc=US",
+      "sourceTags": [
+        "Action Roguelike",
+        "Bullet Hell"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Action Roguelike",
+        "Bullet Hell"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3966360&l=english&cc=US"
+    },
+    "peglin": {
+      "genres": [
+        "rpg",
+        "strategy",
+        "board-card"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1296610/?l=english&cc=US",
+      "sourceTags": [
+        "RPG",
+        "Strategy",
+        "Deckbuilding"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "RPG",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Deckbuilding",
+        "Strategy"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1296610&l=english&cc=US"
+    },
+    "wuthering-waves": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3513350/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "RPG"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "Free To Play"
+      ],
+      "sourceUserTags": [
+        "Action",
+        "RPG",
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3513350&l=english&cc=US"
+    },
+    "quarantine-zone-the-last-check": {
+      "genres": [
+        "strategy",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3419520/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3419520&l=english&cc=US"
+    },
+    "rhythm-doctor": {
+      "genres": [
+        "action",
+        "strategy",
+        "rhythm"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/774181/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Strategy",
+        "Rhythm"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie",
+        "Strategy",
+        "Free To Play"
+      ],
+      "sourceUserTags": [
+        "Rhythm"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=774181&l=english&cc=US"
+    },
+    "i-want-to-agree-to-the-terms": {
+      "genres": [
+        "action"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3757210/?l=english&cc=US",
+      "sourceTags": [
+        "Action"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3757210&l=english&cc=US"
+    },
+    "my-summer-car": {
+      "genres": [
+        "simulation",
+        "racing",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/516750/?l=english&cc=US",
+      "sourceTags": [
+        "Racing",
+        "Simulation",
+        "Automobile Sim",
+        "Survival"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Racing",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Automobile Sim",
+        "Simulation",
+        "Survival"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=516750&l=english&cc=US"
+    },
+    "starcraft": {
+      "genres": [
+        "strategy"
+      ],
+      "sourceUrl": "https://starcraft.blizzard.com/en-us",
+      "sourceTags": [
+        "REAL-TIME STRATEGY"
+      ]
+    },
+    "whos-who-2-0": {
+      "genres": [
+        "action",
+        "rpg",
+        "strategy",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3391260/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "RPG",
+        "Strategy",
+        "Social Deduction",
+        "Party Game",
+        "3D Fighter"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie",
+        "Massively Multiplayer",
+        "RPG",
+        "Strategy",
+        "Free To Play"
+      ],
+      "sourceUserTags": [
+        "Social Deduction",
+        "Party Game",
+        "Strategy",
+        "3D Fighter"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3391260&l=english&cc=US"
+    },
+    "repo": {
+      "genres": [
+        "action",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3241660/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3241660&l=english&cc=US"
+    },
+    "super-mario-party-jamboree": {
+      "genres": [
+        "action",
+        "board-card",
+        "party-social"
+      ],
+      "sourceUrl": "https://www.nintendo.com/us/store/products/super-mario-party-jamboree-switch/",
+      "sourceTags": [
+        "Action",
+        "Party",
+        "Tabletop"
+      ]
+    },
+    "lego-party": {
+      "genres": [
+        "action",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1969370/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Party Game",
+        "Party"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual"
+      ],
+      "sourceUserTags": [
+        "Party Game",
+        "Party"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1969370&l=english&cc=US"
+    },
+    "restaurats": {
+      "genres": [
+        "action",
+        "rpg",
+        "strategy",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2870920/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "RPG",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie",
+        "RPG",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2870920&l=english&cc=US"
+    },
+    "call-of-duty-modern-warfare-ii": {
+      "genres": [
+        "action",
+        "shooter"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3595230/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "FPS",
+        "Shooter",
+        "Third-Person Shooter"
+      ],
+      "sourceGenres": [
+        "Action"
+      ],
+      "sourceUserTags": [
+        "Action",
+        "FPS",
+        "Shooter",
+        "Third-Person Shooter"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3595230&l=english&cc=US"
+    },
+    "cairn": {
+      "genres": [
+        "action",
+        "adventure",
+        "simulation",
+        "sports",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1588550/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Simulation",
+        "Sports",
+        "Survival"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie",
+        "Simulation",
+        "Sports"
+      ],
+      "sourceUserTags": [
+        "Adventure",
+        "Survival"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1588550&l=english&cc=US"
+    },
+    "world-of-warcraft": {
+      "genres": [
+        "rpg"
+      ],
+      "sourceUrl": "https://www.blizzard.com/en-us/games",
+      "sourceTags": [
+        "MMORPG"
+      ]
+    },
+    "reanimal": {
+      "genres": [
+        "adventure",
+        "horror",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2129530/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Horror",
+        "Puzzle"
+      ],
+      "sourceGenres": [
+        "Adventure"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Adventure",
+        "Puzzle"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2129530&l=english&cc=US"
+    },
+    "super-battle-golf": {
+      "genres": [
+        "sports"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4069520/?l=english&cc=US",
+      "sourceTags": [
+        "Sports",
+        "Golf"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Sports"
+      ],
+      "sourceUserTags": [
+        "Sports",
+        "Golf"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4069520&l=english&cc=US"
+    },
+    "slay-the-spire-2": {
+      "genres": [
+        "strategy",
+        "board-card"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2868840/?l=english&cc=US",
+      "sourceTags": [
+        "Strategy",
+        "Card Game",
+        "Deckbuilding",
+        "Roguelike Deckbuilder"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Strategy",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Card Game",
+        "Deckbuilding",
+        "Strategy",
+        "Roguelike Deckbuilder"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2868840&l=english&cc=US"
+    },
+    "scritchy-scratchy": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3948120/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3948120&l=english&cc=US"
+    },
+    "fast-food-simulator": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2916430/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Simulation",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2916430&l=english&cc=US"
+    },
+    "diablo-2": {
+      "genres": [
+        "action",
+        "rpg"
+      ],
+      "sourceUrl": "https://news.blizzard.com/en-us/article/23722094/bringing-the-original-diablo-ii-experience-to-console",
+      "sourceTags": [
+        "ARPG"
+      ]
+    },
+    "roblox": {
+      "genres": [],
+      "sourceUrl": "https://www.roblox.com/",
+      "sourceTags": []
+    },
+    "subnautica-2": {
+      "genres": [
+        "action",
+        "adventure",
+        "horror",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1962700/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Survival",
+        "Horror",
+        "Survival Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Survival",
+        "Horror",
+        "Survival Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1962700&l=english&cc=US"
+    },
+    "undusted": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2891020/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2891020&l=english&cc=US"
+    },
+    "yoshis-mysterious-book": {
+      "genres": [
+        "action",
+        "adventure",
+        "platformer"
+      ],
+      "sourceUrl": "https://www.nintendo.com/us/store/products/yoshi-and-the-mysterious-book-switch-2/",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Platforming"
+      ]
+    },
+    "nikke": {
+      "genres": [
+        "rpg",
+        "shooter"
+      ],
+      "sourceUrl": "https://nikke-en.com/",
+      "sourceTags": [
+        "RPG Shooter"
+      ]
+    },
+    "pebble-knights": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg",
+        "strategy"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3087930/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "Strategy",
+        "Action Roguelike",
+        "Action RPG",
+        "Party-Based RPG"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Casual",
+        "Indie",
+        "RPG",
+        "Strategy",
+        "Free To Play",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Action Roguelike",
+        "RPG",
+        "Action RPG",
+        "Party-Based RPG"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3087930&l=english&cc=US"
+    },
+    "metcha-chameleon": {
+      "genres": [
+        "puzzle",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4704690/?l=english&cc=US",
+      "sourceTags": [
+        "Party Game",
+        "Hidden Object"
+      ],
+      "sourceGenres": [
+        "Casual"
+      ],
+      "sourceUserTags": [
+        "Party Game",
+        "Hidden Object"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4704690&l=english&cc=US"
+    },
+    "yakuza-0": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/638970/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "Beat 'em up"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "RPG"
+      ],
+      "sourceUserTags": [
+        "Action",
+        "Beat 'em up"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=638970&l=english&cc=US"
+    },
+    "dead-by-daylight": {
+      "genres": [
+        "action",
+        "horror",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/381210/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Horror",
+        "Survival Horror",
+        "Survival"
+      ],
+      "sourceGenres": [
+        "Action"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Survival Horror",
+        "Survival"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=381210&l=english&cc=US"
+    },
+    "poly-bridge-2": {
+      "genres": [
+        "simulation",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1062160/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Puzzle"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Puzzle",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1062160&l=english&cc=US"
+    },
+    "drainsim": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2963800/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2963800&l=english&cc=US"
+    },
+    "escape-the-forest": {
+      "genres": [
+        "action",
+        "adventure",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4090360/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Horror",
+        "Psychological Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Psychological Horror",
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4090360&l=english&cc=US"
+    },
+    "the-cabin-factory": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3311740/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Horror",
+        "Psychological Horror",
+        "Immersive Sim"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Psychological Horror",
+        "Immersive Sim",
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3311740&l=english&cc=US"
+    },
+    "im-on-observation-duty-5": {
+      "genres": [
+        "horror",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1850550/?l=english&cc=US",
+      "sourceTags": [
+        "Horror",
+        "Psychological Horror",
+        "Puzzle",
+        "Sokoban"
+      ],
+      "sourceGenres": [
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Psychological Horror",
+        "Puzzle",
+        "Sokoban"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1850550&l=english&cc=US"
+    },
+    "supermarket-chaos": {
+      "genres": [
+        "simulation",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4800590/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Puzzle",
+        "Immersive Sim"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Puzzle",
+        "Immersive Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4800590&l=english&cc=US"
+    },
+    "ore-factory-squad": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4210580/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4210580&l=english&cc=US"
+    },
+    "god-field": {
+      "genres": [
+        "board-card"
+      ],
+      "sourceUrl": "https://godfield.net/",
+      "sourceTags": [
+        "card battle game"
+      ]
+    },
+    "shift-at-midnight": {
+      "genres": [
+        "simulation",
+        "horror",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3722330/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Horror",
+        "Survival Horror"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Survival Horror",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3722330&l=english&cc=US"
+    },
+    "fc-online": {
+      "genres": [
+        "sports"
+      ],
+      "sourceUrl": "https://fconline.nexon.com/main/index",
+      "sourceTags": [
+        "스포츠"
+      ]
+    },
+    "bills-must-be-paid": {
+      "genres": [
+        "action",
+        "strategy",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4421010/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Strategy"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4421010&l=english&cc=US"
+    },
+    "machine-party": {
+      "genres": [
+        "action",
+        "horror",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4108000/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Party Game",
+        "Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Party Game",
+        "Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4108000&l=english&cc=US"
+    },
+    "fc-26": {
+      "genres": [
+        "simulation",
+        "sports"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3405690/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Sports",
+        "Football (Soccer)"
+      ],
+      "sourceGenres": [
+        "Simulation",
+        "Sports"
+      ],
+      "sourceUserTags": [
+        "Football (Soccer)",
+        "Sports",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3405690&l=english&cc=US"
+    },
+    "big-walk": {
+      "genres": [
+        "adventure",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1478500/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Puzzle"
+      ],
+      "sourceGenres": [
+        "Adventure"
+      ],
+      "sourceUserTags": [
+        "Puzzle",
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1478500&l=english&cc=US"
+    },
+    "restory-chill-electronic-repair": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3812600/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Job Simulator"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Job Simulator"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3812600&l=english&cc=US"
+    },
+    "emergency-cleanup-co": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2413190/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Immersive Sim"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Immersive Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2413190&l=english&cc=US"
+    },
+    "pengpong": {
+      "genres": [
+        "action",
+        "shooter"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2766910/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Action Roguelike",
+        "Bullet Hell"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Action Roguelike",
+        "Bullet Hell"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2766910&l=english&cc=US"
+    },
+    "cyberpunk-2077": {
+      "genres": [
+        "rpg",
+        "shooter"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1091500/?l=english&cc=US",
+      "sourceTags": [
+        "RPG",
+        "FPS"
+      ],
+      "sourceGenres": [
+        "RPG"
+      ],
+      "sourceUserTags": [
+        "RPG",
+        "FPS"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1091500&l=english&cc=US"
+    },
+    "big-ambitions": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1331550/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Life Sim"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Life Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1331550&l=english&cc=US"
+    },
+    "bombanana": {
+      "genres": [
+        "puzzle",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4656000/?l=english&cc=US",
+      "sourceTags": [
+        "Puzzle",
+        "Party Game"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Puzzle",
+        "Party Game"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4656000&l=english&cc=US"
+    },
+    "reshine": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4668060/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Immersive Sim"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Immersive Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4668060&l=english&cc=US"
+    },
+    "maestro": {
+      "genres": [
+        "simulation",
+        "rhythm"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2701700/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Rhythm"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Rhythm",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2701700&l=english&cc=US"
+    },
+    "sunset-summit": {
+      "genres": [
+        "action",
+        "adventure"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3874450/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Adventure",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3874450&l=english&cc=US"
+    },
+    "pokebonk": {
+      "genres": [
+        "survival"
+      ],
+      "sourceUrl": "https://pokebonk.com/",
+      "sourceTags": [
+        "Survivor 3D",
+        "sobrevive a hordas salvajes"
+      ]
+    },
+    "how-to-fish": {
+      "genres": [
+        "action",
+        "simulation",
+        "shooter"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4001890/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Simulation",
+        "Shooter"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Shooter"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4001890&l=english&cc=US"
+    },
+    "princess-maker-children-of-revelation": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3438810/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Life Sim"
+      ],
+      "sourceGenres": [
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Life Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3438810&l=english&cc=US"
+    },
+    "the-game-of-life-nintendo-switch": {
+      "genres": [
+        "board-card",
+        "party-social"
+      ],
+      "sourceUrl": "https://www.takaratomy.co.jp/products/jinseidigital/",
+      "sourceTags": [
+        "ボードゲーム",
+        "パーティーゲーム"
+      ]
+    },
+    "the-mound-omen-of-cthulhu": {
+      "genres": [
+        "action",
+        "adventure",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2569760/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Psychological Horror",
+        "Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure"
+      ],
+      "sourceUserTags": [
+        "Psychological Horror",
+        "Horror",
+        "Action",
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2569760&l=english&cc=US"
+    },
+    "moo-who": {
+      "genres": [
+        "action",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4948000/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Hidden Object"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Hidden Object",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4948000&l=english&cc=US"
+    },
+    "clubhouse-games-51-worldwide-classics": {
+      "genres": [
+        "puzzle",
+        "racing",
+        "board-card",
+        "party-social"
+      ],
+      "sourceUrl": "https://www.nintendo.com/us/store/products/clubhouse-games-51-worldwide-classics-switch/",
+      "sourceTags": [
+        "Party",
+        "Puzzle",
+        "Racing",
+        "Tabletop"
+      ]
+    },
+    "big-brain-academy-brain-vs-brain": {
+      "genres": [
+        "puzzle"
+      ],
+      "sourceUrl": "https://www.nintendo.com/us/store/products/big-brain-academy-brain-vs-brain-switch/",
+      "sourceTags": [
+        "puzzles"
+      ]
+    },
+    "thehunter-call-of-the-wild": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "shooter",
+        "sports"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/518790/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Sports",
+        "FPS"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Simulation",
+        "Sports"
+      ],
+      "sourceUserTags": [
+        "FPS",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=518790&l=english&cc=US"
+    },
+    "fruit-mountain-party": {
+      "genres": [
+        "puzzle",
+        "party-social",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3467540/?l=english&cc=US",
+      "sourceTags": [
+        "Party Game",
+        "Puzzle",
+        "3D Platformer",
+        "Puzzle Platformer"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Party Game",
+        "Puzzle",
+        "3D Platformer",
+        "Puzzle Platformer"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3467540&l=english&cc=US"
+    },
+    "fall-guys": {
+      "genres": [
+        "action",
+        "sports",
+        "party-social",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1097150/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Sports",
+        "Party Game",
+        "Platformer"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie",
+        "Massively Multiplayer",
+        "Sports"
+      ],
+      "sourceUserTags": [
+        "Party Game",
+        "Platformer"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1097150&l=english&cc=US"
+    },
+    "sudden-attack": {
+      "genres": [
+        "shooter"
+      ],
+      "sourceUrl": "https://ssl.nexon.com/s2/corporation/NXK/01company/Contribution2022/NEXON_Contribution_2022.pdf",
+      "sourceTags": [
+        "FPS(1인칭 슈팅)"
+      ]
+    },
+    "find-the-differences-3d": {
+      "genres": [
+        "puzzle",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3753590/?l=english&cc=US",
+      "sourceTags": [
+        "Puzzle",
+        "Puzzle Platformer",
+        "Hidden Object"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Puzzle",
+        "Puzzle Platformer",
+        "Hidden Object"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3753590&l=english&cc=US"
+    },
+    "mario-golf-super-rush": {
+      "genres": [
+        "sports"
+      ],
+      "sourceUrl": "https://mariogolf.nintendo.com/",
+      "sourceTags": [
+        "golf"
+      ]
+    },
+    "tattoo-removal-simulator": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3143910/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3143910&l=english&cc=US"
+    },
+    "all-in-one-sports-vr": {
+      "genres": [
+        "action",
+        "simulation",
+        "sports"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1514840/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Simulation",
+        "Sports",
+        "Baseball",
+        "Basketball",
+        "Bowling",
+        "Boxing"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Simulation",
+        "Sports"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Sports",
+        "Baseball",
+        "Basketball",
+        "Bowling",
+        "Boxing"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1514840&l=english&cc=US"
+    },
+    "fears-to-fathom-scratch-creek": {
+      "genres": [
+        "adventure",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4121170/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Horror",
+        "Psychological Horror"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Psychological Horror",
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4121170&l=english&cc=US"
+    },
+    "the-house-always-wins": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3412160/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Job Simulator"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Job Simulator"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3412160&l=english&cc=US"
+    },
+    "hand-simulator-survival": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg",
+        "simulation",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/924140/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "Simulation",
+        "Survival"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie",
+        "Massively Multiplayer",
+        "RPG",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Survival",
+        "Adventure",
+        "Simulation",
+        "RPG",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=924140&l=english&cc=US"
+    },
+    "master-of-pottery": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1160490/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1160490&l=english&cc=US"
+    },
+    "world-of-warships": {
+      "genres": [
+        "action",
+        "strategy",
+        "simulation",
+        "shooter"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/552990/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Simulation",
+        "Strategy",
+        "Shooter",
+        "Third-Person Shooter"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Massively Multiplayer",
+        "Simulation",
+        "Strategy",
+        "Free To Play"
+      ],
+      "sourceUserTags": [
+        "Shooter",
+        "Third-Person Shooter"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=552990&l=english&cc=US"
+    },
+    "baby-kings": {
+      "genres": [
+        "action",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3670180/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Platformer"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual"
+      ],
+      "sourceUserTags": [
+        "Platformer"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3670180&l=english&cc=US"
+    },
+    "fruit-box": {
+      "genres": [
+        "puzzle"
+      ],
+      "sourceUrl": "https://en.gamesaien.com/game/fruit_box/",
+      "sourceTags": [
+        "Puzzle Game"
+      ]
+    },
+    "euro-truck-simulator-2": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/227300/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Automobile Sim"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Automobile Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=227300&l=english&cc=US"
+    },
+    "a-weird-game-about-sausage": {
+      "genres": [
+        "action",
+        "simulation",
+        "horror",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4691990/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Simulation",
+        "Precision Platformer",
+        "Psychological Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Precision Platformer",
+        "Simulation",
+        "Psychological Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4691990&l=english&cc=US"
+    },
+    "tabletop-simulator": {
+      "genres": [
+        "rpg",
+        "strategy",
+        "simulation",
+        "board-card"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/286160/?l=english&cc=US",
+      "sourceTags": [
+        "RPG",
+        "Simulation",
+        "Strategy",
+        "Tabletop",
+        "Board Game",
+        "Card Game",
+        "Trading Card Game"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "RPG",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Tabletop",
+        "Board Game",
+        "Simulation",
+        "Card Game",
+        "Trading Card Game"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=286160&l=english&cc=US"
+    },
+    "pizza-house-simulator": {
+      "genres": [
+        "strategy",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4132330/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Strategy",
+        "Life Sim"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Life Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4132330&l=english&cc=US"
+    },
+    "painting-pc": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4521680/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4521680&l=english&cc=US"
+    },
+    "apple-game-plus": {
+      "genres": [
+        "puzzle"
+      ],
+      "sourceUrl": "https://apple.oshizi.com/ko/",
+      "sourceTags": [
+        "퍼즐 게임"
+      ]
+    },
+    "color-tile-multiplayer": {
+      "genres": [],
+      "sourceUrl": "https://multicolortile.duckdns.org/",
+      "sourceTags": []
+    },
+    "walk-the-stork": {
+      "genres": [],
+      "sourceUrl": "",
+      "sourceTags": []
+    },
+    "gohyang-mandu": {
+      "genres": [],
+      "sourceUrl": "",
+      "sourceTags": []
+    },
+    "side-kick-2007": {
+      "genres": [],
+      "sourceUrl": "",
+      "sourceTags": []
+    },
+    "shu-ramen-shop": {
+      "genres": [],
+      "sourceUrl": "",
+      "sourceTags": []
+    },
+    "mingming-vs-wangtta": {
+      "genres": [],
+      "sourceUrl": "",
+      "sourceTags": []
+    },
+    "jukrim-gosu": {
+      "genres": [],
+      "sourceUrl": "",
+      "sourceTags": []
+    },
+    "jjiksin": {
+      "genres": [],
+      "sourceUrl": "",
+      "sourceTags": []
+    },
+    "machugi-io": {
+      "genres": [
+        "quiz"
+      ],
+      "sourceUrl": "https://machugi.io/",
+      "sourceTags": [
+        "퀴즈"
+      ]
+    },
+    "quiz-bubble": {
+      "genres": [
+        "quiz"
+      ],
+      "sourceUrl": "https://quizbubble.kr/",
+      "sourceTags": [
+        "퀴즈게임",
+        "멀티플레이어퀴즈"
+      ]
+    },
+    "higher-or-lower-game": {
+      "genres": [],
+      "sourceUrl": "https://www.higherorlowergame.com/daily/",
+      "sourceTags": []
+    },
+    "soop-who-are-ya": {
+      "genres": [],
+      "sourceUrl": "https://lollckgacha.github.io/soopwho/",
+      "sourceTags": []
+    },
+    "hello-kitty-party-land": {
+      "genres": [
+        "board-card",
+        "party-social"
+      ],
+      "sourceUrl": "https://www.sanrio-games.jp/ko/news/00006.html",
+      "sourceTags": [
+        "파티 게임",
+        "보드게임"
+      ]
+    },
+    "hozy": {
+      "genres": [
+        "simulation",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3326230/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Puzzle"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Puzzle",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3326230&l=english&cc=US"
+    },
+    "which-one-live": {
+      "genres": [
+        "quiz"
+      ],
+      "sourceUrl": "https://warru.io/which-one",
+      "sourceTags": [
+        "퀴즈 게임"
+      ]
+    },
+    "librarian-tidy-up-the-arcane-library": {
+      "genres": [
+        "simulation",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4197610/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Puzzle",
+        "Hidden Object"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Puzzle",
+        "Hidden Object"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4197610&l=english&cc=US"
+    },
+    "national-quiz-of-common-sense-advanced": {
+      "genres": [
+        "party-social",
+        "quiz"
+      ],
+      "sourceUrl": "https://store.nintendo.co.kr/70010000109342",
+      "sourceTags": [
+        "퀴즈",
+        "파티"
+      ],
+      "sourceGenres": [
+        "파티",
+        "트레이닝",
+        "학습",
+        "커뮤니케이션"
+      ]
+    },
+    "extreme-common-sense-check": {
+      "genres": [
+        "quiz"
+      ],
+      "sourceUrl": "https://store.nintendo.co.kr/70010000123923",
+      "sourceTags": [
+        "퀴즈"
+      ],
+      "sourceGenres": [
+        "트레이닝",
+        "학습",
+        "실용",
+        "커뮤니케이션"
+      ]
+    },
+    "common-sense-championship": {
+      "genres": [
+        "quiz"
+      ],
+      "sourceUrl": "https://store.nintendo.co.kr/70010000129441",
+      "sourceTags": [
+        "퀴즈"
+      ],
+      "sourceGenres": [
+        "트레이닝",
+        "학습",
+        "실용",
+        "커뮤니케이션"
+      ]
+    },
+    "color-tiles-plus": {
+      "genres": [
+        "puzzle"
+      ],
+      "sourceUrl": "https://color-tiles.oshizi.com/ko/",
+      "sourceTags": [
+        "퍼즐게임"
+      ]
+    },
+    "windrose": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3041230/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "Open World Survival Craft",
+        "Survival"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Open World Survival Craft",
+        "Survival"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3041230&l=english&cc=US"
+    },
+    "overwatch": {
+      "genres": [
+        "action",
+        "shooter"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2357570/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Hero Shooter",
+        "FPS",
+        "Third-Person Shooter"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Free To Play"
+      ],
+      "sourceUserTags": [
+        "Hero Shooter",
+        "FPS",
+        "Third-Person Shooter"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2357570&l=english&cc=US"
+    },
+    "vampire-crawlers": {
+      "genres": [
+        "action",
+        "strategy",
+        "board-card"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3265700/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Strategy",
+        "Card Battler",
+        "Deckbuilding",
+        "Card Game"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Indie",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Card Battler",
+        "Deckbuilding",
+        "Strategy",
+        "Card Game",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3265700&l=english&cc=US"
+    },
+    "night-shippers": {
+      "genres": [
+        "action",
+        "simulation",
+        "horror",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3761880/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Simulation",
+        "Horror",
+        "Survival Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Survival Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3761880&l=english&cc=US"
+    },
+    "pratfall": {
+      "genres": [
+        "action",
+        "adventure"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4244510/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4244510&l=english&cc=US"
+    },
+    "omelet-you-cook": {
+      "genres": [
+        "action",
+        "strategy",
+        "board-card"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3205380/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Strategy",
+        "Roguelike Deckbuilder",
+        "Action Roguelike"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Roguelike Deckbuilder",
+        "Action Roguelike"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3205380&l=english&cc=US"
+    },
+    "holy-crap-in-law-survival": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4467380/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Escape Room"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Escape Room",
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4467380&l=english&cc=US"
+    },
+    "scam-line": {
+      "genres": [
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2794590/?l=english&cc=US",
+      "sourceTags": [
+        "Social Deduction"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Social Deduction"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2794590&l=english&cc=US"
+    },
+    "summers-heartbeat": {
+      "genres": [
+        "adventure",
+        "rpg",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4179020/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "RPG",
+        "Simulation",
+        "Choose Your Own Adventure",
+        "Dating Sim",
+        "Immersive Sim"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "RPG",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Choose Your Own Adventure",
+        "Dating Sim",
+        "Immersive Sim",
+        "RPG"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4179020&l=english&cc=US"
+    },
+    "pojangmacha": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3785710/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Life Sim"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Life Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3785710&l=english&cc=US"
+    },
+    "soop-stock": {
+      "genres": [],
+      "sourceUrl": "https://soop-stock-market.vercel.app/",
+      "sourceTags": []
+    },
+    "marbles-on-stream": {
+      "genres": [
+        "simulation",
+        "racing"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1170970/?l=english&cc=US",
+      "sourceTags": [
+        "Racing",
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Massively Multiplayer",
+        "Racing",
+        "Simulation",
+        "Free To Play"
+      ],
+      "sourceUserTags": [
+        "Racing",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1170970&l=english&cc=US"
+    },
+    "comic-book-store-simulator": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3354220/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3354220&l=english&cc=US"
+    },
+    "pokemon-pokopia": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://www.nintendo.com/us/store/products/pokemon-pokopia-121593/",
+      "sourceTags": [
+        "Simulation"
+      ]
+    },
+    "tcg-card-shop-simulator": {
+      "genres": [
+        "simulation",
+        "board-card"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3070070/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Trading Card Game",
+        "Card Game"
+      ],
+      "sourceGenres": [
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Trading Card Game",
+        "Card Game"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3070070&l=english&cc=US"
+    },
+    "heartopia": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4025700/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Life Sim"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Simulation",
+        "Free To Play"
+      ],
+      "sourceUserTags": [
+        "Life Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4025700&l=english&cc=US"
+    },
+    "yapyap": {
+      "genres": [
+        "action",
+        "horror",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3834090/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Horror",
+        "Survival Horror"
+      ],
+      "sourceGenres": [
+        "Action"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Survival Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3834090&l=english&cc=US"
+    },
+    "oh-deer": {
+      "genres": [
+        "action",
+        "horror",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2708450/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Horror",
+        "Social Deduction"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Social Deduction"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2708450&l=english&cc=US"
+    },
+    "no-case-should-remain-unsolved": {
+      "genres": [
+        "adventure",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2676840/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Puzzle"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Puzzle",
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2676840&l=english&cc=US"
+    },
+    "count-the-fingers": {
+      "genres": [],
+      "sourceUrl": "https://countthefingers.com/",
+      "sourceTags": []
+    },
+    "dont-scream-together": {
+      "genres": [
+        "simulation",
+        "horror",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2692990/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Horror",
+        "Survival Horror"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Survival Horror",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2692990&l=english&cc=US"
+    },
+    "backseat-drivers": {
+      "genres": [
+        "simulation",
+        "racing"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3558400/?l=english&cc=US",
+      "sourceTags": [
+        "Racing",
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Racing",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Racing"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3558400&l=english&cc=US"
+    },
+    "bits-and-bops": {
+      "genres": [
+        "action",
+        "rhythm"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1929290/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Rhythm"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Rhythm",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1929290&l=english&cc=US"
+    },
+    "strawberry-game-multiplayer": {
+      "genres": [],
+      "sourceUrl": "https://dalgi.ssjj.kr/",
+      "sourceTags": []
+    },
+    "side-effects": {
+      "genres": [
+        "strategy",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3799100/?l=english&cc=US",
+      "sourceTags": [
+        "Strategy",
+        "Horror"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Strategy",
+        "Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3799100&l=english&cc=US"
+    },
+    "feather-party": {
+      "genres": [
+        "action",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2300230/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Party Game"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Party Game"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2300230&l=english&cc=US"
+    },
+    "onigiri-shop-simulator": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3915140/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Immersive Sim",
+        "Life Sim"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Immersive Sim",
+        "Life Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3915140&l=english&cc=US"
+    },
+    "my-voice-zoo": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4015530/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4015530&l=english&cc=US"
+    },
+    "tavern-keeper": {
+      "genres": [
+        "rpg",
+        "strategy",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/436780/?l=english&cc=US",
+      "sourceTags": [
+        "RPG",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "RPG",
+        "Simulation",
+        "Strategy",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Strategy"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=436780&l=english&cc=US"
+    },
+    "mimesis": {
+      "genres": [
+        "action",
+        "adventure",
+        "horror",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2827200/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Psychological Horror",
+        "Social Deduction"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Casual",
+        "Indie",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Psychological Horror",
+        "Social Deduction"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2827200&l=english&cc=US"
+    },
+    "gone-fishing": {
+      "genres": [
+        "action",
+        "adventure",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3645890/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Action",
+        "Adventure",
+        "Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3645890&l=english&cc=US"
+    },
+    "powerwash-simulator-2": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2968420/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2968420&l=english&cc=US"
+    },
+    "everybody-1-2-switch": {
+      "genres": [
+        "party-social"
+      ],
+      "sourceUrl": "https://www.nintendo.com/kr/switch/argta/index.html",
+      "sourceTags": [
+        "파티 엔터테인먼트"
+      ]
+    },
+    "cloverpit": {
+      "genres": [
+        "action",
+        "adventure",
+        "strategy",
+        "simulation",
+        "horror",
+        "sports"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3314790/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Simulation",
+        "Sports",
+        "Strategy",
+        "Psychological Horror",
+        "Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie",
+        "Simulation",
+        "Sports",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Psychological Horror",
+        "Strategy",
+        "Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3314790&l=english&cc=US"
+    },
+    "baby-steps": {
+      "genres": [
+        "action",
+        "adventure"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1281040/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Action",
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1281040&l=english&cc=US"
+    },
+    "the-spike-cross": {
+      "genres": [
+        "action",
+        "simulation",
+        "sports",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3983810/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Simulation",
+        "Sports",
+        "Volleyball",
+        "2D Platformer"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie",
+        "Simulation",
+        "Sports",
+        "Free To Play"
+      ],
+      "sourceUserTags": [
+        "Sports",
+        "Volleyball",
+        "2D Platformer"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3983810&l=english&cc=US"
+    },
+    "mage-arena": {
+      "genres": [
+        "action"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3716600/?l=english&cc=US",
+      "sourceTags": [
+        "Action"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3716600&l=english&cc=US"
+    },
+    "fingerdance": {
+      "genres": [
+        "action",
+        "simulation",
+        "rhythm"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3633450/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Simulation",
+        "Rhythm"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Action",
+        "Simulation",
+        "Rhythm"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3633450&l=english&cc=US"
+    },
+    "grand-theft-auto-v": {
+      "genres": [
+        "action",
+        "adventure",
+        "simulation",
+        "shooter"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/271590/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Automobile Sim",
+        "Shooter"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure"
+      ],
+      "sourceUserTags": [
+        "Action",
+        "Automobile Sim",
+        "Shooter"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=271590&l=english&cc=US"
+    },
+    "bogos-binted": {
+      "genres": [
+        "strategy",
+        "simulation",
+        "board-card"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3588490/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Strategy",
+        "Card Game",
+        "Board Game",
+        "Tabletop"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Strategy",
+        "Card Game",
+        "Board Game",
+        "Tabletop"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3588490&l=english&cc=US"
+    },
+    "patapon-1-2-replay": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg",
+        "strategy",
+        "rhythm",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2383200/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "Rhythm",
+        "Action RPG",
+        "Action-Adventure",
+        "Beat 'em up",
+        "2D Platformer",
+        "Action RTS",
+        "Hack and Slash"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "RPG"
+      ],
+      "sourceUserTags": [
+        "Action",
+        "Rhythm",
+        "Action RPG",
+        "Action-Adventure",
+        "Beat 'em up",
+        "2D Platformer",
+        "Action RTS",
+        "Hack and Slash"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2383200&l=english&cc=US"
+    },
+    "netmarble-sachunsung": {
+      "genres": [],
+      "sourceUrl": "https://game2.netmarble.net/Sachunsung/",
+      "sourceTags": []
+    },
+    "catch-mind": {
+      "genres": [],
+      "sourceUrl": "https://cmind.netmarble.net/main.asp",
+      "sourceTags": []
+    },
+    "pavlov-vr": {
+      "genres": [
+        "action",
+        "shooter"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/555160/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Shooter",
+        "FPS"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Shooter",
+        "Action",
+        "FPS"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=555160&l=english&cc=US"
+    },
+    "mini-motorways": {
+      "genres": [
+        "strategy",
+        "simulation",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1127500/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Strategy",
+        "Puzzle"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Strategy",
+        "Simulation",
+        "Puzzle"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1127500&l=english&cc=US"
+    },
+    "salted": {
+      "genres": [
+        "action",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3639420/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Platformer",
+        "2D Platformer"
+      ],
+      "sourceGenres": [
+        "Action"
+      ],
+      "sourceUserTags": [
+        "Action",
+        "Platformer",
+        "2D Platformer"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3639420&l=english&cc=US"
+    },
+    "the-binding-of-isaac-rebirth": {
+      "genres": [
+        "action"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/250900/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Action Roguelike"
+      ],
+      "sourceGenres": [
+        "Action"
+      ],
+      "sourceUserTags": [
+        "Action Roguelike"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=250900&l=english&cc=US"
+    },
+    "all-about-chopsticks": {
+      "genres": [],
+      "sourceUrl": "https://store.steampowered.com/app/3688340/?l=english&cc=US",
+      "sourceTags": [],
+      "sourceGenres": [
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3688340&l=english&cc=US"
+    },
+    "dont-pee": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2753520/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Horror"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Adventure",
+        "Horror",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2753520&l=english&cc=US"
+    },
+    "the-stubborn-of-wakgood": {
+      "genres": [],
+      "sourceUrl": "",
+      "sourceTags": []
+    },
+    "red-or-blue": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3439320/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Immersive Sim"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Immersive Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3439320&l=english&cc=US"
+    },
+    "chopchop": {
+      "genres": [],
+      "sourceUrl": "https://store.steampowered.com/app/2918490/?l=english&cc=US",
+      "sourceTags": [],
+      "sourceGenres": [
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2918490&l=english&cc=US"
+    },
+    "watermelon-broken-head": {
+      "genres": [
+        "action",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3540460/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Puzzle",
+        "Match 3"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Puzzle",
+        "Match 3",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3540460&l=english&cc=US"
+    },
+    "thats-not-my-neighbor": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3431040/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Horror"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Adventure",
+        "Horror",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3431040&l=english&cc=US"
+    },
+    "slow-and-steady": {
+      "genres": [],
+      "sourceUrl": "https://store.steampowered.com/app/1599080/?l=english&cc=US",
+      "sourceTags": [],
+      "sourceGenres": [
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1599080&l=english&cc=US"
+    },
+    "rush-only-up-multiplayer": {
+      "genres": [
+        "action",
+        "adventure",
+        "simulation",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2497520/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Simulation",
+        "3D Platformer",
+        "Precision Platformer",
+        "Platformer"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Massively Multiplayer",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "3D Platformer",
+        "Precision Platformer",
+        "Platformer"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2497520&l=english&cc=US"
+    },
+    "whos-next": {
+      "genres": [
+        "strategy",
+        "puzzle",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2891940/?l=english&cc=US",
+      "sourceTags": [
+        "Strategy",
+        "Social Deduction",
+        "Puzzle"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Massively Multiplayer",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Strategy",
+        "Social Deduction",
+        "Puzzle"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2891940&l=english&cc=US"
+    },
+    "lively-chair-simulator": {
+      "genres": [
+        "action",
+        "adventure",
+        "strategy",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2575060/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Simulation",
+        "Strategy",
+        "Action-Adventure"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Indie",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Action-Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2575060&l=english&cc=US"
+    },
+    "yakiniku-simulator": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2001570/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Life Sim"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Life Sim",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2001570&l=english&cc=US"
+    },
+    "revenge-of-the-colon": {
+      "genres": [
+        "rpg",
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2710950/?l=english&cc=US",
+      "sourceTags": [
+        "RPG",
+        "Simulation",
+        "Horror",
+        "Psychological Horror"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "RPG",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Psychological Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2710950&l=english&cc=US"
+    },
+    "lapidary-jewel-craft-simulator": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2539820/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2539820&l=english&cc=US"
+    },
+    "a-game-about-digging-a-hole": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3244220/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Horror",
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3244220&l=english&cc=US"
+    },
+    "netmarble-spot-the-difference": {
+      "genres": [],
+      "sourceUrl": "https://game2.netmarble.net/igame/picture/",
+      "sourceTags": []
+    },
+    "igedol-game": {
+      "genres": [],
+      "sourceUrl": "https://sedol.wakttu.kr/",
+      "sourceTags": []
+    },
+    "getting-over-it": {
+      "genres": [
+        "action",
+        "horror",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/240720/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Psychological Horror",
+        "Horror",
+        "Platformer"
+      ],
+      "sourceGenres": [
+        "Action"
+      ],
+      "sourceUserTags": [
+        "Psychological Horror",
+        "Horror",
+        "Platformer"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=240720&l=english&cc=US"
+    },
+    "wwme-lemon-game": {
+      "genres": [],
+      "sourceUrl": "https://wwme.kr/lemon",
+      "sourceTags": []
+    },
+    "slither-io": {
+      "genres": [
+        "action"
+      ],
+      "sourceUrl": "https://play.google.com/store/apps/details?hl=en-US&id=air.com.hypah.io.slither",
+      "sourceTags": [
+        "Action"
+      ]
+    },
+    "house-flipper": {
+      "genres": [
+        "action",
+        "adventure",
+        "strategy",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/613100/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Casual",
+        "Indie",
+        "Massively Multiplayer",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=613100&l=english&cc=US"
+    },
+    "liars-bar": {
+      "genres": [
+        "strategy",
+        "simulation",
+        "shooter"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3097560/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Strategy",
+        "FPS"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation",
+        "Strategy",
+        "Early Access"
+      ],
+      "sourceUserTags": [
+        "FPS"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3097560&l=english&cc=US"
+    },
+    "wjmax": {
+      "genres": [],
+      "sourceUrl": "",
+      "sourceTags": []
+    },
+    "incantation": {
+      "genres": [
+        "action",
+        "adventure",
+        "rpg",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2328540/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "RPG",
+        "Horror",
+        "Psychological Horror",
+        "Action-Adventure"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "RPG"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Psychological Horror",
+        "Action-Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2328540&l=english&cc=US"
+    },
+    "prisoners": {
+      "genres": [
+        "action",
+        "strategy",
+        "shooter",
+        "party-social",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2725200/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Strategy",
+        "Social Deduction",
+        "Survival",
+        "Shooter"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Social Deduction",
+        "Survival",
+        "Shooter",
+        "Strategy"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2725200&l=english&cc=US"
+    },
+    "lockdown-protocol": {
+      "genres": [
+        "action",
+        "strategy",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2780980/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Strategy",
+        "Social Deduction"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Social Deduction",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2780980&l=english&cc=US"
+    },
+    "a-night-duty": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3305540/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Psychological Horror"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Psychological Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3305540&l=english&cc=US"
+    },
+    "unpacking": {
+      "genres": [
+        "simulation",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1135690/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Puzzle"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Puzzle"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1135690&l=english&cc=US"
+    },
+    "buckshot-roulette": {
+      "genres": [
+        "action",
+        "strategy",
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2835570/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Simulation",
+        "Horror",
+        "Strategy"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Strategy"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/2835570/?l=english&cc=US"
+    },
+    "cooking-simulator": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/641320/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/641320/?l=english&cc=US"
+    },
+    "until-dawn": {
+      "genres": [
+        "adventure",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2172010/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Horror",
+        "Choose Your Own Adventure"
+      ],
+      "sourceGenres": [
+        "Adventure"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Adventure",
+        "Choose Your Own Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/2172010/?l=english&cc=US"
+    },
+    "death-note-killer-within": {
+      "genres": [
+        "strategy",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2213190/?l=english&cc=US",
+      "sourceTags": [
+        "Strategy",
+        "Social Deduction"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Strategy",
+        "Social Deduction"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/2213190/?l=english&cc=US"
+    },
+    "a-little-to-the-left": {
+      "genres": [
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1629520/?l=english&cc=US",
+      "sourceTags": [
+        "Puzzle"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Puzzle"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/1629520/?l=english&cc=US"
+    },
+    "fc-25": {
+      "genres": [
+        "simulation",
+        "sports"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2669320/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Sports",
+        "Football (Soccer)"
+      ],
+      "sourceGenres": [
+        "Simulation",
+        "Sports"
+      ],
+      "sourceUserTags": [
+        "Sports",
+        "Football (Soccer)",
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/2669320/?l=english&cc=US"
+    },
+    "fc-24": {
+      "genres": [
+        "simulation",
+        "sports"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2195250/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Sports",
+        "Football (Soccer)"
+      ],
+      "sourceGenres": [
+        "Simulation",
+        "Sports"
+      ],
+      "sourceUserTags": [
+        "Football (Soccer)",
+        "Sports"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/2195250/?l=english&cc=US"
+    },
+    "nintendo-switch-sports": {
+      "genres": [
+        "sports"
+      ],
+      "sourceUrl": "https://www.nintendo.com/kr/switch/as8sa/",
+      "sourceTags": [
+        "체감 스포츠"
+      ]
+    },
+    "green-hell": {
+      "genres": [
+        "action",
+        "adventure",
+        "simulation",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/815370/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Simulation",
+        "Survival",
+        "Open World Survival Craft"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Survival",
+        "Open World Survival Craft",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/815370/?l=english&cc=US"
+    },
+    "mario-party-superstars": {
+      "genres": [
+        "action",
+        "board-card",
+        "party-social"
+      ],
+      "sourceUrl": "https://www.nintendo.com/us/store/products/mario-party-superstars-switch/",
+      "sourceTags": [
+        "Action",
+        "Party",
+        "Tabletop"
+      ]
+    },
+    "it-takes-two": {
+      "genres": [
+        "action",
+        "adventure",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1426210/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Puzzle"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure"
+      ],
+      "sourceUserTags": [
+        "Puzzle",
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/1426210/?l=english&cc=US"
+    },
+    "school-labyrinth": {
+      "genres": [
+        "action",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2423300/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/2423300/?l=english&cc=US"
+    },
+    "magical-mic-duel": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2696400/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Simulation",
+        "Early Access"
+      ],
+      "sourceUserTags": [],
+      "genreSourceUrl": "https://store.steampowered.com/app/2696400/?l=english&cc=US"
+    },
+    "national-quiz-of-common-sense": {
+      "genres": [
+        "party-social",
+        "quiz"
+      ],
+      "sourceUrl": "https://store.nintendo.co.kr/70010000073448",
+      "sourceTags": [
+        "퀴즈",
+        "파티"
+      ],
+      "sourceGenres": [
+        "파티",
+        "트레이닝",
+        "학습",
+        "커뮤니케이션"
+      ]
+    },
+    "sooper-shot": {
+      "genres": [],
+      "sourceUrl": "",
+      "sourceTags": []
+    },
+    "assetto-corsa": {
+      "genres": [
+        "simulation",
+        "sports",
+        "racing"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/244210/?l=english&cc=US",
+      "sourceTags": [
+        "Racing",
+        "Simulation",
+        "Sports",
+        "Automobile Sim"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "Racing",
+        "Simulation",
+        "Sports"
+      ],
+      "sourceUserTags": [
+        "Racing",
+        "Automobile Sim",
+        "Simulation",
+        "Sports"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/244210/?l=english&cc=US"
+    },
+    "powerwash-simulator": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1290000/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Simulation"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/1290000/?l=english&cc=US"
+    },
+    "heavy-spoilers-rpg": {
+      "genres": [
+        "rpg"
+      ],
+      "sourceUrl": "https://ksb0.com/ksbgames/netabarerpg/",
+      "sourceTags": [
+        "ＲＰＧ"
+      ]
+    },
+    "forbidden-art": {
+      "genres": [
+        "action",
+        "adventure",
+        "horror",
+        "puzzle",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1166140/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Horror",
+        "Puzzle",
+        "Survival Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Puzzle",
+        "Survival Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/1166140/?l=english&cc=US"
+    },
+    "silent-breath": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2796180/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Horror",
+        "Psychological Horror"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Psychological Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/2796180/?l=english&cc=US"
+    },
+    "toreba": {
+      "genres": [],
+      "sourceUrl": "https://www.toreba.net/",
+      "sourceTags": []
+    },
+    "content-warning": {
+      "genres": [
+        "action",
+        "adventure",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2881650/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Horror",
+        "Action Roguelike"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Action Roguelike"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/2881650/?l=english&cc=US"
+    },
+    "sputnika-game": {
+      "genres": [
+        "strategy",
+        "simulation",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2730270/?l=english&cc=US",
+      "sourceTags": [
+        "Strategy",
+        "Puzzle",
+        "Space Sim"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Strategy",
+        "Puzzle",
+        "Space Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/2730270/?l=english&cc=US"
+    },
+    "shadow-corridor": {
+      "genres": [
+        "action",
+        "horror",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1025250/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Horror",
+        "Psychological Horror",
+        "Survival Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Action",
+        "Psychological Horror",
+        "Survival Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/1025250/?l=english&cc=US"
+    },
+    "getting-over-goombas": {
+      "genres": [
+        "platformer"
+      ],
+      "sourceUrl": "https://newbie-indie-game-dev.itch.io/getting-over-goombas",
+      "sourceTags": [
+        "Platformer"
+      ]
+    },
+    "motesolo": {
+      "genres": [
+        "rpg",
+        "strategy",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1414180/?l=english&cc=US",
+      "sourceTags": [
+        "RPG",
+        "Simulation",
+        "Strategy",
+        "Dating Sim"
+      ],
+      "sourceGenres": [
+        "Indie",
+        "RPG",
+        "Simulation",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Simulation",
+        "Dating Sim",
+        "RPG"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/1414180/?l=english&cc=US"
+    },
+    "tekken-8": {
+      "genres": [
+        "action"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1778820/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Fighting",
+        "3D Fighter"
+      ],
+      "sourceGenres": [
+        "Action"
+      ],
+      "sourceUserTags": [
+        "Fighting",
+        "3D Fighter",
+        "Action"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/1778820/?l=english&cc=US"
+    },
+    "poppy-playtime-chapter-3": {
+      "genres": [
+        "action",
+        "adventure",
+        "horror",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2555190/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Horror",
+        "Puzzle"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Adventure",
+        "Action",
+        "Horror",
+        "Puzzle"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/2555190/?l=english&cc=US"
+    },
+    "q-remastered": {
+      "genres": [
+        "simulation",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2246110/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Puzzle"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Puzzle"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/2246110/?l=english&cc=US"
+    },
+    "beadyo-christmas-watermelon": {
+      "genres": [],
+      "sourceUrl": "https://watermelon.shinyou.ng/melon?game=kskja",
+      "sourceTags": []
+    },
+    "night-security": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2367230/?l=english&cc=US",
+      "sourceTags": [
+        "Horror",
+        "Psychological Horror",
+        "Adventure",
+        "Immersive Sim"
+      ],
+      "sourceGenres": [
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Psychological Horror",
+        "Adventure",
+        "Immersive Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/2367230/?l=english&cc=US"
+    },
+    "teamfight-tactics": {
+      "genres": [
+        "strategy"
+      ],
+      "sourceUrl": "https://teamfighttactics.leagueoflegends.com/ko-kr/",
+      "sourceTags": [
+        "전략 오토 배틀러"
+      ]
+    },
+    "headbangers-rhythm-royale": {
+      "genres": [
+        "rhythm"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1761620/?l=english&cc=US",
+      "sourceTags": [
+        "Rhythm"
+      ],
+      "sourceGenres": [
+        "Casual"
+      ],
+      "sourceUserTags": [
+        "Rhythm"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/1761620/?l=english&cc=US"
+    },
+    "a-dance-of-fire-and-ice": {
+      "genres": [
+        "rhythm"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/977950/?l=english&cc=US",
+      "sourceTags": [
+        "Rhythm"
+      ],
+      "sourceGenres": [
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Rhythm"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/977950/?l=english&cc=US"
+    },
+    "the-kidnap": {
+      "genres": [
+        "simulation",
+        "horror",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2593900/?l=english&cc=US",
+      "sourceTags": [
+        "Horror",
+        "Psychological Horror",
+        "Survival Horror",
+        "Immersive Sim"
+      ],
+      "sourceGenres": [
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Psychological Horror",
+        "Survival Horror",
+        "Immersive Sim"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/2593900/?l=english&cc=US"
+    },
+    "outlast-2": {
+      "genres": [
+        "action",
+        "adventure",
+        "horror",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/414700/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Horror",
+        "Psychological Horror",
+        "Survival Horror"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Psychological Horror",
+        "Survival Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/414700/?l=english&cc=US"
+    },
+    "dont-scream": {
+      "genres": [
+        "simulation",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2497900/?l=english&cc=US",
+      "sourceTags": [
+        "Simulation",
+        "Psychological Horror",
+        "Horror"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Psychological Horror",
+        "Horror"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/2497900/?l=english&cc=US"
+    },
+    "golf-with-your-friends": {
+      "genres": [
+        "sports"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/431240/?l=english&cc=US",
+      "sourceTags": [
+        "Sports",
+        "Mini Golf",
+        "Golf"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Sports"
+      ],
+      "sourceUserTags": [
+        "Mini Golf",
+        "Sports",
+        "Golf"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/431240/?l=english&cc=US"
+    },
+    "outlast": {
+      "genres": [
+        "action",
+        "adventure",
+        "horror",
+        "survival"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/238320/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Adventure",
+        "Horror",
+        "Survival Horror",
+        "Psychological Horror",
+        "Survival"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Survival Horror",
+        "Psychological Horror",
+        "Survival"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/238320/?l=english&cc=US"
+    },
+    "gartic-phone": {
+      "genres": [],
+      "sourceUrl": "https://garticphone.com/",
+      "sourceTags": []
+    },
+    "welcome-to-kowloon": {
+      "genres": [
+        "adventure",
+        "horror"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/2515240/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Horror",
+        "Psychological Horror"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Horror",
+        "Psychological Horror",
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/2515240/?l=english&cc=US"
+    },
+    "escape-simulator": {
+      "genres": [
+        "adventure",
+        "simulation",
+        "puzzle"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1435790/?l=english&cc=US",
+      "sourceTags": [
+        "Adventure",
+        "Simulation",
+        "Puzzle",
+        "Escape Room"
+      ],
+      "sourceGenres": [
+        "Adventure",
+        "Casual",
+        "Indie",
+        "Simulation"
+      ],
+      "sourceUserTags": [
+        "Puzzle",
+        "Escape Room",
+        "Adventure"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/1435790/?l=english&cc=US"
+    },
+    "agrou": {
+      "genres": [
+        "strategy",
+        "board-card",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1305420/?l=english&cc=US",
+      "sourceTags": [
+        "Strategy",
+        "Social Deduction",
+        "Board Game"
+      ],
+      "sourceGenres": [
+        "Casual",
+        "Indie",
+        "Strategy"
+      ],
+      "sourceUserTags": [
+        "Strategy",
+        "Social Deduction",
+        "Board Game"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/1305420/?l=english&cc=US"
+    },
+    "ultimate-chicken-horse": {
+      "genres": [
+        "action",
+        "party-social",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/386940/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Party",
+        "Platformer",
+        "Party Game"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie"
+      ],
+      "sourceUserTags": [
+        "Party",
+        "Platformer",
+        "Party Game"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/386940/?l=english&cc=US"
+    },
+    "fling-to-the-finish": {
+      "genres": [
+        "action",
+        "racing",
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/1054430/?l=english&cc=US",
+      "sourceTags": [
+        "Action",
+        "Racing",
+        "Party Game"
+      ],
+      "sourceGenres": [
+        "Action",
+        "Casual",
+        "Indie",
+        "Racing"
+      ],
+      "sourceUserTags": [
+        "Party Game",
+        "Racing"
+      ],
+      "genreSourceUrl": "https://store.steampowered.com/app/1054430/?l=english&cc=US"
+    },
+    "how-much-quiz": {
+      "genres": [],
+      "sourceUrl": "http://how-much-quiz.shop/",
+      "sourceTags": []
+    }
+  }
+}
