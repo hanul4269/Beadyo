@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-11-02",
+  "updatedAt": "2026-11-03",
   "calendarPeriod": "2026년 5월 1일~10월 27일",
   "videoReview": {
     "period": "방송국 전체 목록 2023–2026년 · 2026-10-31 수집 기준",
@@ -9935,7 +9935,9 @@
     {
       "id": "kartrider-drift",
       "title": "카트라이더:드리프트",
-      "aliases": [],
+      "aliases": [
+        "KartRider: Drift"
+      ],
       "dates": [
         {
           "date": "2025-04-01",
@@ -10034,7 +10036,9 @@
     {
       "id": "shinkansen-0",
       "title": "신칸센 0호",
-      "aliases": [],
+      "aliases": [
+        "[Chilla's Art] Shinkansen 0 | 新幹線 0号"
+      ],
       "dates": [],
       "image": "assets/game-log/shinkansen-0.jpg",
       "officialUrl": "https://store.steampowered.com/app/2793370/"
@@ -10042,7 +10046,9 @@
     {
       "id": "the-exit-8",
       "title": "8번 출구",
-      "aliases": [],
+      "aliases": [
+        "The Exit 8"
+      ],
       "dates": [
         {
           "date": "2023-12-10",
@@ -10492,7 +10498,9 @@
     {
       "id": "old-market-simulator",
       "title": "옛날 재래시장 시뮬레이터",
-      "aliases": [],
+      "aliases": [
+        "Old Market Simulator"
+      ],
       "dates": [
         {
           "date": "2024-10-19",
@@ -10656,7 +10664,9 @@
     {
       "id": "detroit-become-human",
       "title": "디트로이트: 비컴 휴먼",
-      "aliases": [],
+      "aliases": [
+        "Detroit: Become Human"
+      ],
       "dates": [
         {
           "date": "2025-01-07",
@@ -10764,7 +10774,9 @@
     {
       "id": "monster-hunter-wilds",
       "title": "몬스터 헌터 와일즈",
-      "aliases": [],
+      "aliases": [
+        "Monster Hunter Wilds"
+      ],
       "dates": [
         {
           "date": "2025-03-08",
@@ -10881,7 +10893,9 @@
     {
       "id": "buried-stars",
       "title": "배리드 스타즈",
-      "aliases": [],
+      "aliases": [
+        "BURIED STARS"
+      ],
       "dates": [
         {
           "date": "2025-03-22",
@@ -10935,7 +10949,9 @@
     {
       "id": "split-fiction",
       "title": "스플릿 픽션",
-      "aliases": [],
+      "aliases": [
+        "Split Fiction"
+      ],
       "dates": [
         {
           "date": "2025-03-25",
@@ -10980,7 +10996,9 @@
     {
       "id": "inzoi",
       "title": "인조이",
-      "aliases": [],
+      "aliases": [
+        "inZOI"
+      ],
       "dates": [
         {
           "date": "2025-03-30",
@@ -11282,7 +11300,9 @@
     {
       "id": "world-of-tanks",
       "title": "월드 오브 탱크",
-      "aliases": [],
+      "aliases": [
+        "World of Tanks"
+      ],
       "dates": [
         {
           "date": "2025-05-12",
@@ -11363,7 +11383,9 @@
     {
       "id": "liar-game",
       "title": "라이어 게임",
-      "aliases": [],
+      "aliases": [
+        "Liar Game"
+      ],
       "dates": [
         {
           "date": "2026-04-25",
@@ -11741,7 +11763,9 @@
     {
       "id": "street-fighter-6",
       "title": "스트리트 파이터 6",
-      "aliases": [],
+      "aliases": [
+        "Street Fighter 6"
+      ],
       "dates": [
         {
           "date": "2025-04-13",
@@ -11768,7 +11792,9 @@
     {
       "id": "slay-the-spire",
       "title": "슬레이 더 스파이어",
-      "aliases": [],
+      "aliases": [
+        "Slay the Spire"
+      ],
       "dates": [
         {
           "date": "2025-06-08",
@@ -11849,7 +11875,9 @@
     {
       "id": "maplestory",
       "title": "메이플스토리",
-      "aliases": [],
+      "aliases": [
+        "MapleStory"
+      ],
       "dates": [
         {
           "date": "2025-06-25",
@@ -12013,8 +12041,12 @@
     },
     {
       "id": "yacht-dice",
-      "title": "야추 다이스",
-      "aliases": [],
+      "title": "야추 다이스 (Yacht Dice)",
+      "aliases": [
+        "야추 다이스",
+        "Yacht Dice",
+        "요트 다이스"
+      ],
       "dates": [
         {
           "date": "2025-10-29",
@@ -12073,8 +12105,14 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": null
+      "image": "assets/game-log/yacht-dice-verified-20261103.jpg",
+      "officialUrl": "https://store.steampowered.com/app/1737690/Yacht_Dice/",
+      "imageFit": "cover",
+      "imageCredit": {
+        "type": "official",
+        "label": "공식 게임 이미지",
+        "sourceUrl": "https://store.steampowered.com/app/1737690/Yacht_Dice/"
+      }
     },
     {
       "id": "subnautica",
@@ -12125,7 +12163,8 @@
       "id": "worms-clan-wars",
       "title": "웜즈 클랜워즈",
       "aliases": [
-        "웜즈"
+        "웜즈",
+        "Worms Clan Wars"
       ],
       "dates": [
         {
@@ -12199,7 +12238,9 @@
     {
       "id": "geoguessr",
       "title": "GeoGuessr",
-      "aliases": [],
+      "aliases": [
+        "GeoGuessr Steam Edition"
+      ],
       "dates": [
         {
           "date": "2025-07-03",
@@ -12410,7 +12451,9 @@
     {
       "id": "whos-at-the-door",
       "title": "후즈 앳 더 도어",
-      "aliases": [],
+      "aliases": [
+        "Who's at the door?"
+      ],
       "dates": [
         {
           "date": "2025-09-01",
@@ -12437,8 +12480,10 @@
     },
     {
       "id": "death-sees-twice",
-      "title": "Death Sees Twice",
-      "aliases": [],
+      "title": "Death Sees Twice: Spot the Difference",
+      "aliases": [
+        "Death Sees Twice"
+      ],
       "dates": [
         {
           "date": "2025-09-06",
@@ -12466,7 +12511,9 @@
     {
       "id": "one-mans-trash",
       "title": "One Man's Trash",
-      "aliases": [],
+      "aliases": [
+        "One Man´s Trash"
+      ],
       "dates": [
         {
           "date": "2025-09-06",
@@ -12494,7 +12541,9 @@
     {
       "id": "fantasy-life-i",
       "title": "판타지 라이프 i 빙글빙글 용과 시간을 훔치는 소녀",
-      "aliases": [],
+      "aliases": [
+        "FANTASY LIFE i: The Girl Who Steals Time"
+      ],
       "dates": [
         {
           "date": "2025-09-08",
@@ -12586,7 +12635,9 @@
     {
       "id": "little-nightmares-3",
       "title": "리틀 나이트메어 3",
-      "aliases": [],
+      "aliases": [
+        "Little Nightmares III"
+      ],
       "dates": [
         {
           "date": "2025-10-12",
@@ -12698,7 +12749,9 @@
     {
       "id": "escape-simulator-2",
       "title": "방탈출 시뮬레이터2",
-      "aliases": [],
+      "aliases": [
+        "Escape Simulator 2"
+      ],
       "dates": [
         {
           "date": "2025-10-28",
@@ -12819,10 +12872,11 @@
     },
     {
       "id": "trine-4",
-      "title": "Trine 4",
+      "title": "Trine 4: The Nightmare Prince",
       "aliases": [
         "트라인 4",
-        "트라인 시리즈"
+        "트라인 시리즈",
+        "Trine 4"
       ],
       "dates": [
         {
@@ -13107,7 +13161,9 @@
     {
       "id": "my-little-puppy",
       "title": "마이 리틀 퍼피",
-      "aliases": [],
+      "aliases": [
+        "My Little Puppy"
+      ],
       "dates": [
         {
           "date": "2025-11-27",
@@ -13171,7 +13227,9 @@
     {
       "id": "five-hearts-under-one-roof-season-2",
       "title": "하숙생이 전부 미녀입니다만? 시즌2",
-      "aliases": [],
+      "aliases": [
+        "Five Hearts Under One Roof season2"
+      ],
       "dates": [
         {
           "date": "2025-11-28",
@@ -13199,7 +13257,9 @@
     {
       "id": "alley-ghost",
       "title": "골목길 : 귀흔",
-      "aliases": [],
+      "aliases": [
+        "The Alley"
+      ],
       "dates": [
         {
           "date": "2025-12-01",
@@ -13367,7 +13427,9 @@
     {
       "id": "bonfire-simulator",
       "title": "본파이어 시뮬레이터",
-      "aliases": [],
+      "aliases": [
+        "BonfireSimulator"
+      ],
       "dates": [
         {
           "date": "2025-12-18",
@@ -13395,7 +13457,9 @@
     {
       "id": "after-school-playground",
       "title": "방과후운동장",
-      "aliases": [],
+      "aliases": [
+        "After School Grounds (방과후운동장)"
+      ],
       "dates": [
         {
           "date": "2025-12-12",
@@ -13423,7 +13487,9 @@
     {
       "id": "peglin",
       "title": "페글린",
-      "aliases": [],
+      "aliases": [
+        "Peglin"
+      ],
       "dates": [
         {
           "date": "2026-01-23",
@@ -13469,7 +13535,9 @@
     {
       "id": "wuthering-waves",
       "title": "명조: 워더링 웨이브",
-      "aliases": [],
+      "aliases": [
+        "Wuthering Waves"
+      ],
       "dates": [
         {
           "date": "2026-01-17",
@@ -13573,7 +13641,9 @@
     {
       "id": "i-want-to-agree-to-the-terms",
       "title": "이용약관에 동의하고 싶어",
-      "aliases": [],
+      "aliases": [
+        "利用規約に同意したい"
+      ],
       "dates": [
         {
           "date": "2026-01-27",
@@ -13785,7 +13855,9 @@
     {
       "id": "whos-who-2-0",
       "title": "후즈후2.0",
-      "aliases": [],
+      "aliases": [
+        "WHO'S WHO 2.0"
+      ],
       "dates": [
         {
           "date": "2025-06-29",
@@ -14021,7 +14093,9 @@
     {
       "id": "call-of-duty-modern-warfare-ii",
       "title": "콜 오브 듀티: 모던 워페어 II",
-      "aliases": [],
+      "aliases": [
+        "Call of Duty: Modern Warfare II"
+      ],
       "dates": [
         {
           "date": "2026-01-09",
@@ -14578,7 +14652,9 @@
     {
       "id": "reanimal",
       "title": "리애니멀",
-      "aliases": [],
+      "aliases": [
+        "REANIMAL"
+      ],
       "dates": [
         {
           "date": "2026-02-19",
@@ -14654,7 +14730,9 @@
     {
       "id": "slay-the-spire-2",
       "title": "슬레이 더 스파이어 2",
-      "aliases": [],
+      "aliases": [
+        "Slay the Spire 2"
+      ],
       "dates": [
         {
           "date": "2026-03-15",
@@ -15068,9 +15146,11 @@
     },
     {
       "id": "undusted",
-      "title": "Undusted",
+      "title": "언더스티드: 과거에서 온 편지",
       "aliases": [
-        "언더스티드"
+        "언더스티드",
+        "Undusted",
+        "Undusted: Letters from the Past"
       ],
       "dates": [
         {
@@ -15773,7 +15853,8 @@
       "title": "메챠 카멜레온",
       "aliases": [
         "메챠카멜레온",
-        "멧챠 카멜레온"
+        "멧챠 카멜레온",
+        "MECCHA CHAMELEON"
       ],
       "dates": [
         {
@@ -15841,7 +15922,8 @@
       "title": "용과 같이 제로",
       "aliases": [
         "용과같이 제로",
-        "용과같이제로"
+        "용과같이제로",
+        "Yakuza 0"
       ],
       "dates": [
         {
@@ -16004,7 +16086,9 @@
     {
       "id": "drainsim",
       "title": "드래인심",
-      "aliases": [],
+      "aliases": [
+        "DrainSim"
+      ],
       "dates": [
         {
           "date": "2026-07-16",
@@ -16504,7 +16588,8 @@
       "id": "fc-26",
       "title": "FC 26",
       "aliases": [
-        "FC26"
+        "FC26",
+        "EA SPORTS FC 26"
       ],
       "dates": [
         {
@@ -16578,8 +16663,10 @@
     },
     {
       "id": "restory-chill-electronic-repair",
-      "title": "ReStory: Chill Electronic Repair",
-      "aliases": [],
+      "title": "ReStory: Chill Electronics Repairs",
+      "aliases": [
+        "ReStory: Chill Electronic Repair"
+      ],
       "dates": [
         {
           "date": "2026-08-17",
@@ -16634,7 +16721,9 @@
     {
       "id": "pengpong",
       "title": "펭퐁",
-      "aliases": [],
+      "aliases": [
+        "PengPong 펭퐁"
+      ],
       "dates": [
         {
           "date": "2026-08-20",
@@ -16928,7 +17017,9 @@
     {
       "id": "princess-maker-children-of-revelation",
       "title": "프린세스 메이커: 예언의 아이들",
-      "aliases": [],
+      "aliases": [
+        "Princess Maker: Children of Revelation"
+      ],
       "dates": [
         {
           "date": "2026-07-14",
@@ -17265,7 +17356,9 @@
     {
       "id": "fruit-mountain-party",
       "title": "과일마운틴 파티",
-      "aliases": [],
+      "aliases": [
+        "Fruit Mountain Party"
+      ],
       "dates": [
         {
           "date": "2026-05-19",
@@ -17310,7 +17403,9 @@
     {
       "id": "fall-guys",
       "title": "폴가이즈",
-      "aliases": [],
+      "aliases": [
+        "Fall Guys"
+      ],
       "dates": [
         {
           "date": "2026-05-17",
@@ -17580,7 +17675,9 @@
     {
       "id": "hand-simulator-survival",
       "title": "핸드 시뮬레이터: 서바이벌",
-      "aliases": [],
+      "aliases": [
+        "Hand Simulator: Survival"
+      ],
       "dates": [
         {
           "date": "2026-06-23",
@@ -17634,7 +17731,9 @@
     {
       "id": "world-of-warships",
       "title": "월드 오브 워쉽",
-      "aliases": [],
+      "aliases": [
+        "World of Warships"
+      ],
       "dates": [
         {
           "date": "2026-10-28",
@@ -18098,7 +18197,9 @@
     {
       "id": "euro-truck-simulator-2",
       "title": "유로 트럭 시뮬레이터 2",
-      "aliases": [],
+      "aliases": [
+        "Euro Truck Simulator 2"
+      ],
       "dates": [
         {
           "date": "2026-09-24",
@@ -18224,7 +18325,9 @@
     {
       "id": "tabletop-simulator",
       "title": "테이블탑 시뮬레이터",
-      "aliases": [],
+      "aliases": [
+        "Tabletop Simulator"
+      ],
       "dates": [
         {
           "date": "2026-09-25",
@@ -18503,14 +18606,21 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": null
+      "image": "assets/game-log/walk-the-stork-verified-20261103.png",
+      "officialUrl": null,
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "screenshot",
+        "label": "게임 플레이 화면",
+        "sourceUrl": "https://onnuridanija.tistory.com/1419"
+      }
     },
     {
       "id": "gohyang-mandu",
       "title": "고향만두",
       "aliases": [
-        "고향 만두"
+        "고향 만두",
+        "Making of Hometown Dumpling"
       ],
       "dates": [
         {
@@ -18532,8 +18642,14 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": null
+      "image": "assets/game-log/gohyang-mandu-verified-20261103.png",
+      "officialUrl": null,
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "archive",
+        "label": "보존 아카이브 화면",
+        "sourceUrl": "https://vidkidz.tistory.com/42"
+      }
     },
     {
       "id": "side-kick-2007",
@@ -18582,14 +18698,23 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": null
+      "image": "assets/game-log/side-kick-2007-verified-20261103.png",
+      "officialUrl": null,
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "archive",
+        "label": "보존 아카이브 화면",
+        "sourceUrl": "https://vidkidz.tistory.com/3856"
+      }
     },
     {
       "id": "shu-ramen-shop",
-      "title": "슈의 라면가게",
+      "title": "슈의 라면집",
       "aliases": [
-        "슈의 라면집"
+        "슈의 라면집",
+        "슈의 라면가게",
+        "Sue's Ramen Shop",
+        "Sue's Cooking Game"
       ],
       "dates": [
         {
@@ -18611,16 +18736,26 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": null
+      "image": "assets/game-log/shu-ramen-shop-verified-20261103.png",
+      "officialUrl": null,
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "archive",
+        "label": "보존 아카이브 화면",
+        "sourceUrl": "https://vidkidz.tistory.com/36"
+      }
     },
     {
       "id": "mingming-vs-wangtta",
-      "title": "밍밍vs.왕따",
+      "title": "밍밍 vs. 왕따",
       "aliases": [
         "밍밍 VS 왕따",
         "포트리스 게임",
-        "밍밍 vs. 왕따 (포트리스 게임)"
+        "밍밍 vs. 왕따 (포트리스 게임)",
+        "밍밍vs.왕따",
+        "밍밍과 왕따",
+        "고무신 포트리스",
+        "힘껏 던져봐"
       ],
       "dates": [
         {
@@ -18642,8 +18777,14 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": null
+      "image": "assets/game-log/mingming-vs-wangtta-verified-20261103.png",
+      "officialUrl": null,
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "archive",
+        "label": "보존 아카이브 화면",
+        "sourceUrl": "https://vidkidz.tistory.com/1531"
+      }
     },
     {
       "id": "jukrim-gosu",
@@ -18671,13 +18812,22 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": null
+      "image": "assets/game-log/jukrim-gosu-verified-20261103.png",
+      "officialUrl": null,
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "archive",
+        "label": "보존 아카이브 화면",
+        "sourceUrl": "https://vidkidz.tistory.com/107"
+      }
     },
     {
       "id": "jjiksin",
       "title": "찍신",
-      "aliases": [],
+      "aliases": [
+        "수능특집 찍신",
+        "E녀 찍신"
+      ],
       "dates": [
         {
           "date": "2026-08-22",
@@ -18698,8 +18848,14 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": null
+      "image": "assets/game-log/jjiksin-verified-20261103.png",
+      "officialUrl": null,
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "archive",
+        "label": "보존 아카이브 화면",
+        "sourceUrl": "https://vidkidz.tistory.com/1804"
+      }
     },
     {
       "id": "machugi-io",
@@ -18889,7 +19045,8 @@
       "aliases": [
         "숲 스트리머 스무고개",
         "숲 스무고개",
-        "SOOP WHO ARE YA? — 숲 스트리머 스무고개"
+        "SOOP WHO ARE YA? — 숲 스트리머 스무고개",
+        "SOOP Who Are Ya"
       ],
       "dates": [
         {
@@ -18911,8 +19068,14 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": "https://lollckgacha.github.io/soopwho/"
+      "image": "assets/game-log/soop-who-are-ya-verified-20261103.png",
+      "officialUrl": "https://lollckgacha.github.io/soopwho/",
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "official_screenshot",
+        "label": "제작자 사이트 화면",
+        "sourceUrl": "https://lollckgacha.github.io/soopwho/"
+      }
     },
     {
       "id": "hello-kitty-party-land",
@@ -19629,11 +19792,13 @@
     },
     {
       "id": "soop-stock",
-      "title": "SOOP STOCK",
+      "title": "SOOP STOCK: 스트리머 주식시장",
       "aliases": [
         "숲 스트리머 모의 주식 시뮬레이터",
         "숲 주식",
-        "숲스탁"
+        "숲스탁",
+        "SOOP STOCK",
+        "스트리머 주식시장"
       ],
       "dates": [
         {
@@ -19655,8 +19820,14 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": "https://soop-stock-market.vercel.app/"
+      "image": "assets/game-log/soop-stock-verified-20261103.png",
+      "officialUrl": "https://neezu-crypto.github.io/soop-stock-market/",
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "official",
+        "label": "공식 게임 이미지",
+        "sourceUrl": "https://github.com/neezu-crypto/soop-stock-market"
+      }
     },
     {
       "id": "marbles-on-stream",
@@ -20194,7 +20365,8 @@
       "title": "비츠 앤 밥스",
       "aliases": [
         "Bits & Bops",
-        "Bits and Bops"
+        "Bits and Bops",
+        "비츠 앤 밥스 Bits & Bops"
       ],
       "dates": [
         {
@@ -20242,7 +20414,9 @@
       "title": "딸기 게임 멀티플레이",
       "aliases": [
         "딸기 게임",
-        "dalgi.ssjj.kr"
+        "dalgi.ssjj.kr",
+        "딸기게임",
+        "딸기 게임 멀티"
       ],
       "dates": [
         {
@@ -20264,8 +20438,14 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": "https://dalgi.ssjj.kr/"
+      "image": "assets/game-log/strawberry-game-multiplayer-verified-20261103.png",
+      "officialUrl": "https://dalgi.ssjj.kr/",
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "broadcast",
+        "label": "방송 플레이 화면",
+        "sourceUrl": "https://vod.sooplive.com/player/180276941?change_second=15149"
+      }
     },
     {
       "id": "side-effects",
@@ -20812,7 +20992,8 @@
         "GTA V",
         "그랜드 테프트 오토 V",
         "FiveM",
-        "여우도시"
+        "여우도시",
+        "Grand Theft Auto V 레거시"
       ],
       "dates": [
         {
@@ -21375,7 +21556,9 @@
       "title": "우왁굳의 고집",
       "aliases": [
         "The Stubborn of Wakgood",
-        "왁이작"
+        "왁이작",
+        "The Stubborn of WakGood",
+        "Wakisaac"
       ],
       "dates": [
         {
@@ -21397,8 +21580,14 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": null
+      "image": "assets/game-log/the-stubborn-of-wakgood-verified-20261103.png",
+      "officialUrl": null,
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "broadcast",
+        "label": "방송 플레이 화면",
+        "sourceUrl": "https://vod.sooplive.com/player/158571369?change_second=10000"
+      }
     },
     {
       "id": "red-or-blue",
@@ -21824,7 +22013,8 @@
       "id": "igedol-game",
       "title": "이계돌 게임",
       "aliases": [
-        "이세돌 사과 게임"
+        "이세돌 사과 게임",
+        "이계돌"
       ],
       "dates": [
         {
@@ -21846,8 +22036,14 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": "https://sedol.wakttu.kr/"
+      "image": "assets/game-log/igedol-game-verified-20261103.png",
+      "officialUrl": "https://sedol.wakttu.kr/",
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "broadcast",
+        "label": "방송 플레이 화면",
+        "sourceUrl": "https://vod.sooplive.com/player/150819093?change_second=3100"
+      }
     },
     {
       "id": "getting-over-it",
@@ -21881,9 +22077,11 @@
     },
     {
       "id": "wwme-lemon-game",
-      "title": "덥덥미 레몬 게임",
+      "title": "레몬 게임 (덥덥미)",
       "aliases": [
-        "레몬 게임"
+        "레몬 게임",
+        "덥덥미 레몬 게임",
+        "레몬게임"
       ],
       "dates": [
         {
@@ -21923,8 +22121,14 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": "https://wwme.kr/lemon"
+      "image": "assets/game-log/wwme-lemon-game-verified-20261103.png",
+      "officialUrl": "https://wwme.kr/lemon",
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "broadcast",
+        "label": "방송 플레이 화면",
+        "sourceUrl": "https://vod.sooplive.com/player/149987893?change_second=13499"
+      }
     },
     {
       "id": "slither-io",
@@ -22053,10 +22257,12 @@
     },
     {
       "id": "wjmax",
-      "title": "왁제이맥스",
+      "title": "왁제이맥스 (WJMAX)",
       "aliases": [
         "WJMAX",
-        "왁맥"
+        "왁맥",
+        "왁제이맥스",
+        "WJMax"
       ],
       "dates": [
         {
@@ -22096,8 +22302,14 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": null
+      "image": "assets/game-log/wjmax-verified-20261103.jpg",
+      "officialUrl": null,
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "catalog",
+        "label": "게임 표지",
+        "sourceUrl": "https://www.igdb.com/games/wjmax/presskit"
+      }
     },
     {
       "id": "incantation",
@@ -22753,7 +22965,8 @@
       "title": "미궁교사",
       "aliases": [
         "School Labyrinth",
-        "迷宮校舎"
+        "迷宮校舎",
+        "迷宮校舎 | School Labyrinth"
       ],
       "dates": [
         {
@@ -22880,14 +23093,21 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": null
+      "image": "assets/game-log/sooper-shot-verified-20261103.png",
+      "officialUrl": null,
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "broadcast",
+        "label": "방송 플레이 화면",
+        "sourceUrl": "https://vod.sooplive.com/player/117831893?change_second=1300"
+      }
     },
     {
       "id": "assetto-corsa",
       "title": "아세토 코르사",
       "aliases": [
-        "Assetto Corsa"
+        "Assetto Corsa",
+        "아세토 코르사 Assetto Corsa"
       ],
       "dates": [
         {
@@ -23458,7 +23678,8 @@
       "title": "야간 경비",
       "aliases": [
         "Night Security",
-        "夜間警備"
+        "夜間警備",
+        "[Chilla's Art] Night Security | 夜間警備"
       ],
       "dates": [
         {
@@ -23569,7 +23790,8 @@
       "aliases": [
         "A Dance of Fire and Ice",
         "ADOFAI",
-        "얼불춤"
+        "얼불춤",
+        "불과 얼음의 춤 (A Dance of Fire and Ice)"
       ],
       "dates": [
         {
@@ -23618,7 +23840,8 @@
       "aliases": [
         "The Kidnap",
         "Chilla’s Art The Kidnap",
-        "誘拐事件"
+        "誘拐事件",
+        "[Chilla's Art] The Kidnap | 誘拐事件"
       ],
       "dates": [
         {
@@ -23705,7 +23928,9 @@
     {
       "id": "golf-with-your-friends",
       "title": "골프 위드 유어 프렌즈",
-      "aliases": [],
+      "aliases": [
+        "Golf With Your Friends"
+      ],
       "dates": [
         {
           "date": "2023-10-14",
@@ -23732,7 +23957,9 @@
     {
       "id": "outlast",
       "title": "아웃라스트",
-      "aliases": [],
+      "aliases": [
+        "Outlast"
+      ],
       "dates": [
         {
           "date": "2023-10-14",
@@ -23804,7 +24031,9 @@
     {
       "id": "welcome-to-kowloon",
       "title": "웰컴 투 구룡",
-      "aliases": [],
+      "aliases": [
+        "Welcome to Kowloon"
+      ],
       "dates": [
         {
           "date": "2023-09-11",
@@ -23941,7 +24170,8 @@
       "title": "우당탕탕 경주",
       "aliases": [
         "Fling to the Finish",
-        "플링 투 더 피니시"
+        "플링 투 더 피니시",
+        "우당탕탕 경주 Fling to the Finish"
       ],
       "dates": [
         {
@@ -23986,10 +24216,13 @@
     },
     {
       "id": "how-much-quiz",
-      "title": "HOW MUCH 세상물정 퀴즈",
+      "title": "HOW MUCH: 세상물정 퀴즈",
       "aliases": [
         "하우머치",
-        "가격 맞히기"
+        "가격 맞히기",
+        "HOW MUCH 세상물정 퀴즈",
+        "HOW MUCH",
+        "세상물정 퀴즈"
       ],
       "dates": [
         {
@@ -24011,8 +24244,14 @@
           ]
         }
       ],
-      "image": null,
-      "officialUrl": "http://how-much-quiz.shop/"
+      "image": "assets/game-log/how-much-quiz-verified-20261103.png",
+      "officialUrl": "http://how-much-quiz.shop/",
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "broadcast",
+        "label": "방송 플레이 화면",
+        "sourceUrl": "https://vod.sooplive.com/player/100879710?change_second=33999"
+      }
     }
   ]
 }

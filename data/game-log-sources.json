@@ -1,5 +1,5 @@
 {
-  "preparedOn": "2026-11-02",
+  "preparedOn": "2026-11-03",
   "timezone": "Asia/Seoul",
   "cutoff": "2026-10-31",
   "sourceFiles": [
@@ -16,7 +16,8 @@
     "공식 이미지는 게임을 식별하는 표지이며 해당 날짜의 버전·DLC를 증명하지 않습니다.",
     "마법 주문 팀은 동일 Steam 앱인 The Spell Brigade로, SBO/VRCBaseBall은 VRChat으로 묶었습니다. 8월 20일 Cleaning Simulator 캘린더 표기는 실제 장면의 Emergency Cleanup Co.로, 7월 19일 Observation Duty 표기는 실제 5편 장면으로 통합하고 원문 근거를 보존했습니다.",
     "2026-10-31 재검토에서 확인한 누락 게임·날짜와 오식별 정정은 재검토 근거에 보존했습니다. 방송국 전체1073개 목록 수집은5~10월 장면 검토와 구분합니다.",
-    "2026-11-01부터 방송국 전체1073개 목록으로 검토 범위를 확장했습니다. 5월 이전 미검토 영상은 별도 기록하며, 준비만 된 표본을 본 것으로 세지 않습니다. 이번 추가 영상 근거와 기존 영상 근거의 시각은 파일별 시작 시각으로 검증했습니다."
+    "2026-11-01부터 방송국 전체1073개 목록으로 검토 범위를 확장했습니다. 5월 이전 미검토 영상은 별도 기록하며, 준비만 된 표본을 본 것으로 세지 않습니다. 이번 추가 영상 근거와 기존 영상 근거의 시각은 파일별 시작 시각으로 검증했습니다.",
+    "2026-11-03: 누락 이미지 17개를 공식 자료, 보존 아카이브, 게임 표지, 실제 방송 장면으로 보완했습니다. 각 이미지의 종류와 출처를 구분하며 기존 이름은 검색 별칭으로 보존했습니다."
   ],
   "videoReview": {
     "period": "방송국 전체 목록 2023–2026년 · 2026-10-31 수집 기준",
@@ -30846,7 +30847,9 @@
     {
       "id": "kartrider-drift",
       "title": "카트라이더:드리프트",
-      "aliases": [],
+      "aliases": [
+        "KartRider: Drift"
+      ],
       "dates": [
         {
           "date": "2025-04-01",
@@ -31119,7 +31122,9 @@
     {
       "id": "shinkansen-0",
       "title": "신칸센 0호",
-      "aliases": [],
+      "aliases": [
+        "[Chilla's Art] Shinkansen 0 | 新幹線 0号"
+      ],
       "dates": [],
       "notes": [],
       "sourceMetadata": [
@@ -31146,7 +31151,9 @@
     {
       "id": "the-exit-8",
       "title": "8번 출구",
-      "aliases": [],
+      "aliases": [
+        "The Exit 8"
+      ],
       "dates": [
         {
           "date": "2023-12-10",
@@ -32696,7 +32703,9 @@
     {
       "id": "old-market-simulator",
       "title": "옛날 재래시장 시뮬레이터",
-      "aliases": [],
+      "aliases": [
+        "Old Market Simulator"
+      ],
       "dates": [
         {
           "date": "2024-10-19",
@@ -33230,7 +33239,9 @@
     {
       "id": "detroit-become-human",
       "title": "디트로이트: 비컴 휴먼",
-      "aliases": [],
+      "aliases": [
+        "Detroit: Become Human"
+      ],
       "dates": [
         {
           "date": "2025-01-07",
@@ -33560,7 +33571,9 @@
     {
       "id": "monster-hunter-wilds",
       "title": "몬스터 헌터 와일즈",
-      "aliases": [],
+      "aliases": [
+        "Monster Hunter Wilds"
+      ],
       "dates": [
         {
           "date": "2025-03-08",
@@ -33882,7 +33895,9 @@
     {
       "id": "buried-stars",
       "title": "배리드 스타즈",
-      "aliases": [],
+      "aliases": [
+        "BURIED STARS"
+      ],
       "dates": [
         {
           "date": "2025-03-22",
@@ -34036,7 +34051,9 @@
     {
       "id": "split-fiction",
       "title": "스플릿 픽션",
-      "aliases": [],
+      "aliases": [
+        "Split Fiction"
+      ],
       "dates": [
         {
           "date": "2025-03-25",
@@ -34166,7 +34183,9 @@
     {
       "id": "inzoi",
       "title": "인조이",
-      "aliases": [],
+      "aliases": [
+        "inZOI"
+      ],
       "dates": [
         {
           "date": "2025-03-30",
@@ -35081,7 +35100,9 @@
     {
       "id": "world-of-tanks",
       "title": "월드 오브 탱크",
-      "aliases": [],
+      "aliases": [
+        "World of Tanks"
+      ],
       "dates": [
         {
           "date": "2025-05-12",
@@ -35323,7 +35344,9 @@
     {
       "id": "liar-game",
       "title": "라이어 게임",
-      "aliases": [],
+      "aliases": [
+        "Liar Game"
+      ],
       "dates": [
         {
           "date": "2026-04-25",
@@ -36478,7 +36501,9 @@
     {
       "id": "street-fighter-6",
       "title": "스트리트 파이터 6",
-      "aliases": [],
+      "aliases": [
+        "Street Fighter 6"
+      ],
       "dates": [
         {
           "date": "2025-04-13",
@@ -36559,7 +36584,9 @@
     {
       "id": "slay-the-spire",
       "title": "슬레이 더 스파이어",
-      "aliases": [],
+      "aliases": [
+        "Slay the Spire"
+      ],
       "dates": [
         {
           "date": "2025-06-08",
@@ -36789,7 +36816,9 @@
     {
       "id": "maplestory",
       "title": "메이플스토리",
-      "aliases": [],
+      "aliases": [
+        "MapleStory"
+      ],
       "dates": [
         {
           "date": "2025-06-25",
@@ -37284,8 +37313,12 @@
     },
     {
       "id": "yacht-dice",
-      "title": "야추 다이스",
-      "aliases": [],
+      "title": "야추 다이스 (Yacht Dice)",
+      "aliases": [
+        "야추 다이스",
+        "Yacht Dice",
+        "요트 다이스"
+      ],
       "dates": [
         {
           "date": "2025-10-29",
@@ -37624,7 +37657,8 @@
       "id": "worms-clan-wars",
       "title": "웜즈 클랜워즈",
       "aliases": [
-        "웜즈"
+        "웜즈",
+        "Worms Clan Wars"
       ],
       "dates": [
         {
@@ -37858,7 +37892,9 @@
     {
       "id": "geoguessr",
       "title": "GeoGuessr",
-      "aliases": [],
+      "aliases": [
+        "GeoGuessr Steam Edition"
+      ],
       "dates": [
         {
           "date": "2025-07-03",
@@ -38591,7 +38627,9 @@
     {
       "id": "whos-at-the-door",
       "title": "후즈 앳 더 도어",
-      "aliases": [],
+      "aliases": [
+        "Who's at the door?"
+      ],
       "dates": [
         {
           "date": "2025-09-01",
@@ -38689,8 +38727,10 @@
     },
     {
       "id": "death-sees-twice",
-      "title": "Death Sees Twice",
-      "aliases": [],
+      "title": "Death Sees Twice: Spot the Difference",
+      "aliases": [
+        "Death Sees Twice"
+      ],
       "dates": [
         {
           "date": "2025-09-06",
@@ -38787,7 +38827,9 @@
     {
       "id": "one-mans-trash",
       "title": "One Man's Trash",
-      "aliases": [],
+      "aliases": [
+        "One Man´s Trash"
+      ],
       "dates": [
         {
           "date": "2025-09-06",
@@ -38884,7 +38926,9 @@
     {
       "id": "fantasy-life-i",
       "title": "판타지 라이프 i 빙글빙글 용과 시간을 훔치는 소녀",
-      "aliases": [],
+      "aliases": [
+        "FANTASY LIFE i: The Girl Who Steals Time"
+      ],
       "dates": [
         {
           "date": "2025-09-08",
@@ -39172,7 +39216,9 @@
     {
       "id": "little-nightmares-3",
       "title": "리틀 나이트메어 3",
-      "aliases": [],
+      "aliases": [
+        "Little Nightmares III"
+      ],
       "dates": [
         {
           "date": "2025-10-12",
@@ -39550,7 +39596,9 @@
     {
       "id": "escape-simulator-2",
       "title": "방탈출 시뮬레이터2",
-      "aliases": [],
+      "aliases": [
+        "Escape Simulator 2"
+      ],
       "dates": [
         {
           "date": "2025-10-28",
@@ -39987,10 +40035,11 @@
     },
     {
       "id": "trine-4",
-      "title": "Trine 4",
+      "title": "Trine 4: The Nightmare Prince",
       "aliases": [
         "트라인 4",
-        "트라인 시리즈"
+        "트라인 시리즈",
+        "Trine 4"
       ],
       "dates": [
         {
@@ -40919,7 +40968,9 @@
     {
       "id": "my-little-puppy",
       "title": "마이 리틀 퍼피",
-      "aliases": [],
+      "aliases": [
+        "My Little Puppy"
+      ],
       "dates": [
         {
           "date": "2025-11-27",
@@ -41134,7 +41185,9 @@
     {
       "id": "five-hearts-under-one-roof-season-2",
       "title": "하숙생이 전부 미녀입니다만? 시즌2",
-      "aliases": [],
+      "aliases": [
+        "Five Hearts Under One Roof season2"
+      ],
       "dates": [
         {
           "date": "2025-11-28",
@@ -41229,7 +41282,9 @@
     {
       "id": "alley-ghost",
       "title": "골목길 : 귀흔",
-      "aliases": [],
+      "aliases": [
+        "The Alley"
+      ],
       "dates": [
         {
           "date": "2025-12-01",
@@ -41841,7 +41896,9 @@
     {
       "id": "bonfire-simulator",
       "title": "본파이어 시뮬레이터",
-      "aliases": [],
+      "aliases": [
+        "BonfireSimulator"
+      ],
       "dates": [
         {
           "date": "2025-12-18",
@@ -41938,7 +41995,9 @@
     {
       "id": "after-school-playground",
       "title": "방과후운동장",
-      "aliases": [],
+      "aliases": [
+        "After School Grounds (방과후운동장)"
+      ],
       "dates": [
         {
           "date": "2025-12-12",
@@ -42033,7 +42092,9 @@
     {
       "id": "peglin",
       "title": "페글린",
-      "aliases": [],
+      "aliases": [
+        "Peglin"
+      ],
       "dates": [
         {
           "date": "2026-01-23",
@@ -42178,7 +42239,9 @@
     {
       "id": "wuthering-waves",
       "title": "명조: 워더링 웨이브",
-      "aliases": [],
+      "aliases": [
+        "Wuthering Waves"
+      ],
       "dates": [
         {
           "date": "2026-01-17",
@@ -42518,7 +42581,9 @@
     {
       "id": "i-want-to-agree-to-the-terms",
       "title": "이용약관에 동의하고 싶어",
-      "aliases": [],
+      "aliases": [
+        "利用規約に同意したい"
+      ],
       "dates": [
         {
           "date": "2026-01-27",
@@ -43284,7 +43349,9 @@
     {
       "id": "whos-who-2-0",
       "title": "후즈후2.0",
-      "aliases": [],
+      "aliases": [
+        "WHO'S WHO 2.0"
+      ],
       "dates": [
         {
           "date": "2025-06-29",
@@ -44163,7 +44230,9 @@
     {
       "id": "call-of-duty-modern-warfare-ii",
       "title": "콜 오브 듀티: 모던 워페어 II",
-      "aliases": [],
+      "aliases": [
+        "Call of Duty: Modern Warfare II"
+      ],
       "dates": [
         {
           "date": "2026-01-09",
@@ -46188,7 +46257,9 @@
     {
       "id": "reanimal",
       "title": "리애니멀",
-      "aliases": [],
+      "aliases": [
+        "REANIMAL"
+      ],
       "dates": [
         {
           "date": "2026-02-19",
@@ -46524,7 +46595,9 @@
     {
       "id": "slay-the-spire-2",
       "title": "슬레이 더 스파이어 2",
-      "aliases": [],
+      "aliases": [
+        "Slay the Spire 2"
+      ],
       "dates": [
         {
           "date": "2026-03-15",
@@ -47707,9 +47780,11 @@
     },
     {
       "id": "undusted",
-      "title": "Undusted",
+      "title": "언더스티드: 과거에서 온 편지",
       "aliases": [
-        "언더스티드"
+        "언더스티드",
+        "Undusted",
+        "Undusted: Letters from the Past"
       ],
       "dates": [
         {
@@ -49635,7 +49710,8 @@
       "title": "메챠 카멜레온",
       "aliases": [
         "메챠카멜레온",
-        "멧챠 카멜레온"
+        "멧챠 카멜레온",
+        "MECCHA CHAMELEON"
       ],
       "dates": [
         {
@@ -49805,7 +49881,8 @@
       "title": "용과 같이 제로",
       "aliases": [
         "용과같이 제로",
-        "용과같이제로"
+        "용과같이제로",
+        "Yakuza 0"
       ],
       "dates": [
         {
@@ -50201,7 +50278,9 @@
     {
       "id": "drainsim",
       "title": "드래인심",
-      "aliases": [],
+      "aliases": [
+        "DrainSim"
+      ],
       "dates": [
         {
           "date": "2026-07-16",
@@ -51485,7 +51564,8 @@
       "id": "fc-26",
       "title": "FC 26",
       "aliases": [
-        "FC26"
+        "FC26",
+        "EA SPORTS FC 26"
       ],
       "dates": [
         {
@@ -51667,8 +51747,10 @@
     },
     {
       "id": "restory-chill-electronic-repair",
-      "title": "ReStory: Chill Electronic Repair",
-      "aliases": [],
+      "title": "ReStory: Chill Electronics Repairs",
+      "aliases": [
+        "ReStory: Chill Electronic Repair"
+      ],
       "dates": [
         {
           "date": "2026-08-17",
@@ -51819,7 +51901,9 @@
     {
       "id": "pengpong",
       "title": "펭퐁",
-      "aliases": [],
+      "aliases": [
+        "PengPong 펭퐁"
+      ],
       "dates": [
         {
           "date": "2026-08-20",
@@ -52521,7 +52605,9 @@
     {
       "id": "princess-maker-children-of-revelation",
       "title": "프린세스 메이커: 예언의 아이들",
-      "aliases": [],
+      "aliases": [
+        "Princess Maker: Children of Revelation"
+      ],
       "dates": [
         {
           "date": "2026-07-14",
@@ -53293,7 +53379,9 @@
     {
       "id": "fruit-mountain-party",
       "title": "과일마운틴 파티",
-      "aliases": [],
+      "aliases": [
+        "Fruit Mountain Party"
+      ],
       "dates": [
         {
           "date": "2026-05-19",
@@ -53387,7 +53475,9 @@
     {
       "id": "fall-guys",
       "title": "폴가이즈",
-      "aliases": [],
+      "aliases": [
+        "Fall Guys"
+      ],
       "dates": [
         {
           "date": "2026-05-17",
@@ -53924,7 +54014,9 @@
     {
       "id": "hand-simulator-survival",
       "title": "핸드 시뮬레이터: 서바이벌",
-      "aliases": [],
+      "aliases": [
+        "Hand Simulator: Survival"
+      ],
       "dates": [
         {
           "date": "2026-06-23",
@@ -54026,7 +54118,9 @@
     {
       "id": "world-of-warships",
       "title": "월드 오브 워쉽",
-      "aliases": [],
+      "aliases": [
+        "World of Warships"
+      ],
       "dates": [
         {
           "date": "2026-10-28",
@@ -55259,7 +55353,9 @@
     {
       "id": "euro-truck-simulator-2",
       "title": "유로 트럭 시뮬레이터 2",
-      "aliases": [],
+      "aliases": [
+        "Euro Truck Simulator 2"
+      ],
       "dates": [
         {
           "date": "2026-09-24",
@@ -55551,7 +55647,9 @@
     {
       "id": "tabletop-simulator",
       "title": "테이블탑 시뮬레이터",
-      "aliases": [],
+      "aliases": [
+        "Tabletop Simulator"
+      ],
       "dates": [
         {
           "date": "2026-09-25",
@@ -56191,7 +56289,8 @@
       "id": "gohyang-mandu",
       "title": "고향만두",
       "aliases": [
-        "고향 만두"
+        "고향 만두",
+        "Making of Hometown Dumpling"
       ],
       "dates": [
         {
@@ -56361,9 +56460,12 @@
     },
     {
       "id": "shu-ramen-shop",
-      "title": "슈의 라면가게",
+      "title": "슈의 라면집",
       "aliases": [
-        "슈의 라면집"
+        "슈의 라면집",
+        "슈의 라면가게",
+        "Sue's Ramen Shop",
+        "Sue's Cooking Game"
       ],
       "dates": [
         {
@@ -56421,11 +56523,15 @@
     },
     {
       "id": "mingming-vs-wangtta",
-      "title": "밍밍vs.왕따",
+      "title": "밍밍 vs. 왕따",
       "aliases": [
         "밍밍 VS 왕따",
         "포트리스 게임",
-        "밍밍 vs. 왕따 (포트리스 게임)"
+        "밍밍 vs. 왕따 (포트리스 게임)",
+        "밍밍vs.왕따",
+        "밍밍과 왕따",
+        "고무신 포트리스",
+        "힘껏 던져봐"
       ],
       "dates": [
         {
@@ -56544,7 +56650,10 @@
     {
       "id": "jjiksin",
       "title": "찍신",
-      "aliases": [],
+      "aliases": [
+        "수능특집 찍신",
+        "E녀 찍신"
+      ],
       "dates": [
         {
           "date": "2026-08-22",
@@ -57036,7 +57145,8 @@
       "aliases": [
         "숲 스트리머 스무고개",
         "숲 스무고개",
-        "SOOP WHO ARE YA? — 숲 스트리머 스무고개"
+        "SOOP WHO ARE YA? — 숲 스트리머 스무고개",
+        "SOOP Who Are Ya"
       ],
       "dates": [
         {
@@ -58782,11 +58892,13 @@
     },
     {
       "id": "soop-stock",
-      "title": "SOOP STOCK",
+      "title": "SOOP STOCK: 스트리머 주식시장",
       "aliases": [
         "숲 스트리머 모의 주식 시뮬레이터",
         "숲 주식",
-        "숲스탁"
+        "숲스탁",
+        "SOOP STOCK",
+        "스트리머 주식시장"
       ],
       "dates": [
         {
@@ -60113,7 +60225,8 @@
       "title": "비츠 앤 밥스",
       "aliases": [
         "Bits & Bops",
-        "Bits and Bops"
+        "Bits and Bops",
+        "비츠 앤 밥스 Bits & Bops"
       ],
       "dates": [
         {
@@ -60223,7 +60336,9 @@
       "title": "딸기 게임 멀티플레이",
       "aliases": [
         "딸기 게임",
-        "dalgi.ssjj.kr"
+        "dalgi.ssjj.kr",
+        "딸기게임",
+        "딸기 게임 멀티"
       ],
       "dates": [
         {
@@ -61485,7 +61600,8 @@
         "GTA V",
         "그랜드 테프트 오토 V",
         "FiveM",
-        "여우도시"
+        "여우도시",
+        "Grand Theft Auto V 레거시"
       ],
       "dates": [
         {
@@ -62881,7 +62997,9 @@
       "title": "우왁굳의 고집",
       "aliases": [
         "The Stubborn of Wakgood",
-        "왁이작"
+        "왁이작",
+        "The Stubborn of WakGood",
+        "Wakisaac"
       ],
       "dates": [
         {
@@ -63826,7 +63944,8 @@
       "id": "igedol-game",
       "title": "이계돌 게임",
       "aliases": [
-        "이세돌 사과 게임"
+        "이세돌 사과 게임",
+        "이계돌"
       ],
       "dates": [
         {
@@ -63945,9 +64064,11 @@
     },
     {
       "id": "wwme-lemon-game",
-      "title": "덥덥미 레몬 게임",
+      "title": "레몬 게임 (덥덥미)",
       "aliases": [
-        "레몬 게임"
+        "레몬 게임",
+        "덥덥미 레몬 게임",
+        "레몬게임"
       ],
       "dates": [
         {
@@ -64334,10 +64455,12 @@
     },
     {
       "id": "wjmax",
-      "title": "왁제이맥스",
+      "title": "왁제이맥스 (WJMAX)",
       "aliases": [
         "WJMAX",
-        "왁맥"
+        "왁맥",
+        "왁제이맥스",
+        "WJMax"
       ],
       "dates": [
         {
@@ -66018,7 +66141,8 @@
       "title": "미궁교사",
       "aliases": [
         "School Labyrinth",
-        "迷宮校舎"
+        "迷宮校舎",
+        "迷宮校舎 | School Labyrinth"
       ],
       "dates": [
         {
@@ -66307,7 +66431,8 @@
       "id": "assetto-corsa",
       "title": "아세토 코르사",
       "aliases": [
-        "Assetto Corsa"
+        "Assetto Corsa",
+        "아세토 코르사 Assetto Corsa"
       ],
       "dates": [
         {
@@ -67560,7 +67685,8 @@
       "title": "야간 경비",
       "aliases": [
         "Night Security",
-        "夜間警備"
+        "夜間警備",
+        "[Chilla's Art] Night Security | 夜間警備"
       ],
       "dates": [
         {
@@ -67795,7 +67921,8 @@
       "aliases": [
         "A Dance of Fire and Ice",
         "ADOFAI",
-        "얼불춤"
+        "얼불춤",
+        "불과 얼음의 춤 (A Dance of Fire and Ice)"
       ],
       "dates": [
         {
@@ -67906,7 +68033,8 @@
       "aliases": [
         "The Kidnap",
         "Chilla’s Art The Kidnap",
-        "誘拐事件"
+        "誘拐事件",
+        "[Chilla's Art] The Kidnap | 誘拐事件"
       ],
       "dates": [
         {
@@ -68086,7 +68214,9 @@
     {
       "id": "golf-with-your-friends",
       "title": "골프 위드 유어 프렌즈",
-      "aliases": [],
+      "aliases": [
+        "Golf With Your Friends"
+      ],
       "dates": [
         {
           "date": "2023-10-14",
@@ -68144,7 +68274,9 @@
     {
       "id": "outlast",
       "title": "아웃라스트",
-      "aliases": [],
+      "aliases": [
+        "Outlast"
+      ],
       "dates": [
         {
           "date": "2023-10-14",
@@ -68309,7 +68441,9 @@
     {
       "id": "welcome-to-kowloon",
       "title": "웰컴 투 구룡",
-      "aliases": [],
+      "aliases": [
+        "Welcome to Kowloon"
+      ],
       "dates": [
         {
           "date": "2023-09-11",
@@ -68603,7 +68737,8 @@
       "title": "우당탕탕 경주",
       "aliases": [
         "Fling to the Finish",
-        "플링 투 더 피니시"
+        "플링 투 더 피니시",
+        "우당탕탕 경주 Fling to the Finish"
       ],
       "dates": [
         {
@@ -68714,10 +68849,13 @@
     },
     {
       "id": "how-much-quiz",
-      "title": "HOW MUCH 세상물정 퀴즈",
+      "title": "HOW MUCH: 세상물정 퀴즈",
       "aliases": [
         "하우머치",
-        "가격 맞히기"
+        "가격 맞히기",
+        "HOW MUCH 세상물정 퀴즈",
+        "HOW MUCH",
+        "세상물정 퀴즈"
       ],
       "dates": [
         {
@@ -71111,10 +71249,17 @@
       "appId": 3799100
     },
     "strawberry-game-multiplayer": {
+      "image": "assets/game-log/strawberry-game-multiplayer-verified-20261103.png",
       "officialUrl": "https://dalgi.ssjj.kr/",
-      "image": null,
-      "verifiedOn": "2026-11-02",
-      "note": "방송 주소창으로 공식 게임 주소 확인. 현재 HTTP 502로 공식 이미지 확보 불가."
+      "imageSource": "https://vod.sooplive.com/player/180276941?change_second=15149",
+      "sourcePageUrl": "https://vod.sooplive.com/player/180276941?change_second=15149",
+      "sourceType": "broadcast",
+      "title": "딸기 게임 멀티플레이",
+      "englishTitle": null,
+      "checkedAt": "2026-11-03",
+      "verification": "보존된 SOOP 원본 1920×1080 장면에서 주소창, 게임 제목 및 실제 진행 화면을 직접 대조했습니다. 원본 변경 없음.",
+      "supportingSourceUrls": [],
+      "imageNote": "실제 원본 이미지 또는 직접 촬영한 게임 화면. 생성 이미지가 아닙니다."
     },
     "feather-party": {
       "image": "assets/game-log/feather-party-20261101.jpg",
@@ -71679,16 +71824,30 @@
       "appId": 240720
     },
     "wwme-lemon-game": {
+      "image": "assets/game-log/wwme-lemon-game-verified-20261103.png",
       "officialUrl": "https://wwme.kr/lemon",
-      "officialTitle": "덥덥미 레몬 게임",
-      "verifiedOn": "2026-11-02",
-      "imageStatus": "공식 페이지 확인; 대표 이미지 미확보"
+      "imageSource": "https://vod.sooplive.com/player/149987893?change_second=13499",
+      "sourcePageUrl": "https://vod.sooplive.com/player/149987893?change_second=13499",
+      "sourceType": "broadcast",
+      "title": "레몬 게임 (덥덥미)",
+      "englishTitle": null,
+      "checkedAt": "2026-11-03",
+      "verification": "보존된 SOOP 원본 1920×1080 장면에서 주소창, 게임 제목 및 실제 진행 화면을 직접 대조했습니다. 원본 변경 없음.",
+      "supportingSourceUrls": [],
+      "imageNote": "실제 원본 이미지 또는 직접 촬영한 게임 화면. 생성 이미지가 아닙니다."
     },
     "igedol-game": {
+      "image": "assets/game-log/igedol-game-verified-20261103.png",
       "officialUrl": "https://sedol.wakttu.kr/",
-      "officialTitle": "이계돌 게임",
-      "verifiedOn": "2026-11-02",
-      "imageStatus": "방송 원본에서 제작자 게임 주소 확인; 현재 DNS 조회 실패로 대표 이미지 미확보"
+      "imageSource": "https://vod.sooplive.com/player/150819093?change_second=3100",
+      "sourcePageUrl": "https://vod.sooplive.com/player/150819093?change_second=3100",
+      "sourceType": "broadcast",
+      "title": "이계돌 게임",
+      "englishTitle": null,
+      "checkedAt": "2026-11-03",
+      "verification": "보존된 SOOP 원본 1920×1080 장면에서 주소창, 게임 제목 및 실제 진행 화면을 직접 대조했습니다. 원본 변경 없음.",
+      "supportingSourceUrls": [],
+      "imageNote": "실제 원본 이미지 또는 직접 촬영한 게임 화면. 생성 이미지가 아닙니다."
     },
     "house-flipper": {
       "image": "assets/game-log/house-flipper-20261101.jpg",
@@ -71825,9 +71984,17 @@
       "appId": 2835570
     },
     "wjmax": {
-      "officialTitle": "WJMAX",
-      "imageStatus": "공식 대표 이미지 확인 불가: 과거 배급 페이지는 다른 도메인으로 이동하며 개발 페이지에 접속할 수 없음",
-      "verifiedOn": "2026-11-02"
+      "image": "assets/game-log/wjmax-verified-20261103.jpg",
+      "officialUrl": null,
+      "imageSource": "https://images.igdb.com/igdb/image/upload/t_cover_big/co62c6.jpg",
+      "sourcePageUrl": "https://www.igdb.com/games/wjmax/presskit",
+      "sourceType": "catalog",
+      "title": "왁제이맥스 (WJMAX)",
+      "englishTitle": "WJMAX",
+      "checkedAt": "2026-11-03",
+      "verification": "IGDB WJMax Press Kit의 Cover for WJMax 링크에서 제공하는 게임 커버 이미지. 왕관을 얹은 W 로고 264x352 원본을 직접 확인. 공식 게임 홈페이지 https://waktaverse.games/gameDetail/wjmax/는 현재 다른 주차 도메인으로 이동하여 공식 링크로 사용하지 않음. 실제 방송의 WJMAX 플레이는 기존 145456271 원본 화면 및 게임로그 근거와 일치.",
+      "supportingSourceUrls": [],
+      "imageNote": "실제 원본 이미지 또는 직접 촬영한 게임 화면. 생성 이미지가 아닙니다."
     },
     "cooking-simulator": {
       "image": "assets/game-log/cooking-simulator-20261101.jpg",
@@ -72491,9 +72658,226 @@
       "transformation": "none; original thumbs_/thumb_landscape.png from official assets archive"
     },
     "soop-stock": {
-      "officialUrl": "https://soop-stock-market.vercel.app/",
-      "imageStatus": "not_verified",
-      "verifiedOn": "2026-11-02"
+      "image": "assets/game-log/soop-stock-verified-20261103.png",
+      "officialUrl": "https://neezu-crypto.github.io/soop-stock-market/",
+      "imageSource": "https://raw.githubusercontent.com/neezu-crypto/soop-stock-market/main/images/%EC%A0%9C%EB%AA%A9%EC%9D%84%20%EC%9E%85%EB%A0%A5%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94.%20%283%29.png",
+      "sourcePageUrl": "https://github.com/neezu-crypto/soop-stock-market",
+      "sourceType": "official",
+      "title": "SOOP STOCK: 스트리머 주식시장",
+      "englishTitle": null,
+      "checkedAt": "2026-11-03",
+      "verification": "제작자 공개 저장소의 원본 스트리머 주식시장 로고입니다. 이전 Vercel 주소는 404, 현재 GitHub Pages는 점검 중입니다. 로고의 글자와 차트 문양을 직접 확인했습니다.",
+      "supportingSourceUrls": [],
+      "imageNote": "실제 원본 이미지 또는 직접 촬영한 게임 화면. 생성 이미지가 아닙니다."
+    },
+    "walk-the-stork": {
+      "image": "assets/game-log/walk-the-stork-verified-20261103.png",
+      "officialUrl": null,
+      "imageSource": "https://t1.daumcdn.net/cfile/tistory/990F484A5F4408A102",
+      "sourcePageUrl": "https://onnuridanija.tistory.com/1419",
+      "sourceType": "screenshot",
+      "title": "황새 오래 걷기",
+      "englishTitle": "Walk the Stork",
+      "checkedAt": "2026-11-03",
+      "verification": [
+        "Direct visual inspection of the WAFlash original title confirms Walk the Stork, Damien Clarke, 20th Feb 2005, and Copyright DX Interactive.",
+        "Selected screenshot shows the upright long-legged white stork, green trees and fence, leaf-covered ground, and Press Spacebar to start the walk. Its graphics match the WAFlash preserved screenshots.",
+        "Existing game-log-sources.json video evidence explicitly identifies the browser title Walk the Stork and vidkidz/2825. Web Design Museum independently lists the 2005 game and DX Interactive/Damien Clarke."
+      ],
+      "supportingSourceUrls": [
+        "https://vidkidz.tistory.com/2825",
+        "https://www.webdesignmuseum.org/flash-games/walk-the-stork-in-2005"
+      ],
+      "imageNote": "Original unedited game screenshot; all existing watermarks and credits preserved."
+    },
+    "gohyang-mandu": {
+      "image": "assets/game-log/gohyang-mandu-verified-20261103.png",
+      "officialUrl": null,
+      "imageSource": "https://blog.kakaocdn.net/dna/bduzyC/btqLwdVDGTg/AAAAAAAAAAAAAAAAAAAAAE1aAzoGvU87x6Q8qI_9qXjPSBfZ1d2HISh7nyPl1BrF/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1796050799&allow_ip=&allow_referer=&signature=ikT8EQTLKYIC%2B1wOv7o9euhrYWs%3D",
+      "sourcePageUrl": "https://vidkidz.tistory.com/42",
+      "sourceType": "archive",
+      "title": "고향만두",
+      "englishTitle": "Making of Hometown Dumpling",
+      "checkedAt": "2026-11-03",
+      "verification": [
+        "Direct visual inspection confirms the Korean title on the chefs hat, iBravo copyright, and Start/Instructions buttons. The 600x480 image shows the original dumpling-shop chef.",
+        "WAFlash /42 credits ibravo.com; FlashArch independently identifies this as the original iBravo promotional dumpling game.",
+        "The existing video evidence identifies the dumpling filling selection and iBravo copyright. This is not the 2021 vertical remake, Hwangjini dumpling, or a Sue game."
+      ],
+      "supportingSourceUrls": [
+        "https://vidkidz.tistory.com/42",
+        "https://flasharch.com/ko/archive/play/862294eb9ae188a622b29f1ef7d76dc3",
+        "https://flasharch.com/en"
+      ],
+      "imageNote": "Original unedited game screenshot; all existing watermarks and credits preserved.",
+      "englishTitleNote": "Archive English display title; not confirmed as the original official English title."
+    },
+    "side-kick-2007": {
+      "image": "assets/game-log/side-kick-2007-verified-20261103.png",
+      "officialUrl": null,
+      "imageSource": "https://blog.kakaocdn.net/dna/w8zWT/btrai6Sjk4d/AAAAAAAAAAAAAAAAAAAAAA08XjAwpP0xg3B8WXMAEEW8QzRp5hFXE-bYQwdUmF82/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1796050799&allow_ip=&allow_referer=&signature=e558YyFFiVKPrmKqxJ1WtI11HCw%3D",
+      "sourcePageUrl": "https://vidkidz.tistory.com/3856",
+      "sourceType": "archive",
+      "title": "사이드킥 2007",
+      "englishTitle": "Side Kick 2007",
+      "checkedAt": "2026-11-03",
+      "verification": [
+        "Direct visual inspection confirms Side kick 2007 title, START/OPTIONS/VISIT ME buttons, soccer ball and stadium, and thebestwebgames.com / Nowe Reginald credit.",
+        "The separate gameplay screenshot from the same archive was also inspected: flags, score, Time, full football field and players match the existing video identification.",
+        "WAFlash /3856 identifies this 2-player football game and the arrow/Ctrl and WASD/Space controls. Similar games such as 1 on 1 Soccer were excluded."
+      ],
+      "supportingSourceUrls": [
+        "https://vidkidz.tistory.com/3856",
+        "https://www.girlgames.com/side-kick-2007.html",
+        "https://www.dan-dare.org/FreeFun/Games/More/SideKick2007.htm"
+      ],
+      "imageNote": "Original unedited game screenshot; all existing watermarks and credits preserved."
+    },
+    "shu-ramen-shop": {
+      "image": "assets/game-log/shu-ramen-shop-verified-20261103.png",
+      "officialUrl": null,
+      "imageSource": "https://blog.kakaocdn.net/dna/cLrnL3/btqNSAyRy4A/AAAAAAAAAAAAAAAAAAAAAGZCq5ivUOEMU32KqlRMDidJx72G2Ull-gFJm9iskhzK/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1796050799&allow_ip=&allow_referer=&signature=kYPtIV8zLCFc40RcCc2ly812OBc%3D",
+      "sourcePageUrl": "https://vidkidz.tistory.com/36",
+      "sourceType": "archive",
+      "title": "슈의 라면집",
+      "englishTitle": "Sue's Ramen Shop",
+      "checkedAt": "2026-11-03",
+      "verification": [
+        "원게임 타이틀 화면에 “슈의 라면집”과 iBravo 로고·저작권 문구가 직접 보인다. 분홍 머리 슈, 노란 냄비, 분홍 주방이 보이는 800×640 타이틀 화면을 직접 확인했다.",
+        "와플래시 보존 아카이브 /36은 같은 게임을 통용명 “슈의 라면가게”로 제공한다.",
+        "Flashpoint 계열 9o3o 아카이브는 제목 “슈의 라면집”, 별칭 “Sue’s Ramen Shop”, “Sue’s Cooking Game”, 제작사 iBravo로 기록한다.",
+        "와플래시 제작자 정보가 핑크빛겜의 원 블로그 글을 직접 출처로 연결한다. 원 블로그 링크는 열었으나 웹 도구에서 본문·이미지를 추출하지 못했으므로, 같은 게임의 보존 타이틀 스크린샷을 사용했다."
+      ],
+      "supportingSourceUrls": [
+        "https://vidkidz.tistory.com/36",
+        "https://ooooooooo.ooo/?id=ca5aed2f-85d9-4c80-829b-b2216b485811",
+        "https://flasharch.com/zh-TW/archive/play/23d25ef9c90ad0c4464d470de3c94604",
+        "https://blog.naver.com/eflower18/140008986060"
+      ],
+      "imageNote": "아카이브에 수록된 실제 원게임 타이틀 스크린샷. 원본 아카이브 워터마크 유지."
+    },
+    "mingming-vs-wangtta": {
+      "image": "assets/game-log/mingming-vs-wangtta-verified-20261103.png",
+      "officialUrl": null,
+      "imageSource": "https://blog.kakaocdn.net/dna/cqVfnA/btqRQSivfjY/AAAAAAAAAAAAAAAAAAAAAKRvdzVp_CVGHxsCzSMZwrhTSoTh4mJRD7wiRX04Nbwa/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1796050799&allow_ip=&allow_referer=&signature=gpHEbGGLYPBho0IK4hOCpoLo2v8%3D",
+      "sourcePageUrl": "https://vidkidz.tistory.com/1531",
+      "sourceType": "archive",
+      "title": "밍밍 vs. 왕따",
+      "englishTitle": null,
+      "checkedAt": "2026-11-03",
+      "verification": [
+        "원게임 타이틀 화면에 “밍밍 vs. 왕따”, nARTBOX.com, START가 직접 보인다. 돌멩이를 던지는 여학생과 고무신을 던지는 남학생이 함께 있는 550×400 타이틀을 직접 확인했다.",
+        "아카이브 /1531의 1번째 이미지는 게임방법 화면이므로 제외하고, 2번째 타이틀 이미지를 선택했다. 3번째 게임플레이도 직접 확인하여 고무신 포트리스 게임과 동일함을 대조했다.",
+        "인터플래시 /440의 제목·게임 설명·스크린샷 분류가 동일 캐릭터/포트리스 게임임을 뒷받침한다."
+      ],
+      "supportingSourceUrls": [
+        "https://vidkidz.tistory.com/1531",
+        "https://inter87.tistory.com/440"
+      ],
+      "imageNote": "아카이브에 수록된 실제 원게임 타이틀 스크린샷. 원본 아카이브 워터마크 유지.",
+      "englishTitleNote": "공식 영문 제목은 확인하지 못함. Mingming vs. Wangtta는 로마자 표기이며 원게임 도움말에는 장르 표현 Fortress Game이 보인다."
+    },
+    "jukrim-gosu": {
+      "image": "assets/game-log/jukrim-gosu-verified-20261103.png",
+      "officialUrl": null,
+      "imageSource": "https://blog.kakaocdn.net/dna/qVSlX/btqIMWt00CM/AAAAAAAAAAAAAAAAAAAAAFtcYs6TJ0KBW87dnVGkgAsz0gfv0ITE9svXNyHZmHHp/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1796050799&allow_ip=&allow_referer=&signature=kAhGxxec4sPddvpIqz3v%2ByFqKBQ%3D",
+      "sourcePageUrl": "https://vidkidz.tistory.com/107",
+      "sourceType": "archive",
+      "title": "죽림고수",
+      "englishTitle": null,
+      "checkedAt": "2026-11-03",
+      "verification": [
+        "원게임 타이틀 화면에 “죽림고수”, “게임시작”, “게임방법”, 한게임플래시, Copyright by NHN Corp.가 직접 보인다. 대나무 숲과 삿갓 쓴 캐릭터가 있는 550×450 타이틀 화면을 직접 확인했다.",
+        "와플래시 /107은 제작자·배급을 한게임플래시로 명시하고 타이틀·게임 방법·게임 화면 및 Gosu06.swf/gosu_RES.swf를 보존한다."
+      ],
+      "supportingSourceUrls": [
+        "https://vidkidz.tistory.com/107"
+      ],
+      "imageNote": "아카이브에 수록된 실제 원게임 타이틀 스크린샷. 원본 아카이브 워터마크 유지.",
+      "englishTitleNote": "공식 영문 제목은 확인하지 못함. Bamboo Master는 설명적 번역이므로 검증된 별칭으로 추가하지 않았다."
+    },
+    "jjiksin": {
+      "image": "assets/game-log/jjiksin-verified-20261103.png",
+      "officialUrl": null,
+      "imageSource": "https://blog.kakaocdn.net/dna/VCvNy/btqTLxQHAA6/AAAAAAAAAAAAAAAAAAAAALwVxrW990di1X9CYwIp9wG79Oi5xuII2Ei08pc9WJZq/img.png?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1796050799&allow_ip=&allow_referer=&signature=HOcTBuecGU%2B3PV%2BkmG3s4ejwULI%3D",
+      "sourcePageUrl": "https://vidkidz.tistory.com/1804",
+      "sourceType": "archive",
+      "title": "찍신",
+      "englishTitle": null,
+      "checkedAt": "2026-11-03",
+      "verification": "실제 방송 원본 프레임 204960585-9195.000.png의 브라우저 주소창이 vidkidz.tistory.com/1804임을 직접 확인. 해당 페이지는 E녀 제작 수능특집 찍신이라고 설명하며 타이틀화면을 제공. 내려받은 700x500 이미지에 수능특집 찍신 로고와 동일 캐릭터 확인. 공식 영문 제목은 확인되지 않아 임의 번역하지 않음.",
+      "supportingSourceUrls": [],
+      "imageNote": "실제 원본 이미지 또는 직접 촬영한 게임 화면. 생성 이미지가 아닙니다."
+    },
+    "the-stubborn-of-wakgood": {
+      "image": "assets/game-log/the-stubborn-of-wakgood-verified-20261103.png",
+      "officialUrl": null,
+      "imageSource": "https://vod.sooplive.com/player/158571369?change_second=10000",
+      "sourcePageUrl": "https://vod.sooplive.com/player/158571369?change_second=10000",
+      "sourceType": "broadcast",
+      "title": "우왁굳의 고집",
+      "englishTitle": "The Stubborn of WakGood",
+      "checkedAt": "2026-11-03",
+      "verification": "기존 공개 SOOP HLS 직접 추출 원본 158571369-10000.000.png를 복사. 2025-04-28 직접 플레이 화면, 왁잘딱 모드 문구와 우왁굳 캐릭터의 보스전 확인. 공식 배포 링크 cafe.naver.com/steamindiegame/9373617은 검색 근거에서 확인했으나 접근 불가. 블로그 커버 후보에는 다운로드 방법이라는 추가 문구가 있어 선택에서 제외하고 실제 방송 원본을 채택. 영어 제목은 게임 로고와 Scanline 표기에서 확인.",
+      "supportingSourceUrls": [
+        "https://www.scanline.gg/games/the-stubborn-of-wakgood",
+        "https://imoneed.tistory.com/155"
+      ],
+      "imageNote": "실제 원본 이미지 또는 직접 촬영한 게임 화면. 생성 이미지가 아닙니다."
+    },
+    "sooper-shot": {
+      "image": "assets/game-log/sooper-shot-verified-20261103.png",
+      "officialUrl": null,
+      "imageSource": "https://vod.sooplive.com/player/117831893?change_second=1300",
+      "sourcePageUrl": "https://vod.sooplive.com/player/117831893?change_second=1300",
+      "sourceType": "broadcast",
+      "title": "숲퍼샷",
+      "englishTitle": null,
+      "checkedAt": "2026-11-03",
+      "verification": "기존 공개 SOOP HLS 추출 원본 117831893-1300.000.png를 복사. 구슬요 캐릭터, 사격 무기와 킬피드, 프리블록스 미니게임 직접 플레이 화면 확인. SOOP 보도자료를 인용한 2024-07-17 기사에서도 프리블록스 플레이월드 숲퍼샷을 명시. 독립 공식 표지 이미지를 찾지 못해 실제 게임 방송 화면 채택. 기존 Sooper Shot 별칭은 보존하되 공식 영문 표기는 독립 확인되지 않음.",
+      "supportingSourceUrls": [
+        "https://zdnet.co.kr/view/?no=20240717095057"
+      ],
+      "imageNote": "실제 원본 이미지 또는 직접 촬영한 게임 화면. 생성 이미지가 아닙니다."
+    },
+    "yacht-dice": {
+      "image": "assets/game-log/yacht-dice-verified-20261103.jpg",
+      "officialUrl": "https://store.steampowered.com/app/1737690/Yacht_Dice/",
+      "imageSource": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1737690/header.jpg?t=1755542104",
+      "sourcePageUrl": "https://store.steampowered.com/app/1737690/Yacht_Dice/",
+      "sourceType": "official",
+      "title": "야추 다이스 (Yacht Dice)",
+      "englishTitle": "Yacht Dice",
+      "checkedAt": "2026-11-03",
+      "verification": "2025-10-29 방송 원본 176288743-12000.000.png의 실행 창 제목 YachtDice, 왼쪽 점수표의 픽셀 A/4개/풀하우스/S/L/요트 아이콘, 상단 네모 보관칸 5개, 하단 차례·남은 굴림/타이머 배치를 Steam app 1737690 공식 스크린샷과 직접 대조해 동일 게임 확인. 다른 온라인 야추 또는 닌텐도 51 Worldwide Games가 아님. 배포사는 GoodOldMan Studio이며 Steam API 한국어 요청에도 이름은 Yacht Dice. 공식 헤더를 선택.",
+      "supportingSourceUrls": [],
+      "imageNote": "실제 원본 이미지 또는 직접 촬영한 게임 화면. 생성 이미지가 아닙니다."
+    },
+    "how-much-quiz": {
+      "image": "assets/game-log/how-much-quiz-verified-20261103.png",
+      "officialUrl": "http://how-much-quiz.shop/",
+      "imageSource": "https://vod.sooplive.com/player/100879710?change_second=33999",
+      "sourcePageUrl": "https://vod.sooplive.com/player/100879710?change_second=33999",
+      "sourceType": "broadcast",
+      "title": "HOW MUCH: 세상물정 퀴즈",
+      "englishTitle": null,
+      "checkedAt": "2026-11-03",
+      "verification": "보존된 SOOP 원본 1920×1080 장면에서 주소창, 게임 제목 및 실제 진행 화면을 직접 대조했습니다. 원본 변경 없음.",
+      "supportingSourceUrls": [],
+      "imageNote": "실제 원본 이미지 또는 직접 촬영한 게임 화면. 생성 이미지가 아닙니다."
+    },
+    "soop-who-are-ya": {
+      "image": "assets/game-log/soop-who-are-ya-verified-20261103.png",
+      "officialUrl": "https://lollckgacha.github.io/soopwho/",
+      "imageSource": "https://lollckgacha.github.io/soopwho/",
+      "sourcePageUrl": "https://lollckgacha.github.io/soopwho/",
+      "sourceType": "official_screenshot",
+      "title": "SOOP WHO ARE YA?",
+      "englishTitle": null,
+      "checkedAt": "2026-11-03",
+      "verification": "제작자 게임의 실제 시작 화면을 직접 촬영했습니다. 기존 방송 근거의 주소와 제목이 일치합니다.",
+      "supportingSourceUrls": [],
+      "imageNote": "실제 원본 이미지 또는 직접 촬영한 게임 화면. 생성 이미지가 아닙니다."
     }
   },
   "unresolvedCalendarEntries": [
@@ -72729,5 +73113,383 @@
         733
       ]
     }
-  ]
+  ],
+  "imageNameReview": {
+    "reviewedAt": "2026-11-03",
+    "games": 310,
+    "missingImagesBefore": 17,
+    "missingImagesAfter": 0,
+    "correctedTitles": [
+      {
+        "id": "yacht-dice",
+        "before": "야추 다이스",
+        "after": "야추 다이스 (Yacht Dice)"
+      },
+      {
+        "id": "death-sees-twice",
+        "before": "Death Sees Twice",
+        "after": "Death Sees Twice: Spot the Difference"
+      },
+      {
+        "id": "trine-4",
+        "before": "Trine 4",
+        "after": "Trine 4: The Nightmare Prince"
+      },
+      {
+        "id": "undusted",
+        "before": "Undusted",
+        "after": "언더스티드: 과거에서 온 편지"
+      },
+      {
+        "id": "restory-chill-electronic-repair",
+        "before": "ReStory: Chill Electronic Repair",
+        "after": "ReStory: Chill Electronics Repairs"
+      },
+      {
+        "id": "shu-ramen-shop",
+        "before": "슈의 라면가게",
+        "after": "슈의 라면집"
+      },
+      {
+        "id": "mingming-vs-wangtta",
+        "before": "밍밍vs.왕따",
+        "after": "밍밍 vs. 왕따"
+      },
+      {
+        "id": "soop-stock",
+        "before": "SOOP STOCK",
+        "after": "SOOP STOCK: 스트리머 주식시장"
+      },
+      {
+        "id": "wwme-lemon-game",
+        "before": "덥덥미 레몬 게임",
+        "after": "레몬 게임 (덥덥미)"
+      },
+      {
+        "id": "wjmax",
+        "before": "왁제이맥스",
+        "after": "왁제이맥스 (WJMAX)"
+      },
+      {
+        "id": "how-much-quiz",
+        "before": "HOW MUCH 세상물정 퀴즈",
+        "after": "HOW MUCH: 세상물정 퀴즈"
+      }
+    ],
+    "storeTitleChecks": [
+      {
+        "appId": "690640",
+        "name": "Trine 4: The Nightmare Prince",
+        "url": "https://store.steampowered.com/api/appdetails?appids=690640&l=koreana&cc=KR",
+        "description": "The best-selling Trine series returns to the magic of 2.5D! Join three iconic heroes as they set off on a quest through fantastical fairytale landscapes to save the world from the Nightmare Prince's shadows."
+      },
+      {
+        "appId": "2891020",
+        "name": "언더스티드: 과거에서 온 편지",
+        "url": "https://store.steampowered.com/api/appdetails?appids=2891020&l=koreana&cc=KR",
+        "description": "Undusted: Letters from the Past는 더러운 물건들을 깨끗하게 닦아 복원하는 캐주얼 게임입니다. 오랫동안 방치된 집으로 돌아온 주인공은 어떤 사연을 가지고 있을까요? 감각적으로 디자인된 사운드와 그래픽에서 기분좋은 시청각적 만족감을 느껴보세요."
+      },
+      {
+        "appId": "3812600",
+        "name": "ReStory: Chill Electronics Repairs",
+        "url": "https://store.steampowered.com/api/appdetails?appids=3812600&l=koreana&cc=KR",
+        "description": "2000년대 중반의 도쿄에서 아담한 전자제품 수리점을 운영하세요. 한 시대를 풍미했던 콘솔 게임기와 휴대전화, 뮤직 플레이어 등, 추억의 전자기기들을 정성스럽게 복원하여 사업을 키우세요. 고객들과 대화하고, 사연을 듣고, 당신의 결정이 그 고객들의 인생과 당신의 가게에 어떤 영향을 미치는지 확인하세요."
+      },
+      {
+        "appId": "2963800",
+        "name": "DrainSim",
+        "url": "https://store.steampowered.com/api/appdetails?appids=2963800&l=koreana&cc=KR",
+        "description": "DrainSim에 뛰어들어 홍수를 제압하세요! 갈퀴부터 잠수 펌프까지 다양한 도구로 침수된 거리를 정리하며 물 흐름을 되살리는 만족감을 느껴보세요. 배수구 하나하나를 해결하며 도시의 영웅이 되세요."
+      },
+      {
+        "appId": "3723720",
+        "name": "Death Sees Twice: Spot the Difference",
+        "url": "https://store.steampowered.com/api/appdetails?appids=3723720&l=koreana&cc=KR",
+        "description": "세계에서 가장 사악한 틀린 그림 찾기. 마지막 오류를 보게 될 때, 이 세계의 진실을 알게 된다."
+      }
+    ],
+    "officialNameAliasesAdded": [
+      {
+        "id": "kartrider-drift",
+        "alias": "KartRider: Drift",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1184140&l=english&cc=US"
+      },
+      {
+        "id": "shinkansen-0",
+        "alias": "[Chilla's Art] Shinkansen 0 | 新幹線 0号",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2793370&l=english&cc=US"
+      },
+      {
+        "id": "the-exit-8",
+        "alias": "The Exit 8",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2653790&l=english&cc=US"
+      },
+      {
+        "id": "old-market-simulator",
+        "alias": "Old Market Simulator",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2878420&l=english&cc=US"
+      },
+      {
+        "id": "detroit-become-human",
+        "alias": "Detroit: Become Human",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1222140&l=english&cc=US"
+      },
+      {
+        "id": "monster-hunter-wilds",
+        "alias": "Monster Hunter Wilds",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2246340&l=english&cc=US"
+      },
+      {
+        "id": "buried-stars",
+        "alias": "BURIED STARS",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1025960&l=english&cc=US"
+      },
+      {
+        "id": "split-fiction",
+        "alias": "Split Fiction",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2001120&l=english&cc=US"
+      },
+      {
+        "id": "inzoi",
+        "alias": "inZOI",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2456740&l=english&cc=US"
+      },
+      {
+        "id": "world-of-tanks",
+        "alias": "World of Tanks",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1407200&l=english&cc=US"
+      },
+      {
+        "id": "liar-game",
+        "alias": "Liar Game",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3555700&l=koreana&cc=US"
+      },
+      {
+        "id": "street-fighter-6",
+        "alias": "Street Fighter 6",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1364780&l=english&cc=US"
+      },
+      {
+        "id": "slay-the-spire",
+        "alias": "Slay the Spire",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=646570&l=english&cc=US"
+      },
+      {
+        "id": "maplestory",
+        "alias": "MapleStory",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=216150&l=english&cc=US"
+      },
+      {
+        "id": "worms-clan-wars",
+        "alias": "Worms Clan Wars",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=233840&l=english&cc=US"
+      },
+      {
+        "id": "geoguessr",
+        "alias": "GeoGuessr Steam Edition",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3478870&l=english&cc=US"
+      },
+      {
+        "id": "whos-at-the-door",
+        "alias": "Who's at the door?",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3690010&l=english&cc=US"
+      },
+      {
+        "id": "one-mans-trash",
+        "alias": "One Man´s Trash",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3692070&l=english&cc=US"
+      },
+      {
+        "id": "fantasy-life-i",
+        "alias": "FANTASY LIFE i: The Girl Who Steals Time",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2993780&l=english&cc=US"
+      },
+      {
+        "id": "little-nightmares-3",
+        "alias": "Little Nightmares III",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1392860&l=english&cc=US"
+      },
+      {
+        "id": "escape-simulator-2",
+        "alias": "Escape Simulator 2",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2879840&l=english&cc=US"
+      },
+      {
+        "id": "my-little-puppy",
+        "alias": "My Little Puppy",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2102040&l=english&cc=US"
+      },
+      {
+        "id": "five-hearts-under-one-roof-season-2",
+        "alias": "Five Hearts Under One Roof season2",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3731020&l=english&cc=US"
+      },
+      {
+        "id": "alley-ghost",
+        "alias": "The Alley",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4181410&l=english&cc=US"
+      },
+      {
+        "id": "bonfire-simulator",
+        "alias": "BonfireSimulator",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3920940&l=english&cc=US"
+      },
+      {
+        "id": "after-school-playground",
+        "alias": "After School Grounds (방과후운동장)",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3966360&l=english&cc=US"
+      },
+      {
+        "id": "peglin",
+        "alias": "Peglin",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1296610&l=english&cc=US"
+      },
+      {
+        "id": "wuthering-waves",
+        "alias": "Wuthering Waves",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3513350&l=english&cc=US"
+      },
+      {
+        "id": "i-want-to-agree-to-the-terms",
+        "alias": "利用規約に同意したい",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3757210&l=koreana&cc=US"
+      },
+      {
+        "id": "whos-who-2-0",
+        "alias": "WHO'S WHO 2.0",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3391260&l=english&cc=US"
+      },
+      {
+        "id": "call-of-duty-modern-warfare-ii",
+        "alias": "Call of Duty: Modern Warfare II",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3595230&l=english&cc=US"
+      },
+      {
+        "id": "reanimal",
+        "alias": "REANIMAL",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2129530&l=english&cc=US"
+      },
+      {
+        "id": "slay-the-spire-2",
+        "alias": "Slay the Spire 2",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2868840&l=english&cc=US"
+      },
+      {
+        "id": "metcha-chameleon",
+        "alias": "MECCHA CHAMELEON",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=4704690&l=koreana&cc=US"
+      },
+      {
+        "id": "yakuza-0",
+        "alias": "Yakuza 0",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=638970&l=english&cc=US"
+      },
+      {
+        "id": "drainsim",
+        "alias": "DrainSim",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2963800&l=english&cc=US"
+      },
+      {
+        "id": "fc-26",
+        "alias": "EA SPORTS FC 26",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3405690&l=english&cc=US"
+      },
+      {
+        "id": "pengpong",
+        "alias": "PengPong 펭퐁",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=2766910&l=koreana&cc=US"
+      },
+      {
+        "id": "princess-maker-children-of-revelation",
+        "alias": "Princess Maker: Children of Revelation",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3438810&l=english&cc=US"
+      },
+      {
+        "id": "fruit-mountain-party",
+        "alias": "Fruit Mountain Party",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=3467540&l=english&cc=US"
+      },
+      {
+        "id": "fall-guys",
+        "alias": "Fall Guys",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=1097150&l=english&cc=US"
+      },
+      {
+        "id": "hand-simulator-survival",
+        "alias": "Hand Simulator: Survival",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=924140&l=english&cc=US"
+      },
+      {
+        "id": "world-of-warships",
+        "alias": "World of Warships",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=552990&l=english&cc=US"
+      },
+      {
+        "id": "euro-truck-simulator-2",
+        "alias": "Euro Truck Simulator 2",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=227300&l=english&cc=US"
+      },
+      {
+        "id": "tabletop-simulator",
+        "alias": "Tabletop Simulator",
+        "sourceUrl": "https://store.steampowered.com/api/appdetails/?appids=286160&l=english&cc=US"
+      },
+      {
+        "id": "bits-and-bops",
+        "alias": "비츠 앤 밥스 Bits & Bops",
+        "sourceUrl": "https://store.steampowered.com/app/1929290/"
+      },
+      {
+        "id": "grand-theft-auto-v",
+        "alias": "Grand Theft Auto V 레거시",
+        "sourceUrl": "https://store.steampowered.com/app/271590/"
+      },
+      {
+        "id": "school-labyrinth",
+        "alias": "迷宮校舎 | School Labyrinth",
+        "sourceUrl": "https://store.steampowered.com/app/2423300/"
+      },
+      {
+        "id": "assetto-corsa",
+        "alias": "아세토 코르사 Assetto Corsa",
+        "sourceUrl": "https://store.steampowered.com/app/244210/"
+      },
+      {
+        "id": "night-security",
+        "alias": "[Chilla's Art] Night Security | 夜間警備",
+        "sourceUrl": "https://store.steampowered.com/app/2367230/"
+      },
+      {
+        "id": "a-dance-of-fire-and-ice",
+        "alias": "불과 얼음의 춤 (A Dance of Fire and Ice)",
+        "sourceUrl": "https://store.steampowered.com/app/977950/"
+      },
+      {
+        "id": "the-kidnap",
+        "alias": "[Chilla's Art] The Kidnap | 誘拐事件",
+        "sourceUrl": "https://store.steampowered.com/app/2593900/"
+      },
+      {
+        "id": "golf-with-your-friends",
+        "alias": "Golf With Your Friends",
+        "sourceUrl": "https://store.steampowered.com/app/431240/"
+      },
+      {
+        "id": "outlast",
+        "alias": "Outlast",
+        "sourceUrl": "https://store.steampowered.com/app/238320/"
+      },
+      {
+        "id": "welcome-to-kowloon",
+        "alias": "Welcome to Kowloon",
+        "sourceUrl": "https://store.steampowered.com/app/2515240/"
+      },
+      {
+        "id": "fling-to-the-finish",
+        "alias": "우당탕탕 경주 Fling to the Finish",
+        "sourceUrl": "https://store.steampowered.com/app/1054430/"
+      }
+    ],
+    "note": "한글·영문 검색 및 원본 게임 타이틀, 공식 스토어, 보존 아카이브, 기존 방송 장면을 대조했습니다. 영문 제목이 확인되지 않은 게임은 임의 번역하지 않았습니다. 날짜·방송 근거는 변경하지 않았습니다."
+  }
 }

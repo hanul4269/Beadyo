@@ -89,7 +89,8 @@
         if (!game.image || !/^assets\/game-log\/[\w.-]+$/.test(game.image)) return null;
         const image = element('img', className);
         image.src = game.image;
-        image.alt = `${game.title} 공식 게임 이미지`;
+        image.alt = `${game.title} ${game.imageCredit?.label || '공식 게임 이미지'}`;
+        if (game.imageFit === 'contain') image.classList.add('image-contained');
         image.loading = className === 'detail-image' ? 'eager' : 'lazy';
         image.decoding = 'async';
         image.width = 460;
@@ -222,11 +223,13 @@
         }
         content.append(element('p', 'detail-date-note', '확인된 자료에 남아 있는 날짜예요. 최초 플레이일이나 전체 플레이 횟수를 뜻하지는 않습니다.'));
         if (state.year || state.month) content.append(element('p', 'detail-date-note', '다른 기간의 기록은 연도·월 필터를 해제하면 볼 수 있어요.'));
-        if (game.officialUrl && safeLink(game.officialUrl)) {
+        const imageSource = safeLink(game.imageCredit?.sourceUrl || '');
+        const gameSource = safeLink(game.officialUrl || '');
+        if (imageSource || gameSource) {
             const credit = element('div', 'image-credit');
-            credit.append(element('span', '', game.image ? '이미지 © 해당 게임 제작사·배급사' : '게임 정보'));
-            const link = element('a', '', '공식 게임 페이지 ↗');
-            link.href = safeLink(game.officialUrl);
+            credit.append(element('span', '', game.imageCredit?.label || (game.image ? '이미지 © 해당 게임 제작사·배급사' : '게임 정보')));
+            const link = element('a', '', imageSource ? '이미지 출처 ↗' : '공식 게임 페이지 ↗');
+            link.href = imageSource || gameSource;
             link.target = '_blank';
             link.rel = 'noopener noreferrer';
             credit.append(link);
@@ -425,7 +428,7 @@
         $('games').setAttribute('aria-busy', 'true');
         try {
             const [response, genreData] = await Promise.all([
-                fetch('data/game-log.json?v=20261101', { cache: 'no-cache', credentials: 'omit' }),
+                fetch('data/game-log.json?v=game-images-20261103', { cache: 'no-cache', credentials: 'omit' }),
                 loadGenres(),
                 loadCustomRecords(),
             ]);
@@ -444,7 +447,7 @@
             syncCatalogControls();
             const hasVideoRecords = dataset.games.some(game => game.dates.some(record => record.confidence === 'video'));
             const sourceNote = hasVideoRecords ? '영상에서 확인한 날짜에는 해당 장면으로 이동하는 링크를 붙였습니다. 날짜는 한국 시간 기준이며, 자정을 넘긴 경우 방송 시작일도 함께 표시합니다.' : '날짜별 링크에서 캘린더·문서 출처를 확인할 수 있어요.';
-            $('source-info').replaceChildren(element('p', '', `기록: 제공된 나무위키 문서, 비드요 캘린더${hasVideoRecords ? ', SOOP 방송 영상의 확인 장면' : ''}. ${sourceNote}`), element('p', '', '이미지: 공식 스토어 및 제작사·배급사 공개 자료. 게임별 공식 페이지는 상세 화면에서 확인할 수 있어요. 이미지가 확보되지 않은 게임은 이름으로 표시합니다.'));
+            $('source-info').replaceChildren(element('p', '', `기록: 제공된 나무위키 문서, 비드요 캘린더${hasVideoRecords ? ', SOOP 방송 영상의 확인 장면' : ''}. ${sourceNote}`), element('p', '', '이미지: 공식 스토어·제작사 자료, 보존 아카이브의 원게임 화면, 게임 표지 및 실제 방송 플레이 화면을 사용합니다. 종류와 출처는 각 게임의 상세 화면에서 확인할 수 있어요. 권리는 각 권리자에게 있으며, 이미지가 없는 새 등록 게임은 이름으로 표시합니다.'));
             $('source-info').append(element('p', '', genreData ? '장르: 기존 게임은 공식 스토어·제작사 페이지의 장르와 태그를 검색용으로 묶었으며, 새 게임은 등록자가 선택한 장르로 표시합니다. 여러 장르에 포함될 수 있으며 확인되지 않은 게임은 장르 미분류로 표시합니다.' : '장르 정보를 불러오지 못했어요. 새로고침하면 다시 시도합니다.'));
             if (dataset.videoReview) {
                 const review = dataset.videoReview;
