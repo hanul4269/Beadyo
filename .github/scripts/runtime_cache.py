@@ -1,9 +1,13 @@
 import json
 import os
+from pathlib import Path
+import sys
 import urllib.error
 import urllib.request
 
-SUPABASE_URL = 'https://qlmcwobfldgmhwhptkfz.supabase.co'
+# The workflow entry points run directly from .github/scripts.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from tools.supabase_http import SUPABASE_URL, open_supabase
 
 
 def upsert_runtime_cache(cache_key, payload, updated_at=None):
@@ -40,7 +44,7 @@ def upsert_runtime_cache(cache_key, payload, updated_at=None):
     )
 
     try:
-        with urllib.request.urlopen(req, timeout=15) as resp:
+        with open_supabase(req, timeout=15) as resp:
             if resp.status not in (200, 201, 204):
                 raise RuntimeError(f'Unexpected Supabase status: {resp.status}')
     except urllib.error.HTTPError as error:

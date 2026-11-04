@@ -4,12 +4,11 @@ Usage:
   python3 import_songs.py
   → Supabase service role key 입력 프롬프트 (Project Settings > API > service_role)
 """
-import json, os, sys, ssl
+from getpass import getpass
+import json, os, sys
 import urllib.request, urllib.error
+from tools.supabase_http import SUPABASE_URL, open_supabase
 
-ctx = ssl._create_unverified_context()
-
-SUPABASE_URL  = 'https://qlmcwobfldgmhwhptkfz.supabase.co'
 SONGBOOK_JSON = '/tmp/songbook.json'
 LIVE_JSON     = '/tmp/live_songs.json'
 BATCH         = 300
@@ -17,7 +16,7 @@ BATCH         = 300
 def get_key():
     key = os.environ.get('SUPABASE_SERVICE_KEY', '').strip()
     if not key:
-        key = input('Supabase service role key: ').strip()
+        key = getpass('Supabase service role key: ').strip()
     return key
 
 def req(method, path, key, body=None):
@@ -30,7 +29,7 @@ def req(method, path, key, body=None):
         'Prefer': 'return=minimal',
     })
     try:
-        with urllib.request.urlopen(r, context=ctx) as resp:
+        with open_supabase(r) as resp:
             return resp.status, resp.read()
     except urllib.error.HTTPError as e:
         return e.code, e.read()

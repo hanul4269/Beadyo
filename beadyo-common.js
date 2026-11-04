@@ -7,6 +7,12 @@
     const SUPABASE_ANON_KEY = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
     const OWNER_EMAIL = 'riosniper12@gmail.com';
 
+    // Google sign-in returns a PKCE code. Discard bearer tokens sent in a link.
+    const fragment = new URLSearchParams(global.location.hash.slice(1));
+    if (fragment.has('access_token') || fragment.has('refresh_token')) {
+        global.history.replaceState(global.history.state, '', global.location.pathname + global.location.search);
+    }
+
     let supabaseClient = null;
 
     function getSupabaseClient(options = {}) {
@@ -14,7 +20,10 @@
         if (!global.supabase?.createClient) {
             throw new Error('supabase.min.js must be loaded before beadyo-common.js');
         }
-        supabaseClient = global.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, options);
+        supabaseClient = global.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            ...options,
+            auth: { ...options.auth, flowType: 'pkce', detectSessionInUrl: false },
+        });
         return supabaseClient;
     }
 

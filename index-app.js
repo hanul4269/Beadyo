@@ -231,7 +231,6 @@ function routeToTabIndex() {
 }
 
 function syncTabUrl(index, replace = false) {
-    if (authServiceUnavailable && window.location.hash.includes('access_token=')) return;
     const route = index === MUSIC_TAB_INDEX
         ? (currentMusicPage === 'songs' ? 'music' : currentMusicPage)
         : TAB_ROUTES[index];
@@ -240,7 +239,7 @@ function syncTabUrl(index, replace = false) {
     if (!replace) params.delete('tab');
     const search = params.toString();
     const nextUrl = `${window.location.pathname}${search ? `?${search}` : ''}#${route}`;
-    if (window.location.href.endsWith(`#${route}`)) return;
+    if (window.location.hash === `#${route}`) return;
     const method = replace ? 'replaceState' : 'pushState';
     history[method]({ tab: index }, document.title, nextUrl);
 }
@@ -276,9 +275,9 @@ const authDb = (() => {
             },
             global: { fetch: fetchWithJwtFutureRetry },
         });
-    } catch (error) {
+    } catch {
         authServiceUnavailable = true;
-        console.error('로그인 서비스 초기화 실패:', error);
+        console.error('로그인 서비스 초기화 실패');
         return null;
     }
 })();
@@ -1451,26 +1450,6 @@ async function initAuth() {
         syncCalendarAuth();
     });
 
-    // Implicit flow: #access_token= 해시 처리
-    const hash = window.location.hash.substring(1);
-    if (hash.includes('access_token=')) {
-        const params = new URLSearchParams(hash);
-        const accessToken = params.get('access_token');
-        const refreshToken = params.get('refresh_token') || '';
-        if (accessToken) {
-            history.replaceState({}, document.title, window.location.pathname);
-            const { data, error } = await authDb.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
-            if (error) {
-                console.error('setSession error:', error.message, error);
-            } else if (data.session) {
-                authUser = data.session.user ?? null;
-                updateAuthUI();
-                syncCalendarAuth();
-                return;
-            }
-        }
-    }
-
     // PKCE flow: ?code= 쿼리 처리
     const currentUrl = new URL(window.location.href);
     const authError = currentUrl.searchParams.get('error_description') || currentUrl.searchParams.get('error');
@@ -1479,7 +1458,7 @@ async function initAuth() {
         currentUrl.searchParams.delete('error_code');
         currentUrl.searchParams.delete('error_description');
         history.replaceState({}, document.title, currentUrl.pathname + currentUrl.search);
-        alert('로그인 실패: ' + authError);
+        alert('로그인을 완료하지 못했습니다. 로그인 버튼을 눌러 다시 시도해 주세요.');
     }
     const authCode = currentUrl.searchParams.get('code');
     if (authCode) {
@@ -1488,7 +1467,7 @@ async function initAuth() {
         history.replaceState({}, document.title, currentUrl.pathname + currentUrl.search);
         const { data, error } = await authDb.auth.exchangeCodeForSession(authCode);
         if (error) {
-            console.error('exchangeCodeForSession error:', error.message, error);
+            console.error('로그인 코드 교환 실패', error.status);
         } else if (data.session) {
             authUser = data.session.user ?? null;
             updateAuthUI();
@@ -1515,7 +1494,7 @@ function authRedirectTo() {
 
 async function signIn() {
     if (location.protocol === 'file:') {
-        alert('파일로 직접 열면 로그인이 안 돼요.\n터미널에서 아래 명령어로 로컬 서버를 실행해주세요:\n\npython3 -m http.server 3000\n\n그 다음 http://localhost:3000 에서 접속하면 로그인 가능해요.');
+        alert('파일로 직접 열면 로그인이 안 돼요.\n저장소 폴더에서 로컬 미리보기를 실행해 주세요.\n\n./dev.sh\n\n그 다음 http://localhost:3000 에서 접속하면 로그인 가능해요.');
         return;
     }
     if (!authDb || authServiceUnavailable) { openLoginModal(); return; }
@@ -1535,13 +1514,19 @@ async function signIn() {
 async function signOut() {
     if (!authDb || authServiceUnavailable) { openLoginModal(); return; }
     closeAuthMenu();
-    await authDb.auth.signOut();
+    try {
+        const { error } = await authDb.auth.signOut({ scope: 'global' });
+        if (error) throw error;
+    } catch {
+        alert('로그아웃을 완료하지 못했습니다. 연결을 확인하고 다시 시도해 주세요.');
+        return;
+    }
     authUser = null;
     updateAuthUI();
     syncCalendarAuth();
 }
 
-initAuth().catch(error => {
-    console.error('로그인 서비스 초기화 실패:', error);
+initAuth().catch(() => {
+    console.error('로그인 서비스 초기화 실패');
     showAuthUnavailable();
 });

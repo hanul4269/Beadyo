@@ -11,16 +11,15 @@ import argparse
 import json
 import os
 import re
-import ssl
 import sys
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
 from difflib import SequenceMatcher
+from tools.supabase_http import SUPABASE_URL, open_supabase
 
 
-SUPABASE_URL = "https://qlmcwobfldgmhwhptkfz.supabase.co"
 ITUNES_SEARCH_URL = "https://itunes.apple.com/search"
 PAGE_SIZE = 500
 DEFAULT_COUNTRIES = ("KR", "JP", "US")
@@ -30,8 +29,6 @@ DEFAULT_MIN_ARTIST_SCORE = 0.62
 JPOP_SEARCH_TITLE_SCORE = 0.9
 JPOP_SEARCH_TITLE_MAX_RANK = 4
 MAX_QUERIES_PER_SONG = 14
-
-ctx = ssl._create_unverified_context()
 
 
 def env(name):
@@ -51,9 +48,11 @@ def http_json(method, url, headers=None, body=None, retries=2):
             data = json.dumps(body).encode("utf-8")
 
     req = urllib.request.Request(url, data=data, method=method, headers=headers or {})
+    open_url = (open_supabase if req.has_header('Apikey') or req.has_header('Authorization')
+                else urllib.request.urlopen)
     for attempt in range(retries + 1):
         try:
-            with urllib.request.urlopen(req, context=ctx, timeout=30) as resp:
+            with open_url(req, timeout=30) as resp:
                 raw = resp.read()
                 if not raw:
                     return resp.status, None
