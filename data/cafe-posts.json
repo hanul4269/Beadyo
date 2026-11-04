@@ -3,8 +3,14 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-11-04T01:25:21.016Z",
+  "fetchedAt": "2026-11-04T08:04:29.563Z",
   "posts": [
+    {
+      "id": "40507",
+      "title": "뷰기들",
+      "publishedAt": "2026-11-04T14:47:52.643+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40507"
+    },
     {
       "id": "40485",
       "title": "쫀아침",
@@ -28,12 +34,6 @@
       "title": "구슬요는",
       "publishedAt": "2026-10-31T14:28:26.807+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40418"
-    },
-    {
-      "id": "40416",
-      "title": "조심히왕",
-      "publishedAt": "2026-10-31T13:10:54.110+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40416"
     }
   ]
 }
