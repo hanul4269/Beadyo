@@ -3,8 +3,14 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-11-04T08:04:29.563Z",
+  "fetchedAt": "2026-11-04T16:21:05.358Z",
   "posts": [
+    {
+      "id": "40513",
+      "title": "소식없는 슬요 근황",
+      "publishedAt": "2026-11-04T21:32:34.480+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40513"
+    },
     {
       "id": "40507",
       "title": "뷰기들",
@@ -28,12 +34,6 @@
       "title": "부기들..",
       "publishedAt": "2026-10-31T16:48:48.530+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40422"
-    },
-    {
-      "id": "40418",
-      "title": "구슬요는",
-      "publishedAt": "2026-10-31T14:28:26.807+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40418"
     }
   ]
 }
