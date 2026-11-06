@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-02",
+  "updatedAt": "2026-11-06",
   "categories": [
     {
       "id": "action",
@@ -6140,6 +6140,31 @@
       "genres": [],
       "sourceUrl": "http://how-much-quiz.shop/",
       "sourceTags": []
+    },
+    "aging-curve": {
+      "genres": [
+        "action",
+        "rhythm",
+        "puzzle"
+      ],
+      "sourceUrl": "https://aging-curve-kappa.vercel.app/",
+      "sourceTags": [
+        "반응속도·에임 미니게임",
+        "4키 리듬게임",
+        "순서 기억력·멀티태스킹 검사"
+      ],
+      "classificationNote": "공식 게임 설명의 미니게임 구성에 따라 기존 사이트 장르로 분류"
+    },
+    "zelda-ocarina-of-time": {
+      "genres": [
+        "action",
+        "adventure"
+      ],
+      "sourceUrl": "https://www.nintendo.com/us/store/products/the-legend-of-zelda-ocarina-of-time-125697/",
+      "sourceTags": [
+        "Action",
+        "Adventure"
+      ]
     }
   }
 }

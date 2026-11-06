@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "preparedOn": "2026-11-02",
+  "preparedOn": "2026-11-06",
   "channel": "beadyo97",
   "coverage": {
-    "period": "방송국 전체 목록 2023–2026년 · 2026-10-31 수집 기준",
-    "totalVods": 1073,
-    "reviewedVods": 1024,
+    "period": "2026-10-31 수집 방송국 전체 목록(2023–2026년) + 2026-11-03~11-06 추가 검토(11월 2~3일 경계 방송 포함)",
+    "totalVods": 1077,
+    "reviewedVods": 1028,
     "restrictedVods": 47,
     "partialVods": 0,
     "pendingVods": 0,
@@ -13,12 +13,12 @@
     "sampleIntervalSeconds": 60,
     "continuousPlaybackReviewed": false,
     "reviewComplete": false,
-    "replayVods": 1039,
+    "replayVods": 1043,
     "clipVods": 34,
     "recheckedOn": "2026-11-02",
     "baseSampleIntervalSeconds": 60,
     "candidateScanIntervalSeconds": 15,
-    "gapCandidateReviewedVods": 1020,
+    "gapCandidateReviewedVods": 1024,
     "full15SecondSampleReviewedVods": 4,
     "audioReviewed": false,
     "reviewCompleteMeaning": "공개 재생 가능한 영상의 장면 표본 검토를 완료했습니다. 접근 제한·재생 불가 영상과 삭제 구간은 확인하지 못했으며 전편 연속 시청이 아닙니다.",
@@ -30,7 +30,27 @@
     "newPeriodSampleReviewedVods": 843,
     "newPeriodDirectlyViewedFrames": 623991,
     "publicSampleReviewComplete": true,
-    "unavailableRecheckedOn": "2026-11-02"
+    "unavailableRecheckedOn": "2026-11-02",
+    "latestIncrementalReview": {
+      "reviewedOn": "2026-11-06",
+      "from": "2026-11-03",
+      "through": "2026-11-06",
+      "vodIds": [
+        211582727,
+        211674325,
+        211807465,
+        211846677
+      ],
+      "reviewedVods": 4,
+      "directlyViewedSampleFrames": 2866,
+      "additionalOriginalFramesViewed": 11,
+      "addedGames": 2,
+      "addedGameDates": 5,
+      "currentStationInventoryCount": 1074,
+      "scopeNote": "11월 2일 시작·3일 종료 경계 방송을 포함. 그 외 11월 1~2일 방송은 이번 추가 검토 범위에 포함하지 않음. 누적 목록은 과거 수집본을 보존하여 현재 방송국 목록 수와 다를 수 있음.",
+      "continuousPlaybackReviewed": false,
+      "audioReviewed": false
+    }
   },
   "method": {
     "source": "SOOP 공식 공개 장면 이미지와 선택 구간의 실제1920×1080 영상 프레임",
@@ -104701,6 +104721,317 @@
         "audioReviewed": false
       },
       "reviewedOn": "2026-10-31"
+    },
+    {
+      "vodId": 211582727,
+      "title": "후열은 뭐하지?",
+      "sourceUrl": "https://vod.sooplive.com/player/211582727",
+      "broadcastStart": "2026-11-02 18:01:01",
+      "uploadedAt": "2026-11-03 01:55:25",
+      "durationSeconds": 27860.017,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [],
+      "unresolved": [],
+      "excluded": [
+        "11월 3일 자정 이후에는 이미지 검색·캐릭터/굿즈 이미지 열람·캘린더·소통만 확인. 게임 직접 플레이는 발견하지 못함.",
+        "전반부 영상/다른 방송 시청·스팀 상점 열람은 플레이에서 제외.",
+        "03:52~05:10경 탁상 추리 게임 플레이 장면은 11월 2일에 해당하여 이번 요청 기간(11월 3~6일) 등록에서 제외."
+      ],
+      "notes": [
+        "등록 대상은 실제 플레이 날짜가 2026-11-03~2026-11-06인 기록입니다."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-06",
+      "incrementalSampleReview": {
+        "complete": true,
+        "pagesActuallyViewed": 4,
+        "samplesActuallyViewed": 820,
+        "scanned15SecondFrames": 1858,
+        "baseSampleIntervalSeconds": 60,
+        "candidateScanIntervalSeconds": 15,
+        "displayedTileResolution": [
+          128,
+          72
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 211674325,
+      "title": "종겜 핀볼 결과 : 니케 (진짜임) {MUDFISH}",
+      "sourceUrl": "https://vod.sooplive.com/player/211674325",
+      "broadcastStart": "2026-11-03 18:00:59",
+      "uploadedAt": "2026-11-04 02:11:39",
+      "durationSeconds": 28838.934,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [
+        {
+          "gameId": "aging-curve",
+          "date": "2026-11-03",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/211674325?change_second=4425",
+          "confidence": "video",
+          "eventTitle": "종겜 핀볼 결과 : 니케 (진짜임) {MUDFISH}",
+          "description": "01:08:30 공식 웹게임 첫 화면을 열고 01:09~01:19 정밀 검사 13종을 진행. 01:13:45 스킬콤 QWER의 입력 진행 수·오입력 수와 본인 플레이, 01:19 클릭 속도 결과를 확인했다. 미니게임 검사를 하나의 웹게임으로 묶었다.",
+          "vodId": 211674325,
+          "broadcastTitle": "종겜 핀볼 결과 : 니케 (진짜임) {MUDFISH}",
+          "timestampLabel": "01:13:45",
+          "seconds": 4425.034,
+          "playedAt": "2026-11-03T19:14:44.034+09:00",
+          "broadcastDate": "2026-11-03",
+          "videoVerified": true,
+          "verificationMethod": "전체 60초 장면 표본·15초 변화 후보와 선택한 공개 원본 1920×1080 프레임 직접 확인",
+          "frameResolution": [
+            1920,
+            1080
+          ],
+          "reviewedOn": "2026-11-06",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "proofUrls": [
+            "https://aging-curve-kappa.vercel.app/"
+          ],
+          "dateBasis": "file_start_plus_file_local_time",
+          "fileStart": "2026-11-03 18:00:59",
+          "fileLocalSeconds": 4425.034,
+          "fileIndex": 0
+        },
+        {
+          "gameId": "nikke",
+          "date": "2026-11-03",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/211674325?change_second=12451",
+          "confidence": "video",
+          "eventTitle": "종겜 핀볼 결과 : 니케 (진짜임) {MUDFISH}",
+          "description": "니케 클라이언트에서 4주년 전초기지와 스토리 선택·이동을 진행한다. 02:23 이후 게임 내 스토리 진행이 이어지며, 03:27:31 본인 계정의 전초기지 HUD와 게임 조작 화면을 확인했다.",
+          "vodId": 211674325,
+          "broadcastTitle": "종겜 핀볼 결과 : 니케 (진짜임) {MUDFISH}",
+          "timestampLabel": "03:27:31",
+          "seconds": 12451.034,
+          "playedAt": "2026-11-03T21:28:31.034+09:00",
+          "broadcastDate": "2026-11-03",
+          "videoVerified": true,
+          "verificationMethod": "전체 60초 장면 표본·15초 변화 후보와 선택한 공개 원본 1920×1080 프레임 직접 확인",
+          "frameResolution": [
+            1920,
+            1080
+          ],
+          "reviewedOn": "2026-11-06",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "proofUrls": [
+            "https://nikke-kr.com/"
+          ],
+          "dateBasis": "file_start_plus_file_local_time",
+          "fileStart": "2026-11-03 20:26:01",
+          "fileLocalSeconds": 3750.034,
+          "fileIndex": 3
+        },
+        {
+          "gameId": "nikke",
+          "date": "2026-11-04",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/211674325?change_second=28487",
+          "confidence": "video",
+          "eventTitle": "종겜 핀볼 결과 : 니케 (진짜임) {MUDFISH}",
+          "description": "11월 4일 자정 이후에도 니케 스토리 진행과 전투가 이어진다. 07:54:47 보스 체력·조준·파티·스킬 HUD가 있는 본인 전투 화면을 원본 프레임으로 확인했다.",
+          "vodId": 211674325,
+          "broadcastTitle": "종겜 핀볼 결과 : 니케 (진짜임) {MUDFISH}",
+          "timestampLabel": "07:54:47",
+          "seconds": 28487.034,
+          "playedAt": "2026-11-04T01:55:48.034+09:00",
+          "broadcastDate": "2026-11-03",
+          "videoVerified": true,
+          "verificationMethod": "전체 60초 장면 표본·15초 변화 후보와 선택한 공개 원본 1920×1080 프레임 직접 확인",
+          "frameResolution": [
+            1920,
+            1080
+          ],
+          "reviewedOn": "2026-11-06",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "proofUrls": [
+            "https://nikke-kr.com/"
+          ],
+          "dateBasis": "file_start_plus_file_local_time",
+          "fileStart": "2026-11-04 01:26:03",
+          "fileLocalSeconds": 1785.034,
+          "fileIndex": 4
+        }
+      ],
+      "unresolved": [],
+      "excluded": [
+        "초반 소통·방송 일정 열람·외부 영상 감상은 게임으로 추가하지 않음.",
+        "02:00~02:12 무렵 핀볼은 다음 게임을 선택하는 추첨 도구로 사용되어 별도 플레이 게임에서 제외.",
+        "MUDFISH는 제목에 있지만 해당 이름의 독립 게임 플레이 장면은 확인되지 않음."
+      ],
+      "notes": [
+        "등록 대상은 실제 플레이 날짜가 2026-11-03~2026-11-06인 기록입니다."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-06",
+      "incrementalSampleReview": {
+        "complete": true,
+        "pagesActuallyViewed": 4,
+        "samplesActuallyViewed": 800,
+        "scanned15SecondFrames": 1925,
+        "baseSampleIntervalSeconds": 60,
+        "candidateScanIntervalSeconds": 15,
+        "displayedTileResolution": [
+          128,
+          72
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 211807465,
+      "title": "해킹 떄매 고통받다 방송킨 사람..",
+      "sourceUrl": "https://vod.sooplive.com/player/211807465",
+      "broadcastStart": "2026-11-05 18:01:52",
+      "uploadedAt": "2026-11-05 18:46:32",
+      "durationSeconds": 2679.0,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [],
+      "unresolved": [],
+      "excluded": [
+        "전체 장면 표본에서 아바타 배경의 소통을 확인. 직접 게임 플레이는 발견하지 못함."
+      ],
+      "notes": [
+        "등록 대상은 실제 플레이 날짜가 2026-11-03~2026-11-06인 기록입니다."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-06",
+      "incrementalSampleReview": {
+        "complete": true,
+        "pagesActuallyViewed": 1,
+        "samplesActuallyViewed": 49,
+        "scanned15SecondFrames": 179,
+        "baseSampleIntervalSeconds": 60,
+        "candidateScanIntervalSeconds": 15,
+        "displayedTileResolution": [
+          128,
+          72
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 211846677,
+      "title": "젤다의 전설 시간의 오카리나.",
+      "sourceUrl": "https://vod.sooplive.com/player/211846677",
+      "broadcastStart": "2026-11-05 18:46:32",
+      "uploadedAt": "2026-11-06 01:25:36",
+      "durationSeconds": 23343.934,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [
+        {
+          "gameId": "zelda-ocarina-of-time",
+          "date": "2026-11-05",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "confidence": "video",
+          "sourceUrl": "https://vod.sooplive.com/player/211846677?change_second=10777",
+          "eventTitle": "젤다의 전설 시간의 오카리나.",
+          "description": "본인 방송 화면에서 코키리 숲을 이동하고 NPC와 대화한다. 이후 데크나무 던전에서 이동·전투·아이템 조작을 이어가는 장면도 표본 전체에서 확인했다. 타이틀 화면 및 Nintendo Switch 2 공식 소개와 일치한다.",
+          "vodId": 211846677,
+          "broadcastTitle": "젤다의 전설 시간의 오카리나.",
+          "timestampLabel": "02:59:37",
+          "seconds": 10777.034,
+          "playedAt": "2026-11-05T21:46:09.034+09:00",
+          "broadcastDate": "2026-11-05",
+          "videoVerified": true,
+          "verificationMethod": "공개 원본 영상의 1920×1080 프레임 직접 확인 및 전체 60초 표본·15초 변화 후보 대조",
+          "frameResolution": [
+            1920,
+            1080
+          ],
+          "reviewedOn": "2026-11-06",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "proofUrls": [
+            "https://www.nintendo.com/kr/games/switch2/aa9ja/"
+          ],
+          "dateBasis": "file_start_plus_file_local_time",
+          "fileStart": "2026-11-05 21:12:09",
+          "fileLocalSeconds": 2040.034,
+          "fileIndex": 2
+        },
+        {
+          "gameId": "zelda-ocarina-of-time",
+          "date": "2026-11-06",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "confidence": "video",
+          "sourceUrl": "https://vod.sooplive.com/player/211846677?change_second=19177",
+          "eventTitle": "젤다의 전설 시간의 오카리나.",
+          "description": "자정을 넘긴 11월 6일에도 링크를 직접 조작하여 카카리코 마을을 탐색한다. 체력·아이템 HUD와 이동 장면을 원본 1920×1080 프레임에서 확인했다.",
+          "vodId": 211846677,
+          "broadcastTitle": "젤다의 전설 시간의 오카리나.",
+          "timestampLabel": "05:19:37",
+          "seconds": 19177.034,
+          "playedAt": "2026-11-06T00:06:09.034+09:00",
+          "broadcastDate": "2026-11-05",
+          "videoVerified": true,
+          "verificationMethod": "공개 원본 영상의 1920×1080 프레임 직접 확인 및 전체 60초 표본·15초 변화 후보 대조",
+          "frameResolution": [
+            1920,
+            1080
+          ],
+          "reviewedOn": "2026-11-06",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "proofUrls": [
+            "https://www.nintendo.com/kr/games/switch2/aa9ja/"
+          ],
+          "dateBasis": "file_start_plus_file_local_time",
+          "fileStart": "2026-11-05 21:12:09",
+          "fileLocalSeconds": 10440.034,
+          "fileIndex": 2
+        }
+      ],
+      "unresolved": [],
+      "excluded": [
+        "00:00~02:24:30 전후는 실제 프로 배구 경기와 광고 방송 시청으로, 게임 플레이가 아니다.",
+        "02:25~02:48 전후 및 05:51:37 이후는 수다·방송 준비·콘솔 메뉴·팬 게시물 감상이며 별도 게임으로 등록하지 않는다."
+      ],
+      "notes": [
+        "등록 대상은 실제 플레이 날짜가 2026-11-03~2026-11-06인 기록입니다."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-06",
+      "incrementalSampleReview": {
+        "complete": true,
+        "pagesActuallyViewed": 5,
+        "samplesActuallyViewed": 1197,
+        "scanned15SecondFrames": 1557,
+        "baseSampleIntervalSeconds": 60,
+        "candidateScanIntervalSeconds": 15,
+        "displayedTileResolution": [
+          128,
+          72
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
     }
   ],
   "technicalGapReaudit": {

@@ -1,11 +1,11 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-11-03",
+  "updatedAt": "2026-11-06",
   "calendarPeriod": "2026년 5월 1일~10월 27일",
   "videoReview": {
-    "period": "방송국 전체 목록 2023–2026년 · 2026-10-31 수집 기준",
-    "totalVods": 1073,
-    "reviewedVods": 1024,
+    "period": "2026-10-31 수집 방송국 전체 목록(2023–2026년) + 2026-11-03~11-06 추가 검토(11월 2~3일 경계 방송 포함)",
+    "totalVods": 1077,
+    "reviewedVods": 1028,
     "restrictedVods": 47,
     "partialVods": 0,
     "pendingVods": 0,
@@ -13,12 +13,12 @@
     "sampleIntervalSeconds": 60,
     "continuousPlaybackReviewed": false,
     "reviewComplete": false,
-    "replayVods": 1039,
+    "replayVods": 1043,
     "clipVods": 34,
     "recheckedOn": "2026-11-02",
     "baseSampleIntervalSeconds": 60,
     "candidateScanIntervalSeconds": 15,
-    "gapCandidateReviewedVods": 1020,
+    "gapCandidateReviewedVods": 1024,
     "full15SecondSampleReviewedVods": 4,
     "audioReviewed": false,
     "reviewCompleteMeaning": "공개 재생 가능한 영상의 장면 표본 검토를 완료했습니다. 접근 제한·재생 불가 영상과 삭제 구간은 확인하지 못했으며 전편 연속 시청이 아닙니다.",
@@ -30,7 +30,27 @@
     "newPeriodSampleReviewedVods": 843,
     "newPeriodDirectlyViewedFrames": 623991,
     "publicSampleReviewComplete": true,
-    "unavailableRecheckedOn": "2026-11-02"
+    "unavailableRecheckedOn": "2026-11-02",
+    "latestIncrementalReview": {
+      "reviewedOn": "2026-11-06",
+      "from": "2026-11-03",
+      "through": "2026-11-06",
+      "vodIds": [
+        211582727,
+        211674325,
+        211807465,
+        211846677
+      ],
+      "reviewedVods": 4,
+      "directlyViewedSampleFrames": 2866,
+      "additionalOriginalFramesViewed": 11,
+      "addedGames": 2,
+      "addedGameDates": 5,
+      "currentStationInventoryCount": 1074,
+      "scopeNote": "11월 2일 시작·3일 종료 경계 방송을 포함. 그 외 11월 1~2일 방송은 이번 추가 검토 범위에 포함하지 않음. 누적 목록은 과거 수집본을 보존하여 현재 방송국 목록 수와 다를 수 있음.",
+      "continuousPlaybackReviewed": false,
+      "audioReviewed": false
+    }
   },
   "games": [
     {
@@ -15231,6 +15251,42 @@
       ],
       "dates": [
         {
+          "date": "2026-11-04",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/211674325?change_second=28487",
+          "confidence": "video",
+          "eventTitle": "종겜 핀볼 결과 : 니케 (진짜임) {MUDFISH}",
+          "timestampLabel": "07:54:47",
+          "seconds": 28487.034,
+          "playedAt": "2026-11-04T01:55:48.034+09:00",
+          "broadcastDate": "2026-11-03",
+          "vodId": 211674325,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        },
+        {
+          "date": "2026-11-03",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/211674325?change_second=12451",
+          "confidence": "video",
+          "eventTitle": "종겜 핀볼 결과 : 니케 (진짜임) {MUDFISH}",
+          "timestampLabel": "03:27:31",
+          "seconds": 12451.034,
+          "playedAt": "2026-11-03T21:28:31.034+09:00",
+          "broadcastDate": "2026-11-03",
+          "vodId": 211674325,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        },
+        {
           "date": "2026-10-30",
           "dateEnd": null,
           "sourceLabel": "SOOP 다시보기",
@@ -24252,6 +24308,100 @@
         "label": "방송 플레이 화면",
         "sourceUrl": "https://vod.sooplive.com/player/100879710?change_second=33999"
       }
+    },
+    {
+      "id": "aging-curve",
+      "title": "나 아직 에이징 커브 아니야",
+      "aliases": [
+        "에이징 커브",
+        "에이징커브 피지컬의원",
+        "게임 피지컬 나이 테스트",
+        "Aging Curve"
+      ],
+      "officialUrl": "https://aging-curve-kappa.vercel.app/",
+      "image": "assets/game-log/aging-curve-official-20261106.png",
+      "imageFit": "contain",
+      "imageCredit": {
+        "type": "official",
+        "label": "공식 게임 이미지",
+        "sourceUrl": "https://aging-curve-kappa.vercel.app/"
+      },
+      "dates": [
+        {
+          "date": "2026-11-03",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/211674325?change_second=4425",
+          "confidence": "video",
+          "eventTitle": "종겜 핀볼 결과 : 니케 (진짜임) {MUDFISH}",
+          "timestampLabel": "01:13:45",
+          "seconds": 4425.034,
+          "playedAt": "2026-11-03T19:14:44.034+09:00",
+          "broadcastDate": "2026-11-03",
+          "vodId": 211674325,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "zelda-ocarina-of-time",
+      "title": "젤다의 전설 시간의 오카리나",
+      "aliases": [
+        "The Legend of Zelda: Ocarina of Time",
+        "시간의 오카리나",
+        "젤다 시간의 오카리나",
+        "Ocarina of Time"
+      ],
+      "image": "assets/game-log/zelda-ocarina-of-time-official-20261106.png",
+      "imageFit": "contain",
+      "officialUrl": "https://www.nintendo.com/kr/games/switch2/aa9ja/",
+      "imageCredit": {
+        "type": "official",
+        "label": "공식 게임 이미지",
+        "sourceUrl": "https://www.nintendo.com/kr/games/switch2/aa9ja/"
+      },
+      "dates": [
+        {
+          "date": "2026-11-06",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/211846677?change_second=19177",
+          "confidence": "video",
+          "eventTitle": "젤다의 전설 시간의 오카리나.",
+          "timestampLabel": "05:19:37",
+          "seconds": 19177.034,
+          "playedAt": "2026-11-06T00:06:09.034+09:00",
+          "broadcastDate": "2026-11-05",
+          "vodId": 211846677,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        },
+        {
+          "date": "2026-11-05",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/211846677?change_second=10777",
+          "confidence": "video",
+          "eventTitle": "젤다의 전설 시간의 오카리나.",
+          "timestampLabel": "02:59:37",
+          "seconds": 10777.034,
+          "playedAt": "2026-11-05T21:46:09.034+09:00",
+          "broadcastDate": "2026-11-05",
+          "vodId": 211846677,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        }
+      ]
     }
   ]
 }
