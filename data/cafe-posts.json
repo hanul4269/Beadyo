@@ -3,8 +3,20 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-11-06T03:41:04.937Z",
+  "fetchedAt": "2026-11-06T11:33:36.464Z",
   "posts": [
+    {
+      "id": "40528",
+      "title": "으아",
+      "publishedAt": "2026-11-06T18:46:33.030+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40528"
+    },
+    {
+      "id": "40522",
+      "title": "척추 서는 노래",
+      "publishedAt": "2026-11-06T14:29:45.190+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40522"
+    },
     {
       "id": "40520",
       "title": "컴퓨터 정리안한",
@@ -22,18 +34,6 @@
       "title": "뷰기들",
       "publishedAt": "2026-11-04T14:47:52.643+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40507"
-    },
-    {
-      "id": "40485",
-      "title": "쫀아침",
-      "publishedAt": "2026-11-03T15:57:56.933+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40485"
-    },
-    {
-      "id": "40461",
-      "title": "멀미나서",
-      "publishedAt": "2026-11-01T22:16:15.090+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40461"
     }
   ]
 }
