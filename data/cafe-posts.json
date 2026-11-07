@@ -3,8 +3,14 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-11-07T03:15:06.441Z",
+  "fetchedAt": "2026-11-07T10:25:35.726Z",
   "posts": [
+    {
+      "id": "40535",
+      "title": "어제 춤췄더고",
+      "publishedAt": "2026-11-07T13:02:10.357+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40535"
+    },
     {
       "id": "40528",
       "title": "으아",
@@ -28,12 +34,6 @@
       "title": "소식없는 슬요 근황",
       "publishedAt": "2026-11-04T21:32:34.480+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40513"
-    },
-    {
-      "id": "40507",
-      "title": "뷰기들",
-      "publishedAt": "2026-11-04T14:47:52.643+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40507"
     }
   ]
 }
