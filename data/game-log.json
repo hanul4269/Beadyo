@@ -1,11 +1,11 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-11-06",
+  "updatedAt": "2026-11-10",
   "calendarPeriod": "2026년 5월 1일~10월 27일",
   "videoReview": {
-    "period": "2026-10-31 수집 방송국 전체 목록(2023–2026년) + 2026-11-03~11-06 추가 검토(11월 2~3일 경계 방송 포함)",
-    "totalVods": 1077,
-    "reviewedVods": 1028,
+    "period": "2026-10-31 수집 방송국 전체 목록(2023–2026년) + 2026-11-03~11-10 추가 검토(11월 2~3일 경계 방송 포함)",
+    "totalVods": 1080,
+    "reviewedVods": 1031,
     "restrictedVods": 47,
     "partialVods": 0,
     "pendingVods": 0,
@@ -13,12 +13,12 @@
     "sampleIntervalSeconds": 60,
     "continuousPlaybackReviewed": false,
     "reviewComplete": false,
-    "replayVods": 1043,
+    "replayVods": 1046,
     "clipVods": 34,
     "recheckedOn": "2026-11-02",
     "baseSampleIntervalSeconds": 60,
     "candidateScanIntervalSeconds": 15,
-    "gapCandidateReviewedVods": 1024,
+    "gapCandidateReviewedVods": 1027,
     "full15SecondSampleReviewedVods": 4,
     "audioReviewed": false,
     "reviewCompleteMeaning": "공개 재생 가능한 영상의 장면 표본 검토를 완료했습니다. 접근 제한·재생 불가 영상과 삭제 구간은 확인하지 못했으며 전편 연속 시청이 아닙니다.",
@@ -32,25 +32,73 @@
     "publicSampleReviewComplete": true,
     "unavailableRecheckedOn": "2026-11-02",
     "latestIncrementalReview": {
-      "reviewedOn": "2026-11-06",
-      "from": "2026-11-03",
-      "through": "2026-11-06",
+      "reviewedOn": "2026-11-10",
+      "from": "2026-11-06",
+      "through": "2026-11-10",
       "vodIds": [
-        211582727,
-        211674325,
-        211807465,
+        212016773,
+        212106883,
+        212193875
+      ],
+      "reviewedVods": 3,
+      "directlyViewedSampleFrames": 3897,
+      "additionalOriginalFramesViewed": 20,
+      "addedGames": 4,
+      "addedGameDates": 8,
+      "currentStationInventoryCount": 1074,
+      "currentStationReplayCount": 1039,
+      "previouslyReviewedBoundaryVodIds": [
         211846677
       ],
-      "reviewedVods": 4,
-      "directlyViewedSampleFrames": 2866,
-      "additionalOriginalFramesViewed": 11,
-      "addedGames": 2,
-      "addedGameDates": 5,
-      "currentStationInventoryCount": 1074,
-      "scopeNote": "11월 2일 시작·3일 종료 경계 방송을 포함. 그 외 11월 1~2일 방송은 이번 추가 검토 범위에 포함하지 않음. 누적 목록은 과거 수집본을 보존하여 현재 방송국 목록 수와 다를 수 있음.",
+      "scopeNote": "11월 6일 새벽까지의 경계 방송은 기존 검토·기록을 보존하고, 이후 새 공개 다시보기 3개(11월 7~10일)를 추가 검토했습니다. 11월 10일 오전 공개 목록 기준이며 이후 방송은 포함하지 않습니다. 누적 목록은 과거 수집본을 보존하므로 현재 방송국 목록 수와 다를 수 있습니다.",
       "continuousPlaybackReviewed": false,
       "audioReviewed": false
-    }
+    },
+    "incrementalReviews": [
+      {
+        "reviewedOn": "2026-11-06",
+        "from": "2026-11-03",
+        "through": "2026-11-06",
+        "vodIds": [
+          211582727,
+          211674325,
+          211807465,
+          211846677
+        ],
+        "reviewedVods": 4,
+        "directlyViewedSampleFrames": 2866,
+        "additionalOriginalFramesViewed": 11,
+        "addedGames": 2,
+        "addedGameDates": 5,
+        "currentStationInventoryCount": 1074,
+        "scopeNote": "11월 2일 시작·3일 종료 경계 방송을 포함. 그 외 11월 1~2일 방송은 이번 추가 검토 범위에 포함하지 않음. 누적 목록은 과거 수집본을 보존하여 현재 방송국 목록 수와 다를 수 있음.",
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      },
+      {
+        "reviewedOn": "2026-11-10",
+        "from": "2026-11-06",
+        "through": "2026-11-10",
+        "vodIds": [
+          212016773,
+          212106883,
+          212193875
+        ],
+        "reviewedVods": 3,
+        "directlyViewedSampleFrames": 3897,
+        "additionalOriginalFramesViewed": 20,
+        "addedGames": 4,
+        "addedGameDates": 8,
+        "currentStationInventoryCount": 1074,
+        "currentStationReplayCount": 1039,
+        "previouslyReviewedBoundaryVodIds": [
+          211846677
+        ],
+        "scopeNote": "11월 6일 새벽까지의 경계 방송은 기존 검토·기록을 보존하고, 이후 새 공개 다시보기 3개(11월 7~10일)를 추가 검토했습니다. 11월 10일 오전 공개 목록 기준이며 이후 방송은 포함하지 않습니다. 누적 목록은 과거 수집본을 보존하므로 현재 방송국 목록 수와 다를 수 있습니다.",
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    ]
   },
   "games": [
     {
@@ -16618,6 +16666,24 @@
       ],
       "dates": [
         {
+          "date": "2026-11-08",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212106883?change_second=24420",
+          "confidence": "video",
+          "eventTitle": "재미가 있었당~",
+          "timestampLabel": "06:47:00",
+          "seconds": 24420.034,
+          "playedAt": "2026-11-08T21:48:15.034+09:00",
+          "broadcastDate": "2026-11-08",
+          "vodId": 212106883,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        },
+        {
           "date": "2026-08-08",
           "dateEnd": null,
           "sourceLabel": "SOOP 다시보기",
@@ -24366,6 +24432,42 @@
       },
       "dates": [
         {
+          "date": "2026-11-08",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212016773?change_second=21999",
+          "confidence": "video",
+          "eventTitle": "젤다 시간의 오카리나 ",
+          "timestampLabel": "06:06:39",
+          "seconds": 21999.984,
+          "playedAt": "2026-11-08T00:07:23.784+09:00",
+          "broadcastDate": "2026-11-07",
+          "vodId": 212016773,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        },
+        {
+          "date": "2026-11-07",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212016773?change_second=6000",
+          "confidence": "video",
+          "eventTitle": "젤다 시간의 오카리나 ",
+          "timestampLabel": "01:40:00",
+          "seconds": 6000.0,
+          "playedAt": "2026-11-07T19:40:43.800+09:00",
+          "broadcastDate": "2026-11-07",
+          "vodId": 212016773,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        },
+        {
           "date": "2026-11-06",
           "dateEnd": null,
           "sourceLabel": "SOOP 다시보기",
@@ -24395,6 +24497,164 @@
           "playedAt": "2026-11-05T21:46:09.034+09:00",
           "broadcastDate": "2026-11-05",
           "vodId": 211846677,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "crack",
+      "title": "CRACK",
+      "aliases": [
+        "크랙"
+      ],
+      "image": "assets/game-log/crack-official-20261110.jpg",
+      "officialUrl": "https://store.steampowered.com/app/4312190/",
+      "imageCredit": {
+        "type": "official",
+        "label": "공식 게임 이미지",
+        "sourceUrl": "https://store.steampowered.com/app/4312190/"
+      },
+      "dates": [
+        {
+          "date": "2026-11-08",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212106883?change_second=8700",
+          "confidence": "video",
+          "eventTitle": "재미가 있었당~",
+          "timestampLabel": "02:25:00",
+          "seconds": 8700.034,
+          "playedAt": "2026-11-08T17:26:13.034+09:00",
+          "broadcastDate": "2026-11-08",
+          "vodId": 212106883,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mimic-party",
+      "title": "Mimic Party",
+      "aliases": [
+        "미믹 파티",
+        "미믹파티"
+      ],
+      "image": "assets/game-log/mimic-party-official-20261110.jpg",
+      "officialUrl": "https://store.steampowered.com/app/5053820/",
+      "imageCredit": {
+        "type": "official",
+        "label": "공식 게임 이미지",
+        "sourceUrl": "https://store.steampowered.com/app/5053820/"
+      },
+      "dates": [
+        {
+          "date": "2026-11-08",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212106883?change_second=20730",
+          "confidence": "video",
+          "eventTitle": "재미가 있었당~",
+          "timestampLabel": "05:45:30",
+          "seconds": 20730.034,
+          "playedAt": "2026-11-08T20:46:45.034+09:00",
+          "broadcastDate": "2026-11-08",
+          "vodId": 212106883,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "japanese-ramen-simulator",
+      "title": "Japanese Ramen Simulator",
+      "aliases": [
+        "재패니즈 라멘 시뮬레이터",
+        "라멘 시뮬레이터",
+        "일본 라멘 시뮬레이터"
+      ],
+      "image": "assets/game-log/japanese-ramen-simulator-official-20261110.jpg",
+      "officialUrl": "https://store.steampowered.com/app/4968640/",
+      "imageCredit": {
+        "type": "official",
+        "label": "공식 게임 이미지",
+        "sourceUrl": "https://store.steampowered.com/app/4968640/"
+      },
+      "dates": [
+        {
+          "date": "2026-11-09",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212193875?change_second=11520",
+          "confidence": "video",
+          "eventTitle": "7시) 좌 밍턴 우 난초 와 함께하는 재미있는 합방 ^^ 신난ㄴ다!!",
+          "timestampLabel": "03:12:00",
+          "seconds": 11520.034,
+          "playedAt": "2026-11-09T21:11:57.034+09:00",
+          "broadcastDate": "2026-11-09",
+          "vodId": 212193875,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "augmented-yut",
+      "title": "증강 윷놀이",
+      "aliases": [
+        "Augmented Yut",
+        "증강윷놀이"
+      ],
+      "image": "assets/game-log/augmented-yut-official-20261110.jpg",
+      "officialUrl": "https://store.steampowered.com/app/4947900/",
+      "imageCredit": {
+        "type": "official",
+        "label": "공식 게임 이미지",
+        "sourceUrl": "https://store.steampowered.com/app/4947900/"
+      },
+      "dates": [
+        {
+          "date": "2026-11-10",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212193875?change_second=21720",
+          "confidence": "video",
+          "eventTitle": "7시) 좌 밍턴 우 난초 와 함께하는 재미있는 합방 ^^ 신난ㄴ다!!",
+          "timestampLabel": "06:02:00",
+          "seconds": 21720.034,
+          "playedAt": "2026-11-10T00:01:59.034+09:00",
+          "broadcastDate": "2026-11-09",
+          "vodId": 212193875,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        },
+        {
+          "date": "2026-11-09",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212193875?change_second=20700",
+          "confidence": "video",
+          "eventTitle": "7시) 좌 밍턴 우 난초 와 함께하는 재미있는 합방 ^^ 신난ㄴ다!!",
+          "timestampLabel": "05:45:00",
+          "seconds": 20700.034,
+          "playedAt": "2026-11-09T23:44:59.034+09:00",
+          "broadcastDate": "2026-11-09",
+          "vodId": 212193875,
           "dateBasis": "file_start_plus_file_local_time",
           "evidenceCount": 1,
           "sourceLabels": [

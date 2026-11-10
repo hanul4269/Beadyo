@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-06",
+  "updatedAt": "2026-11-10",
   "categories": [
     {
       "id": "action",
@@ -6164,6 +6164,47 @@
       "sourceTags": [
         "Action",
         "Adventure"
+      ]
+    },
+    "crack": {
+      "genres": [
+        "adventure",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4312190/",
+      "sourceTags": [
+        "Adventure",
+        "Simulation"
+      ]
+    },
+    "mimic-party": {
+      "genres": [
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/5053820/",
+      "sourceTags": [
+        "online voice party game"
+      ]
+    },
+    "japanese-ramen-simulator": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4968640/",
+      "sourceTags": [
+        "Simulation"
+      ]
+    },
+    "augmented-yut": {
+      "genres": [
+        "board-card",
+        "strategy"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4947900/",
+      "sourceTags": [
+        "Board Game",
+        "Turn-Based Tactics",
+        "Strategy"
       ]
     }
   }
