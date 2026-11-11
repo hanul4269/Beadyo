@@ -31,8 +31,8 @@
     <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
     <script src="beadyo-common.js?v=auth-security-20261105"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" integrity="sha384-SN6A48CJQjx946+DRb8wsoifC4a8ur9ZS6R+HCTgnBHOKCa6GLXAR3Qn8d1jztxg" crossorigin="anonymous" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" integrity="sha384-SN6A48CJQjx946+DRb8wsoifC4a8ur9ZS6R+HCTgnBHOKCa6GLXAR3Qn8d1jztxg" crossorigin="anonymous" rel="stylesheet"></noscript>
+    <link href="assets/fonts/pretendard/pretendard-subset.css?v=subset-20261112" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="assets/fonts/pretendard/pretendard-subset.css?v=subset-20261112" rel="stylesheet"></noscript>
     <style>
         * { box-sizing: border-box; }
 
@@ -1864,7 +1864,7 @@
                     <div class="slot-row top" id="ladder-top"></div>
                     <div class="ladder-canvas-wrap" id="ladder-wrap">
                         <canvas id="ladder-canvas"></canvas>
-                        <img class="ladder-token" id="ladder-token" src="game-assets/gobookticon/gobook-01.png" alt="" hidden>
+                        <img class="ladder-token" id="ladder-token" src="game-assets/gobookticon/gobook-01.webp" alt="" hidden>
                     </div>
                     <div class="slot-row bottom" id="ladder-bottom"></div>
                 </div>
@@ -1898,11 +1898,11 @@
                         <div class="wheel-pointer"></div>
                         <canvas id="roulette-canvas" width="760" height="760"></canvas>
                         <button class="wheel-center" type="button" onclick="spinRoulette()" aria-label="룰렛 시작">
-                            <img id="wheel-center-img" src="game-assets/gobookticon/gobook-02.png" alt="">
+                            <img id="wheel-center-img" src="game-assets/gobookticon/gobook-02.webp" alt="">
                         </button>
                     </div>
                     <aside class="winner-box">
-                        <img id="winner-img" src="game-assets/gobookticon/gobook-03.png" alt="">
+                        <img id="winner-img" src="game-assets/gobookticon/gobook-03.webp" alt="">
                         <div class="winner-label">WINNER</div>
                         <div class="winner-name" id="winner-name">대기 중</div>
                         <div class="history" id="history"></div>
@@ -1964,7 +1964,7 @@
                     </div>
                     <div class="gacha-prize-modal" id="gacha-prize-modal" onclick="if(event.target === this) closeGachaPrize()" hidden>
                         <section class="gacha-prize-card" role="dialog" aria-modal="true" aria-label="뽑기 결과" tabindex="-1">
-                            <div class="gacha-ball" id="gacha-result-ball"><img id="gacha-result-img" src="game-assets/gobookticon/gobook-04.png" alt=""></div>
+                            <div class="gacha-ball" id="gacha-result-ball"><img id="gacha-result-img" src="game-assets/gobookticon/gobook-04.webp" alt=""></div>
                             <div class="gacha-prize-title">당첨!</div>
                             <div class="gacha-prize-name" id="gacha-winner">대기 중</div>
                             <button class="gacha-confirm" type="button" onclick="closeGachaPrize()">확인</button>
@@ -2031,7 +2031,7 @@
                 </button>
             </div>
             <div class="result-mascot">
-                <img src="game-assets/gobookticon/gobook-13.png" alt="">
+                <img src="game-assets/gobookticon/gobook-13.webp" alt="">
                 <span>결과가 나왔어요</span>
             </div>
             <div class="result-list" id="result-list"></div>
@@ -2080,7 +2080,7 @@
             } catch {}
         }
 
-        const ASSETS = Array.from({ length: 19 }, (_, i) => `game-assets/gobookticon/gobook-${String(i + 1).padStart(2, '0')}.png`);
+        const ASSETS = Array.from({ length: 19 }, (_, i) => `game-assets/gobookticon/gobook-${String(i + 1).padStart(2, '0')}.webp`);
         const colors = ['#7fb83f', '#5b8fc7', '#c69c3a', '#54a99f', '#9a7bc2', '#8ea65d', '#6f776b', '#9aa26f'];
         const rouletteColors = ['#a9d96b', '#8cc7ee', '#f4ce73', '#8fdbc9', '#c9a7e8', '#f2a58f', '#b9dc86', '#95d0a8'];
         const LIMITS = { ladder: 12, roulette: 40, gacha: 300 };

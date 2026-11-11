@@ -21,8 +21,8 @@
     <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" integrity="sha384-SN6A48CJQjx946+DRb8wsoifC4a8ur9ZS6R+HCTgnBHOKCa6GLXAR3Qn8d1jztxg" crossorigin="anonymous" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" integrity="sha384-SN6A48CJQjx946+DRb8wsoifC4a8ur9ZS6R+HCTgnBHOKCa6GLXAR3Qn8d1jztxg" crossorigin="anonymous" rel="stylesheet"></noscript>
+    <link href="assets/fonts/pretendard/pretendard-subset.css?v=subset-20261112" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="assets/fonts/pretendard/pretendard-subset.css?v=subset-20261112" rel="stylesheet"></noscript>
     <script>
         (() => {
             const key = 'beadyo:theme';
@@ -853,7 +853,7 @@
                     : state.filter === 'cover' ? '커버 곡이 없어요'
                     : '라이브 영상이 없어요';
                 grid.innerHTML = `<div class="empty-state">
-                    <img class="empty-state-img" src="game-assets/gobookticon/gobook-10.png" alt="">
+                    <img class="empty-state-img" src="game-assets/gobookticon/gobook-10.webp" alt="">
                     <p>${label}</p>
                 </div>`;
                 return;
@@ -1054,7 +1054,7 @@
         let _toastTimer = null;
         function showToast(msg) {
             const el = document.getElementById('toast');
-            el.innerHTML = `<img class="toast-sticker" src="game-assets/gobookticon/gobook-01.png" alt=""><span>${esc(msg)}</span>`;
+            el.innerHTML = `<img class="toast-sticker" src="game-assets/gobookticon/gobook-01.webp" alt=""><span>${esc(msg)}</span>`;
             el.classList.add('show');
             clearTimeout(_toastTimer);
             _toastTimer = setTimeout(() => el.classList.remove('show'), 2500);

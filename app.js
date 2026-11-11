@@ -273,7 +273,7 @@ function typeOf(key) {
 }
 
 const GOBOOKTICON_STICKERS = Array.from({ length: 19 }, (_, i) =>
-    `game-assets/gobookticon/gobook-${String(i + 1).padStart(2, '0')}.png`
+    `game-assets/gobookticon/gobook-${String(i + 1).padStart(2, '0')}.webp`
 );
 const MOOD_STICKERS = {
     chat: GOBOOKTICON_STICKERS[5],
@@ -294,7 +294,7 @@ const MOOD_STICKERS = {
     save: GOBOOKTICON_STICKERS[0],
     delete: GOBOOKTICON_STICKERS[8],
     error: GOBOOKTICON_STICKERS[6],
-    fan: 'game-assets/gobookticon/gobook-fan-sd.png',
+    fan: 'game-assets/gobookticon/gobook-fan-sd.webp',
 };
 
 function stickerImg(src, className, alt = '') {
@@ -2804,7 +2804,7 @@ function renderUpModal(data, fetchLive = false) {
             ? `<button type="button" class="up-highlight-summary" onclick="jumpToUpHighlight()">
                 <span class="up-highlight-label">하이라이트 댓글 · 순위로 이동 ↓</span>
                 <span class="up-highlight-person">
-                    <img class="up-highlight-profile" src="${esc(safeImageUrl(highlighted.profile_url, 'stickers/s8.png'))}" onerror="this.src='stickers/s8.png'" alt="">
+                    <img class="up-highlight-profile" src="${esc(safeImageUrl(highlighted.profile_url, 'stickers/s8.webp'))}" onerror="this.src='stickers/s8.webp'" alt="">
                     <span class="up-highlight-info"><strong>현재 ${Number(highlighted.rank)}위</strong>
                     <span>${esc(highlighted.name)} · ${Number(highlighted.up_count).toLocaleString('ko-KR')} UP</span></span>
                 </span>
@@ -2832,8 +2832,8 @@ function renderUpModal(data, fetchLive = false) {
                     onclick="window.open(this.dataset.href,'_blank','noopener noreferrer')"
                     onkeydown="if(event.key==='Enter')window.open(this.dataset.href,'_blank','noopener noreferrer')">
                     <div class="up-rank-num${cls}">${Number.isFinite(Number(r.rank)) ? Number(r.rank) : ''}</div>
-                    <img class="up-rank-profile" src="${esc(safeImageUrl(r.profile_url, 'stickers/s8.png'))}"
-                         onerror="this.src='stickers/s8.png'" alt="" loading="lazy">
+                    <img class="up-rank-profile" src="${esc(safeImageUrl(r.profile_url, 'stickers/s8.webp'))}"
+                         onerror="this.src='stickers/s8.webp'" alt="" loading="lazy">
                     <div class="up-rank-info">
                         <div class="up-rank-name">${esc(r.name)}${r._highlight ? '<span class="up-rank-badge">하이라이트</span>' : ''}</div>
                         <div class="up-rank-handle">@${esc(r.bj_id)}</div>
