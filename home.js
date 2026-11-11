@@ -13,7 +13,7 @@
     let lastLoad = 0;
     let photoOpener = null;
     const scheduleColumns = 'id,date,end_date,start_time,title,type,subtitle,collab,is_rest';
-    const typeNames = { chat: '소통', song: '노래', solo: '슬요 컨텐츠', collab: '참여 컨텐츠', watch: '같이 보기', game: '게임', ad: '광고', rest: '휴방', cover: '커버곡', relay: '중계', pre: '방송 전', general: '기타' };
+    const typeNames = { chat: '소통', song: '노래', solo: '슬요 컨텐츠', collab: '참여 컨텐츠', watch: '같이 보기', game: '게임', ad: '광고', rest: '휴방', cover: '커버곡', original: '오리지널곡', relay: '중계', pre: '방송 전', general: '기타' };
     const esc = C.esc;
     const url = value => C.safeUrl(value, '');
     const dateText = day => Number.isFinite(D.dayNumber(day)) ? new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', month: 'long', day: 'numeric', weekday: 'short' }).format(new Date(`${day}T00:00:00+09:00`)) : '';
