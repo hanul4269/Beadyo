@@ -1,0 +1,21 @@
+# GitHub Pages(Jekyll) 빌드 설정
+# 사이트 동작에 필요 없는 내부 파일(DB 권한 SQL, 작업 문서, 스크립트)을
+# beadyo.com 주소로 공개하지 않도록 배포 대상에서 제외합니다.
+# 저장소(GitHub) 자체에는 그대로 남습니다.
+exclude:
+  - "*.sql"
+  - "*.py"
+  - "*.sh"
+  - AGENTS.md
+  - EXPLORE.md
+  - HOME.md
+  - songbook_cover_backfill_guide.md
+  - scripts/
+  - tools/
+  - supabase/
+  - output/
+  - tmp/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/

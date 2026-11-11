@@ -1785,12 +1785,12 @@ function renderCalendar() {
 
             const dragAttrs = state.isEditor && isStart
                 ? `draggable="true"
-                   onpointerdown="startSchedulePointerCopy(event,'${esc(ev.id)}','${dateStr}')"
-                   ondragstart="dragStart(event,'${esc(ev.id)}','${dateStr}')"
+                   onpointerdown="startSchedulePointerCopy(event,${jsArg(ev.id)},'${dateStr}')"
+                   ondragstart="dragStart(event,${jsArg(ev.id)},'${dateStr}')"
                    ondragend="dragEnd(event)"
-                   ondragover="dragOver(event,'${esc(ev.id)}','${dateStr}')"
+                   ondragover="dragOver(event,${jsArg(ev.id)},'${dateStr}')"
                    ondragleave="dragLeave(event)"
-                   ondrop="dragDrop(event,'${esc(ev.id)}','${dateStr}')"` : '';
+                   ondrop="dragDrop(event,${jsArg(ev.id)},'${dateStr}')"` : '';
 
             const timeClass = isStart && ev.start_time ? ' has-time' : '';
 
@@ -2831,7 +2831,7 @@ function renderUpModal(data, fetchLive = false) {
                 return `<div class="up-rank-item${r._highlight ? ' is-highlight' : ''}" role="link" tabindex="0" data-href="${esc(href)}"
                     onclick="window.open(this.dataset.href,'_blank','noopener noreferrer')"
                     onkeydown="if(event.key==='Enter')window.open(this.dataset.href,'_blank','noopener noreferrer')">
-                    <div class="up-rank-num${cls}">${r.rank}</div>
+                    <div class="up-rank-num${cls}">${Number.isFinite(Number(r.rank)) ? Number(r.rank) : ''}</div>
                     <img class="up-rank-profile" src="${esc(safeImageUrl(r.profile_url, 'stickers/s8.png'))}"
                          onerror="this.src='stickers/s8.png'" alt="" loading="lazy">
                     <div class="up-rank-info">
@@ -4026,7 +4026,7 @@ function renderCalendarNoticeList() {
             </div>
             <div class="up-event-admin-actions">
                 <label class="up-startup-toggle">
-                    <input type="checkbox" ${notice.is_active ? 'checked' : ''} onchange="toggleCalendarNoticeActive('${esc(notice.id)}', this.checked)">
+                    <input type="checkbox" ${notice.is_active ? 'checked' : ''} onchange="toggleCalendarNoticeActive(${jsArg(notice.id)}, this.checked)">
                     <span>활성</span>
                 </label>
                 <button class="editor-remove-btn" onclick="previewCalendarNotice(${jsArg(notice.id)})">미리보기</button>
