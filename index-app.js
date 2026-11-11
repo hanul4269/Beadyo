@@ -1093,8 +1093,8 @@ async function updateAuthUI() {
         <div class="auth-menu" id="auth-menu">
             ${canAdmin ? `<button onclick="openCalendarAdmin()">⚙ 편집 설정</button>` : ''}
             <button onclick="openPatchNotesModal()">패치노트</button>
-            <button onclick="openDanceReviewPage()">춤영상 검토페이지</button>
-            <button onclick="openDevelopmentRequestsPage()">개발요청란</button>
+            ${canAdmin ? `<button onclick="openDanceReviewPage()">춤영상 검토페이지</button>
+            <button onclick="openDevelopmentRequestsPage()">개발요청란</button>` : ''}
             <button class="danger" onclick="signOut()">로그아웃</button>
         </div>
     </div>`;
