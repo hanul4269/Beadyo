@@ -3503,6 +3503,12 @@ const SONGBOOK_TAG_OPTIONS = [
     '인디/포크',
     '뮤지컬',
     '애니/보컬로이드',
+    '트로트',
+    '국악',
+    '한국풍',
+    '동요',
+    '랩',
+    '밴드',
     '고음',
     '잔잔한곡',
     '신나는곡',
@@ -3551,6 +3557,18 @@ const SONGBOOK_TAG_ALIASES = new Map([
     ['보컬로이드', '애니/보컬로이드'],
     ['vocaloid', '애니/보컬로이드'],
     ['보카로', '애니/보컬로이드'],
+    ['trot', '트로트'],
+    ['뽕짝', '트로트'],
+    ['gugak', '국악'],
+    ['민요', '국악'],
+    ['동양풍', '한국풍'],
+    ['국풍', '한국풍'],
+    ['children', '동요'],
+    ['rap', '랩'],
+    ['힙합', '랩'],
+    ['hiphop', '랩'],
+    ['hip-hop', '랩'],
+    ['band', '밴드'],
     ['highnote', '고음'],
     ['잔잔', '잔잔한곡'],
     ['조용', '잔잔한곡'],
@@ -3605,6 +3623,13 @@ function inferSongbookTags(song) {
     if (/남자\s*아이돌|남돌|보이그룹|boy\s*group|\bboy\s*idol\b|\bmale\s*idol\b|\bbts\b|방탄소년단|방탄|\bseventeen\b|세븐틴|\bnct\b|\bexo\b|엑소|\bstray\s*kids\b|스트레이\s*키즈|스키즈|\btxt\b|투모로우바이투게더|\benhypen\b|엔하이픈|\bateez\b|에이티즈|\bthe\s*boyz\b|더보이즈|\bshinee\b|샤이니|\bsuper\s*junior\b|슈퍼주니어|\bbigbang\b|빅뱅|\bbtob\b|비투비|\bwinner\b|위너|\bikon\b|아이콘|\briize\b|라이즈/.test(fullText)) add('남자아이돌');
     if (/보컬로이드|vocaloid|\bgumi\b|\bmiku\b|하츠네|미쿠|카가미네|메구리네|\bkaito\b|\bmeiko\b|보카로/.test(fullText)) add('애니/보컬로이드');
     if (/애니|anime|animation|러브라이브|마크로스|귀멸의\s*칼날|귀멸|나루토|원피스|최애의\s*아이|아이돌마스터|뱅드림/.test(fullText)) add('애니/보컬로이드');
+
+    if (/트로트|\btrot\b/.test(fullText)) add('트로트');
+    if (/국악|민요|gugak/.test(memoText)) add('국악');
+    if (/한국풍|동양풍|국풍/.test(memoText)) add('한국풍');
+    if (/동요/.test(memoText)) add('동요');
+    if (/(^|[^가-힣])랩([^가-힣]|$)|힙합|\brap\b|hip\s*-?\s*hop/.test(memoText)) add('랩');
+    if (/밴드|\bband\b/.test(memoText)) add('밴드');
 
     if (/발라드|ballad/.test(memoText)) add('발라드');
     if (/댄스|dance/.test(memoText)) { add('댄스'); add('신나는곡'); }
