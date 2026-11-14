@@ -3,8 +3,14 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-11-14T01:50:32.263Z",
+  "fetchedAt": "2026-11-14T09:00:16.718Z",
   "posts": [
+    {
+      "id": "40619",
+      "title": "어제 아침 6시에",
+      "publishedAt": "2026-11-14T14:23:00.810+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40619"
+    },
     {
       "id": "40602",
       "title": "구모닝",
@@ -28,12 +34,6 @@
       "title": "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
       "publishedAt": "2026-11-08T14:21:38.467+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40544"
-    },
-    {
-      "id": "40535",
-      "title": "어제 춤췄더고",
-      "publishedAt": "2026-11-07T13:02:10.357+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40535"
     }
   ]
 }
