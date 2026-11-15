@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "preparedOn": "2026-11-10",
+  "preparedOn": "2026-11-16",
   "channel": "beadyo97",
   "coverage": {
-    "period": "2026-10-31 수집 방송국 전체 목록(2023–2026년) + 2026-11-03~11-10 추가 검토(11월 2~3일 경계 방송 포함)",
-    "totalVods": 1080,
-    "reviewedVods": 1031,
+    "period": "2026-10-31 수집 방송국 전체 목록(2023–2026년) + 2026-11-03~11-15 추가 검토(11월 2~3일 경계 방송 포함)",
+    "totalVods": 1088,
+    "reviewedVods": 1039,
     "restrictedVods": 47,
     "partialVods": 0,
     "pendingVods": 0,
@@ -13,7 +13,7 @@
     "sampleIntervalSeconds": 60,
     "continuousPlaybackReviewed": false,
     "reviewComplete": false,
-    "replayVods": 1046,
+    "replayVods": 1054,
     "clipVods": 34,
     "recheckedOn": "2026-11-02",
     "baseSampleIntervalSeconds": 60,
@@ -32,25 +32,28 @@
     "publicSampleReviewComplete": true,
     "unavailableRecheckedOn": "2026-11-02",
     "latestIncrementalReview": {
-      "reviewedOn": "2026-11-10",
-      "from": "2026-11-06",
-      "through": "2026-11-10",
+      "reviewedOn": "2026-11-16",
+      "from": "2026-11-10",
+      "through": "2026-11-15",
       "vodIds": [
-        212016773,
-        212106883,
+        212290131,
+        212420025,
+        212431473,
+        212507945,
+        212552493,
+        212591607,
+        212599961,
+        212650121
+      ],
+      "reviewedVods": 8,
+      "directlyViewedSampleFrames": 855,
+      "baseSampleIntervalSeconds": 120,
+      "addedGames": 2,
+      "addedGameDates": 4,
+      "previouslyReviewedBoundaryVodIds": [
         212193875
       ],
-      "reviewedVods": 3,
-      "directlyViewedSampleFrames": 3897,
-      "additionalOriginalFramesViewed": 20,
-      "addedGames": 4,
-      "addedGameDates": 8,
-      "currentStationInventoryCount": 1074,
-      "currentStationReplayCount": 1039,
-      "previouslyReviewedBoundaryVodIds": [
-        211846677
-      ],
-      "scopeNote": "11월 6일 새벽까지의 경계 방송은 기존 검토·기록을 보존하고, 이후 새 공개 다시보기 3개(11월 7~10일)를 추가 검토했습니다. 11월 10일 오전 공개 목록 기준이며 이후 방송은 포함하지 않습니다. 누적 목록은 과거 수집본을 보존하므로 현재 방송국 목록 수와 다를 수 있습니다.",
+      "scopeNote": "11월 10일 새벽까지의 방송은 기존 검토·기록을 보존하고, 이후 새 공개 다시보기 8개(11월 10일 저녁~15일 새벽)를 120초 간격 장면 표본으로 추가 검토했습니다. 11월 16일 0시 공개 목록 기준이며 이후 방송은 포함하지 않습니다.",
       "continuousPlaybackReviewed": false,
       "audioReviewed": false
     },
@@ -95,6 +98,32 @@
           211846677
         ],
         "scopeNote": "11월 6일 새벽까지의 경계 방송은 기존 검토·기록을 보존하고, 이후 새 공개 다시보기 3개(11월 7~10일)를 추가 검토했습니다. 11월 10일 오전 공개 목록 기준이며 이후 방송은 포함하지 않습니다. 누적 목록은 과거 수집본을 보존하므로 현재 방송국 목록 수와 다를 수 있습니다.",
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      },
+      {
+        "reviewedOn": "2026-11-16",
+        "from": "2026-11-10",
+        "through": "2026-11-15",
+        "vodIds": [
+          212290131,
+          212420025,
+          212431473,
+          212507945,
+          212552493,
+          212591607,
+          212599961,
+          212650121
+        ],
+        "reviewedVods": 8,
+        "directlyViewedSampleFrames": 855,
+        "baseSampleIntervalSeconds": 120,
+        "addedGames": 2,
+        "addedGameDates": 4,
+        "previouslyReviewedBoundaryVodIds": [
+          212193875
+        ],
+        "scopeNote": "11월 10일 새벽까지의 방송은 기존 검토·기록을 보존하고, 이후 새 공개 다시보기 8개(11월 10일 저녁~15일 새벽)를 120초 간격 장면 표본으로 추가 검토했습니다. 11월 16일 0시 공개 목록 기준이며 이후 방송은 포함하지 않습니다.",
         "continuousPlaybackReviewed": false,
         "audioReviewed": false
       }
@@ -105451,6 +105480,405 @@
         "displayedTileResolution": [
           128,
           72
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 212290131,
+      "title": "증강 칼바람이 뭐야?",
+      "sourceUrl": "https://vod.sooplive.com/player/212290131",
+      "broadcastStart": "2026-11-10 18:00:56",
+      "uploadedAt": "2026-11-11 04:00:03",
+      "durationSeconds": 35344.417,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [
+        {
+          "gameId": "league-of-legends",
+          "date": "2026-11-11",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "confidence": "video",
+          "sourceUrl": "https://vod.sooplive.com/player/212290131?change_second=27539",
+          "eventTitle": "증강 칼바람이 뭐야?",
+          "description": "게스트 중력과 리그 오브 레전드 사용자 설정 대기실(박우중력 님의 게임)에 들어간 뒤 칼바람 나락에서 증강 칼바람을 플레이한다. 01:35 무렵 대기실, 07:38:59 원본 프레임에서 증강 3장 선택 화면(왕관의 무게·마법 명사수·밤의 추적)을 직접 확인했고 이후 표본에서 칼바람 나락 전투와 추가 증강 선택이 이어진다.",
+          "vodId": 212290131,
+          "broadcastTitle": "증강 칼바람이 뭐야?",
+          "timestampLabel": "07:38:59",
+          "seconds": 27539,
+          "playedAt": "2026-11-11T01:39:56.000+09:00",
+          "broadcastDate": "2026-11-10",
+          "videoVerified": true,
+          "verificationMethod": "공개 영상의 640px 표본 프레임 직접 확인 및 전체 120초 표본 대조",
+          "frameResolution": [
+            640,
+            360
+          ],
+          "reviewedOn": "2026-11-16",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "proofUrls": [
+            "https://www.leagueoflegends.com/en-us/"
+          ],
+          "dateBasis": "file_start_plus_file_local_time",
+          "fileStart": "2026-11-10 21:21:26",
+          "fileLocalSeconds": 15510.0,
+          "fileIndex": 2
+        }
+      ],
+      "unresolved": [],
+      "excluded": [
+        "00:00~07:35 전후는 대기 화면·공지·V리그 여자배구 SOOP 대 IBK기업은행 경기 시청·도쿄 여행 사진·게스트 중력과의 수다로 게임 플레이가 아니다.",
+        "07:50~08:08 전후는 화면 끊김·게시판·일정 확인 휴식이다.",
+        "09:07~09:24 전후 리그 오브 레전드 다른 맵(벚꽃 테마) 모드는 모드명을 확인하지 못했으나 같은 게임으로 기록 범위에 포함된다."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-10~2026-11-15인 추가 기록. 같이보기(영화 등)는 같이보기 목록에서 따로 관리합니다."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-16",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 296,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          480,
+          270
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 212420025,
+      "title": "3시) 미현영의 미친 토크룸",
+      "sourceUrl": "https://vod.sooplive.com/player/212420025",
+      "broadcastStart": "2026-11-12 14:00:27",
+      "uploadedAt": "2026-11-12 17:44:02",
+      "durationSeconds": 13259.468,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [],
+      "unresolved": [],
+      "excluded": [
+        "미현영 토크룸 합방·AGF 굿즈 소개·팬카페와 영상 감상으로 직접 게임 플레이는 발견하지 못함."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-10~2026-11-15인 추가 기록. 같이보기(영화 등)는 같이보기 목록에서 따로 관리합니다."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-16",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 111,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          480,
+          270
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 212431473,
+      "title": "검은 사제들 무섭나용?",
+      "sourceUrl": "https://vod.sooplive.com/player/212431473",
+      "broadcastStart": "2026-11-12 17:44:02",
+      "uploadedAt": "2026-11-12 20:03:16",
+      "durationSeconds": 7752.617,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [],
+      "unresolved": [],
+      "excluded": [
+        "00:04~01:47 전후 영화 「검은 사제들」 같이보기, 이후 감상평과 수다. 직접 게임 플레이는 발견하지 못함."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-10~2026-11-15인 추가 기록. 같이보기(영화 등)는 같이보기 목록에서 따로 관리합니다."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-16",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 65,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          480,
+          270
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 212507945,
+      "title": "5시 30분) AGF 굿즈를 사면 좋은 일이 있다던데?",
+      "sourceUrl": "https://vod.sooplive.com/player/212507945",
+      "broadcastStart": "2026-11-13 17:01:59",
+      "uploadedAt": "2026-11-13 18:07:57",
+      "durationSeconds": 3956.0,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [],
+      "unresolved": [],
+      "excluded": [
+        "AGF 굿즈 안내·SOOPSTORE 페이지 확인과 수다. 직접 게임 플레이는 발견하지 못함."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-10~2026-11-15인 추가 기록. 같이보기(영화 등)는 같이보기 목록에서 따로 관리합니다."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-16",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 34,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          480,
+          270
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 212552493,
+      "title": "사람을 믿지마..",
+      "sourceUrl": "https://vod.sooplive.com/player/212552493",
+      "broadcastStart": "2026-11-13 18:07:56",
+      "uploadedAt": "2026-11-14 01:23:23",
+      "durationSeconds": 1457.034,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [],
+      "unresolved": [],
+      "excluded": [
+        "공개 파일은 시작 29초와 11월 14일 00:49 이후 약 24분뿐이며 그 사이 구간은 다시보기에 없다. 공개 구간은 AGF 굿즈 구매인증 확인과 수다로 직접 게임 플레이는 발견하지 못함."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-10~2026-11-15인 추가 기록. 같이보기(영화 등)는 같이보기 목록에서 따로 관리합니다."
+      ],
+      "missingSceneSegments": [
+        "2026-11-13 18:08~2026-11-14 00:49 구간은 공개 다시보기 파일에 없음. 캘린더 일정(시네티: 타인은 지옥이다 7화까지)과 남은 구간 채팅으로 보아 드라마 같이보기 구간이며, 장면으로는 확인 불가."
+      ],
+      "reviewedOn": "2026-11-16",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 12,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          480,
+          270
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 212591607,
+      "title": "낮뱅 슬요",
+      "sourceUrl": "https://vod.sooplive.com/player/212591607",
+      "broadcastStart": "2026-11-14 15:00:59",
+      "uploadedAt": "2026-11-14 15:53:23",
+      "durationSeconds": 3143.0,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [],
+      "unresolved": [],
+      "excluded": [
+        "낮방송 소통과 팬카페 확인. 직접 게임 플레이는 발견하지 못함."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-10~2026-11-15인 추가 기록. 같이보기(영화 등)는 같이보기 목록에서 따로 관리합니다."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-16",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 26,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          480,
+          270
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 212599961,
+      "title": "비상입니다 오드리아나 부상.. VS GS칼텍스 | V리그 여자 배구",
+      "sourceUrl": "https://vod.sooplive.com/player/212599961",
+      "broadcastStart": "2026-11-14 15:53:23",
+      "uploadedAt": "2026-11-14 17:52:08",
+      "durationSeconds": 7125.0,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [],
+      "unresolved": [],
+      "excluded": [
+        "V리그 여자배구 GS칼텍스 대 SOOP 경기 시청과 세터 설명. 직접 게임 플레이는 발견하지 못함."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-10~2026-11-15인 추가 기록. 같이보기(영화 등)는 같이보기 목록에서 따로 관리합니다."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-16",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 59,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          480,
+          270
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 212650121,
+      "title": "후열) 감자 다 깍고 방종하기",
+      "sourceUrl": "https://vod.sooplive.com/player/212650121",
+      "broadcastStart": "2026-11-14 17:52:08",
+      "uploadedAt": "2026-11-15 02:25:15",
+      "durationSeconds": 30186.684,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [
+        {
+          "gameId": "cozy-game-restoration",
+          "date": "2026-11-14",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "confidence": "video",
+          "sourceUrl": "https://vod.sooplive.com/player/212650121?change_second=9300",
+          "eventTitle": "후열) 감자 다 깍고 방종하기",
+          "description": "02:33 무렵 Steam 라이브러리에서 Cozy Game Restoration을 실행하고, 02:35:00 원본 프레임에서 할아버지 편지(Gramps)와 손 도구 안내를 직접 확인했다. 이후 표본에서 게임 카트리지 청소·수리와 GAME RESTORED 화면이 22시 40분 무렵까지 이어진다.",
+          "vodId": 212650121,
+          "broadcastTitle": "후열) 감자 다 깍고 방종하기",
+          "timestampLabel": "02:35:00",
+          "seconds": 9300,
+          "playedAt": "2026-11-14T20:27:09.000+09:00",
+          "broadcastDate": "2026-11-14",
+          "videoVerified": true,
+          "verificationMethod": "공개 영상의 640px 표본 프레임 직접 확인 및 전체 120초 표본 대조",
+          "frameResolution": [
+            640,
+            360
+          ],
+          "reviewedOn": "2026-11-16",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "proofUrls": [
+            "https://store.steampowered.com/app/3581230/"
+          ],
+          "dateBasis": "file_start_plus_file_local_time",
+          "fileStart": "2026-11-14 17:52:39",
+          "fileLocalSeconds": 9270.0,
+          "fileIndex": 1
+        },
+        {
+          "gameId": "potato-please",
+          "date": "2026-11-14",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "confidence": "video",
+          "sourceUrl": "https://vod.sooplive.com/player/212650121?change_second=17820",
+          "eventTitle": "후열) 감자 다 깍고 방종하기",
+          "description": "04:51 무렵 Steam 라이브러리의 POTATO PLEASE 화면을 확인했고, 이후 표본에서 도마 위 감자 깎기·저장고·보급국 업그레이드 화면이 이어진다. 04:57:00 프레임부터 본인 플레이 장면이다.",
+          "vodId": 212650121,
+          "broadcastTitle": "후열) 감자 다 깍고 방종하기",
+          "timestampLabel": "04:57:00",
+          "seconds": 17820,
+          "playedAt": "2026-11-14T22:49:09.000+09:00",
+          "broadcastDate": "2026-11-14",
+          "videoVerified": true,
+          "verificationMethod": "공개 영상의 640px 표본 프레임 직접 확인 및 전체 120초 표본 대조",
+          "frameResolution": [
+            640,
+            360
+          ],
+          "reviewedOn": "2026-11-16",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "proofUrls": [
+            "https://store.steampowered.com/app/5266240/"
+          ],
+          "dateBasis": "file_start_plus_file_local_time",
+          "fileStart": "2026-11-14 17:52:39",
+          "fileLocalSeconds": 17790.0,
+          "fileIndex": 1
+        },
+        {
+          "gameId": "potato-please",
+          "date": "2026-11-15",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "confidence": "video",
+          "sourceUrl": "https://vod.sooplive.com/player/212650121?change_second=22262",
+          "eventTitle": "후열) 감자 다 깍고 방종하기",
+          "description": "자정 이후에도 감자 저장고에서 감자를 깎는 본인 플레이가 이어진다. 06:11:02 원본 프레임에서 바닥의 감자 더미와 진행 목표 UI를 직접 확인했고, 02:09 무렵 근무 보고서(깎은 감자 62,898)와 엔딩 문구까지 표본으로 확인했다.",
+          "vodId": 212650121,
+          "broadcastTitle": "후열) 감자 다 깍고 방종하기",
+          "timestampLabel": "06:11:02",
+          "seconds": 22262,
+          "playedAt": "2026-11-15T00:03:11.000+09:00",
+          "broadcastDate": "2026-11-14",
+          "videoVerified": true,
+          "verificationMethod": "공개 영상의 640px 표본 프레임 직접 확인 및 전체 120초 표본 대조",
+          "frameResolution": [
+            640,
+            360
+          ],
+          "reviewedOn": "2026-11-16",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "proofUrls": [
+            "https://store.steampowered.com/app/5266240/"
+          ],
+          "dateBasis": "file_start_plus_file_local_time",
+          "fileStart": "2026-11-14 22:52:41",
+          "fileLocalSeconds": 4230.0,
+          "fileIndex": 2
+        }
+      ],
+      "unresolved": [],
+      "excluded": [
+        "00:00~02:31 전후는 팬카페·짧은 클립·3D 모델 의상 소개로 게임 플레이가 아니다.",
+        "08:19 이후는 수다와 마무리 화면이다."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-10~2026-11-15인 추가 기록. 같이보기(영화 등)는 같이보기 목록에서 따로 관리합니다."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-16",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 252,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          480,
+          270
         ],
         "continuousPlaybackReviewed": false,
         "audioReviewed": false

@@ -1,11 +1,11 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-11-10",
+  "updatedAt": "2026-11-16",
   "calendarPeriod": "2026년 5월 1일~10월 27일",
   "videoReview": {
-    "period": "2026-10-31 수집 방송국 전체 목록(2023–2026년) + 2026-11-03~11-10 추가 검토(11월 2~3일 경계 방송 포함)",
-    "totalVods": 1080,
-    "reviewedVods": 1031,
+    "period": "2026-10-31 수집 방송국 전체 목록(2023–2026년) + 2026-11-03~11-15 추가 검토(11월 2~3일 경계 방송 포함)",
+    "totalVods": 1088,
+    "reviewedVods": 1039,
     "restrictedVods": 47,
     "partialVods": 0,
     "pendingVods": 0,
@@ -13,7 +13,7 @@
     "sampleIntervalSeconds": 60,
     "continuousPlaybackReviewed": false,
     "reviewComplete": false,
-    "replayVods": 1046,
+    "replayVods": 1054,
     "clipVods": 34,
     "recheckedOn": "2026-11-02",
     "baseSampleIntervalSeconds": 60,
@@ -32,25 +32,28 @@
     "publicSampleReviewComplete": true,
     "unavailableRecheckedOn": "2026-11-02",
     "latestIncrementalReview": {
-      "reviewedOn": "2026-11-10",
-      "from": "2026-11-06",
-      "through": "2026-11-10",
+      "reviewedOn": "2026-11-16",
+      "from": "2026-11-10",
+      "through": "2026-11-15",
       "vodIds": [
-        212016773,
-        212106883,
+        212290131,
+        212420025,
+        212431473,
+        212507945,
+        212552493,
+        212591607,
+        212599961,
+        212650121
+      ],
+      "reviewedVods": 8,
+      "directlyViewedSampleFrames": 855,
+      "baseSampleIntervalSeconds": 120,
+      "addedGames": 2,
+      "addedGameDates": 4,
+      "previouslyReviewedBoundaryVodIds": [
         212193875
       ],
-      "reviewedVods": 3,
-      "directlyViewedSampleFrames": 3897,
-      "additionalOriginalFramesViewed": 20,
-      "addedGames": 4,
-      "addedGameDates": 8,
-      "currentStationInventoryCount": 1074,
-      "currentStationReplayCount": 1039,
-      "previouslyReviewedBoundaryVodIds": [
-        211846677
-      ],
-      "scopeNote": "11월 6일 새벽까지의 경계 방송은 기존 검토·기록을 보존하고, 이후 새 공개 다시보기 3개(11월 7~10일)를 추가 검토했습니다. 11월 10일 오전 공개 목록 기준이며 이후 방송은 포함하지 않습니다. 누적 목록은 과거 수집본을 보존하므로 현재 방송국 목록 수와 다를 수 있습니다.",
+      "scopeNote": "11월 10일 새벽까지의 방송은 기존 검토·기록을 보존하고, 이후 새 공개 다시보기 8개(11월 10일 저녁~15일 새벽)를 120초 간격 장면 표본으로 추가 검토했습니다. 11월 16일 0시 공개 목록 기준이며 이후 방송은 포함하지 않습니다.",
       "continuousPlaybackReviewed": false,
       "audioReviewed": false
     },
@@ -95,6 +98,32 @@
           211846677
         ],
         "scopeNote": "11월 6일 새벽까지의 경계 방송은 기존 검토·기록을 보존하고, 이후 새 공개 다시보기 3개(11월 7~10일)를 추가 검토했습니다. 11월 10일 오전 공개 목록 기준이며 이후 방송은 포함하지 않습니다. 누적 목록은 과거 수집본을 보존하므로 현재 방송국 목록 수와 다를 수 있습니다.",
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      },
+      {
+        "reviewedOn": "2026-11-16",
+        "from": "2026-11-10",
+        "through": "2026-11-15",
+        "vodIds": [
+          212290131,
+          212420025,
+          212431473,
+          212507945,
+          212552493,
+          212591607,
+          212599961,
+          212650121
+        ],
+        "reviewedVods": 8,
+        "directlyViewedSampleFrames": 855,
+        "baseSampleIntervalSeconds": 120,
+        "addedGames": 2,
+        "addedGameDates": 4,
+        "previouslyReviewedBoundaryVodIds": [
+          212193875
+        ],
+        "scopeNote": "11월 10일 새벽까지의 방송은 기존 검토·기록을 보존하고, 이후 새 공개 다시보기 8개(11월 10일 저녁~15일 새벽)를 120초 간격 장면 표본으로 추가 검토했습니다. 11월 16일 0시 공개 목록 기준이며 이후 방송은 포함하지 않습니다.",
         "continuousPlaybackReviewed": false,
         "audioReviewed": false
       }
@@ -9138,6 +9167,24 @@
         "League of Legends"
       ],
       "dates": [
+        {
+          "date": "2026-11-11",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212290131?change_second=27539",
+          "confidence": "video",
+          "eventTitle": "증강 칼바람이 뭐야?",
+          "timestampLabel": "07:38:59",
+          "seconds": 27539,
+          "playedAt": "2026-11-11T01:39:56.000+09:00",
+          "broadcastDate": "2026-11-10",
+          "vodId": 212290131,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        },
         {
           "date": "2026-10-29",
           "dateEnd": null,
@@ -24655,6 +24702,94 @@
           "playedAt": "2026-11-09T23:44:59.034+09:00",
           "broadcastDate": "2026-11-09",
           "vodId": 212193875,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cozy-game-restoration",
+      "title": "Cozy Game Restoration",
+      "aliases": [
+        "코지 게임 레스토레이션",
+        "코지 게임 복원"
+      ],
+      "image": "assets/game-log/cozy-game-restoration-official-20261116.jpg",
+      "officialUrl": "https://store.steampowered.com/app/3581230/",
+      "imageCredit": {
+        "type": "official",
+        "label": "공식 게임 이미지",
+        "sourceUrl": "https://store.steampowered.com/app/3581230/"
+      },
+      "dates": [
+        {
+          "date": "2026-11-14",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212650121?change_second=9300",
+          "confidence": "video",
+          "eventTitle": "후열) 감자 다 깍고 방종하기",
+          "timestampLabel": "02:35:00",
+          "seconds": 9300,
+          "playedAt": "2026-11-14T20:27:09.000+09:00",
+          "broadcastDate": "2026-11-14",
+          "vodId": 212650121,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "potato-please",
+      "title": "Potato Please",
+      "aliases": [
+        "포테이토 플리즈",
+        "감자 깎기 게임"
+      ],
+      "image": "assets/game-log/potato-please-official-20261116.jpg",
+      "officialUrl": "https://store.steampowered.com/app/5266240/",
+      "imageCredit": {
+        "type": "official",
+        "label": "공식 게임 이미지",
+        "sourceUrl": "https://store.steampowered.com/app/5266240/"
+      },
+      "dates": [
+        {
+          "date": "2026-11-15",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212650121?change_second=22262",
+          "confidence": "video",
+          "eventTitle": "후열) 감자 다 깍고 방종하기",
+          "timestampLabel": "06:11:02",
+          "seconds": 22262,
+          "playedAt": "2026-11-15T00:03:11.000+09:00",
+          "broadcastDate": "2026-11-14",
+          "vodId": 212650121,
+          "dateBasis": "file_start_plus_file_local_time",
+          "evidenceCount": 1,
+          "sourceLabels": [
+            "SOOP 다시보기"
+          ]
+        },
+        {
+          "date": "2026-11-14",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212650121?change_second=17820",
+          "confidence": "video",
+          "eventTitle": "후열) 감자 다 깍고 방종하기",
+          "timestampLabel": "04:57:00",
+          "seconds": 17820,
+          "playedAt": "2026-11-14T22:49:09.000+09:00",
+          "broadcastDate": "2026-11-14",
+          "vodId": 212650121,
           "dateBasis": "file_start_plus_file_local_time",
           "evidenceCount": 1,
           "sourceLabels": [

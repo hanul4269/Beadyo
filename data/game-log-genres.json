@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-10",
+  "updatedAt": "2026-11-16",
   "categories": [
     {
       "id": "action",
@@ -6205,6 +6205,27 @@
         "Board Game",
         "Turn-Based Tactics",
         "Strategy"
+      ]
+    },
+    "cozy-game-restoration": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/3581230/",
+      "sourceTags": [
+        "Casual",
+        "Simulation"
+      ]
+    },
+    "potato-please": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/5266240/",
+      "sourceTags": [
+        "Casual",
+        "Indie",
+        "Simulation"
       ]
     }
   }
