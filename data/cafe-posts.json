@@ -3,8 +3,14 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-11-15T14:50:02.027Z",
+  "fetchedAt": "2026-11-15T20:25:05.255Z",
   "posts": [
+    {
+      "id": "40637",
+      "title": "내가 원한 디자인",
+      "publishedAt": "2026-11-16T03:11:36.270+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40637"
+    },
     {
       "id": "40633",
       "title": "택배 보내는",
@@ -28,12 +34,6 @@
       "title": "빼빼로 재료 시켰다",
       "publishedAt": "2026-11-11T14:37:02.693+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40579"
-    },
-    {
-      "id": "40553",
-      "title": "어",
-      "publishedAt": "2026-11-09T13:39:54.170+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40553"
     }
   ]
 }
