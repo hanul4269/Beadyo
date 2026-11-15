@@ -2174,6 +2174,92 @@
             font-weight: 700;
         }
         .cover-preview.show { display: flex; }
+        .ef-duplicate {
+            margin: -4px 0 12px;
+            padding: 8px 10px;
+            border: 1px solid #f0c98a;
+            border-radius: 8px;
+            background: #fff6e5;
+            color: #8a5a14;
+            font-size: 12px;
+            line-height: 1.45;
+            overflow-wrap: anywhere;
+        }
+        .ef-duplicate[hidden] { display: none; }
+        .ef-duplicate strong { display: block; font-weight: 800; }
+        html[data-theme="dark"] .ef-duplicate { background: #332d1d; border-color: #6b5524; color: #f0c16d; }
+        .bulk-table tbody tr.bulk-dup td { background: #fff6e5; }
+        .bulk-table tbody tr.bulk-dup .bc-title,
+        .bulk-table tbody tr.bulk-dup .bc-artist { border-color: #f0c98a; }
+        html[data-theme="dark"] .bulk-table tbody tr.bulk-dup td { background: #332d1d; }
+        .bulk-status.has-dup { color: #8a5a14; font-weight: 700; }
+        html[data-theme="dark"] .bulk-status.has-dup { color: #f0c16d; }
+        .ef-cover-input-row { display: flex; gap: 6px; align-items: stretch; }
+        .ef-cover-input-row input { flex: 1; min-width: 0; }
+        .btn-cover-find {
+            flex-shrink: 0;
+            padding: 0 12px;
+            border: 1.5px solid var(--accent);
+            border-radius: 8px;
+            background: var(--accent-light);
+            color: var(--accent-dark);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .btn-cover-find:disabled { opacity: .6; cursor: default; }
+        .ef-cover-results {
+            display: none;
+            margin-top: 8px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface-2);
+        }
+        .ef-cover-results.show { display: block; }
+        .ef-cover-status { font-size: 12px; font-weight: 700; color: var(--muted); line-height: 1.4; }
+        .ef-cover-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .ef-cover-option {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+            padding: 5px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--text);
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+        .ef-cover-option:hover { border-color: var(--accent); }
+        .ef-cover-option.selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-light); }
+        .ef-cover-option img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 6px;
+            background: var(--accent-light);
+        }
+        .ef-cover-option strong,
+        .ef-cover-option span {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            overflow-wrap: anywhere;
+            line-height: 1.3;
+        }
+        .ef-cover-option strong { font-size: 11px; font-weight: 800; }
+        .ef-cover-option span { font-size: 10px; color: var(--muted); }
         .cover-preview img {
             width: 54px;
             height: 54px;
@@ -3043,11 +3129,16 @@
                     <option>ETC</option><option>애교송</option><option>오리지널</option>
                 </select>
             </div>
-            <div class="ef-row"><label>제목 *</label><input type="text" id="ef-title" placeholder="노래 제목"></div>
-            <div class="ef-row"><label>가수</label><input type="text" id="ef-artist" placeholder="가수명"></div>
+            <div class="ef-row"><label>제목 *</label><input type="text" id="ef-title" placeholder="노래 제목" oninput="updateEditingSongDuplicate()" onchange="onEditingSongIdentityChange()"></div>
+            <div class="ef-row"><label>가수</label><input type="text" id="ef-artist" placeholder="가수명" oninput="updateEditingSongDuplicate()" onchange="onEditingSongIdentityChange()"></div>
+            <div id="ef-duplicate" class="ef-duplicate" role="status" hidden></div>
             <div class="ef-row">
-                <label>커버 이미지 URL</label>
-                <input type="url" id="ef-cover" placeholder="https://..." oninput="updateCoverPreview(this.value)">
+                <label for="ef-cover">커버 이미지 URL</label>
+                <div class="ef-cover-input-row">
+                    <input type="url" id="ef-cover" placeholder="https://..." oninput="updateCoverPreview(this.value)">
+                    <button type="button" class="btn-cover-find" id="ef-cover-find-btn" onclick="findEditingSongCover()">커버 찾기</button>
+                </div>
+                <div id="ef-cover-results" class="ef-cover-results" aria-live="polite"></div>
                 <div id="ef-cover-preview" class="cover-preview"></div>
                 <button type="button" class="btn-cover-clear" id="ef-cover-clear-btn" onclick="clearEditingSongCover()" style="display:none">커버 삭제</button>
             </div>
@@ -3491,6 +3582,34 @@ function normalizeSongbookCompare(value) {
 }
 function songbookCompareKey(song) {
     return `${normalizeSongbookCompare(song.title)}|||${normalizeSongbookCompare(song.artist)}`;
+}
+
+// ── 중복 곡 확인 ─────────────────────────────────
+// 괄호 속 내용·띄어쓰기·문장부호·대소문자를 무시하고 제목을 비교한다.
+// 가수는 괄호를 뗀 이름과 괄호 속 별칭 중 하나라도 같으면 같은 가수로 본다.
+function songbookDupCompact(value) {
+    return normalizeSongbookCompare(value).replace(/[\s\p{P}\p{S}]+/gu, '');
+}
+function songbookDupArtistKeys(artist) {
+    const text = String(artist ?? '').trim();
+    return new Set([text, ...coverArtistBracketNames(text)].map(songbookDupCompact).filter(Boolean));
+}
+function songbookSameIdentity(a, b) {
+    const titleKey = songbookDupCompact(a?.title);
+    if (!titleKey || titleKey !== songbookDupCompact(b?.title)) return false;
+    const aKeys = songbookDupArtistKeys(a?.artist);
+    const bKeys = songbookDupArtistKeys(b?.artist);
+    if (!aKeys.size || !bKeys.size) return !aKeys.size && !bKeys.size;
+    return [...aKeys].some(key => bKeys.has(key));
+}
+function findSongbookDuplicates(song, { excludeId = '' } = {}) {
+    if (!songbookDupCompact(song?.title)) return [];
+    return (S.songbookData || []).filter(other =>
+        !(excludeId !== '' && String(other.id) === String(excludeId)) &&
+        songbookSameIdentity(song, other));
+}
+function songbookDuplicateLabel(song) {
+    return `[${song.category || '-'}] ${song.title}${song.artist ? ` / ${song.artist}` : ''}`;
 }
 
 const SONGBOOK_TAG_OPTIONS = [
@@ -5623,7 +5742,7 @@ document.addEventListener('change', e => {
 function closeBulkModal() { document.getElementById('bulk-modal').classList.remove('open'); }
 
 // ── 커버 자동 채우기 ─────────────────────────────
-const COVER_ITUNES_REQUEST_GAP_MS = 1200;
+const COVER_ITUNES_REQUEST_GAP_MS = 700;
 const COVER_ITUNES_RETRY_DELAY_MS = 2500;
 const COVER_ITUNES_ACCEPT_SCORE = 0.88;
 const COVER_ITUNES_CONFIDENT_SCORE = 0.94;
@@ -5631,7 +5750,8 @@ const COVER_ITUNES_MIN_TITLE_SCORE = 0.88;
 const COVER_ITUNES_MIN_ARTIST_SCORE = 0.62;
 const COVER_ITUNES_SEARCH_TITLE_SCORE = 0.9;
 const COVER_ITUNES_SEARCH_TITLE_MAX_RANK = 4;
-const COVER_ITUNES_MAX_QUERIES_PER_SONG = 14;
+const COVER_ITUNES_MAX_QUERIES_PER_SONG = 4;
+const COVER_ITUNES_MAX_QUERIES_JPOP = 6;
 const COVER_YOUTUBE_ACCEPT_SCORE = 0.82;
 const COVER_YOUTUBE_MIN_TITLE_SCORE = 0.82;
 const COVER_YOUTUBE_MIN_ARTIST_SCORE = 0.52;
@@ -5979,11 +6099,47 @@ function coverArtistAliases(artist) {
         '米津玄師': ['요네즈 켄시', 'Kenshi Yonezu'],
         '우타다 히카루 요네즈 켄시': ['Hikaru Utada', '宇多田ヒカル', 'Kenshi Yonezu', '米津玄師'],
     };
-    const key = coverSearchText(text);
+    const base = coverWithoutBrackets(text);
+    const parts = coverArtistBracketNames(text);
+    const keys = [text, base, ...parts].map(coverSearchText).filter(Boolean);
     return [...new Set([
         text,
-        ...(aliases[key] || []),
-    ].filter(Boolean))];
+        base,
+        ...parts,
+        ...keys.flatMap(key => aliases[key] || []),
+    ].filter(name => coverCompactText(name).length >= 2))];
+}
+
+function coverWithoutBrackets(value) {
+    return String(value || '')
+        .replace(/\([^)]*\)/g, ' ')
+        .replace(/（[^）]*）/g, ' ')
+        .replace(/\[[^\]]*\]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+// "AKMU (악동뮤지션 / 악뮤)" → ["악동뮤지션", "악뮤"]
+function coverArtistBracketNames(artist) {
+    const names = [];
+    const pattern = /[(（\[]([^)）\]]*)[)）\]]/g;
+    let match;
+    while ((match = pattern.exec(String(artist || '')))) {
+        for (const part of match[1].split(/[\/,·]/)) {
+            const name = part.trim();
+            if (name && !/\b(ver|feat|ft|prod)\b/i.test(name)) names.push(name);
+        }
+    }
+    return names;
+}
+
+// 검색어로 쓸 가수명: 괄호를 뗀 이름 → 괄호 안 이름 → 별칭 순
+function coverArtistSearchNames(artist) {
+    const text = String(artist || '').trim().replace(/\s+/g, ' ');
+    if (!text) return [];
+    const aliases = coverArtistAliases(text).filter(name => name !== text);
+    if (coverIsSourceArtistLabel(text)) return aliases.filter(name => !coverIsSourceArtistLabel(name));
+    return [...new Set([coverWithoutBrackets(text) || text, ...aliases])];
 }
 
 function coverHasArtist(song) {
@@ -6082,36 +6238,34 @@ function resizeItunesArtwork(url, size = SONG_COVER_SIZE.thumbnail) {
 
 function coverItunesSearchPlan(song) {
     const title = String(song.title || '').trim().replace(/\s+/g, ' ');
-    const artist = String(song.artist || '').trim().replace(/\s+/g, ' ');
-    const titleAliases = coverTitleAliases(title);
-    const artistAliases = coverArtistAliases(artist);
-    const countries = coverCountryOrder(song);
-    const primaryCountry = countries[0];
-    const queries = [];
-    const push = (country, term) => {
-        const cleanTerm = String(term || '').trim().replace(/\s+/g, ' ');
-        if (!country || !cleanTerm) return;
-        const key = `${country}|${coverSearchText(cleanTerm)}`;
-        if (!queries.some(q => q.key === key)) queries.push({ country, term: cleanTerm, key });
+    if (!title) return [];
+    const isJpop = coverIsJpop(song);
+    const base = coverWithoutBrackets(title) || title;
+    const known = coverKnownTitleAliases(title);
+    const titleTerms = [...new Set((isJpop
+        ? [...known, base, ...coverBracketParts(title)]
+        : [base, ...coverBracketParts(title), ...known]
+    ).filter(term => coverCompactText(term).length >= 1))];
+    const artistTerms = coverArtistSearchNames(song.artist);
+    const terms = [];
+    const pushTerm = term => {
+        const clean = String(term || '').trim().replace(/\s+/g, ' ');
+        if (clean && !terms.some(t => coverCompactText(t) === coverCompactText(clean))) terms.push(clean);
     };
-
-    for (const alias of titleAliases) {
-        if (artistAliases[0]) push(primaryCountry, `${alias} ${artistAliases[0]}`);
+    for (const t of titleTerms.slice(0, isJpop ? 3 : 2)) {
+        for (const a of artistTerms.slice(0, 2)) pushTerm(`${t} ${a}`);
     }
-    for (const alias of titleAliases) {
-        for (const artistAlias of artistAliases.slice(1)) push(primaryCountry, artistAlias ? `${alias} ${artistAlias}` : alias);
-    }
-    for (const artistAlias of artistAliases) push(primaryCountry, title ? `${title} ${artistAlias}` : artistAlias);
-    if (artist && title) push(primaryCountry, `${artist} ${title}`);
-    for (const alias of titleAliases) push(primaryCountry, alias);
+    pushTerm(titleTerms[0]);
 
-    for (const country of countries.slice(1)) {
-        for (const artistAlias of artistAliases.slice(0, 2)) push(country, title ? `${title} ${artistAlias}` : artistAlias);
-        for (const alias of titleAliases.slice(0, 2)) push(country, artistAliases[0] ? `${alias} ${artistAliases[0]}` : alias);
-        push(country, titleAliases[0] || title);
+    const queries = [];
+    const limit = isJpop ? COVER_ITUNES_MAX_QUERIES_JPOP : COVER_ITUNES_MAX_QUERIES_PER_SONG;
+    for (const store of coverStorePlan(song)) {
+        for (const term of terms) {
+            if (queries.length >= limit) break;
+            queries.push({ country: store.country, lookup: store.lookup, term, key: `${store.country}|${coverSearchText(term)}` });
+        }
     }
-
-    return queries.slice(0, COVER_ITUNES_MAX_QUERIES_PER_SONG);
+    return queries;
 }
 
 function coverYoutubeQueryVariants(song) {
@@ -6165,7 +6319,7 @@ function coverFromSongYoutubeUrl(song) {
     };
 }
 
-function itunesJsonp(params) {
+function itunesJsonp(params, endpoint = 'search') {
     return new Promise((resolve, reject) => {
         const callbackName = `__beadyoItunes${Date.now()}${Math.floor(Math.random() * 100000)}`;
         const script = document.createElement('script');
@@ -6185,7 +6339,8 @@ function itunesJsonp(params) {
         };
 
         const search = new URLSearchParams({ ...params, callback: callbackName });
-        script.src = `https://itunes.apple.com/search?${search.toString()}`;
+        const path = endpoint === 'lookup' ? 'lookup' : 'search';
+        script.src = `https://itunes.apple.com/${path}?${search.toString()}`;
         script.onerror = () => {
             cleanup();
             reject(new Error('iTunes search failed'));
@@ -6194,25 +6349,27 @@ function itunesJsonp(params) {
     });
 }
 
-function coverCountryOrder(song) {
+// iTunes 한국 스토어는 노래 검색 결과를 돌려주지 않는다(2026-11 확인, 조회는 가능).
+// 그래서 한국 곡은 미국 스토어에서 한글로 검색하고, 찾은 곡 번호를 한국 스토어로 다시 조회해
+// 한글 제목·가수명으로 비교한다. lookup이 없으면 검색 결과 이름만 비교한다.
+function coverStorePlan(song) {
     const cat = String(song?.category || '').toUpperCase();
-    if (cat.includes('JPOP') || cat.includes('J-POP')) return ['JP', 'KR', 'US'];
-    if (cat.includes('KPOP') || cat.includes('K-POP')) return ['KR', 'US', 'JP'];
-    if (cat.includes('POP')) return ['US', 'KR', 'JP'];
-    return ['KR', 'US', 'JP'];
+    if (cat.includes('JPOP') || cat.includes('J-POP')) return [{ country: 'JP', lookup: '' }, { country: 'US', lookup: 'JP' }];
+    if (cat === 'POP') return [{ country: 'US', lookup: '' }];
+    return [{ country: 'US', lookup: 'KR' }];
 }
 
-async function throttledItunesJsonp(params) {
+async function throttledItunesJsonp(params, endpoint = 'search') {
     const waitMs = Math.max(0, _coverItunesNextRequestAt - Date.now());
     if (waitMs) await wait(waitMs);
     _coverItunesNextRequestAt = Date.now() + COVER_ITUNES_REQUEST_GAP_MS;
-    return itunesJsonp(params);
+    return itunesJsonp(params, endpoint);
 }
 
-async function fetchItunesSearch(params, onRetry) {
+async function fetchItunesSearch(params, onRetry, endpoint = 'search') {
     for (let attempt = 0; attempt < 2; attempt++) {
         try {
-            return await throttledItunesJsonp(params);
+            return await throttledItunesJsonp(params, endpoint);
         } catch (err) {
             if (attempt === 0) {
                 onRetry?.(err);
@@ -6225,60 +6382,65 @@ async function fetchItunesSearch(params, onRetry) {
     return null;
 }
 
+function coverItunesCandidate(song, result, context) {
+    const art = result?.artworkUrl100 || result?.artworkUrl60;
+    if (!art) return null;
+    const match = coverCandidateMatch(song, result, context);
+    if (!match.accepted) return null;
+    return {
+        score: match.score,
+        country: context.country,
+        trackId: result.trackId || `${result.trackName}|${result.artistName}|${result.collectionName}`,
+        coverUrl: resizeItunesArtwork(art),
+        title: result.trackName || '',
+        artist: result.artistName || '',
+        album: result.collectionName || '',
+    };
+}
+
 async function searchItunesCover(song, onRetry) {
-    let best = null;
+    const byTrack = new Map();
     let bestScore = 0;
-    const candidates = [];
-    const seen = new Set();
     let retryNotified = false;
-    for (const { country, term } of coverItunesSearchPlan(song)) {
-        const params = {
-            term,
-            country,
-            media: 'music',
-            entity: 'song',
-            limit: '12',
-        };
+    const notifyRetry = () => {
+        if (!retryNotified) {
+            retryNotified = true;
+            onRetry?.();
+        }
+    };
+    const consider = candidate => {
+        if (!candidate) return;
+        const prev = byTrack.get(candidate.trackId);
+        // 같은 곡이면 점수가 높은 쪽(대개 한국 스토어의 한글 이름)을 남긴다.
+        if (!prev || candidate.score > prev.score) byTrack.set(candidate.trackId, candidate);
+        bestScore = Math.max(bestScore, candidate.score);
+    };
+    for (const { country, lookup, term } of coverItunesSearchPlan(song)) {
         let data = null;
         try {
-            data = await fetchItunesSearch(params, () => {
-                if (!retryNotified) {
-                    retryNotified = true;
-                    onRetry?.();
-                }
-            });
+            data = await fetchItunesSearch({ term, country, media: 'music', entity: 'song', limit: '15' }, notifyRetry);
         } catch {
             continue;
         }
-        for (const [rank, result] of (data?.results || []).entries()) {
-            const key = result.trackId || `${result.trackName}|${result.artistName}|${result.collectionName}`;
-            if (seen.has(key)) continue;
-            seen.add(key);
-            const art = result.artworkUrl100 || result.artworkUrl60;
-            if (!art) continue;
-            const match = coverCandidateMatch(song, result, { term, country, rank });
-            if (!match.accepted) continue;
-            const score = match.score;
-            const candidate = {
-                score,
-                country,
-                coverUrl: resizeItunesArtwork(art),
-                title: result.trackName || '',
-                artist: result.artistName || '',
-                album: result.collectionName || '',
-            };
-            candidates.push(candidate);
-            if (score > bestScore) {
-                bestScore = score;
-                best = candidate;
-            }
+        const results = (data?.results || []).filter(result => result?.trackId);
+        results.forEach((result, rank) => consider(coverItunesCandidate(song, result, { term, country, rank })));
+        if (lookup && results.length && bestScore < COVER_ITUNES_CONFIDENT_SCORE) {
+            const rankById = new Map(results.map((result, rank) => [String(result.trackId), rank]));
+            try {
+                const local = await fetchItunesSearch({ id: [...rankById.keys()].join(','), country: lookup }, notifyRetry, 'lookup');
+                for (const result of local?.results || []) {
+                    const rank = rankById.get(String(result?.trackId));
+                    if (rank === undefined) continue;
+                    consider(coverItunesCandidate(song, result, { term, country: lookup, rank }));
+                }
+            } catch {}
         }
         if (bestScore >= COVER_ITUNES_CONFIDENT_SCORE) break;
     }
-    candidates.sort((a, b) => b.score - a.score);
-    if (!best || bestScore < COVER_ITUNES_ACCEPT_SCORE) return null;
-    best.candidates = candidates;
-    return best;
+    const candidates = [...byTrack.values()].sort((a, b) => b.score - a.score);
+    const best = candidates[0];
+    if (!best || best.score < COVER_ITUNES_ACCEPT_SCORE) return null;
+    return { ...best, candidates };
 }
 
 async function searchYoutubeCover(song, apiKey) {
@@ -6511,7 +6673,7 @@ function addBulkRow(vals) {
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
-        <td class="bt-del"><button class="bt-del-btn" onclick="this.closest('tr').remove()" title="삭제">✕</button></td>
+        <td class="bt-del"><button class="bt-del-btn" onclick="this.closest('tr').remove(); updateBulkDuplicateMarks()" title="삭제">✕</button></td>
         <td class="bt-cat"><select class="bc-cat">${BULK_CATS.map(c=>`<option${c===cat?' selected':''}>${c}</option>`).join('')}</select></td>
         <td class="bt-title"><input class="bc-title" type="text" value="${esc(title)}" placeholder="제목"></td>
         <td class="bt-artist"><input class="bc-artist" type="text" value="${esc(artist)}" placeholder="가수"></td>
@@ -6526,10 +6688,48 @@ function addBulkRow(vals) {
 
     // 붙여넣기 핸들러 (엑셀 TSV)
     tr.querySelectorAll('input, select').forEach((el, colIdx) => {
-        el.addEventListener('paste', e => handleBulkPaste(e, tr, colIdx));
+        el.addEventListener('paste', e => {
+            handleBulkPaste(e, tr, colIdx);
+            setTimeout(updateBulkDuplicateMarks, 0);
+        });
     });
+    tr.querySelectorAll('.bc-title, .bc-artist').forEach(el => el.addEventListener('input', updateBulkDuplicateMarks));
 
     document.getElementById('bulk-rows').appendChild(tr);
+    updateBulkDuplicateMarks();
+}
+
+// 일괄 추가: 이미 등록된 곡이나 같은 표 안에서 겹치는 줄을 표시하고 목록을 돌려준다.
+function updateBulkDuplicateMarks() {
+    const rows = [...document.querySelectorAll('#bulk-rows tr')];
+    const seen = [];
+    const found = [];
+    for (const tr of rows) {
+        const song = {
+            title: tr.querySelector('.bc-title')?.value.trim() || '',
+            artist: tr.querySelector('.bc-artist')?.value.trim() || '',
+        };
+        let reason = '';
+        if (song.title) {
+            const existing = findSongbookDuplicates(song);
+            if (existing.length) reason = `이미 등록됨: ${songbookDuplicateLabel(existing[0])}`;
+            else if (seen.some(other => songbookSameIdentity(song, other))) reason = '이 표 안에서 겹침';
+            seen.push(song);
+        }
+        tr.classList.toggle('bulk-dup', !!reason);
+        if (reason) {
+            tr.title = reason;
+            found.push(`${song.title}${song.artist ? ` / ${song.artist}` : ''} (${reason})`);
+        } else {
+            tr.removeAttribute('title');
+        }
+    }
+    const status = document.getElementById('bulk-status');
+    if (status) {
+        status.classList.toggle('has-dup', found.length > 0);
+        status.textContent = found.length ? `겹치는 곡 ${found.length}개 (노란 줄)` : '';
+    }
+    return found;
 }
 
 // 엑셀 TSV 붙여넣기 공통 처리: 시작 칸부터 행·열을 채우고, 부족한 행은 자동 추가
@@ -6594,6 +6794,12 @@ async function saveBulk() {
 
     if (!records.length) { showToast('제목을 하나 이상 입력해주세요'); return; }
     if (records.some(r => r._invalidUrl)) { showToast('MR/클립/커버 URL은 http 또는 https 주소로 입력해주세요'); return; }
+    const duplicateRows = updateBulkDuplicateMarks();
+    if (duplicateRows.length) {
+        const list = duplicateRows.slice(0, 5).join('\n');
+        const more = duplicateRows.length > 5 ? `\n외 ${duplicateRows.length - 5}곡` : '';
+        if (!confirm(`겹치는 곡이 ${duplicateRows.length}개 있어요.\n${list}${more}\n\n그래도 모두 추가할까요?`)) return;
+    }
     records.forEach(r => delete r._invalidUrl);
     const hasCoverUrls = records.some(r => r.cover_url);
     const canUseCover = hasCoverUrls ? await ensureSongCoverColumn() : false;
@@ -6810,6 +7016,7 @@ function openSongModal(id) {
     document.getElementById('ef-title').value    = s?.title ?? '';
     document.getElementById('ef-artist').value   = s?.artist ?? '';
     document.getElementById('ef-cover').value    = s?.cover_url ?? '';
+    resetEditingCoverResults();
     updateCoverPreview(s?.cover_url ?? '');
     document.getElementById('ef-cover-clear-btn').style.display = s?.cover_url ? '' : 'none';
     document.getElementById('ef-mr').value       = s?.mr_url ?? '';
@@ -6819,10 +7026,171 @@ function openSongModal(id) {
     renderSongTagPicker(currentTags);
     updateSongTagsStatus();
     document.getElementById('ef-memo').value     = s?.memo ?? '';
+    _efOriginalIdentity = s ? { title: s.title, artist: s.artist } : null;
+    updateEditingSongDuplicate();
     document.getElementById('song-del-btn').style.display = s ? '' : 'none';
     document.getElementById('song-modal').classList.add('open');
 }
-function closeSongModal() { document.getElementById('song-modal').classList.remove('open'); }
+function closeSongModal() {
+    resetEditingCoverResults();
+    document.getElementById('song-modal').classList.remove('open');
+}
+
+// ── 노래 추가·수정 창: 중복 안내 ───────────────────
+let _efOriginalIdentity = null;
+
+function updateEditingSongDuplicate() {
+    const el = document.getElementById('ef-duplicate');
+    if (!el) return [];
+    const song = {
+        title: document.getElementById('ef-title').value.trim(),
+        artist: document.getElementById('ef-artist').value.trim(),
+    };
+    const duplicates = findSongbookDuplicates(song, { excludeId: document.getElementById('ef-id').value });
+    if (!duplicates.length) {
+        el.hidden = true;
+        el.innerHTML = '';
+        return duplicates;
+    }
+    const shown = duplicates.slice(0, 3).map(other => esc(songbookDuplicateLabel(other))).join('<br>');
+    const more = duplicates.length > 3 ? `<br>외 ${duplicates.length - 3}곡` : '';
+    el.innerHTML = `<strong>이미 등록된 곡이 있어요</strong>${shown}${more}`;
+    el.hidden = false;
+    return duplicates;
+}
+
+// ── 노래 추가·수정 창: 커버 찾기 ───────────────────
+let _efCoverSearchToken = 0;
+let _efCoverOptions = [];
+let _efCoverStatus = '';
+let _efCoverAutoTimer = 0;
+let _efCoverAutoUrl = '';
+
+function editingSongFromModal() {
+    return {
+        id: document.getElementById('ef-id').value,
+        category: document.getElementById('ef-category').value,
+        title: document.getElementById('ef-title').value.trim(),
+        artist: document.getElementById('ef-artist').value.trim(),
+        clip_url: document.getElementById('ef-clip').value.trim(),
+        mr_url: document.getElementById('ef-mr').value.trim(),
+    };
+}
+
+function resetEditingCoverResults() {
+    _efCoverSearchToken++;
+    clearTimeout(_efCoverAutoTimer);
+    _efCoverOptions = [];
+    _efCoverStatus = '';
+    _efCoverAutoUrl = '';
+    const el = document.getElementById('ef-cover-results');
+    if (el) {
+        el.classList.remove('show');
+        el.innerHTML = '';
+    }
+    const btn = document.getElementById('ef-cover-find-btn');
+    if (btn) {
+        btn.disabled = false;
+        btn.textContent = '커버 찾기';
+    }
+}
+
+function renderEditingCoverResults() {
+    const el = document.getElementById('ef-cover-results');
+    if (!el) return;
+    const current = document.getElementById('ef-cover').value.trim();
+    const grid = _efCoverOptions.length
+        ? `<div class="ef-cover-grid">${_efCoverOptions.map((option, index) => `
+            <button type="button" class="ef-cover-option${option.coverUrl === current ? ' selected' : ''}" onclick="applyEditingCoverOption(${index})" aria-pressed="${option.coverUrl === current}" title="${esc(option.title)}${option.sub ? ` · ${esc(option.sub)}` : ''}">
+                <img src="${esc(option.coverUrl)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+                <strong>${esc(option.title)}</strong>
+                <span>${esc(option.sub)}</span>
+            </button>`).join('')}</div>`
+        : '';
+    el.innerHTML = `<div class="ef-cover-status">${esc(_efCoverStatus)}</div>${grid}`;
+    el.classList.add('show');
+}
+
+async function findEditingSongCover({ auto = false } = {}) {
+    const song = editingSongFromModal();
+    if (!song.title) {
+        if (!auto) {
+            showToast('제목을 먼저 입력해주세요');
+            document.getElementById('ef-title').focus();
+        }
+        return;
+    }
+    const token = ++_efCoverSearchToken;
+    const btn = document.getElementById('ef-cover-find-btn');
+    btn.disabled = true;
+    btn.textContent = '찾는 중...';
+    _efCoverOptions = [];
+    _efCoverStatus = 'iTunes에서 커버를 찾는 중...';
+    renderEditingCoverResults();
+
+    let match = null;
+    try {
+        match = await searchItunesCover(song);
+    } catch {}
+    if (token !== _efCoverSearchToken || !document.getElementById('song-modal').classList.contains('open')) return;
+    btn.disabled = false;
+    btn.textContent = '커버 찾기';
+
+    const options = [];
+    const seen = new Set();
+    for (const candidate of match?.candidates || []) {
+        if (!candidate.coverUrl || seen.has(candidate.coverUrl)) continue;
+        seen.add(candidate.coverUrl);
+        options.push({ coverUrl: candidate.coverUrl, title: candidate.title, sub: candidate.album || candidate.artist, source: 'iTunes', score: candidate.score });
+        if (options.length >= 6) break;
+    }
+    const itunesCount = options.length;
+    const youtube = coverFromSongYoutubeUrl(song);
+    if (youtube?.coverUrl && !seen.has(youtube.coverUrl)) {
+        options.push({ coverUrl: youtube.coverUrl, title: 'YouTube 썸네일', sub: '클립·MR 영상', source: 'YouTube' });
+    }
+    _efCoverOptions = options;
+
+    const coverInput = document.getElementById('ef-cover');
+    const confident = itunesCount === 1 && options[0].score >= COVER_ITUNES_CONFIDENT_SCORE;
+    if (auto && !coverInput.value.trim() && confident) {
+        applyEditingCoverOption(0, '커버를 자동으로 넣었어요. 다르면 다른 후보를 고르거나 지우세요. 저장해야 반영돼요.');
+        _efCoverAutoUrl = options[0].coverUrl;
+        return;
+    }
+    _efCoverStatus = itunesCount
+        ? `후보 ${options.length}개 · 눌러서 고르면 커버 칸에 들어가요`
+        : options.length
+            ? 'iTunes에서 못 찾았어요. 영상 썸네일을 쓸 수 있어요'
+            : 'iTunes에서 못 찾았어요. 이미지 주소를 직접 넣어주세요';
+    renderEditingCoverResults();
+}
+
+function applyEditingCoverOption(index, status = '') {
+    const option = _efCoverOptions[index];
+    if (!option) return;
+    _efCoverAutoUrl = '';
+    document.getElementById('ef-cover').value = option.coverUrl;
+    updateCoverPreview(option.coverUrl);
+    _efCoverStatus = status || '선택했어요. 저장해야 반영돼요.';
+    renderEditingCoverResults();
+}
+
+// 제목과 가수가 모두 있고 커버가 비어 있을 때만 자동으로 찾는다.
+// 자동으로 넣은 커버는 제목·가수를 고치면 비우고 다시 찾는다.
+function onEditingSongIdentityChange() {
+    clearTimeout(_efCoverAutoTimer);
+    const coverInput = document.getElementById('ef-cover');
+    const current = coverInput.value.trim();
+    if (current && current !== _efCoverAutoUrl) return;
+    if (current) {
+        coverInput.value = '';
+        updateCoverPreview('');
+        _efCoverAutoUrl = '';
+    }
+    if (!document.getElementById('ef-title').value.trim() || !document.getElementById('ef-artist').value.trim()) return;
+    _efCoverAutoTimer = setTimeout(() => findEditingSongCover({ auto: true }), 300);
+}
 
 function updateCoverPreview(value) {
     const el = document.getElementById('ef-cover-preview');
@@ -6889,6 +7257,15 @@ function updateSkillDisplay(hoverVal) {
 async function saveSong() {
     const titleVal = document.getElementById('ef-title').value.trim();
     if (!titleVal) { document.getElementById('ef-title').focus(); return; }
+    const editingId = document.getElementById('ef-id').value;
+    const artistVal = document.getElementById('ef-artist').value.trim();
+    const duplicates = updateEditingSongDuplicate();
+    // 수정할 때는 제목·가수를 바꾼 경우에만 묻는다(원래부터 겹치던 곡은 매번 묻지 않음).
+    const identityChanged = !_efOriginalIdentity || !songbookSameIdentity(_efOriginalIdentity, { title: titleVal, artist: artistVal });
+    if (duplicates.length && identityChanged) {
+        const list = duplicates.slice(0, 5).map(songbookDuplicateLabel).join('\n');
+        if (!confirm(`이미 등록된 곡이 있어요.\n${list}\n\n그래도 ${editingId ? '저장' : '추가'}할까요?`)) return;
+    }
     const mrInput = document.getElementById('ef-mr').value.trim();
     const clipInput = document.getElementById('ef-clip').value.trim();
     const coverInput = document.getElementById('ef-cover').value.trim();
