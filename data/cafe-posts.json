@@ -3,8 +3,14 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-11-15T07:14:41.215Z",
+  "fetchedAt": "2026-11-15T14:50:02.027Z",
   "posts": [
+    {
+      "id": "40633",
+      "title": "택배 보내는",
+      "publishedAt": "2026-11-15T16:32:51.350+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40633"
+    },
     {
       "id": "40619",
       "title": "어제 아침 6시에",
@@ -28,12 +34,6 @@
       "title": "어",
       "publishedAt": "2026-11-09T13:39:54.170+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40553"
-    },
-    {
-      "id": "40544",
-      "title": "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
-      "publishedAt": "2026-11-08T14:21:38.467+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40544"
     }
   ]
 }
