@@ -49,7 +49,7 @@ function calendar({ width = 1280, search = '', readLinks = async () => response(
         loadBroadcastInfos: async (from, to) => { broadcasts.push({ from, to }); },
         renderCalendar() { renders++; }, setTimeout: () => 1, clearTimeout() {},
         loadMemoCards: async () => {}, renderMobileSchedule() {},
-        calendarEventsForDate: () => [], broadcastInfoForDate: () => null, broadcastTimeLabel: () => '', broadcastLinks: () => [],
+        calendarEventsForDate: () => [], anniversariesForDate: () => [], broadcastInfoForDate: () => null, broadcastTimeLabel: () => '', broadcastLinks: () => [],
         dayEmptyHtml: message => message, esc: value => String(value ?? ''), safeUrl: value => value,
         ytLinkType: () => 'long', jsArg: value => JSON.stringify(value),
         typeOf: () => ({ icon: '', label: '' }), typeStyle: () => '', eventHotclipUrls: () => [], eventYoutubeLinks: () => [],

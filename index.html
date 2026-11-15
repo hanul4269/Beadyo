@@ -48,10 +48,10 @@
     <script defer src="beadyo-common.js?v=auth-security-20261105"></script>
     <script defer src="patch-notes.js?v=common-20260918"></script>
     <link rel="stylesheet" href="explore.css?v=content-game-log-20261031">
-    <script defer src="explore-data.js?v=content-game-log-20261031"></script>
+    <script defer src="explore-data.js?v=records-20261114"></script>
     <script defer src="explore.js?v=release-20261011-all"></script>
-    <script defer src="index-app.js?v=types-20261112"></script>
-    <script defer src="explore-shell.js?v=content-game-log-20261031"></script>
+    <script defer src="index-app.js?v=review-20261115"></script>
+    <script defer src="explore-shell.js?v=review-20261115"></script>
     <link rel="stylesheet" href="home.css?v=photostrip-centered-20261102">
     <script defer src="home-data.js?v=release-20261011-all"></script>
     <script defer src="home-visual.js?v=release-20261011-all"></script>
@@ -60,7 +60,7 @@
     <script defer src="monthly-data.js?v=release-20261011-all"></script>
     <script defer src="monthly.js?v=release-20261011-all"></script>
     <script defer src="video-metadata.js?v=release-20261011-all"></script>
-    <script defer src="home.js?v=types-20261112"></script>
+    <script defer src="home.js?v=review-20261115"></script>
     <link rel="stylesheet" href="page-footer.css?v=release-20261011-all">
     <script defer src="page-footer.js?v=release-20261011-all"></script>
     <script>
@@ -599,6 +599,23 @@
             color: #4f7f25;
             border-color: rgba(255,255,255,0.72);
             box-shadow: 0 2px 8px rgba(0,0,0,0.14);
+        }
+
+        @media (max-width: 640px) {
+            .tab-subnav {
+                justify-content: flex-start;
+                overflow-x: auto;
+                scrollbar-width: none;
+                gap: 5px;
+                padding-inline: 8px;
+            }
+            .tab-subnav::-webkit-scrollbar { display: none; }
+            .subtab {
+                flex-shrink: 0;
+                min-width: 0;
+                padding: 0 11px;
+                white-space: nowrap;
+            }
         }
 
         /* ── 콘텐츠 ── */
@@ -1994,7 +2011,9 @@
     </div>
     <nav class="tab-subnav" id="content-subnav" aria-label="CONTENT 하위 메뉴">
         <button type="button" class="subtab" data-content-tab="5" onclick="switchTab(5)">기획 콘텐츠</button>
+        <button type="button" class="subtab" data-content-tab="9" onclick="switchTab(9)">참가 콘텐츠</button>
         <button type="button" class="subtab" data-content-tab="8" onclick="switchTab(8)">플레이한 게임</button>
+        <button type="button" class="subtab" data-content-tab="10" onclick="switchTab(10)">같이보기</button>
     </nav>
     </div>
 
@@ -2082,7 +2101,7 @@
             <div class="qm-header-btns">
                 <button class="qm-header-btn" onclick="viewDesktop()">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-                    PC버전
+                    PC 버전
                 </button>
                 <button class="qm-header-btn guide-link-btn" onclick="openGuideModal()">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.3 9a3 3 0 1 1 5.4 1.8c-.9.7-1.7 1.3-1.7 2.7"/><circle cx="12" cy="17.5" r="0.8" fill="currentColor" stroke="none"/></svg>
@@ -2179,6 +2198,8 @@
             <iframe class="sheet-frame local-frame-host" id="frame-6" title="게임" loading="lazy" allow="fullscreen" allowfullscreen></iframe>
             <section class="sheet-frame home-root" id="frame-7" aria-label="HOME" hidden></section>
             <iframe class="sheet-frame local-frame-host" id="frame-8" title="플레이한 게임" loading="lazy"></iframe>
+            <iframe class="sheet-frame local-frame-host" id="frame-9" title="참가 콘텐츠" loading="lazy" allow="clipboard-write"></iframe>
+            <iframe class="sheet-frame local-frame-host" id="frame-10" title="같이보기" loading="lazy"></iframe>
         </div>
     </div>
 

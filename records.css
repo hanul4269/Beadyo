@@ -1,0 +1,141 @@
+/* 참가 콘텐츠·같이 본 작품 — '플레이한 게임' 페이지의 기본 스타일 위에 덧붙임 */
+@import url('game-log.css?v=game-images-20261103');
+
+.copy-buffer{position:fixed;left:-9999px;top:0;opacity:0}
+.toolbar .chip-row{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+.filter-chip{min-height:32px;padding:5px 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface-soft);color:var(--muted);font-size:12px;font-weight:650}
+.filter-chip[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent-dark);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
+.filter-chip:hover{color:var(--accent-dark)}
+
+.record-years{display:flex;flex-direction:column;gap:30px;margin-top:26px}
+.year-head{display:flex;align-items:baseline;gap:10px;margin:0 0 13px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+.year-head h2{margin:0;font-size:22px;letter-spacing:-.6px;color:var(--accent-dark);font-variant-numeric:tabular-nums}
+.year-count{font-size:12px;color:var(--muted)}
+.record-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.record-card{display:flex;flex-direction:column;gap:9px;min-width:0;padding:16px 16px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:var(--shadow)}
+.record-card.has-image{padding-top:0;overflow:hidden}
+.record-image{display:block;width:calc(100% + 32px);margin:0 -16px 4px;aspect-ratio:16/9;object-fit:cover;background:var(--accent-soft)}
+.record-image-link{display:block;position:relative;margin:0 -16px 4px;overflow:hidden}
+.record-image-link .record-image{width:100%;margin:0;transition:transform .25s}
+.record-image-link:hover .record-image{transform:scale(1.03)}
+.record-image-link::after{content:"▶";position:absolute;right:10px;bottom:10px;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#000a;color:#fff;font-size:11px}
+.record-grid{align-items:stretch}
+.record-card>.record-image,.record-card>.record-image-link,.record-card>.record-fallback{flex-shrink:0}
+.record-fallback{display:grid;place-items:center;margin:0 -16px 4px;aspect-ratio:16/9;background:linear-gradient(135deg,var(--accent-soft),var(--surface-soft));color:var(--accent-dark)}
+.record-fallback span{font-size:20px;font-weight:800;letter-spacing:-.5px;opacity:.45}
+.record-fallback[data-category="VR"]{background:linear-gradient(135deg,#dfe9fb,#f1ecfb)}
+.record-fallback[data-category="마인크래프트"]{background:linear-gradient(135deg,#e2f0d4,#efe6d6)}
+.record-fallback[data-category="기타 게임"]{background:linear-gradient(135deg,#f6e6d4,#f3edf8)}
+html[data-theme="dark"] .record-fallback{background:linear-gradient(135deg,var(--accent-soft),var(--surface-soft))}
+.record-meta{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.record-when{font-size:12px;font-weight:750;color:var(--ink);font-variant-numeric:tabular-nums;margin-right:2px}
+.category-chip,.tag-chip{font-size:10px;font-weight:750;line-height:1.5;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.category-chip{background:var(--accent-soft);color:var(--accent-dark)}
+.tag-chip{border:1px solid var(--line);color:var(--muted)}
+.record-title{margin:0;font-size:16px;line-height:1.4;letter-spacing:-.4px;font-weight:780;overflow-wrap:anywhere}
+.record-facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;margin:0;font-size:12px}
+.record-facts dt{color:var(--muted)}
+.record-facts dd{margin:0;overflow-wrap:anywhere}
+.record-result{margin:0;padding:9px 11px;border-radius:9px;background:var(--surface-soft);font-size:12px;line-height:1.65;white-space:pre-line;overflow-wrap:anywhere}
+.record-note{margin:0;font-size:12px;line-height:1.6;color:var(--muted);white-space:pre-line;overflow-wrap:anywhere}
+.record-links{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:auto;padding-top:4px}
+.record-link{font-size:11px;font-weight:700;color:var(--accent-dark);text-decoration:none;padding:4px 9px;border-radius:6px;background:var(--accent-soft)}
+.record-link:hover{text-decoration:underline;text-underline-offset:3px}
+.record-edit{margin-left:auto;font-size:11px;font-weight:700;padding:4px 10px;border:1px solid var(--line);border-radius:6px;background:var(--surface-soft);color:var(--muted)}
+
+/* 같이 본 작품 */
+.watch-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:0 0 4px}
+.watch-stat{padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.watch-stat strong{display:block;font-size:26px;letter-spacing:-.8px;color:var(--accent-dark);font-variant-numeric:tabular-nums}
+.watch-stat span{font-size:12px;color:var(--muted)}
+.watch-list{display:flex;flex-direction:column;gap:8px}
+.watch-row{display:grid;grid-template-columns:44px 84px minmax(0,1fr) auto;align-items:center;gap:14px;padding:9px 15px 9px 10px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.watch-date{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.watch-main{min-width:0;display:flex;flex-direction:column;gap:3px}
+.watch-title{margin:0;font-size:15px;font-weight:750;letter-spacing:-.35px;overflow-wrap:anywhere}
+.watch-sub{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.watch-actions{display:flex;align-items:center;gap:6px}
+
+/* 편집 창 */
+.record-dialog{width:min(640px,calc(100% - 24px));max-height:calc(100dvh - 40px);padding:0;border:1px solid var(--line);border-radius:18px;background:var(--surface);color:var(--ink);box-shadow:0 24px 100px #0004;overflow:auto;overscroll-behavior:contain}
+.record-dialog::backdrop{background:#11200e99;backdrop-filter:blur(4px)}
+.dialog-top{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:3;background:var(--surface);border-bottom:1px solid var(--line)}
+.dialog-top h2{margin:0;font-size:18px;letter-spacing:-.4px}
+.dialog-top button{display:grid;place-items:center;width:32px;height:32px;background:var(--surface-soft);border:1px solid var(--line);border-radius:50%;font-size:23px;line-height:1;color:var(--muted)}
+.form-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 14px;margin:0;padding:20px 22px;border:0;min-width:0}
+.form-fields>label{display:grid;gap:6px;min-width:0;font-size:12px;font-weight:700}
+.form-fields>label.span-2{grid-column:1/-1}
+.form-fields b{color:#c2414b}
+.form-fields i{font-style:normal;font-weight:400;font-size:11px;color:var(--muted)}
+.form-fields input,.form-fields select,.form-fields textarea{width:100%;min-width:0;min-height:42px;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--surface-soft);font:inherit;font-weight:400;color:var(--ink)}
+.form-fields textarea{resize:vertical}
+.form-message{margin:0;padding:0 22px;color:#a32530;font-size:12px;line-height:1.6}
+.form-message:empty{display:none}
+.dialog-footer{position:sticky;bottom:0;display:flex;justify-content:flex-end;gap:9px;margin-top:8px;padding:14px 22px;border-top:1px solid var(--line);background:var(--surface)}
+.danger-action{margin-right:auto;min-height:40px;padding:9px 15px;border:1px solid #e6b9bd;border-radius:9px;background:transparent;color:#b3303b;font-size:12px;font-weight:700}
+html[data-theme="dark"] .danger-action{border-color:#6b3337;color:#ff9aa2}
+
+/* 편집자 추가 버튼: 오른쪽 끝, 숫자 상자와 겹치지 않게 */
+.archive-actions #add-btn{margin-left:auto}
+.watch-stats+.archive-actions{margin-top:16px}
+
+/* 카드형 / 리스트형 전환 */
+.list-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px}
+.result-count{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.list-controls+.record-years{margin-top:14px}
+.view-toggle{display:inline-flex;flex-shrink:0;gap:2px;padding:3px;border:1px solid var(--line);border-radius:9px;background:var(--surface)}
+.view-toggle button{display:flex;align-items:center;justify-content:center;gap:5px;min-height:32px;padding:0 9px;border:0;border-radius:6px;background:transparent;color:var(--muted);font-size:11px;font-weight:650;cursor:pointer}
+.view-toggle button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent-dark)}
+.view-toggle button:hover{color:var(--accent-dark)}
+.view-toggle svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* 참가 콘텐츠 리스트형 */
+.record-list{display:flex;flex-direction:column;gap:10px}
+.record-row{display:grid;grid-template-columns:136px minmax(0,1fr) auto;align-items:center;gap:16px;min-width:0;padding:10px 15px 10px 10px;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:var(--shadow)}
+.record-thumb{min-width:0;border-radius:8px;overflow:hidden}
+.record-thumb>.record-image,.record-thumb>.record-image-link,.record-thumb>.record-fallback{width:100%;margin:0}
+.record-thumb .record-fallback span{font-size:12px}
+.record-row-main{min-width:0;display:flex;flex-direction:column;gap:4px}
+.record-row .record-title{margin:0;font-size:15px}
+.record-row-detail{margin:0;font-size:12px;color:var(--muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.record-row .record-links{margin:0;justify-content:flex-end}
+
+/* 같이 본 작품 포스터 */
+.poster-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:20px 14px}
+.poster-card{display:flex;flex-direction:column;gap:9px;min-width:0}
+.poster-frame{position:relative;aspect-ratio:2/3;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--surface-soft);box-shadow:var(--shadow)}
+.poster-image{display:block;width:100%;height:100%;object-fit:cover}
+.poster-kind{position:absolute;left:8px;top:8px;padding:2px 7px;border-radius:999px;background:#000a;color:#fff;font-size:10px;font-weight:700}
+.poster-fallback{display:grid;place-items:center;width:100%;height:100%;background:linear-gradient(160deg,var(--accent-soft),var(--surface-soft));color:var(--accent-dark)}
+.poster-fallback span{font-size:15px;font-weight:800;opacity:.5}
+.poster-body{display:flex;flex-direction:column;gap:3px;min-width:0}
+.poster-title{margin:0;font-size:14px;font-weight:750;line-height:1.4;letter-spacing:-.3px;overflow-wrap:anywhere}
+.poster-date{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.poster-body .record-edit{align-self:flex-start;margin-top:4px}
+.watch-thumb{width:100%;aspect-ratio:2/3;border-radius:6px;overflow:hidden;background:var(--surface-soft)}
+.watch-thumb .poster-fallback span{font-size:9px}
+
+@media(max-width:1000px){.record-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){
+    .record-years{gap:24px;margin-top:20px}
+    .year-head h2{font-size:19px}
+    .record-grid{grid-template-columns:minmax(0,1fr);gap:10px}
+    .record-card{padding:14px 13px 12px;border-radius:12px}
+    .record-image{width:calc(100% + 26px);margin:0 -13px 4px}
+    .record-image-link,.record-fallback{margin:0 -13px 4px}
+    .record-title{font-size:15px}
+    .watch-row{grid-template-columns:40px minmax(0,1fr) auto;grid-template-areas:"thumb main actions" "thumb date actions";gap:3px 11px;padding:9px 11px 9px 9px}
+    .watch-thumb{grid-area:thumb}.watch-main{grid-area:main}.watch-date{grid-area:date;font-size:11px}.watch-actions{grid-area:actions}
+    .list-controls{margin-top:16px}
+    .view-toggle button{font-size:10px;padding:0 8px}
+    .poster-grid{grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:16px 10px}
+    .poster-title{font-size:13px}
+    .record-list{gap:8px}
+    .record-row{grid-template-columns:104px minmax(0,1fr);grid-template-areas:"thumb main" "thumb links";gap:6px 12px;padding:9px}
+    .record-thumb{grid-area:thumb}.record-row-main{grid-area:main}.record-row .record-links{grid-area:links;justify-content:flex-start}
+    .record-row .record-title{font-size:14px}
+    .form-fields{grid-template-columns:minmax(0,1fr);padding:18px 16px}
+    .form-message{padding-inline:16px}
+    .dialog-footer{padding:12px 16px}
+    .filter-chip{font-size:11px;padding:4px 10px;min-height:30px}
+}

@@ -1852,7 +1852,7 @@
                         </button>
                         <button class="action-btn" type="button" onclick="showLadderResults()">
                             <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/></svg>
-                            결과보기
+                            결과 보기
                         </button>
                         <button class="action-btn reset" type="button" onclick="shuffleLadder()">
                             사다리 섞기
@@ -1959,7 +1959,7 @@
                             <span class="lever-base"></span>
                         </button>
                         <div class="gacha-dock" id="gacha-dock">
-                            <span class="winner-label">나오는곳</span>
+                            <span class="winner-label">나오는 곳</span>
                         </div>
                     </div>
                     <div class="gacha-prize-modal" id="gacha-prize-modal" onclick="if(event.target === this) closeGachaPrize()" hidden>
@@ -1989,7 +1989,7 @@
         <section class="game-panel" id="nikke-panel">
             <div class="play-stage">
                 <div class="nikke-frame">
-                    <iframe data-src="nikke.html?v=no-playlists-20261010" title="NIKKE 가이드" loading="lazy" scrolling="no"></iframe>
+                    <iframe data-src="nikke.html?v=storyline-20261115" title="NIKKE 가이드" loading="lazy" scrolling="no"></iframe>
                 </div>
             </div>
         </section>
@@ -3155,7 +3155,7 @@
             const statusLast = $('gacha-status-last');
             if (statusLast) statusLast.textContent = '-';
             document.querySelector('.gacha-machine')?.classList.remove('dispensing');
-            $('gacha-dock').innerHTML = '<span class="winner-label">나오는곳</span>';
+            $('gacha-dock').innerHTML = '<span class="winner-label">나오는 곳</span>';
             $('gacha-bowl')?.classList.remove('shuffling');
         }
 

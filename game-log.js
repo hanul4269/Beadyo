@@ -147,7 +147,7 @@
         stats.append(recent, total);
         const detail = element('span', 'row-detail');
         detail.setAttribute('aria-hidden', 'true');
-        detail.append(element('span', '', '상세보기'));
+        detail.append(element('span', '', '상세 보기'));
         detail.innerHTML += '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 5 5 5-5 5"/></svg>';
         button.append(gameArt(game), title, stats, detail);
         button.addEventListener('click', () => openDetail(game, button));

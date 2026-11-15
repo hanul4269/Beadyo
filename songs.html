@@ -850,7 +850,7 @@
                     ? `"${esc(state.query)}" 검색 결과가 없어요`
                     : state.filter === 'all' ? '등록된 노래가 없어요'
                     : state.filter === 'original' ? '오리지널 곡이 없어요'
-                    : state.filter === 'cover' ? '커버 곡이 없어요'
+                    : state.filter === 'cover' ? '커버곡이 없어요'
                     : '라이브 영상이 없어요';
                 grid.innerHTML = `<div class="empty-state">
                     <img class="empty-state-img" src="game-assets/gobookticon/gobook-10.webp" alt="">
@@ -1042,7 +1042,7 @@
 
         async function deleteSong(id, title) {
             if (!state.isEditor) return;
-            if (!confirm(`"${title}" 을(를) 삭제하시겠습니까?`)) return;
+            if (!confirm(`"${title}"을(를) 삭제하시겠습니까?`)) return;
             await ensureDb();
             const { error } = await db.from('youtube_songs').delete().eq('id', id).select('id').single();
             if (error) { showToast('삭제 실패: ' + error.message); return; }

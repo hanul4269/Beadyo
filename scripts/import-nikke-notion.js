@@ -114,7 +114,6 @@ function renderPage(page, article) {
     <main class="archive-shell">
         <p class="archive-eyebrow">${page.eyebrow}</p>
         ${article}
-        <p class="archive-origin">한울의 Notion HTML 내보내기에서 가져온 자료입니다.</p>
     </main>
     <dialog class="lightbox" id="lightbox" aria-label="이미지 크게 보기">
         <button class="lightbox-close" type="button" aria-label="닫기">×</button>

@@ -21,14 +21,14 @@
     <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
     <link rel="preload" href="supabase.min.js?v=supabase-2-119-0" as="script">
-    <link rel="preload" href="app.js?v=types-20261112" as="script">
+    <link rel="preload" href="app.js?v=review-20261115" as="script">
     <script defer src="supabase.min.js?v=supabase-2-119-0"></script>
     <script defer src="beadyo-common.js?v=auth-security-20261105"></script>
     <script defer src="modal-focus.js?v=release-20261011-all"></script>
     <link rel="stylesheet" href="explore.css?v=release-20261011-all">
     <script defer src="explore-data.js?v=release-20261011-all"></script>
     <script defer src="explore.js?v=release-20261011-all"></script>
-    <script defer src="app.js?v=types-20261112"></script>
+    <script defer src="app.js?v=review-20261115"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="assets/fonts/pretendard/pretendard-subset.css?v=subset-20261112" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="assets/fonts/pretendard/pretendard-subset.css?v=subset-20261112" rel="stylesheet"></noscript>
@@ -500,6 +500,22 @@
             flex-shrink: 0;
             margin-bottom: 2px;
         }
+        .anniv-mark {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 16px; height: 16px; padding: 0; flex-shrink: 0;
+            border: none; border-radius: 50%; cursor: pointer;
+            background: transparent; color: #4caf50;
+            font-size: 11px; line-height: 1;
+            transition: transform 0.1s, background 0.1s;
+        }
+        .anniv-mark:hover, .anniv-mark:focus-visible { transform: scale(1.25); background: rgba(76,175,80,0.14); }
+        .anniv-list { display: flex; flex-direction: column; gap: 6px; }
+        .anniv-card {
+            padding: 9px 12px; border-radius: 10px;
+            background: rgba(76,175,80,0.08); border: 1px solid rgba(76,175,80,0.28);
+        }
+        .anniv-title { font-size: 14px; font-weight: 800; color: var(--text, #333); }
+        .anniv-since { font-size: 12px; color: var(--muted); margin-top: 2px; }
         .yt-badges { display: flex; gap: 2px; }
         .yt-badge {
             display: inline-flex;
@@ -3165,6 +3181,15 @@
                 flex-direction: column;
                 gap: 8px;
             }
+            .mobile-anniv {
+                display: block; width: 100%; margin: -2px 0 10px;
+                padding: 7px 12px; border-radius: 12px;
+                background: rgba(76,175,80,0.1); border: 1px solid rgba(76,175,80,0.3);
+                color: #2e7d32; font-size: 13px; font-weight: 800;
+                text-align: left; cursor: pointer;
+                overflow-wrap: anywhere;
+            }
+            html[data-theme="dark"] .mobile-anniv { color: #8fd694; }
             .mobile-event-pill {
                 position: relative;
                 overflow: hidden;
@@ -3580,7 +3605,7 @@
                 <svg viewBox="0 0 24 24"><path d="M4 16.5V20h3.5L18.2 9.3l-3.5-3.5L4 16.5Z"/><path d="m13.5 7 3.5 3.5"/><path d="M5 21h14"/></svg>
             </button>
         </div>
-        <a class="cal-sheet-link" href="./#schedule" target="_top">구) 스케쥴 바로가기</a>
+        <a class="cal-sheet-link" href="./#schedule" target="_top">구) 스케줄 바로가기</a>
     </div>
 </div>
 
@@ -3678,7 +3703,7 @@
         </div>
         <p class="schedule-copy-hint" id="editCopyHint" hidden>날짜와 내용을 확인한 뒤 저장하세요. 원본 일정은 그대로 유지됩니다.</p>
         <div class="field">
-            <div class="schedule-type-label" id="editTypeLabel">컨텐츠 유형</div>
+            <div class="schedule-type-label" id="editTypeLabel">콘텐츠 유형</div>
             <input type="hidden" id="editType">
             <div class="schedule-type-options" id="editTypeOptions" role="group" aria-labelledby="editTypeLabel"></div>
         </div>
@@ -3725,7 +3750,7 @@
             <input type="text" id="editSubtitle" placeholder="부제목">
         </div>
         <div class="field">
-            <label for="editCollab">합방멤버</label>
+            <label for="editCollab">합방 멤버</label>
             <input type="text" id="editCollab" placeholder="예: 구슬요, 따린, 냐냐, 엘시">
         </div>
         <div class="field">

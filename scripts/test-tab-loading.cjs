@@ -29,7 +29,7 @@ function element() {
     };
 }
 function harness({ deferAnimation = false, url = 'http://localhost:3000/#content' } = {}) {
-    const frames = Array.from({ length: 9 }, (_, i) => {
+    const frames = Array.from({ length: 11 }, (_, i) => {
         const frame = element();
         frame.id = `frame-${i}`;
         frame.requests = [];
@@ -65,7 +65,8 @@ function harness({ deferAnimation = false, url = 'http://localhost:3000/#content
     let nextTimer = 0;
     const ctx = vm.createContext({
         HOME_TAB_INDEX: 7, SONGBOOK_TAB_INDEX: 2, CONTENT_TAB_INDEX: 5, GAME_LOG_TAB_INDEX: 8, GAME_TAB_INDEX: 6, MUSIC_TAB_INDEX: 4,
-        TAB_ROUTES: ['calendar', 'schedule', 'songbook', 'live', 'music', 'content', 'games', 'home', 'game-log'],
+        PARTICIPATION_TAB_INDEX: 9, WATCHLIST_TAB_INDEX: 10, CONTENT_CHILD_TAB_INDEXES: [8, 9, 10],
+        TAB_ROUTES: ['calendar', 'schedule', 'songbook', 'live', 'music', 'content', 'games', 'home', 'game-log', 'participation', 'watchlist'],
         MUSIC_PAGES: { songs: {}, dance: {}, gembox: {} },
         URLSearchParams, location, history, authServiceUnavailable: false,
         document: {

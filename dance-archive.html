@@ -7,7 +7,7 @@
     <script src="site-theme.js?v=release-20261011-all"></script>
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="robots" content="noindex, nofollow">
-    <title>구슬요 춤영상 검토페이지</title>
+    <title>구슬요 춤영상 검토 페이지</title>
     <link rel="icon" href="logo-icon.webp">
     <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
     <script src="modal-focus.js?v=release-20261011-all"></script>
@@ -824,7 +824,7 @@
             <header class="topbar">
                 <div>
                     <div class="eyebrow">DANCE CLIP WORKSPACE</div>
-                    <h1>구슬요 춤영상 검토페이지</h1>
+                    <h1>구슬요 춤영상 검토 페이지</h1>
                     <div class="top-note">SOOP VOD 클립, 캐치, YouTube Shorts에서 춤영상 후보를 모아 검토하고 정리하는 별도 화면입니다. 가져온 후보는 이 브라우저에 저장되고, 채택된 항목만 공개 페이지에 반영됩니다.</div>
                     <div class="top-actions">
                         <button class="import-btn" id="importDataBtn">데이터 가져오기</button>
@@ -1618,7 +1618,7 @@
                 const { data: isEditor, error: rpcError } = await db.rpc('is_beadyo_editor');
                 if (rpcError) throw rpcError;
                 if (isEditor !== true) {
-                    showAccessGate('편집자만 이용할 수 있는 페이지예요.', '편집자로 등록된 계정으로 로그인해야 춤영상 검토페이지를 볼 수 있습니다. <a href="index.html">메인으로 돌아가기</a>');
+                    showAccessGate('편집자만 이용할 수 있는 페이지예요.', '편집자로 등록된 계정으로 로그인해야 춤영상 검토 페이지를 볼 수 있습니다. <a href="index.html">메인으로 돌아가기</a>');
                     return;
                 }
             } catch (error) {

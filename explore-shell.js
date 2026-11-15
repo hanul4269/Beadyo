@@ -86,7 +86,7 @@
                 const chosen = config.musicIds.map(id => rows.find(row => row.id === id)).filter(Boolean);
                 return chosen.length ? `<ul>${chosen.map(row => `<li><strong>${esc(row.title)}</strong><span class="explore-meta">${esc(row.upload_date || '게시일 미등록')} · 오리지널</span>${E.link(row.youtube_url, 'MUSIC에 등록된 영상')}</li>`).join('')}</ul>` : '<p class="explore-state">소개할 곡의 등록 정보를 확인하지 못했습니다.</p>';
             });
-            E.area(picks, '주요 컨텐츠', () => E.readIds('content_archive', 'id,title,summary,broadcast_date', config.contentIds), rows => {
+            E.area(picks, '주요 콘텐츠', () => E.readIds('content_archive', 'id,title,summary,broadcast_date', config.contentIds), rows => {
                 const chosen = config.contentIds.map(id => rows.find(row => row.id === id)).filter(Boolean);
                 return chosen.length ? `<ul>${chosen.map(row => {
                     const intro = config.contentIntros?.[row.id];

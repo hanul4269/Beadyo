@@ -95,7 +95,7 @@ function applyTheme(theme, options = {}) {
 
 function syncThemeToFrames(targetFrame = null) {
     const msg = { type: 'beadyo-theme-sync', theme: currentTheme };
-    const ids = ['frame-0', 'frame-2', 'frame-3', 'frame-4', 'frame-5', 'frame-6', 'frame-8', 'guide-frame'];
+    const ids = ['frame-0', 'frame-2', 'frame-3', 'frame-4', 'frame-5', 'frame-6', 'frame-8', 'frame-9', 'frame-10', 'guide-frame'];
     const frames = targetFrame
         ? (ids.includes(targetFrame.id) ? [targetFrame] : [])
         : ids.map(id => document.getElementById(id));
@@ -176,25 +176,31 @@ function markPwaGuideSeen() {
 }
 
 const TABS = [
-    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'types-20261112' },
+    { type: 'calendar', src: 'calendar.html', directUrl: 'calendar.html', assetVersion: 'review-20261115' },
     { type: 'schedule', id: '1vXzzx7UibAcUwM26Lp2InUnhNkITLd7-JkqB4g_FudM' },
-    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'security-20261025' },
-    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'security-20261025' },
-    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'security-20261025' },
+    { type: 'songbook', src: 'songbook.html?view=songbook', directUrl: 'songbook.html?view=songbook', assetVersion: 'review-20261115' },
+    { type: 'songbook', src: 'songbook.html?view=live', directUrl: 'songbook.html?view=live', assetVersion: 'review-20261115' },
+    { type: 'songs', src: 'songs.html', directUrl: 'songs.html', assetVersion: 'review-20261115' },
     { type: 'content', src: 'content.html', directUrl: 'content.html', assetVersion: 'security-20261025' },
-    { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'security-20261022' },
+    { type: 'games', src: 'games.html', directUrl: 'games.html', assetVersion: 'storyline-20261115' },
     { type: 'home' },
-    { type: 'game-log', src: 'game-log.html', directUrl: 'game-log.html', assetVersion: '20261028' },
+    { type: 'game-log', src: 'game-log.html', directUrl: 'game-log.html', assetVersion: 'review-20261115' },
+    { type: 'participation', src: 'participation.html', directUrl: 'participation.html', assetVersion: 'review-20261115' },
+    { type: 'watchlist', src: 'watchlist.html', directUrl: 'watchlist.html', assetVersion: 'review-20261115' },
 ];
 
 const CONTENT_TAB_INDEX = 5;
 const GAME_LOG_TAB_INDEX = 8;
+const PARTICIPATION_TAB_INDEX = 9;
+const WATCHLIST_TAB_INDEX = 10;
+const CONTENT_CHILD_TAB_INDEXES = [GAME_LOG_TAB_INDEX, PARTICIPATION_TAB_INDEX, WATCHLIST_TAB_INDEX];
+const LOCAL_PAGE_TYPES = new Set(['calendar', 'songs', 'songbook', 'content', 'games', 'game-log', 'participation', 'watchlist']);
 const GAME_TAB_INDEX = 6;
 const HOME_TAB_INDEX = 7;
-const TAB_ROUTES = ['calendar', 'schedule', 'songbook', 'live', 'music', 'content', 'games', 'home', 'game-log'];
+const TAB_ROUTES = ['calendar', 'schedule', 'songbook', 'live', 'music', 'content', 'games', 'home', 'game-log', 'participation', 'watchlist'];
 const MUSIC_TAB_INDEX = 4;
 const MUSIC_PAGES = {
-    songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'security-20261025' },
+    songs: { src: 'songs.html', directUrl: 'songs.html', assetVersion: 'review-20261115' },
     dance: { src: 'dance.html', directUrl: 'dance.html', assetVersion: 'release-20261011-all' },
     gembox: { src: 'gembox.html', directUrl: 'gembox.html', assetVersion: 'release-20261011-all' },
     tractor: { src: 'tractor-service.html', directUrl: 'tractor-service.html', assetVersion: 'release-20261011-all' },
@@ -410,7 +416,7 @@ function getFrameUrl(index) {
         });
         return withFrameAssetVersion(child.pathname + child.search, tab.assetVersion);
     }
-    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'content' || tab.type === 'games' || tab.type === 'game-log') {
+    if (LOCAL_PAGE_TYPES.has(tab.type)) {
         return withFrameAssetVersion(tab.src, tab.assetVersion);
     }
     if (tab.type === 'schedule') return scheduleUrl(tab);
@@ -423,7 +429,7 @@ function getSheetDirectUrl(index) {
         return (MUSIC_PAGES[currentMusicPage] || MUSIC_PAGES.songs).directUrl;
     }
     const tab = TABS[index];
-    if (tab.type === 'calendar' || tab.type === 'songs' || tab.type === 'songbook' || tab.type === 'content' || tab.type === 'games' || tab.type === 'game-log') return tab.directUrl;
+    if (LOCAL_PAGE_TYPES.has(tab.type)) return tab.directUrl;
     if (tab.type === 'schedule') return scheduleUrl(tab);
     return `https://docs.google.com/spreadsheets/d/${tab.id}/edit#gid=${tab.gid}`;
 }
@@ -535,7 +541,7 @@ function updateMobileFab(index) {
     if (!isMobile) return;
     if (index === HOME_TAB_INDEX) { fab.classList.remove('show'); return; }
     const type = TABS[index]?.type;
-    if (type === 'calendar' || type === 'songs' || type === 'songbook' || type === 'content' || type === 'games' || type === 'game-log') {
+    if (LOCAL_PAGE_TYPES.has(type)) {
         fab.classList.remove('show');
         return;
     }
@@ -586,7 +592,7 @@ function updateMusicSubnav(activeIndex) {
 function updateContentSubnav(activeIndex) {
     const nav = document.getElementById('content-subnav');
     if (!nav) return;
-    nav.classList.toggle('open', activeIndex === CONTENT_TAB_INDEX || activeIndex === GAME_LOG_TAB_INDEX);
+    nav.classList.toggle('open', activeIndex === CONTENT_TAB_INDEX || CONTENT_CHILD_TAB_INDEXES.includes(activeIndex));
     nav.querySelectorAll('[data-content-tab]').forEach(button => {
         const active = Number(button.dataset.contentTab) === activeIndex;
         button.classList.toggle('active', active);
@@ -1051,12 +1057,12 @@ function openCalendarAdmin() {
 
 function openDanceReviewPage() {
     closeAuthMenu();
-    window.location.href = withFrameAssetVersion('dance-archive.html', 'security-20261025');
+    window.location.href = withFrameAssetVersion('dance-archive.html', 'review-20261115');
 }
 
 function openDevelopmentRequestsPage() {
     closeAuthMenu();
-    window.location.href = withFrameAssetVersion('development-requests.html', 'security-20261025');
+    window.location.href = withFrameAssetVersion('development-requests.html', 'review-20261115');
 }
 
 function openPatchNotesModal() {
@@ -1093,7 +1099,7 @@ async function updateAuthUI() {
         <div class="auth-menu" id="auth-menu">
             ${canAdmin ? `<button onclick="openCalendarAdmin()">⚙ 편집 설정</button>` : ''}
             <button onclick="openPatchNotesModal()">패치노트</button>
-            ${canAdmin ? `<button onclick="openDanceReviewPage()">춤영상 검토페이지</button>
+            ${canAdmin ? `<button onclick="openDanceReviewPage()">춤영상 검토 페이지</button>
             <button onclick="openDevelopmentRequestsPage()">개발요청란</button>` : ''}
             <button class="danger" onclick="signOut()">로그아웃</button>
         </div>
@@ -1135,7 +1141,7 @@ function switchTab(index, options = {}) {
     document.querySelector('.content').classList.toggle('external-sheet-view', index === 1);
     document.querySelectorAll('.tab').forEach((t, i) => {
         const tabIndex = Number(t.dataset.tabIndex ?? i);
-        const active = tabIndex === index || (tabIndex === CONTENT_TAB_INDEX && index === GAME_LOG_TAB_INDEX);
+        const active = tabIndex === index || (tabIndex === CONTENT_TAB_INDEX && CONTENT_CHILD_TAB_INDEXES.includes(index));
         t.classList.toggle('active', active);
         if (active) t.setAttribute('aria-current', 'page');
         else t.removeAttribute('aria-current');
@@ -1494,7 +1500,7 @@ function authRedirectTo() {
 
 async function signIn() {
     if (location.protocol === 'file:') {
-        alert('파일로 직접 열면 로그인이 안 돼요.\n저장소 폴더에서 로컬 미리보기를 실행해 주세요.\n\n./dev.sh\n\n그 다음 http://localhost:3000 에서 접속하면 로그인 가능해요.');
+        alert('파일로 직접 열면 로그인이 안 돼요.\n저장소 폴더에서 로컬 미리보기를 실행해 주세요.\n\n./dev.sh\n\n그다음 http://localhost:3000에서 접속하면 로그인 가능해요.');
         return;
     }
     if (!authDb || authServiceUnavailable) { openLoginModal(); return; }

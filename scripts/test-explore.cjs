@@ -28,8 +28,8 @@ test('date targets reject invalid dates and accept leap days', () => {
     for (const value of ['2025-02-29', '2026-02-30', '2026-13-01', '2026-01-01<script>', '', null]) assert.equal(D.validDate(value), '');
 });
 test('navigation retains game-log links under CONTENT and keeps SCHEDULE out of MORE', () => {
-    assert.deepEqual(D.menus.map(m => m.index).sort((a,b) => a-b), [0,1,2,3,4,5,6,7,8]);
-    assert.deepEqual(D.menus.map(m => m.route).sort(), ['calendar','content','game-log','games','home','live','music','schedule','songbook']);
+    assert.deepEqual(D.menus.map(m => m.index).sort((a,b) => a-b), [0,1,2,3,4,5,6,7,8,9,10]);
+    assert.deepEqual(D.menus.map(m => m.route).sort(), ['calendar','content','game-log','games','home','live','music','participation','schedule','songbook','watchlist']);
     assert.ok(D.menus.every(m => m.label && m.description));
     assert.deepEqual(D.menus.filter(m => !m.hidden && m.parentIndex === undefined).map(m => m.index).sort((a,b) => a-b), [0,2,3,4,5,6,7]);
     const gameLog = D.menus.find(m => m.route === 'game-log');

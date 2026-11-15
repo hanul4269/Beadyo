@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko" data-page="watchlist">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="방송에서 구슬요와 함께 본 영화·애니메이션·드라마·예능 목록">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://qlmcwobfldgmhwhptkfz.supabase.co; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+    <meta name="theme-color" content="#76ad39">
+    <title>같이보기 — BEADYO</title>
+    <link rel="icon" href="logo-icon.webp">
+    <script src="site-backdrop.js?v=release-20261011-all"></script>
+    <link rel="stylesheet" href="records.css?v=records-20261113c">
+    <script defer src="supabase.min.js?v=supabase-2-119-0"></script>
+    <script defer src="beadyo-common.js?v=auth-security-20261105"></script>
+    <script defer src="records-common.js?v=review-20261115"></script>
+    <script defer src="watchlist.js?v=records-20261113c"></script>
+</head>
+<body>
+    <a class="skip-link" href="#records">작품 목록으로 건너뛰기</a>
+    <header class="standalone-nav" id="standalone-nav">
+        <a class="brand" href="./#home"><img src="logo-icon.webp" width="28" height="28" alt="">BEADYO</a>
+        <a class="home-link" href="./#home">홈으로 <span aria-hidden="true">↗</span></a>
+    </header>
+    <main class="page">
+        <header class="page-heading">
+            <div>
+                <p class="eyebrow">BEADYO WATCH TOGETHER</p>
+                <h1>같이보기<span class="heading-dot" aria-hidden="true">.</span></h1>
+                <p class="lead">방송에서 함께 본 영화·애니메이션·드라마·예능.</p>
+            </div>
+            <div class="heading-symbol" aria-hidden="true">
+                <svg viewBox="0 0 80 80"><rect x="14" y="22" width="52" height="38" rx="6"/><path d="M14 32h52M24 22l6 10M38 22l6 10M52 22l6 10M35 40v12l10-6Z"/></svg>
+            </div>
+        </header>
+
+        <div class="archive-summary" id="summary" aria-live="polite"><span>기록을 불러오고 있어요.</span></div>
+        <div class="watch-stats" id="stats" hidden></div>
+        <div class="archive-actions">
+            <button id="add-btn" class="primary-action" type="button" hidden>+ 작품 추가</button>
+        </div>
+        <p id="notice" class="save-notice" role="status" hidden></p>
+
+        <section class="toolbar" aria-label="작품 검색과 필터">
+            <label class="search-field">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="7.3"/><path d="m16.2 16.2 4.4 4.4"/></svg>
+                <span class="sr-only">작품 제목 검색</span>
+                <input id="search" type="search" placeholder="작품 제목 검색" autocomplete="off" maxlength="100">
+            </label>
+            <label class="select-field"><span class="sr-only">연도</span><select id="year-filter"><option value="">전체 연도</option></select></label>
+            <div class="chip-row" id="kind-filter" role="group" aria-label="종류"></div>
+        </section>
+
+        <div class="list-controls">
+            <span id="result-count" class="result-count" role="status"></span>
+            <div id="view-toggle" class="view-toggle" role="group" aria-label="목록 보기 방식"></div>
+        </div>
+        <section id="records" class="record-years" aria-label="같이보기 작품 목록" aria-busy="true"></section>
+        <div id="empty" class="empty-state" hidden><h2>조건에 맞는 작품이 없어요</h2><p>다른 제목으로 검색하거나 종류를 바꿔보세요.</p><button id="reset" type="button">전체 보기</button></div>
+        <div id="load-error" class="empty-state" hidden><h2>기록을 불러오지 못했어요</h2><p>잠시 후 다시 시도해 주세요.</p><button id="retry" type="button">다시 불러오기</button></div>
+
+        <footer class="archive-footer">
+            <p><span class="source-dot" aria-hidden="true"></span>방송에서 함께 본 작품을 시청 날짜 기준으로 모아요. 날짜를 모르는 작품은 '날짜 미확인'에 있어요.</p>
+            <span class="footer-brand">BEADYO · WATCH TOGETHER</span>
+        </footer>
+    </main>
+
+    <dialog id="edit-dialog" class="record-dialog" aria-labelledby="edit-title">
+        <form id="edit-form" novalidate>
+            <div class="dialog-top"><h2 id="edit-title">작품 추가</h2><button type="button" id="close-edit" aria-label="닫기">×</button></div>
+            <fieldset class="form-fields">
+                <label class="span-2"><span>작품 제목 <b aria-hidden="true">*</b></span><input name="title" required maxlength="200" autocomplete="off"></label>
+                <label><span>종류 <b aria-hidden="true">*</b></span><select name="kind" required><option>영화</option><option>애니메이션</option><option>드라마</option><option>예능</option><option>기타</option></select></label>
+                <label><span>본 날짜 <i>모르면 비움</i></span><input name="watched_date" type="date"></label>
+                <label class="span-2"><span>회차 <i>애니메이션이면 예: 1~12화</i></span><input name="episodes" maxlength="60" autocomplete="off"></label>
+                <label class="span-2"><span>포스터 이미지 주소 <i>선택</i></span><input name="image_url" type="url" maxlength="2048" placeholder="https://beadyo.com/assets/watchlist/..." autocomplete="off"></label>
+                <label class="span-2"><span>한 줄 메모 <i>선택</i></span><textarea name="notes" rows="2" maxlength="1000"></textarea></label>
+            </fieldset>
+            <p id="edit-message" class="form-message" role="alert"></p>
+            <div class="dialog-footer">
+                <button id="delete-btn" class="danger-action" type="button" hidden>삭제</button>
+                <button id="cancel-edit" class="secondary-action" type="button">취소</button>
+                <button id="save-btn" class="primary-action" type="submit">저장</button>
+            </div>
+        </form>
+    </dialog>
+</body>
+</html>

@@ -579,7 +579,7 @@
             <div>
                 <p class="eyebrow">DEVELOPMENT REQUEST</p>
                 <h1>개발요청란</h1>
-                <p class="hero-copy">방송에 필요한 기능이나 수정 사항을 편하게 남겨주세요.<br>요청 상태는 접수 → 진행중 → 완료 순서로 표시됩니다.</p>
+                <p class="hero-copy">방송에 필요한 기능이나 수정 사항을 편하게 남겨주세요.<br>요청 상태는 접수 → 진행 중 → 완료 순서로 표시됩니다.</p>
             </div>
             <div class="user-chip" id="user-chip" hidden></div>
         </section>
@@ -608,7 +608,7 @@
                     <div class="filters" id="filters" aria-label="요청 상태 필터">
                         <button class="filter-btn active" type="button" data-filter="all">전체</button>
                         <button class="filter-btn" type="button" data-filter="received">접수</button>
-                        <button class="filter-btn" type="button" data-filter="in_progress">진행중</button>
+                        <button class="filter-btn" type="button" data-filter="in_progress">진행 중</button>
                         <button class="filter-btn" type="button" data-filter="completed">완료</button>
                     </div>
                 </div>
@@ -625,7 +625,7 @@
         const THEME_STORAGE_KEY = 'beadyo:theme';
         const STATUS_LABELS = {
             received: '접수',
-            in_progress: '진행중',
+            in_progress: '진행 중',
             completed: '완료',
         };
         const db = getBeadyoSupabaseClient({
@@ -985,7 +985,10 @@
             }
             current.status = status;
             renderRequests();
-            showToast(`상태를 ${STATUS_LABELS[status]}로 변경했어요.`);
+            const label = STATUS_LABELS[status];
+            const code = label.charCodeAt(label.length - 1) - 0xac00;
+            const ro = code >= 0 && code < 11172 && code % 28 && code % 28 !== 8 ? '으로' : '로';
+            showToast(`상태를 ${label}${ro} 변경했어요.`);
         }
 
         function startRequestEdit(id) {

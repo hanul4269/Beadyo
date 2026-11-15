@@ -90,7 +90,7 @@ function harness(options = {}) {
         OWNER_EMAIL: 'owner@example.test', safeImageUrl: value => value || '',
         checkEditorAccess: options.checkEditorAccess || (async () => true),
         resetScheduleDrag() {}, hideMemoTooltip() {}, clearCopiedEvent() {}, closeEditModal() {}, refreshScheduleCopyUi() {}, renderMemoSidebar() {},
-        renderSecondaryViews() {}, getHoliday: () => null, typeOf: () => ({ text: '', icon: '' }), eventCardStyle: () => '',
+        renderSecondaryViews() {}, getHoliday: () => null, anniversariesForDate: () => [], typeOf: () => ({ text: '', icon: '' }), eventCardStyle: () => '',
         chipFontSize: () => '12px', chipSubtitleFontSize: () => '10px', eventYoutubeLinks: () => [],
         stickerImg: () => '', MOOD_STICKERS: {}, toAmPm: value => value, ytLinkType: () => null, safeUrl: value => value,
         calendarEventsForDate: date => state.events.filter(ev => date >= ev.date && date <= (ev.end_date || ev.date)),

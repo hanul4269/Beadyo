@@ -31,9 +31,9 @@ window.addEventListener('storage', event => {
 const EVENT_TYPES = [
     { key: 'chat',    label: '소통',        icon: '☘', color: '#c8f5bc', text: '#2e6e22', border: '#8fd878' },
     { key: 'song',    label: '노래',        icon: '♪',  color: '#ffd0b8', text: '#a03a15', border: '#f5a07a' },
-    { key: 'solo',    label: '슬요 컨텐츠', icon: '✦', color: '#ffe7bf', text: '#a76016', border: '#f1bd73' },
-    { key: 'collab',  label: '참여 컨텐츠', icon: '＋', color: '#bff5ee', text: '#1a7a6e', border: '#7dddd6' },
-    { key: 'watch',   label: '같이 보기',   icon: '▶', color: '#eadcff', text: '#6b4aa0', border: '#cdb7ef' },
+    { key: 'solo',    label: '슬요 콘텐츠', icon: '✦', color: '#ffe7bf', text: '#a76016', border: '#f1bd73' },
+    { key: 'collab',  label: '참여 콘텐츠', icon: '＋', color: '#bff5ee', text: '#1a7a6e', border: '#7dddd6' },
+    { key: 'watch',   label: '같이보기',    icon: '▶', color: '#eadcff', text: '#6b4aa0', border: '#cdb7ef' },
     { key: 'game',    label: '게임',        icon: '◆', color: '#cdf6df', text: '#28724b', border: '#97d9b5' },
     { key: 'ad',      label: '광고',        icon: 'AD', color: '#fff3b8', text: '#9a7914', border: '#ecd46a' },
     { key: 'rest',    label: '휴방',        icon: 'Zz', color: '#ffd9e3', text: '#e14b67', border: '#f3a8b8' },
@@ -162,6 +162,42 @@ const HOLIDAYS = {
 
 function getHoliday(dateStr) {
     return HOLIDAYS[dateStr] || (dateStr.slice(5) === '08-18' ? '🎂 구슬요 생일' : null);
+}
+
+// ─── 구슬요 연간 기념일 (달력의 작은 ✦ 표시 → 날짜 보기에서 공개) ───
+// md: 월-일, year: 처음 있었던 해, label: 이름, note: 덧붙임(선택)
+// 생일(08-18)은 달력 칸에 이미 공휴일처럼 표시되므로 칸 표시는 생략하고 날짜 보기에만 보여준다.
+const ANNIVERSARIES = [
+    { md: '02-01', year: 2024, label: '「지것대」 발매' },
+    { md: '02-01', year: 2026, label: '「바기너불」 발매' },
+    { md: '02-10', year: 2023, label: '구활절' },
+    { md: '02-15', year: 2025, label: 'Priz-V 결성 발표' },
+    { md: '04-02', year: 2026, label: '「너와 나의 내일」 발매' },
+    { md: '04-24', year: 2025, label: '「We! (with you)」 발매', note: '뮤직비디오는 4월 30일' },
+    { md: '04-28', year: 2023, label: '베스트 BJ 수상' },
+    { md: '06-29', year: 2023, label: '포코톤 「너에게」 발매' },
+    { md: '07-24', year: 2021, label: '구슬요 데뷔' },
+    { md: '08-18', year: 1997, label: '구슬요 생일', birthday: true },
+    { md: '08-21', year: 2025, label: '「우리,다시」 발매' },
+    { md: '08-28', year: 2024, label: '「추헤요」 발매' },
+    { md: '10-26', year: 2024, label: '「스누반너」 발매' },
+    { md: '11-04', year: 2023, label: '개모임 결성' },
+    { md: '12-22', year: 2022, label: 'SOOP 이적' },
+];
+
+function anniversariesForDate(dateStr) {
+    const md = dateStr.slice(5);
+    const y = Number(dateStr.slice(0, 4));
+    return ANNIVERSARIES
+        .filter(a => a.md === md && y >= a.year)
+        .map(a => {
+            const n = y - a.year;
+            const title = a.birthday ? `🎂 ${a.label}`
+                : n === 0 ? `${a.label}일` : `${a.label} ${n}주년`;
+            const monthDay = `${Number(a.md.slice(0, 2))}월 ${Number(a.md.slice(3))}일`;
+            const since = a.birthday ? monthDay : `${a.year}년 ${monthDay}`;
+            return { ...a, n, title, since };
+        });
 }
 
 const state = {
@@ -1626,11 +1662,16 @@ function renderMobileSchedule() {
                 </button>`;
             }).join('')
             : `<div class="mobile-empty-note">${stickerImg(MOOD_STICKERS.rest, 'mobile-empty-sticker')}<span>일정이 비어있어요</span></div>`;
+        const annivs = anniversariesForDate(dateStr);
+        const annivHtml = annivs.length
+            ? `<button class="mobile-anniv" onclick="openDayViewModal('${dateStr}')">✦ ${esc(annivs.map(a => a.title).join(' · '))}</button>`
+            : '';
         cards.push(`<section class="mobile-day-card">
             <div class="mobile-day-head">
                 <div class="mobile-date-title${titleCls}">${day}일(${dayNames[dow]})</div>
                 ${dateStr === todayStr ? '<div class="mobile-today-badge">TODAY</div>' : ''}
             </div>
+            ${annivHtml}
             <div class="mobile-event-list">${eventHtml}</div>
         </section>`);
     }
@@ -1725,9 +1766,13 @@ function renderCalendar() {
             (dow === 0 || isHoliday) ? 'sun' : dow === 6 ? 'sat' : '',
             state.isEditor && !other ? 'date-button' : '',
         ].filter(Boolean).join(' ');
-        const dateNumHtml = state.isEditor && !other
+        const annivs = other ? [] : anniversariesForDate(dateStr).filter(a => !a.birthday);
+        const annivHtml = annivs.length
+            ? `<button class="anniv-mark" onclick="event.stopPropagation();openDayViewModal('${dateStr}')" title="${esc(annivs.map(a => a.title).join(' · '))}" aria-label="기념일: ${esc(annivs.map(a => a.title).join(', '))}">✦</button>`
+            : '';
+        const dateNumHtml = (state.isEditor && !other
             ? `<button class="${numCls}" onclick="event.stopPropagation();openBroadcastModal('${dateStr}')" title="방송정보 편집">${day}</button>`
-            : `<div class="${numCls}">${day}</div>`;
+            : `<div class="${numCls}">${day}</div>`) + annivHtml;
 
         const isSingle     = events.length === 1;
         const isStableList = events.length >= 2 && events.length <= 4;
@@ -2383,6 +2428,16 @@ function openDayViewModal(dateStr) {
     const links = broadcastLinks(info);
 
     let html = `<div class="modal-title">${formatDate(dateStr)}</div>`;
+    const annivs = anniversariesForDate(dateStr);
+    if (annivs.length) {
+        html += `<div class="day-modal-section">
+            <div class="day-section-title">오늘의 기념일</div>
+            <div class="anniv-list">${annivs.map(a => `<div class="anniv-card">
+                <div class="anniv-title">✦ ${esc(a.title)}</div>
+                <div class="anniv-since">${esc(a.since)}${a.note ? ` · ${esc(a.note)}` : ''}</div>
+            </div>`).join('')}</div>
+        </div>`;
+    }
     html += `<div class="day-modal-section">
         <div class="day-section-title">일정</div>
         ${events.length

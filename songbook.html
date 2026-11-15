@@ -3022,7 +3022,7 @@
 <div id="fab-menu" class="fab-menu">
     <button class="fab-menu-song" onclick="closeFabMenu(); openSongModal(null)">한 곡 추가</button>
     <button class="fab-menu-song" onclick="closeFabMenu(); openBulkModal()">여러 곡 추가</button>
-    <button class="fab-menu-song fab-menu-cover" onclick="closeFabMenu(); openCoverBackfillModal()">커버 자동채우기</button>
+    <button class="fab-menu-song fab-menu-cover" onclick="closeFabMenu(); openCoverBackfillModal()">커버 자동 채우기</button>
     <button class="fab-menu-live" onclick="closeFabMenu(); openLiveModal(null)">한 곡 추가</button>
     <button class="fab-menu-live" onclick="closeFabMenu(); openLiveBulkModal()">여러 곡 추가</button>
 </div>
@@ -3129,7 +3129,7 @@
 <div id="cover-modal" class="modal-overlay" onclick="if(event.target===this)closeCoverBackfillModal()">
     <div class="modal edit-modal">
         <div class="emod-header">
-            <span>커버 자동채우기</span>
+            <span>커버 자동 채우기</span>
             <button class="emod-close" onclick="closeCoverBackfillModal()">✕</button>
         </div>
         <div class="emod-body">
@@ -3158,7 +3158,7 @@
                 <div class="cover-youtube-key" id="cover-youtube-key-wrap">
                     <label for="cover-youtube-key">YouTube Data API 키</label>
                     <input type="password" id="cover-youtube-key" placeholder="AIza..." autocomplete="off" oninput="saveCoverYoutubeSettings()">
-                    <small>키는 이 브라우저에만 저장됩니다. YouTube 결과는 영상 썸네일이라 앨범커버와 다를 수 있습니다.</small>
+                    <small>키는 이 브라우저에만 저장됩니다. YouTube 결과는 영상 썸네일이라 앨범 커버와 다를 수 있습니다.</small>
                 </div>
             </div>
             <div class="cover-status" id="cover-status">대기 중</div>
@@ -4694,7 +4694,7 @@ function renderStats() {
                 </div>
             </div>
             <div class="stats-card">
-                <div class="stats-sec-title">부른지 오래된 곡</div>
+                <div class="stats-sec-title">부른 지 오래된 곡</div>
                 ${statListHtml(oldSongs, oldSongs[0]?.daysAgo || 1, {
                     sub: s => s.artist || '가수 미상',
                     sideMeta: s => s.lastDateText || '날짜 없음',
@@ -6412,7 +6412,7 @@ async function startCoverBackfill(scope) {
 async function undoLastCoverBackfill() {
     if (_coverBackfillRunning || !_lastCoverBackfillSaved.length) return;
     const count = _lastCoverBackfillSaved.length;
-    if (!confirm(`이번 자동채우기로 저장한 커버 ${count}곡을 비울까요? 노래는 삭제되지 않습니다.`)) return;
+    if (!confirm(`이번 자동 채우기로 저장한 커버 ${count}곡을 비울까요? 노래는 삭제되지 않습니다.`)) return;
     const entries = [...new Map(_lastCoverBackfillSaved
         .filter(item => item.id && item.coverUrl)
         .map(item => [String(item.id), { ...item }])).values()];
