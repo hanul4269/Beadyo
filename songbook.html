@@ -3311,6 +3311,7 @@ const S = {
     songbookTag:  'all',
     songbookQuality: 'all',
     songbookFavoriteOnly: false,
+    songbookSort: 'artist',
     songbookTargetId: null,
     songbookFavoriteIds: new Set(readSongbookFavoriteIds()),
     songbookFilterExpanded: {
@@ -4206,6 +4207,46 @@ function songbookFacetRowHtml(kind, label, allCount, entries, selected, expanded
     </div>`;
 }
 
+const SONGBOOK_SORT_OPTIONS = [
+    { value: 'artist', label: '가수 가나다순' },
+    { value: 'title', label: '제목 가나다순' },
+    { value: 'newest', label: '최근 등록순' },
+    { value: 'oldest', label: '오래된 등록순' },
+];
+const songbookTextCollator = new Intl.Collator('ko', { numeric: true, sensitivity: 'base' });
+
+function compareSongbookText(a, b) {
+    return songbookTextCollator.compare(String(a ?? '').trim(), String(b ?? '').trim());
+}
+
+// 노래책에는 등록일 칸이 없어 곡이 추가될 때마다 커지는 id를 등록 순서로 쓴다.
+function sortSongbookItems(items) {
+    const sort = S.songbookSort;
+    const byId = (a, b) => (Number(a?.id) || 0) - (Number(b?.id) || 0);
+    if (sort === 'newest') return [...items].sort((a, b) => byId(b, a));
+    if (sort === 'oldest') return [...items].sort(byId);
+    if (sort === 'title') {
+        return [...items].sort((a, b) => compareSongbookText(a?.title, b?.title) || compareSongbookText(a?.artist, b?.artist) || byId(a, b));
+    }
+    return [...items].sort((a, b) => compareSongbookText(a?.artist, b?.artist) || compareSongbookText(a?.title, b?.title) || byId(a, b));
+}
+
+function songbookSortRowHtml() {
+    const chips = SONGBOOK_SORT_OPTIONS.map(option => {
+        const active = S.songbookSort === option.value;
+        return `<button type="button" class="sbf-chip${active ? ' active' : ''}" aria-pressed="${active}" onclick="setSongbookSort('${option.value}')">${esc(option.label)}</button>`;
+    }).join('');
+    return `<div class="sbf-row sbf-row-sort">
+        <div class="sbf-label">정렬</div>
+        <div class="sbf-chips">${chips}</div>
+    </div>`;
+}
+
+function setSongbookSort(sort) {
+    S.songbookSort = SONGBOOK_SORT_OPTIONS.some(option => option.value === sort) ? sort : 'artist';
+    renderSongbook();
+}
+
 function renderSongbookFilterPanel() {
     const panel = document.getElementById('songbook-filter-panel');
     if (!panel) return;
@@ -4229,6 +4270,7 @@ function renderSongbookFilterPanel() {
         .filter(entry => entry.count || S.songbookTag === entry.label);
 
     const rows = [
+        songbookSortRowHtml(),
         songbookFacetRowHtml('favorite', '저장', favoriteBase.length, favoriteEntries, S.songbookFavoriteOnly ? 'only' : 'all', true),
         songbookFacetRowHtml('tags', '태그', tagBase.length, tagEntries, S.songbookTag, S.songbookFilterExpanded.tags),
     ];
@@ -4274,7 +4316,7 @@ function renderSongbook(forceAll) {
     }
 
     const isAll = forceAll || S.songbookCat === 'all';
-    const items = filteredSongbookItems({ forceAll: isAll });
+    const items = sortSongbookItems(filteredSongbookItems({ forceAll: isAll }));
     const scopedTotal = filteredSongbookItems({ forceAll: isAll, ignoreTag: true, ignoreFavorite: true }).length;
 
     renderSongbookFilterPanel();
