@@ -2992,14 +2992,7 @@
             <button class="sub-tab"        data-cat="애교송"    onclick="setSongbookCat('애교송')">애교송</button>
             <button class="sub-tab"        data-cat="오리지널"  onclick="setSongbookCat('오리지널')">오리지널</button>
         </div>
-        <div id="live-subtabs" class="sub-tabs" style="display:none">
-            <button class="sub-tab active" onclick="setLiveYear('stats')">📊 통계</button>
-            <button class="sub-tab" onclick="setLiveYear(2026)">2026</button>
-            <button class="sub-tab" onclick="setLiveYear(2025)">2025</button>
-            <button class="sub-tab" onclick="setLiveYear(2024)">2024</button>
-            <button class="sub-tab" onclick="setLiveYear(2023)">2023</button>
-            <button class="sub-tab" onclick="setLiveYear(2022)">2022</button>
-        </div>
+        <div id="live-subtabs" class="sub-tabs" style="display:none"></div>
         <a class="sheet-open-link" id="sheet-open-link" href="#" target="_blank" rel="noopener noreferrer" title="Google 스프레드시트 열기" aria-label="Google 스프레드시트 열기">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M9 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>
@@ -3029,13 +3022,7 @@
         <div id="live-filter-panel" class="live-filter-panel" style="display:none">
             <div class="lf-row">
                 <span class="lf-label">연도</span>
-                <div class="lf-checks" id="lf-year-checks">
-                    <label class="lf-check lf-year-check" style="--year-color:#e87ca8;--year-bg:#fde8f0;--year-strong:#b7356a"><input type="checkbox" value="2026" checked onchange="applyLiveFilter()"><span>2026</span></label>
-                    <label class="lf-check lf-year-check" style="--year-color:#8bc34a;--year-bg:#f0fae4;--year-strong:#5f8f23"><input type="checkbox" value="2025" checked onchange="applyLiveFilter()"><span>2025</span></label>
-                    <label class="lf-check lf-year-check" style="--year-color:#e8d07c;--year-bg:#fdf8e8;--year-strong:#a68523"><input type="checkbox" value="2024" checked onchange="applyLiveFilter()"><span>2024</span></label>
-                    <label class="lf-check lf-year-check" style="--year-color:#e8a87c;--year-bg:#fdf0e8;--year-strong:#b96935"><input type="checkbox" value="2023" checked onchange="applyLiveFilter()"><span>2023</span></label>
-                    <label class="lf-check lf-year-check" style="--year-color:#a8c8e8;--year-bg:#eef5fb;--year-strong:#4d82b8"><input type="checkbox" value="2022" checked onchange="applyLiveFilter()"><span>2022</span></label>
-                </div>
+                <div class="lf-checks" id="lf-year-checks"></div>
             </div>
             <div class="lf-row">
                 <span class="lf-label">정렬</span>
@@ -3393,6 +3380,46 @@ function readSongbookFavoriteIds() {
     }
 }
 
+// ── 라이브 기록 연도 ─────────────────────────────
+// 연도 목록은 2022년부터 "올해(한국 시간)"와 "DB에 있는 가장 늦은 연도" 중 큰 해까지 자동으로 만든다.
+const LIVE_FIRST_YEAR = 2022;
+const LIVE_FIRST_CHART_YEAR = 2023;
+const LIVE_YEAR_COLORS = {
+    2022: { color: '#a8c8e8', bg: '#eef5fb', strong: '#4d82b8' },
+    2023: { color: '#e8a87c', bg: '#fdf0e8', strong: '#b96935' },
+    2024: { color: '#e8d07c', bg: '#fdf8e8', strong: '#a68523' },
+    2025: { color: '#8bc34a', bg: '#f0fae4', strong: '#5f8f23' },
+    2026: { color: '#e87ca8', bg: '#fde8f0', strong: '#b7356a' },
+};
+// 2027년부터 순서대로 돌려 쓰는 색
+const LIVE_YEAR_EXTRA_COLORS = [
+    { color: '#a48be8', bg: '#f3effd', strong: '#6b4fc2' },
+    { color: '#5cc0b5', bg: '#e6f7f5', strong: '#2f8a80' },
+    { color: '#7c8fe8', bg: '#eef0fd', strong: '#4a5bc0' },
+    { color: '#c49a6c', bg: '#f8f0e6', strong: '#8a6234' },
+];
+let _liveLatestDbYear = 0;
+
+function liveCurrentYear() {
+    return new Date(Date.now() + 9 * 60 * 60 * 1000).getUTCFullYear();
+}
+function liveYears() {
+    const last = Math.max(LIVE_FIRST_YEAR, liveCurrentYear(), _liveLatestDbYear || 0);
+    const years = [];
+    for (let y = LIVE_FIRST_YEAR; y <= last; y++) years.push(y);
+    return years;
+}
+function liveYearColor(year) {
+    const y = Number(year);
+    if (LIVE_YEAR_COLORS[y]) return LIVE_YEAR_COLORS[y];
+    const index = Math.max(0, y - 2027) % LIVE_YEAR_EXTRA_COLORS.length;
+    return LIVE_YEAR_EXTRA_COLORS[index];
+}
+function liveYearStyle(year) {
+    const c = liveYearColor(year);
+    return `--year-color:${c.color};--year-bg:${c.bg};--year-strong:${c.strong}`;
+}
+
 // ── 상태 ──────────────────────────────────────────
 const S = {
     mainTab:      INITIAL_VIEW,
@@ -3417,7 +3444,7 @@ const S = {
     liveCache:    {},
     liveLoading:  {},
     liveFilter: {
-        years: new Set([2022, 2023, 2024, 2025, 2026]),
+        years: new Set(liveYears()),
         sort:  'date',
         dir:   'desc',
     },
@@ -3528,7 +3555,7 @@ async function loadLive(year) {
             if (year === 'all') {
                 // 각 연도 로드 후 병합
                 renderSkeleton('live-list');
-                const years = [2022, 2023, 2024, 2025, 2026];
+                const years = liveYears();
                 await Promise.all(years.map(y => loadLive(y)));
                 S.liveCache['all'] = years.flatMap(y => S.liveCache[y] || [])
                     .sort((a, b) => (b.performed_date || '').localeCompare(a.performed_date || ''));
@@ -4550,7 +4577,7 @@ async function renderLive() {
             return `
             <tr data-live-record-id="${esc(r.id)}" class="${S.session ? 'editable ' : ''}${monthStart ? 'month-start' : ''}"${S.session ? ` onclick="openLiveModal(${r.id})"` : ''}>
                 <td class="col-num">${i + 1}</td>
-                ${showYear ? `<td class="col-year">${r.year ? `<span class="year-badge y${r.year}">${r.year}</span>` : ''}</td>` : ''}
+                ${showYear ? `<td class="col-year">${r.year ? `<span class="year-badge y${esc(r.year)}" style="${liveYearStyle(r.year)}">${esc(r.year)}</span>` : ''}</td>` : ''}
                 <td class="col-date">${fmtDate(r.performed_date)}</td>
                 <td class="col-title">${esc(r.title)}</td>
                 <td class="col-artist">${esc(r.artist || '')}</td>
@@ -4577,11 +4604,11 @@ function renderStats() {
     const statRows = all.filter(r => !r.exclude_from_stats);
     if (!statRows.length) { panel.innerHTML = emptyHtml('집계할 데이터가 없어요'); return; }
 
-    const YEARS  = [2022, 2023, 2024, 2025, 2026];
-    const CHART_YEARS = [2023, 2024, 2025, 2026];
+    const YEARS  = liveYears();
+    const CHART_YEARS = YEARS.filter(y => y >= LIVE_FIRST_CHART_YEAR);
     const MONTHS = [1,2,3,4,5,6,7,8,9,10,11,12];
-    const YCLR   = { 2022:'#a8c8e8', 2023:'#e8a87c', 2024:'#e8d07c', 2025:'#8bc34a', 2026:'#e87ca8' };
-    const YBG    = { 2022:'#eef5fb', 2023:'#fdf0e8', 2024:'#fdf8e8', 2025:'#f0fae4', 2026:'#fde8f0' };
+    const YCLR   = Object.fromEntries(YEARS.map(y => [y, liveYearColor(y).color]));
+    const YBG    = Object.fromEntries(YEARS.map(y => [y, liveYearColor(y).bg]));
 
     // ── 집계 ──────────────────────────────────────
     const today = new Date();
@@ -5159,9 +5186,8 @@ function revealLiveDate(date, recordId = '') {
     document.getElementById('search-input').value = '';
     document.getElementById('search-clear').classList.remove('show');
     S.liveYear = Number(date.slice(0, 4));
-    document.querySelectorAll('#live-subtabs .sub-tab').forEach((tab, i) => {
-        tab.classList.toggle('active', ['stats', '2026', '2025', '2024', '2023', '2022'][i] === String(S.liveYear));
-    });
+    if (S.liveYear > Math.max(...liveYears())) noteLiveLatestYear(S.liveYear);
+    syncLiveYearTabs();
     setMainTab('live');
 }
 function clearLiveRecordRoute(clearDate = false) {
@@ -5179,11 +5205,50 @@ function setLiveYear(year) {
     clearLiveRecordRoute(true);
     S.liveDate = '';
     S.liveYear = year;
-    const vals = ['stats','2026','2025','2024','2023','2022'];
-    document.querySelectorAll('#live-subtabs .sub-tab').forEach((el, i) =>
-        el.classList.toggle('active', String(year) === vals[i]));
+    syncLiveYearTabs();
     renderLive();
     updateFab();
+}
+
+// 연도 탭과 상세검색 연도 체크박스를 연도 목록에 맞춰 다시 그린다.
+let _liveRenderedYears = [];
+function renderLiveYearControls() {
+    const years = liveYears();
+    const added = years.filter(y => !_liveRenderedYears.includes(y));
+    if (_liveRenderedYears.length) added.forEach(y => S.liveFilter.years.add(y));
+    _liveRenderedYears = years;
+    const desc = [...years].reverse();
+    const tabs = document.getElementById('live-subtabs');
+    if (tabs) {
+        tabs.innerHTML = `<button class="sub-tab" data-year="stats" onclick="setLiveYear('stats')">📊 통계</button>`
+            + desc.map(y => `<button class="sub-tab" data-year="${y}" onclick="setLiveYear(${y})">${y}</button>`).join('');
+        syncLiveYearTabs();
+    }
+    const checks = document.getElementById('lf-year-checks');
+    if (checks) {
+        checks.innerHTML = desc.map(y => `<label class="lf-check lf-year-check" style="${liveYearStyle(y)}"><input type="checkbox" value="${y}"${S.liveFilter.years.has(y) ? ' checked' : ''} onchange="applyLiveFilter()"><span>${y}</span></label>`).join('');
+    }
+}
+function syncLiveYearTabs() {
+    document.querySelectorAll('#live-subtabs .sub-tab').forEach(el =>
+        el.classList.toggle('active', el.dataset.year === String(S.liveYear)));
+}
+// DB에 올해보다 늦은 연도 기록이 있으면 그 해까지 탭을 늘리고, 이미 모아둔 전체 목록은 다시 불러온다.
+function noteLiveLatestYear(year) {
+    const y = Number(year);
+    if (!Number.isInteger(y) || y <= Math.max(...liveYears())) return false;
+    _liveLatestDbYear = y;
+    renderLiveYearControls();
+    delete S.liveCache['all'];
+    return true;
+}
+async function refreshLiveLatestYear() {
+    try {
+        await ensureDb();
+        const { data, error } = await db.from('live_songs').select('year').order('year', { ascending: false }).limit(1);
+        if (error) return;
+        if (noteLiveLatestYear(data?.[0]?.year) && S.mainTab === 'live') renderLive();
+    } catch {}
 }
 
 // ── 라이브 필터 ──────────────────────────────────
@@ -5632,6 +5697,8 @@ function songbookSaveErrorMessage(error) {
 
 // ── 초기화 ───────────────────────────────────────
 async function init() {
+    renderLiveYearControls();
+    deferWarmup(() => refreshLiveLatestYear());
     if (S.mainTab === 'live') {
         if (INITIAL_LIVE_DATE) revealLiveDate(INITIAL_LIVE_DATE, INITIAL_RECORD_ID);
         else applyInitialView();
@@ -5640,7 +5707,7 @@ async function init() {
     }
     await loadSongbook();
     applyInitialView();
-    deferWarmup(() => loadLive(2026));
+    deferWarmup(() => loadLive(liveCurrentYear()));
 }
 
 function deferWarmup(task) {
@@ -6937,7 +7004,7 @@ async function ensureLiveAllForSongDetail() {
     if (S.liveCache['all'] !== undefined && !incompleteLiveYears.size) return S.liveCache['all'];
     if (_songDetailLivePromise) return _songDetailLivePromise;
 
-    const years = [2022, 2023, 2024, 2025, 2026];
+    const years = liveYears();
     _songDetailLivePromise = Promise.all(years.map(async year => {
         if (S.liveCache[year] !== undefined && !incompleteLiveYears.has(String(year)) && !incompleteLiveYears.has('all')) return S.liveCache[year] || [];
         const rows = await fetchAll('live_songs', { year }, [['performed_date', false], ['id', false]], { strict: true });

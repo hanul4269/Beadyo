@@ -156,7 +156,7 @@ test('song detail reuses complete archive reads but rejects and retries an incom
     let calls = 0;
     const incompleteLiveYears = new Set(['2025']);
     const S = {liveCache:{all:[{id:1}],2022:[],2023:[],2024:[],2025:[{id:1}],2026:[]}};
-    const context = vm.createContext({S, incompleteLiveYears, _songDetailLivePromise:null, ensureDb:async()=>{}, showToast(){}, db:{from(){
+    const context = vm.createContext({S, incompleteLiveYears, _songDetailLivePromise:null, liveYears:()=>[2022,2023,2024,2025,2026], ensureDb:async()=>{}, showToast(){}, db:{from(){
         calls++;
         const query = {select(){return this;},range(){return this;},eq(){return this;},order(){return this;},then(resolve){
             return Promise.resolve(fail ? {error:new Error('Archive unavailable')} : {data:[{id:2,performed_date:'2025-04-22'}]}).then(resolve);

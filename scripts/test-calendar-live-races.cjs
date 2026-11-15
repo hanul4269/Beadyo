@@ -198,6 +198,7 @@ function live({ readYear, readStats = async () => {} } = {}) {
         loadLive: readYear || (async () => {}), renderSkeleton() {}, ensureStatsData: readStats, renderStats() { stats++; },
         updateResultInfo() { renders++; }, liveStatKey: row => row.title, esc: value => String(value ?? ''), fmtDate: value => value,
         emptyHtml: value => value, safeUrl: value => value, matches: (title, artist, query) => title.includes(query),
+        liveYearStyle: () => '',
     });
     vm.runInContext(section('songbook.html', 'let liveRenderGeneration =', '// ── 렌더: 통계'), ctx);
     return { ctx, nodes, S, renders: () => renders, stats: () => stats };
