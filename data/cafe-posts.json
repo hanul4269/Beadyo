@@ -3,8 +3,14 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-11-16T00:24:15.304Z",
+  "fetchedAt": "2026-11-16T07:20:03.935Z",
   "posts": [
+    {
+      "id": "40639",
+      "title": "날씨 좋북",
+      "publishedAt": "2026-11-16T13:43:04.760+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40639"
+    },
     {
       "id": "40637",
       "title": "내가 원한 디자인",
@@ -28,12 +34,6 @@
       "title": "구모닝",
       "publishedAt": "2026-11-13T12:34:19.160+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40602"
-    },
-    {
-      "id": "40579",
-      "title": "빼빼로 재료 시켰다",
-      "publishedAt": "2026-11-11T14:37:02.693+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40579"
     }
   ]
 }
