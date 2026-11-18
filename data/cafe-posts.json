@@ -3,8 +3,20 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-11-18T01:20:00.857Z",
+  "fetchedAt": "2026-11-18T09:12:36.755Z",
   "posts": [
+    {
+      "id": "40671",
+      "title": "안 믿을까봐",
+      "publishedAt": "2026-11-18T14:45:03.683+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40671"
+    },
+    {
+      "id": "40669",
+      "title": "왼쩍은 구북이 등짝이 모양으로 만든간데",
+      "publishedAt": "2026-11-18T13:11:27.107+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40669"
+    },
     {
       "id": "40647",
       "title": "뭐야",
@@ -22,18 +34,6 @@
       "title": "내가 원한 디자인",
       "publishedAt": "2026-11-16T03:11:36.270+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40637"
-    },
-    {
-      "id": "40633",
-      "title": "택배 보내는",
-      "publishedAt": "2026-11-15T16:32:51.350+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40633"
-    },
-    {
-      "id": "40619",
-      "title": "어제 아침 6시에",
-      "publishedAt": "2026-11-14T14:23:00.810+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40619"
     }
   ]
 }
