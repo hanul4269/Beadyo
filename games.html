@@ -802,7 +802,7 @@
             border: 1px solid rgba(255,255,255,.62);
             border-radius: 50%;
             box-shadow: inset 0 0 22px rgba(255,255,255,.48);
-            z-index: 2;
+            z-index: 150;
             pointer-events: none;
         }
 
@@ -826,13 +826,6 @@
             width: var(--gacha-ball-size, 106px);
             height: var(--gacha-ball-size, 106px);
             --rest-rotate: 0deg;
-            --mix-x1: 80px;
-            --mix-y1: -70px;
-            --mix-x2: -110px;
-            --mix-y2: 90px;
-            --mix-x3: 130px;
-            --mix-y3: 40px;
-            --mix-rotate: 180deg;
             border: 1px solid rgba(255,255,255,.58);
             border-radius: 50%;
             background:
@@ -846,8 +839,71 @@
             transform-origin: 50% 50%;
         }
 
+        .gacha-bowl .gacha-ball {
+            left: 0;
+            top: 0;
+            width: var(--gacha-ball-size, 100px);
+            height: var(--gacha-ball-size, 100px);
+            z-index: 1;
+            transition: box-shadow .2s ease, opacity .2s ease;
+        }
+
+        .gacha-bowl .gacha-ball img {
+            width: var(--gacha-img-size, 56px);
+            height: var(--gacha-img-size, 56px);
+        }
+
         .gacha-bowl.shuffling .gacha-ball {
             will-change: transform;
+        }
+
+        .gacha-bowl .gacha-ball.chosen {
+            z-index: 200 !important;
+            opacity: 1 !important;
+            box-shadow:
+                0 0 0 3px rgba(255,226,120,.95),
+                0 0 22px 6px rgba(255,204,64,.62),
+                0 10px 16px rgba(42,47,41,.18);
+            animation: gacha-chosen-pulse .38s ease-in-out both;
+        }
+
+        @keyframes gacha-chosen-pulse {
+            0% { filter: brightness(1); }
+            50% { filter: brightness(1.22); }
+            100% { filter: brightness(1.08); }
+        }
+
+        .gacha-exit {
+            position: absolute;
+            left: 50%;
+            bottom: 4px;
+            z-index: 0;
+            width: calc(var(--gacha-ball-size, 100px) * 1.1);
+            height: calc(var(--gacha-ball-size, 100px) * .3);
+            border-radius: 50%;
+            background: radial-gradient(ellipse at 50% 40%, rgba(40,62,22,.55) 0 45%, rgba(79,127,37,.28) 70%, transparent 72%);
+            transform: translateX(-50%) scale(.82);
+            transition: transform .3s ease, filter .3s ease;
+            pointer-events: none;
+        }
+
+        .gacha-exit.open {
+            transform: translateX(-50%) scale(1.12);
+            filter: brightness(.7);
+        }
+
+        .gacha-flyer {
+            position: absolute;
+            z-index: 6;
+            opacity: 1;
+            transform-origin: 50% 50%;
+            will-change: transform;
+            pointer-events: none;
+        }
+
+        .gacha-ball.pick.landed {
+            animation: none;
+            opacity: 1;
         }
 
         .gacha-ball::before {
@@ -2794,231 +2850,246 @@
             return min + Math.random() * (max - min);
         }
 
-        function gachaCapsuleMetrics(count) {
-            if (count > 42)  return { ball: 96, img: 54 };
-            if (count > 36)  return { ball: 106, img: 58 };
-            if (count > 28)  return { ball: 112, img: 62 };
-            if (count > 20)  return { ball: 124, img: 68 };
-            return { ball: 136, img: 74 };
+        const GACHA_CAPSULE_COUNT = 30;
+        const GACHA_CAPSULE_COLORS = [
+            'rgba(91,143,199,.72)',
+            'rgba(127,184,63,.72)',
+            'rgba(198,156,58,.72)',
+            'rgba(205,112,142,.72)',
+            'rgba(130,105,206,.72)',
+            'rgba(73,177,154,.72)',
+            'rgba(221,128,70,.72)',
+            'rgba(190,93,183,.72)'
+        ];
+
+        // Bowl geometry in px. The bowl is a sphere: origin at its center, y grows downward,
+        // z grows toward the viewer, and capsules are drawn with a light perspective.
+        function gachaGeometry(bowl) {
+            const width = bowl?.clientWidth || 0;
+            if (width < 80) return null;
+            const R = width / 2 - 11;
+            const d = Math.round(R * 2 * .19);
+            return { cx: width / 2, cy: (bowl.clientHeight || width) / 2, R, r: d / 2, d, limit: R - d / 2 };
         }
 
-        function gachaVisualCapsuleCount(candidateCount) {
-            if (candidateCount <= 0) return 0;
-            const scaled = Math.ceil(33 + Math.min(3, Math.sqrt(candidateCount)));
-            return Math.min(36, Math.max(34, scaled));
+        function gachaLayoutSignature(bowl) {
+            return `${visibleGachaNames().join('\n')}|${bowl?.clientWidth || 0}`;
         }
 
-        function gachaLayoutBounds(count) {
-            return count > 36
-                ? { leftMin: 3, leftMax: 74, topMin: 10, topMax: 72 }
-                : count > 28
-                    ? { leftMin: 3, leftMax: 74, topMin: 9, topMax: 70 }
-                    : { leftMin: 5, leftMax: 72, topMin: 10, topMax: 68 };
+        function projectGachaCapsule(state, geom) {
+            const depth = Math.max(-1, Math.min(1, (state.z || 0) / geom.limit));
+            const spread = 1 + depth * .07;
+            return { x: geom.cx + state.x * spread, y: geom.cy + state.y * spread, scale: 1 + depth * .2, depth };
         }
 
-        function makeGachaCapsuleLayout(count) {
-            const placed = [];
-            const bounds = gachaLayoutBounds(count);
-            const aspect = 1.72;
-            const cols = Math.max(2, Math.ceil(Math.sqrt(count * aspect)));
-            const rows = Math.max(1, Math.ceil(count / cols));
-            const cellW = (bounds.leftMax - bounds.leftMin) / cols;
-            const cellH = (bounds.topMax - bounds.topMin) / rows;
-            for (let i = 0; i < count; i++) {
-                const row = Math.floor(i / cols);
-                const col = i % cols;
-                let left = 50;
-                let top = 60;
-                if (count <= 28) {
-                    const compactPile = count <= 4;
-                    const layer = Math.floor(i / 4);
-                    for (let attempt = 0; attempt < 24; attempt++) {
-                        const lowerPile = Math.random() < (compactPile ? .92 : .72);
-                        const layerTop = lowerPile
-                            ? randomBetween(compactPile ? 52 : 54, bounds.topMax) - layer * randomBetween(4, 7)
-                            : randomBetween(compactPile ? 42 : 30, 56) - layer * randomBetween(2, 4);
-                        left = randomBetween(bounds.leftMin, bounds.leftMax);
-                        top = Math.max(bounds.topMin, Math.min(bounds.topMax, layerTop + randomBetween(-4, 4)));
-                        const tooClose = placed.some(item => {
-                            const dx = item.left - left;
-                            const dy = item.top - top;
-                            return Math.hypot(dx, dy) < 12;
-                        });
-                        if (!tooClose || attempt > 16) break;
-                    }
-                } else {
-                    const rowBias = rows <= 1 ? 0 : row / (rows - 1);
-                    const lowerWeight = Math.pow(rowBias, .62);
-                    left = bounds.leftMin + (col + .5) * cellW + randomBetween(-cellW * .34, cellW * .34);
-                    top = bounds.topMin + (row + .5) * cellH + randomBetween(-cellH * .36, cellH * .36);
-                    top += lowerWeight * Math.min(7, cellH * 1.15);
-                    left = Math.max(bounds.leftMin, Math.min(bounds.leftMax, left));
-                    top = Math.max(bounds.topMin, Math.min(bounds.topMax, top));
-                }
-                placed.push({
-                    left,
-                    top,
-                    rotate: randomBetween(-24, 24),
-                    direction: Math.random() < .5 ? -1 : 1,
-                });
-            }
-            return placed.sort((a, b) => a.top - b.top);
+        function writeGachaCapsule(state, geom) {
+            const p = projectGachaCapsule(state, geom);
+            const ball = state.ball;
+            ball.style.transform = `translate3d(${(p.x - geom.r).toFixed(1)}px, ${(p.y - geom.r).toFixed(1)}px, 0) rotate(${(state.angle * 57.2958).toFixed(1)}deg) scale(${p.scale.toFixed(3)})`;
+            ball.style.zIndex = ball.classList.contains('chosen') ? '200' : String(Math.round(60 + p.depth * 50));
+            ball.style.opacity = (.7 + (p.depth + 1) * .14).toFixed(2);
+        }
+
+        function makeGachaCapsuleElement(index) {
+            const ball = document.createElement('div');
+            ball.className = 'gacha-ball';
+            ball.dataset.asset = ASSETS[index % ASSETS.length];
+            ball.dataset.color = GACHA_CAPSULE_COLORS[index % GACHA_CAPSULE_COLORS.length];
+            ball.style.setProperty('--cap', ball.dataset.color);
+            ball.innerHTML = `<img src="${ball.dataset.asset}" alt="">`;
+            return ball;
+        }
+
+        function spawnGachaState(ball, geom, fromTop) {
+            const spread = geom.limit * .6;
+            return {
+                ball,
+                x: randomBetween(-spread, spread),
+                y: fromTop ? -geom.limit * randomBetween(.55, .85) : randomBetween(-geom.limit * .7, geom.limit * .6),
+                z: randomBetween(-spread, spread),
+                vx: 0, vy: 0, vz: 0, w: 0,
+                angle: randomBetween(-.6, .6),
+                kickIn: randomBetween(0, .25),
+                removed: false
+            };
         }
 
         function renderGacha() {
             const bowl = $('gacha-bowl');
             if (!bowl) return;
             const names = visibleGachaNames();
-            const visualCount = gachaVisualCapsuleCount(names.length);
             $('gacha-count').textContent = `후보 ${gacha.count}명`;
             const statusCount = $('gacha-status-count');
             if (statusCount) statusCount.textContent = String(gacha.count);
-            const metrics = gachaCapsuleMetrics(visualCount);
-            bowl.style.setProperty('--gacha-ball-size', `${metrics.ball}px`);
-            bowl.style.setProperty('--gacha-img-size', `${metrics.img}px`);
-            const capsuleColors = [
-                'rgba(91,143,199,.72)',
-                'rgba(127,184,63,.72)',
-                'rgba(198,156,58,.72)',
-                'rgba(205,112,142,.72)',
-                'rgba(130,105,206,.72)',
-                'rgba(73,177,154,.72)',
-                'rgba(221,128,70,.72)',
-                'rgba(190,93,183,.72)'
-            ];
-            const layout = makeGachaCapsuleLayout(visualCount);
-            const capsules = Array.from({ length: visualCount }, (_, i) => names[i % names.length] || `캡슐 ${i + 1}`);
-            bowl.innerHTML = capsules.map((name, i) => {
-                const spot = layout[i];
-                const direction = spot.direction;
-                const mixX1 = direction * randomBetween(74, 154);
-                const mixY1 = -randomBetween(54, 132);
-                const mixX2 = direction * -randomBetween(88, 176);
-                const mixY2 = randomBetween(46, 116);
-                const mixX3 = direction * randomBetween(96, 190);
-                const mixY3 = randomBetween(-82, 82);
-                const mixRotate = randomBetween(220, 430);
-                const delay = randomBetween(0, .22);
-                const color = capsuleColors[i % capsuleColors.length];
-                return `<div class="gacha-ball" title="${escapeHtml(name)}" style="left:${spot.left.toFixed(1)}%;top:${spot.top.toFixed(1)}%;--cap:${color};--rest-rotate:${spot.rotate.toFixed(1)}deg;--mix-x1:${mixX1.toFixed(1)}px;--mix-y1:${mixY1.toFixed(1)}px;--mix-x2:${mixX2.toFixed(1)}px;--mix-y2:${mixY2.toFixed(1)}px;--mix-x3:${mixX3.toFixed(1)}px;--mix-y3:${mixY3.toFixed(1)}px;--mix-rotate:${mixRotate.toFixed(1)}deg;--shake-delay:${delay.toFixed(2)}s">
-                    <img src="${ASSETS[i % ASSETS.length]}" alt="">
-                </div>`;
-            }).join('');
-        }
-
-        function makeGachaPhysicsState(ball, bowl, index, total) {
-            const bounds = gachaLayoutBounds(total);
-            const leftMin = bounds.leftMin;
-            const leftMax = bounds.leftMax;
-            const topMin = bounds.topMin;
-            const topMax = bounds.topMax;
-            const bowlRect = bowl.getBoundingClientRect();
-            const ballRect = ball.getBoundingClientRect();
-            const ballPctX = ballRect.width / bowlRect.width * 100;
-            const ballPctY = ballRect.height / bowlRect.height * 100;
-            const edgePadX = total > 36 ? 1.2 : 1.65;
-            const edgePadY = 2;
-            const wallLeftMin = Math.max(leftMin, edgePadX);
-            const wallLeftMax = Math.min(leftMax, 100 - ballPctX - edgePadX);
-            const wallTopMin = Math.max(topMin, edgePadY);
-            const baseFloorTop = Math.min(topMax + (total > 28 ? 6.5 : 4.8), 100 - ballPctY - edgePadY);
-            const stackRoll = Math.random();
-            const stackLift = stackRoll < .64
-                ? randomBetween(0, 1.1)
-                : stackRoll < .9
-                    ? randomBetween(1.2, 4.4)
-                    : randomBetween(4.5, 7.6);
-            const floorTop = baseFloorTop - stackLift;
-            const startLeft = Math.max(wallLeftMin, Math.min(wallLeftMax, Number.parseFloat(ball.style.left) || randomBetween(12, 76)));
-            const startTop = Math.max(wallTopMin, Math.min(baseFloorTop, Number.parseFloat(ball.style.top) || randomBetween(52, 70)));
-            const density = total > 36 ? .98 : 1.28;
-            let vx = randomBetween(-216, 216) * density;
-            let vy = randomBetween(-216, 120) * density;
-            if (Math.abs(vx) < 68 * density) vx += (vx < 0 ? -1 : 1) * randomBetween(68, 104) * density;
-            if (Math.abs(vy) < 54 * density) vy += (vy < 0 ? -1 : 1) * randomBetween(54, 88) * density;
-            return {
-                ball,
-                bowlRect,
-                density,
-                floorTop,
-                index,
-                left: startLeft,
-                phase: randomBetween(0, Math.PI * 2),
-                rotate: Number.parseFloat(ball.style.getPropertyValue('--rest-rotate')) || 0,
-                spin: randomBetween(-520, 520) * density,
-                top: startTop,
-                vx,
-                vy,
-                wallLeftMax,
-                wallLeftMin,
-                wallTopMin
-            };
-        }
-
-        function stepGachaCapsule(state, elapsed, dt) {
-            const t = elapsed / 1000;
-            const mix = elapsed < 2100 ? 1 : Math.max(0, 1 - (elapsed - 2100) / 780);
-            const settle = 1 - mix;
-            const centerX = 43 + Math.sin(t * 1.72 + state.phase) * 9.2 * mix;
-            const centerY = 47 + Math.cos(t * 1.36 + state.phase * .8) * 8.8 * mix;
-            const dx = state.left - centerX;
-            const dy = state.top - centerY;
-            const swirl = mix * (120 + state.density * 70);
-            const pulse = Math.sin(t * (10.5 + (state.index % 5) * .8) + state.phase);
-            const lift = Math.cos(t * (9.2 + (state.index % 4) * .9) + state.phase * .7);
-            const wallRush = Math.sin(t * (7.8 + (state.index % 6) * .55) + state.phase * 1.3);
-            state.vx += ((-dy * 1.34) + pulse * 110 + wallRush * 66) * swirl * dt / 58;
-            state.vy += ((dx * .9) + lift * 98 - 54 * mix) * swirl * dt / 62;
-            state.vy += (124 + settle * 42 + mix * 18) * state.density * dt;
-            const drag = Math.max(.64, .988 - settle * .18);
-            state.vx *= drag;
-            state.vy *= drag;
-            state.spin *= mix > 0 ? .982 : Math.max(.42, .84 - settle * .32);
-            state.left += state.vx * dt;
-            state.top += state.vy * dt;
-            state.rotate += state.spin * dt + state.vx * .16;
-
-            if (state.left < state.wallLeftMin || state.left > state.wallLeftMax) {
-                state.left = Math.max(state.wallLeftMin, Math.min(state.wallLeftMax, state.left));
-                state.vx *= -(mix > 0 ? .94 : .46);
-                state.vy += Math.sin(t * 12 + state.phase) * 28 * state.density * mix;
-                state.spin += state.vx * 2.15;
+            const geom = gachaGeometry(bowl);
+            gacha.world = null;
+            gacha.layoutSig = '';
+            bowl.innerHTML = '<span class="gacha-exit" aria-hidden="true"></span>';
+            if (!names.length) return;
+            if (geom) {
+                bowl.style.setProperty('--gacha-ball-size', `${geom.d}px`);
+                bowl.style.setProperty('--gacha-img-size', `${Math.round(geom.d * .56)}px`);
             }
-            if (state.top < state.wallTopMin) {
-                state.top = state.wallTopMin;
-                state.vy = Math.abs(state.vy) * (mix > 0 ? .9 : .34);
-                state.vx += Math.sin(t * 13 + state.phase) * 30 * state.density;
-                state.spin += state.vy * 1.35;
-            }
-            if (state.top > state.floorTop) {
-                state.top = state.floorTop;
-                if (mix > .08) {
-                    state.vy = -Math.abs(state.vy) * (mix > .24 ? .78 : .34);
-                    state.vx += Math.cos(t * 10 + state.phase) * 34 * state.density;
-                } else {
-                    state.vy = 0;
-                    state.vx *= .38;
-                    state.spin *= .3;
+            const states = [];
+            for (let i = 0; i < GACHA_CAPSULE_COUNT; i++) {
+                const ball = makeGachaCapsuleElement(i);
+                bowl.appendChild(ball);
+                if (geom) {
+                    ball._gacha = spawnGachaState(ball, geom, false);
+                    states.push(ball._gacha);
                 }
             }
+            if (!geom) return;
+            // Let the pile fall and settle off-screen so the bowl opens already at rest.
+            for (let i = 0; i < 240; i++) stepGachaWorld(states, geom, { dt: 1 / 60, mixing: false, write: false });
+            states.forEach(state => { state.vx = state.vy = state.w = 0; writeGachaCapsule(state, geom); });
+            gacha.world = { states, geom };
+            gacha.layoutSig = gachaLayoutSignature(bowl);
+        }
 
-            state.ball.style.left = `${state.left.toFixed(2)}%`;
-            state.ball.style.top = `${state.top.toFixed(2)}%`;
-            state.ball.style.setProperty('--rest-rotate', `${state.rotate.toFixed(1)}deg`);
+        // Reuse the current pile when nothing changed, dropping in replacements for dispensed capsules.
+        function refillGachaBowl() {
+            const bowl = $('gacha-bowl');
+            if (!bowl || !gacha.world || gacha.layoutSig !== gachaLayoutSignature(bowl)) return false;
+            const { geom } = gacha.world;
+            let balls = Array.from(bowl.querySelectorAll('.gacha-ball'));
+            balls.forEach(ball => ball.classList.remove('chosen'));
+            for (let i = balls.length; i < GACHA_CAPSULE_COUNT; i++) {
+                const ball = makeGachaCapsuleElement(Math.floor(Math.random() * ASSETS.length));
+                ball._gacha = spawnGachaState(ball, geom, true);
+                bowl.appendChild(ball);
+                writeGachaCapsule(ball._gacha, geom);
+            }
+            return true;
+        }
+
+        function makeGachaPhysicsState(ball, geom) {
+            const state = ball._gacha || (geom ? spawnGachaState(ball, geom, true) : { ball });
+            state.ball = ball;
+            state.removed = false;
+            ball._gacha = state;
+            return state;
+        }
+
+        // One frame of the bowl: air-jet kicks while mixing, gravity, and sphere-wall plus ball-ball
+        // collisions in 3D, so capsules pass in front of and behind each other instead of lining up flat.
+        function stepGachaWorld(states, geom, { dt, mixing, write = true }) {
+            if (!geom) return;
+            const { R, r, limit } = geom;
+            const gravity = 8.4 * R;
+            const minDist = r * 2;
+            const live = states.filter(state => !state.removed);
+            const substeps = 2;
+            const h = dt / substeps;
+            const restitution = mixing ? .74 : .24;
+            for (let step = 0; step < substeps; step++) {
+                for (const s of live) {
+                    if (mixing) {
+                        s.kickIn -= h;
+                        if (s.kickIn <= 0) {
+                            s.kickIn = randomBetween(.08, .2);
+                            if (s.y > -limit * .2) {
+                                s.vy -= randomBetween(3.9, 5.9) * R;
+                                s.vx += randomBetween(-2.5, 2.5) * R;
+                                s.vz += randomBetween(-2.5, 2.5) * R;
+                                s.w += randomBetween(-20, 20);
+                            }
+                        }
+                    }
+                    s.vy += gravity * h;
+                    const damping = mixing ? .9995 : Math.max(0, 1 - 2.6 * h);
+                    s.vx *= damping;
+                    s.vy *= damping;
+                    s.vz *= damping;
+                    s.x += s.vx * h;
+                    s.y += s.vy * h;
+                    s.z += s.vz * h;
+                    s.contact = false;
+                }
+                for (let iter = 0; iter < 4; iter++) {
+                    for (let i = 0; i < live.length; i++) {
+                        const a = live[i];
+                        for (let j = i + 1; j < live.length; j++) {
+                            const b = live[j];
+                            const dx = b.x - a.x;
+                            const dy = b.y - a.y;
+                            const dz = b.z - a.z;
+                            const d2 = dx * dx + dy * dy + dz * dz;
+                            if (d2 >= minDist * minDist || d2 < 1e-6) continue;
+                            const dist = Math.sqrt(d2);
+                            const nx = dx / dist;
+                            const ny = dy / dist;
+                            const nz = dz / dist;
+                            const push = (minDist - dist) / 2;
+                            a.x -= nx * push; a.y -= ny * push; a.z -= nz * push;
+                            b.x += nx * push; b.y += ny * push; b.z += nz * push;
+                            const vn = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny + (b.vz - a.vz) * nz;
+                            if (vn < 0) {
+                                const impulse = -(1 + restitution) * vn / 2;
+                                a.vx -= impulse * nx; a.vy -= impulse * ny; a.vz -= impulse * nz;
+                                b.vx += impulse * nx; b.vy += impulse * ny; b.vz += impulse * nz;
+                                const vt = (b.vx - a.vx) * -ny + (b.vy - a.vy) * nx;
+                                a.w += vt / r * .08;
+                                b.w += vt / r * .08;
+                            }
+                            if (ny > .35) b.contact = true;
+                            if (ny < -.35) a.contact = true;
+                        }
+                    }
+                    for (const s of live) {
+                        const dist = Math.hypot(s.x, s.y, s.z);
+                        if (dist <= limit) continue;
+                        const nx = s.x / dist;
+                        const ny = s.y / dist;
+                        const nz = s.z / dist;
+                        s.x = nx * limit;
+                        s.y = ny * limit;
+                        s.z = nz * limit;
+                        const vn = s.vx * nx + s.vy * ny + s.vz * nz;
+                        if (vn > 0) {
+                            s.vx -= (1 + restitution) * vn * nx;
+                            s.vy -= (1 + restitution) * vn * ny;
+                            s.vz -= (1 + restitution) * vn * nz;
+                        }
+                        const vt = s.vx * -ny + s.vy * nx;
+                        s.vx *= .992;
+                        s.vz *= .992;
+                        s.w += (-vt / r - s.w) * .3;
+                        if (ny > .2) s.contact = true;
+                    }
+                }
+                for (const s of live) {
+                    if (!mixing && s.contact) {
+                        s.w += (s.vx / r - s.w) * .25;
+                        if (Math.hypot(s.vx, s.vy, s.vz) < R * .05) { s.vx *= .5; s.vy *= .5; s.vz *= .5; s.w *= .5; }
+                    }
+                    s.w *= mixing ? .998 : .985;
+                    s.angle += s.w * h;
+                }
+            }
+            if (write) live.forEach(state => writeGachaCapsule(state, geom));
+        }
+
+        function gachaWorldEnergy(states, geom) {
+            if (!geom) return 0;
+            return states.reduce((max, s) => s.removed ? max : Math.max(max, Math.hypot(s.vx, s.vy, s.vz) / geom.R), 0);
         }
 
         function animateGachaCapsules(bowl, runToken) {
             const balls = Array.from(bowl?.querySelectorAll('.gacha-ball') || []);
             if (!balls.length) return Promise.resolve(true);
             bowl.classList.add('shuffling');
-            const states = balls.map((ball, index) => makeGachaPhysicsState(ball, bowl, index, balls.length));
+            const geom = gachaGeometry(bowl);
+            const states = balls.map(ball => makeGachaPhysicsState(ball, geom));
+            gacha.world = geom ? { states, geom } : null;
             return new Promise(resolve => {
                 function finish(completed) {
                     if (gacha.finishAnimation === finish) gacha.finishAnimation = null;
                     resolve(completed);
                 }
                 gacha.finishAnimation = finish;
-                const duration = randomBetween(2850, 3300);
+                const mixDuration = randomBetween(1600, 1900);
+                const maxDuration = mixDuration + 900;
                 let startedAt = 0;
                 let lastAt = 0;
                 function tick(now) {
@@ -3032,10 +3103,12 @@
                         lastAt = now;
                     }
                     const elapsed = now - startedAt;
-                    const dt = Math.min(0.026, (now - lastAt) / 1000 || 0.016);
+                    const dt = Math.min(0.03, (now - lastAt) / 1000 || 0.016);
                     lastAt = now;
-                    states.forEach(state => stepGachaCapsule(state, elapsed, dt));
-                    if (elapsed < duration) {
+                    const mixing = elapsed < mixDuration;
+                    stepGachaWorld(states, geom, { dt, mixing });
+                    const settled = !mixing && elapsed > mixDuration + 350 && gachaWorldEnergy(states, geom) < .08;
+                    if (elapsed < maxDuration && !settled) {
                         gacha.animationFrame = requestAnimationFrame(tick);
                     } else {
                         bowl.classList.remove('shuffling');
@@ -3044,6 +3117,88 @@
                 }
                 gacha.animationFrame = requestAnimationFrame(tick);
             });
+        }
+
+        // After a capsule leaves, the rest of the pile slumps into the gap.
+        function settleGachaPile(runToken, duration) {
+            const world = gacha.world;
+            if (!world) return;
+            let startedAt = 0;
+            let lastAt = 0;
+            function tick(now) {
+                if (runToken !== gacha.runToken) return;
+                gacha.animationFrame = 0;
+                if (!startedAt) startedAt = lastAt = now;
+                const dt = Math.min(0.03, (now - lastAt) / 1000 || 0.016);
+                lastAt = now;
+                stepGachaWorld(world.states, world.geom, { dt, mixing: false });
+                if (now - startedAt < duration) gacha.animationFrame = requestAnimationFrame(tick);
+            }
+            gacha.animationFrame = requestAnimationFrame(tick);
+        }
+
+        function chooseGachaExitCapsule() {
+            const world = gacha.world;
+            if (!world) return null;
+            const exitY = world.geom.limit;
+            let best = null;
+            let bestDist = Infinity;
+            for (const s of world.states) {
+                if (s.removed || !s.ball?.isConnected) continue;
+                const dist = Math.hypot(s.x, s.y - exitY, s.z * .7);
+                if (dist < bestDist) { best = s; bestDist = dist; }
+            }
+            return best;
+        }
+
+        // Fly the chosen capsule from its spot in the bowl, through the bottom hole, down into the dock.
+        function flyGachaCapsule(state, dock, duration) {
+            const { geom } = gacha.world;
+            const bowl = $('gacha-bowl');
+            const machine = document.querySelector('.gacha-machine');
+            const landed = dock.querySelector('.gacha-ball');
+            if (!bowl || !machine || !landed?.getBoundingClientRect) return null;
+            const bowlRect = bowl.getBoundingClientRect();
+            const machineRect = machine.getBoundingClientRect();
+            const landedRect = landed.getBoundingClientRect();
+            const size = landedRect.width || geom.d;
+            const projected = projectGachaCapsule(state, geom);
+            const scale = geom.d / size;
+            const originX = bowlRect.left + bowl.clientLeft;
+            const originY = bowlRect.top + bowl.clientTop;
+            const endX = landedRect.left + landedRect.width / 2;
+            const endY = landedRect.top + landedRect.height / 2;
+            const startX = originX + projected.x - endX;
+            const startY = originY + projected.y - endY;
+            const holeX = originX + geom.cx - endX;
+            const holeY = originY + geom.cy + geom.limit - endY;
+            const belowY = bowlRect.bottom + geom.d * .25 - endY;
+            const rollDeg = Math.hypot(startX - holeX, startY - holeY) / geom.r * 57.3 * (state.x > 0 ? -1 : 1);
+            const a0 = state.angle * 57.2958;
+            // Land upright so the swap to the static dock capsule doesn't snap.
+            const endDeg = Math.round((a0 + rollDeg + 420) / 360) * 360;
+
+            const flyer = document.createElement('div');
+            flyer.className = 'gacha-ball gacha-flyer';
+            flyer.style.setProperty('--cap', state.ball.dataset.color);
+            flyer.style.width = flyer.style.height = `${size}px`;
+            flyer.style.left = `${endX - machineRect.left - machine.clientLeft - size / 2}px`;
+            flyer.style.top = `${endY - machineRect.top - machine.clientTop - size / 2}px`;
+            flyer.innerHTML = `<img src="${state.ball.dataset.asset}" alt="">`;
+            const img = flyer.querySelector('img');
+            img.style.width = img.style.height = `${Math.round(size * .55)}px`;
+            machine.appendChild(flyer);
+            const at = (x, y, deg, s) => `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${deg.toFixed(0)}deg) scale(${s.toFixed(3)})`;
+            const animation = flyer.animate([
+                { offset: 0, transform: at(startX, startY, a0, scale * projected.scale), easing: 'cubic-bezier(.45,0,.75,.55)' },
+                { offset: .3, transform: at(holeX, holeY, a0 + rollDeg, scale), easing: 'cubic-bezier(.5,0,1,.6)' },
+                { offset: .44, transform: at(holeX, belowY, a0 + rollDeg + 120, scale * 1.04), easing: 'cubic-bezier(.4,0,1,.7)' },
+                { offset: .8, transform: at(0, 0, endDeg - 40, 1.05), easing: 'cubic-bezier(.2,.7,.4,1)' },
+                { offset: .9, transform: at(0, -size * .1, endDeg - 10, 1), easing: 'cubic-bezier(.6,0,.9,.5)' },
+                { offset: 1, transform: at(0, 0, endDeg, 1) }
+            ], { duration, fill: 'forwards' });
+            gacha.flyer = flyer;
+            return animation;
         }
 
         function cancelGachaDraw() {
@@ -3059,6 +3214,10 @@
             $('gacha-btn').disabled = false;
             $('gacha-btn').classList.remove('pulling');
             $('gacha-bowl')?.classList.remove('shuffling');
+            $('gacha-bowl')?.querySelector('.gacha-exit')?.classList.remove('open');
+            Array.from($('gacha-bowl')?.querySelectorAll('.gacha-ball') || []).forEach(ball => ball.classList.remove('chosen'));
+            gacha.flyer?.remove();
+            gacha.flyer = null;
             document.querySelector('.gacha-machine')?.classList.remove('dispensing');
         }
 
@@ -3070,7 +3229,7 @@
                     gacha.pauseTimer = 0;
                     gacha.finishPause = null;
                     resolve(true);
-                }, 180);
+                }, 120);
             });
         }
 
@@ -3079,7 +3238,7 @@
             const names = visibleGachaNames();
             if (names.length < 2) return;
             closeGachaPrize();
-            renderGacha();
+            if (!refillGachaBowl()) renderGacha();
             const runToken = ++gacha.runToken;
             gacha.drawing = true;
             const lever = $('gacha-btn');
@@ -3099,28 +3258,25 @@
             if (runToken !== gacha.runToken || !gacha.drawing) return;
             const winnerIndex = Math.floor(Math.random() * names.length);
             const winner = names[winnerIndex];
-            const asset = ASSETS[winnerIndex % ASSETS.length];
             const dock = $('gacha-dock');
+            const bowl = $('gacha-bowl');
             const machine = document.querySelector('.gacha-machine');
-            const capsuleColors = [
-                'rgba(91,143,199,.72)',
-                'rgba(127,184,63,.72)',
-                'rgba(198,156,58,.72)',
-                'rgba(205,112,142,.72)',
-                'rgba(130,105,206,.72)',
-                'rgba(73,177,154,.72)',
-                'rgba(221,128,70,.72)',
-                'rgba(190,93,183,.72)'
-            ];
-            const color = capsuleColors[winnerIndex % capsuleColors.length];
-            $('gacha-bowl')?.classList.remove('shuffling');
+            const chosen = chooseGachaExitCapsule();
+            const asset = chosen?.ball.dataset.asset || ASSETS[winnerIndex % ASSETS.length];
+            const color = chosen?.ball.dataset.color || GACHA_CAPSULE_COLORS[winnerIndex % GACHA_CAPSULE_COLORS.length];
+            const exit = bowl?.querySelector('.gacha-exit');
+            bowl?.classList.remove('shuffling');
             machine?.classList.remove('dispensing');
-            void machine?.offsetWidth;
-            machine?.classList.add('dispensing');
-            dock.innerHTML = `<div class="gacha-ball pick" style="--cap:${color}"><img src="${asset}" alt=""></div>`;
-            gacha.resultTimer = setTimeout(() => {
-                if (runToken !== gacha.runToken || !gacha.drawing) return;
-                gacha.resultTimer = 0;
+
+            function later(callback, delay) {
+                gacha.resultTimer = setTimeout(() => {
+                    if (runToken !== gacha.runToken || !gacha.drawing) return;
+                    gacha.resultTimer = 0;
+                    callback();
+                }, delay);
+            }
+
+            function publish() {
                 $('gacha-result-img').src = asset;
                 const resultBall = $('gacha-result-ball');
                 if (resultBall) resultBall.style.setProperty('--cap', color);
@@ -3135,8 +3291,38 @@
                 $('gacha-btn').disabled = false;
                 $('gacha-btn').classList.remove('pulling');
                 machine?.classList.remove('dispensing');
+                exit?.classList.remove('open');
                 focusGameModal($('gacha-prize-modal'));
-            }, 1900);
+            }
+
+            if (!chosen) {
+                void machine?.offsetWidth;
+                machine?.classList.add('dispensing');
+                dock.innerHTML = `<div class="gacha-ball pick" style="--cap:${color}"><img src="${asset}" alt=""></div>`;
+                later(publish, 1380);
+                return;
+            }
+
+            // 1) The capsule nearest the hole lights up, 2) rolls out through it into the dock, 3) result.
+            chosen.ball.classList.add('chosen');
+            exit?.classList.add('open');
+            later(() => {
+                dock.innerHTML = `<div class="gacha-ball pick landed" style="--cap:${color};visibility:hidden"><img src="${asset}" alt=""></div>`;
+                const flight = flyGachaCapsule(chosen, dock, 900);
+                chosen.removed = true;
+                chosen.ball.remove();
+                settleGachaPile(runToken, 900);
+                void machine?.offsetWidth;
+                machine?.classList.add('dispensing');
+                later(() => {
+                    flight?.cancel();
+                    gacha.flyer?.remove();
+                    gacha.flyer = null;
+                    const landed = dock.querySelector('.gacha-ball');
+                    if (landed) landed.style.visibility = '';
+                    later(publish, 200);
+                }, 900);
+            }, 280);
         }
 
         function closeGachaPrize() {
@@ -3295,7 +3481,7 @@
         window.addEventListener('resize', () => {
             drawLadder();
             drawRoulette();
-            renderGacha();
+            if (!gacha.drawing) renderGacha();
         });
     </script>
 </body>

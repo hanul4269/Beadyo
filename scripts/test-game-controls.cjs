@@ -84,7 +84,7 @@ function fixture({ balls = 0 } = {}) {
         drawRoulette = () => {};
         drawLadder = () => {};
         makeGachaPhysicsState = ball => ({ ball });
-        stepGachaCapsule = () => {};
+        stepGachaWorld = () => {};
         revealLadder = () => { count.reveals++; };
         runLadder = index => { count.starts.push(index); };
         globalThis.api = { roulette, gacha, ladder, spinRoulette, resetRoulette, pullGachaLever, resetGacha,
