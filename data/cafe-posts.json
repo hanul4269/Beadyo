@@ -3,8 +3,14 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-11-22T00:21:56.393Z",
+  "fetchedAt": "2026-11-22T07:30:10.413Z",
   "posts": [
+    {
+      "id": "40707",
+      "title": "엇",
+      "publishedAt": "2026-11-22T14:28:35.130+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40707"
+    },
     {
       "id": "40689",
       "title": "무서워서",
@@ -28,12 +34,6 @@
       "title": "안 믿을까봐",
       "publishedAt": "2026-11-18T14:45:03.683+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40671"
-    },
-    {
-      "id": "40669",
-      "title": "왼쩍은 구북이 등짝이 모양으로 만든간데",
-      "publishedAt": "2026-11-18T13:11:27.107+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40669"
     }
   ]
 }
