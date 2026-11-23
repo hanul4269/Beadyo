@@ -3,8 +3,20 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-11-23T01:59:17.112Z",
+  "fetchedAt": "2026-11-23T10:49:39.715Z",
   "posts": [
+    {
+      "id": "40724",
+      "title": "콜오브듀티",
+      "publishedAt": "2026-11-23T17:21:01.780+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40724"
+    },
+    {
+      "id": "40722",
+      "title": "좋은 기회로",
+      "publishedAt": "2026-11-23T14:54:10.877+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40722"
+    },
     {
       "id": "40707",
       "title": "엇",
@@ -22,18 +34,6 @@
       "title": "키마가 오래",
       "publishedAt": "2026-11-19T19:52:11.700+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40683"
-    },
-    {
-      "id": "40681",
-      "title": "피로감에 계속 자다가",
-      "publishedAt": "2026-11-19T14:57:01.390+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40681"
-    },
-    {
-      "id": "40671",
-      "title": "안 믿을까봐",
-      "publishedAt": "2026-11-18T14:45:03.683+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40671"
     }
   ]
 }
