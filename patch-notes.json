@@ -1,8 +1,23 @@
 {
   "schemaVersion": 1,
   "rangeLabel": "최근 2개월 주요 변경점",
-  "updatedAt": "2026.11.23",
+  "updatedAt": "2026.11.25",
   "notes": [
+    {
+      "date": "2026.11.25",
+      "tag": "관리",
+      "items": [
+        "플레이한 게임에 11월 15~24일 기록 추가 (Worst Class Ever, 예비군, 콜 오브 듀티: 모던 워페어 4 등 7개 게임)",
+        "Dub Night Live·Just Dance: Decades of Hits 공식 이미지와 이름 정리"
+      ]
+    },
+    {
+      "date": "2026.11.25",
+      "tag": "개선",
+      "items": [
+        "플레이한 게임: 직접 추가한 게임을 편집자가 수정할 수 있어요"
+      ]
+    },
     {
       "date": "2026.11.23",
       "tag": "개선",

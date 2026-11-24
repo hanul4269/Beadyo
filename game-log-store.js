@@ -60,7 +60,9 @@
         const payload = canonicalPayload({ ...values, id });
         const allowed = new Set((categories || []).map(category => typeof category === 'string' ? category : category.id));
         payload.genres = genres(values.genres, allowed);
-        if ((existingGames || []).some(game => [game.title, ...(game.aliases || [])].some(value => normalize(value) === normalize(payload.title)))) throw fail('이미 등록된 게임입니다. 게임 목록에서 확인해 주세요.', 'DUPLICATE');
+        // When editing, the record being edited must not count as its own duplicate.
+        const selfId = `custom-${payload.id}`;
+        if ((existingGames || []).some(game => game.id !== selfId && [game.title, ...(game.aliases || [])].some(value => normalize(value) === normalize(payload.title)))) throw fail('이미 등록된 게임입니다. 게임 목록에서 확인해 주세요.', 'DUPLICATE');
         return payload;
     }
     function validRow(row) {
@@ -82,7 +84,7 @@
     function databaseError(error, fallback) {
         const code = error?.code || fallback;
         const message = code === '23505' ? '이미 등록된 게임입니다. 게임 목록에서 확인해 주세요.'
-            : code === '42501' || code === 'PGRST301' ? '게임을 추가할 권한을 확인하지 못했어요. 로그인 상태를 확인해 주세요.'
+            : code === '42501' || code === 'PGRST301' ? '게임을 저장할 권한을 확인하지 못했어요. 로그인 상태를 확인해 주세요.'
                 : code === 'PGRST205' || code === '42P01' ? '게임 저장 기능을 준비하지 못했어요. 잠시 후 다시 시도해 주세요.'
                     : fallback === 'READ_FAILED' ? '추가한 게임을 불러오지 못했어요. 다시 시도해 주세요.'
                         : '저장 결과를 확인하지 못했어요. 잠시 후 같은 내용으로 다시 저장해 주세요.';
@@ -141,5 +143,24 @@
         } catch { /* Preserve the uncertain result; never invent a successful save. */ }
         throw originalError;
     }
-    return Object.freeze({ FIELDS, normalize, buildPayload, rowToGame, readEntries, addEntry });
+    async function updateEntry(db, values, options = {}) {
+        const payload = canonicalPayload(values);
+        const { id, ...changes } = payload;
+        const timeoutMs = options.timeoutMs || 5000;
+        let originalError;
+        try {
+            const result = await deadline(signal => db.from(TABLE).update(changes).eq('id', id).select(FIELDS).abortSignal(signal).maybeSingle(), timeoutMs);
+            if (result.error) throw databaseError(result.error, 'SAVE_UNCONFIRMED');
+            if (!result.data) throw fail('수정할 권한이 없거나 이미 삭제된 게임이에요. 새로고침 후 다시 확인해 주세요.', 'NOT_UPDATED');
+            if (!matches(result.data, payload)) throw fail('저장 결과를 확인하지 못했어요. 잠시 후 같은 내용으로 다시 저장해 주세요.', 'SAVE_UNCONFIRMED');
+            return validRow(result.data);
+        } catch (error) { originalError = error?.code ? error : databaseError(error, 'SAVE_UNCONFIRMED'); }
+        // A failed response may follow a committed UPDATE. Verify only this record's UUID.
+        try {
+            const { data, error } = await deadline(signal => db.from(TABLE).select(FIELDS).eq('id', id).abortSignal(signal).maybeSingle(), timeoutMs);
+            if (!error && matches(data, payload)) return validRow(data);
+        } catch { /* Preserve the uncertain result; never invent a successful save. */ }
+        throw originalError;
+    }
+    return Object.freeze({ FIELDS, normalize, buildPayload, rowToGame, readEntries, addEntry, updateEntry });
 });

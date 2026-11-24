@@ -6227,6 +6227,102 @@
         "Indie",
         "Simulation"
       ]
+    },
+    "just-dance": {
+      "genres": [
+        "rhythm",
+        "party-social"
+      ],
+      "sourceUrl": "https://www.ubisoft.com/ko-kr/game/just-dance/decades-of-hits",
+      "sourceTags": [
+        "Rhythm",
+        "Dance",
+        "Party"
+      ]
+    },
+    "worst-class-ever": {
+      "genres": [
+        "party-social",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/5175310/",
+      "sourceTags": [
+        "Asymmetric party",
+        "Casual",
+        "Simulation"
+      ]
+    },
+    "rok-reserve-force": {
+      "genres": [
+        "action",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/5367010/",
+      "sourceTags": [
+        "Action",
+        "Indie",
+        "Simulation"
+      ]
+    },
+    "trust-your-instinct": {
+      "genres": [
+        "strategy",
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4066520/",
+      "sourceTags": [
+        "Roguelite",
+        "Roulette",
+        "Strategy",
+        "Simulation"
+      ]
+    },
+    "hair-removal-salon-simulator": {
+      "genres": [
+        "simulation"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4351380/",
+      "sourceTags": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ]
+    },
+    "ah-ah-ah": {
+      "genres": [
+        "action",
+        "platformer"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4574320/",
+      "sourceTags": [
+        "Voice input",
+        "Action",
+        "Casual"
+      ]
+    },
+    "call-of-duty-modern-warfare-4": {
+      "genres": [
+        "shooter",
+        "action"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/4435490/",
+      "sourceTags": [
+        "FPS",
+        "Action",
+        "Campaign"
+      ]
+    },
+    "dub-night-live": {
+      "genres": [
+        "party-social"
+      ],
+      "sourceUrl": "https://store.steampowered.com/app/5099290/",
+      "sourceTags": [
+        "Casual",
+        "Indie",
+        "Party",
+        "Voice dubbing"
+      ]
     }
   }
 }

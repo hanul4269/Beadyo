@@ -50,6 +50,7 @@
     let authGeneration = 0;
     let savingGame = false;
     let draftId = '';
+    let editingId = '';
     const Store = window.BeadyoGameStore;
     let db = null;
     try { db = window.getBeadyoSupabaseClient({ auth: { detectSessionInUrl: false, flowType: 'pkce' } }); } catch {}
@@ -221,6 +222,17 @@
                 content.append(source);
             }
         }
+        if (game.isCustom && isEditor && customReady) {
+            const edit = element('button', 'secondary-action detail-edit', '정보 수정');
+            edit.type = 'button';
+            edit.addEventListener('click', () => {
+                const row = customRows.find(item => `custom-${item.id}` === game.id);
+                if (!row) return;
+                $('game-dialog').close();
+                openGameForm(row);
+            });
+            content.append(edit);
+        }
         content.append(element('p', 'detail-date-note', '확인된 자료에 남아 있는 날짜예요. 최초 플레이일이나 전체 플레이 횟수를 뜻하지는 않습니다.'));
         if (state.year || state.month) content.append(element('p', 'detail-date-note', '다른 기간의 기록은 연도·월 필터를 해제하면 볼 수 있어요.'));
         const imageSource = safeLink(game.imageCredit?.sourceUrl || '');
@@ -319,12 +331,25 @@
             return label;
         }));
     }
-    function openAddGame() {
+    function openGameForm(row = null) {
         if (!isEditor || !customReady || !dataset || savingGame) return;
         $('game-add-form').reset();
         $('game-add-message').textContent = '';
-        $('new-game-date').value = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
-        draftId = crypto.randomUUID();
+        editingId = row ? row.id : '';
+        $('game-add-title').textContent = row ? '게임 정보 수정' : '새 게임 추가';
+        $('save-new-game').textContent = row ? '수정 저장' : '게임 추가';
+        if (row) {
+            $('new-game-title').value = row.title;
+            $('new-game-date').value = row.played_date || '';
+            $('new-game-official').value = row.official_url || '';
+            $('new-game-source').value = row.source_url || '';
+            $('new-game-notes').value = row.notes || '';
+            $('new-game-genres').querySelectorAll('input').forEach(input => { input.checked = row.genres.includes(input.value); });
+            draftId = row.id;
+        } else {
+            $('new-game-date').value = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+            draftId = crypto.randomUUID();
+        }
         $('game-add-dialog').showModal();
         document.body.classList.add('detail-open');
     }
@@ -350,7 +375,8 @@
         $('save-new-game').textContent = '저장 중…';
         try {
             if (!await canEditNow()) throw new Error('편집 권한을 확인하지 못했어요. 로그인 상태를 확인하고 다시 시도해 주세요.');
-            const saved = await Store.addEntry(db, payload);
+            const editing = Boolean(editingId) && editingId === payload.id;
+            const saved = editing ? await Store.updateEntry(db, payload) : await Store.addEntry(db, payload);
             customRows = [...customRows.filter(row => row.id !== saved.id), saved];
             const game = Store.rowToGame(saved);
             dataset = { ...dataset, games: [...dataset.games.filter(item => item.id !== game.id), game] };
@@ -360,7 +386,7 @@
             $('game-search').value = game.title;
             render();
             $('game-add-dialog').close();
-            $('game-save-notice').textContent = '새 게임을 추가했어요.';
+            $('game-save-notice').textContent = editing ? '게임 정보를 수정했어요.' : '새 게임을 추가했어요.';
             $('game-save-notice').hidden = false;
         } catch (error) {
             message.textContent = ['23505', 'DUPLICATE'].includes(error.code) ? '이미 등록된 게임 이름이에요. 목록에서 먼저 확인해 주세요.' : error.message || '저장하지 못했어요. 내용을 유지했으니 다시 시도해 주세요.';
@@ -368,7 +394,7 @@
             savingGame = false;
             $('game-add-fields').disabled = false;
             for (const id of ['save-new-game', 'cancel-new-game', 'close-add-game']) $(id).disabled = false;
-            $('save-new-game').textContent = '게임 추가';
+            $('save-new-game').textContent = editingId ? '수정 저장' : '게임 추가';
         }
     }
     function syncCatalogControls() {
@@ -411,7 +437,7 @@
         try {
             return await Promise.race([
                 (async () => {
-                    const response = await fetch('data/game-log-genres.json?v=filters-20261102', { cache: 'no-cache', credentials: 'omit', signal: controller.signal });
+                    const response = await fetch('data/game-log-genres.json?v=vod-20261125', { cache: 'no-cache', credentials: 'omit', signal: controller.signal });
                     if (!response.ok) return null;
                     const data = await response.json();
                     if (!Array.isArray(data.categories) || !data.games || typeof data.games !== 'object') return null;
@@ -428,7 +454,7 @@
         $('games').setAttribute('aria-busy', 'true');
         try {
             const [response, genreData] = await Promise.all([
-                fetch('data/game-log.json?v=game-images-20261103', { cache: 'no-cache', credentials: 'omit' }),
+                fetch('data/game-log.json?v=vod-20261125', { cache: 'no-cache', credentials: 'omit' }),
                 loadGenres(),
                 loadCustomRecords(),
             ]);
@@ -440,10 +466,11 @@
             genresAvailable = Boolean(genreData);
             renderGenreChoices();
             const categoryIds = new Set(categories.map(category => category.id));
+            const catalogNames = new Set(Store ? next.games.flatMap(game => [game.title, ...(game.aliases || [])]).map(Store.normalize) : []);
             dataset = { ...next, games: next.games.map(game => {
                 const genres = genreData?.games[game.id]?.genres;
                 return { ...game, genres: Array.isArray(genres) ? [...new Set(genres.filter(genre => categoryIds.has(genre)))] : [] };
-            }).concat(customRows.map(row => Store.rowToGame(row))) };
+            }).concat(customRows.filter(row => !catalogNames.has(Store.normalize(row.title))).map(row => Store.rowToGame(row))) };
             syncCatalogControls();
             const hasVideoRecords = dataset.games.some(game => game.dates.some(record => record.confidence === 'video'));
             const sourceNote = hasVideoRecords ? '영상에서 확인한 날짜에는 해당 장면으로 이동하는 링크를 붙였습니다. 날짜는 한국 시간 기준이며, 자정을 넘긴 경우 방송 시작일도 함께 표시합니다.' : '날짜별 링크에서 캘린더·문서 출처를 확인할 수 있어요.';
@@ -496,7 +523,7 @@
     $('reset-filters').addEventListener('click', reset);
     $('retry-load').addEventListener('click', load);
     $('retry-custom-games').addEventListener('click', load);
-    $('add-game-btn').addEventListener('click', openAddGame);
+    $('add-game-btn').addEventListener('click', () => openGameForm());
     $('game-add-form').addEventListener('submit', saveNewGame);
     $('game-add-form').addEventListener('input', () => { if (!savingGame) $('game-add-message').textContent = ''; });
     for (const id of ['cancel-new-game', 'close-add-game']) $(id).addEventListener('click', () => { if (!savingGame) $('game-add-dialog').close(); });

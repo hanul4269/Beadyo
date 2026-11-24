@@ -3,9 +3,9 @@
   "preparedOn": "2026-11-16",
   "channel": "beadyo97",
   "coverage": {
-    "period": "2026-10-31 수집 방송국 전체 목록(2023–2026년) + 2026-11-03~11-15 추가 검토(11월 2~3일 경계 방송 포함)",
-    "totalVods": 1088,
-    "reviewedVods": 1039,
+    "period": "2026-10-31 수집 방송국 전체 목록(2023–2026년) + 2026-11-03~11-24 추가 검토(11월 2~3일 경계 방송 포함)",
+    "totalVods": 1102,
+    "reviewedVods": 1053,
     "restrictedVods": 47,
     "partialVods": 0,
     "pendingVods": 0,
@@ -13,7 +13,7 @@
     "sampleIntervalSeconds": 60,
     "continuousPlaybackReviewed": false,
     "reviewComplete": false,
-    "replayVods": 1054,
+    "replayVods": 1068,
     "clipVods": 34,
     "recheckedOn": "2026-11-02",
     "baseSampleIntervalSeconds": 60,
@@ -32,28 +32,34 @@
     "publicSampleReviewComplete": true,
     "unavailableRecheckedOn": "2026-11-02",
     "latestIncrementalReview": {
-      "reviewedOn": "2026-11-16",
-      "from": "2026-11-10",
-      "through": "2026-11-15",
+      "reviewedOn": "2026-11-24",
+      "from": "2026-11-15",
+      "through": "2026-11-24",
       "vodIds": [
-        212290131,
-        212420025,
-        212431473,
-        212507945,
-        212552493,
-        212591607,
-        212599961,
+        212750033,
+        212832027,
+        212930469,
+        212966905,
+        212979531,
+        213000399,
+        213100401,
+        213163665,
+        213178263,
+        213212593,
+        213223797,
+        213252391,
+        213358535,
+        213440689
+      ],
+      "reviewedVods": 14,
+      "directlyViewedSampleFrames": 1959,
+      "baseSampleIntervalSeconds": 120,
+      "addedGames": 7,
+      "addedGameDates": 12,
+      "previouslyReviewedBoundaryVodIds": [
         212650121
       ],
-      "reviewedVods": 8,
-      "directlyViewedSampleFrames": 855,
-      "baseSampleIntervalSeconds": 120,
-      "addedGames": 2,
-      "addedGameDates": 4,
-      "previouslyReviewedBoundaryVodIds": [
-        212193875
-      ],
-      "scopeNote": "11월 10일 새벽까지의 방송은 기존 검토·기록을 보존하고, 이후 새 공개 다시보기 8개(11월 10일 저녁~15일 새벽)를 120초 간격 장면 표본으로 추가 검토했습니다. 11월 16일 0시 공개 목록 기준이며 이후 방송은 포함하지 않습니다.",
+      "scopeNote": "11월 15일 새벽까지의 방송은 기존 검토·기록을 보존하고, 이후 새 공개 다시보기 14개(11월 15일 저녁~24일 새벽)를 120초 간격 장면 표본으로 추가 검토했습니다. 11월 24일 공개 목록 기준이며 클립은 제외했습니다.",
       "continuousPlaybackReviewed": false,
       "audioReviewed": false
     },
@@ -124,6 +130,38 @@
           212193875
         ],
         "scopeNote": "11월 10일 새벽까지의 방송은 기존 검토·기록을 보존하고, 이후 새 공개 다시보기 8개(11월 10일 저녁~15일 새벽)를 120초 간격 장면 표본으로 추가 검토했습니다. 11월 16일 0시 공개 목록 기준이며 이후 방송은 포함하지 않습니다.",
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      },
+      {
+        "reviewedOn": "2026-11-24",
+        "from": "2026-11-15",
+        "through": "2026-11-24",
+        "vodIds": [
+          212750033,
+          212832027,
+          212930469,
+          212966905,
+          212979531,
+          213000399,
+          213100401,
+          213163665,
+          213178263,
+          213212593,
+          213223797,
+          213252391,
+          213358535,
+          213440689
+        ],
+        "reviewedVods": 14,
+        "directlyViewedSampleFrames": 1959,
+        "baseSampleIntervalSeconds": 120,
+        "addedGames": 7,
+        "addedGameDates": 12,
+        "previouslyReviewedBoundaryVodIds": [
+          212650121
+        ],
+        "scopeNote": "11월 15일 새벽까지의 방송은 기존 검토·기록을 보존하고, 이후 새 공개 다시보기 14개(11월 15일 저녁~24일 새벽)를 120초 간격 장면 표본으로 추가 검토했습니다. 11월 24일 공개 목록 기준이며 클립은 제외했습니다.",
         "continuousPlaybackReviewed": false,
         "audioReviewed": false
       }
@@ -105879,6 +105917,760 @@
         "displayedTileResolution": [
           480,
           270
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 212750033,
+      "title": "후열 노래 잠깐 | 11월 25일 슬요 X 따린 오리지널곡 많관부💚",
+      "sourceUrl": "https://vod.sooplive.com/player/212750033",
+      "broadcastStart": "2026-11-15 20:08:49",
+      "durationSeconds": 23323.667,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [
+        {
+          "date": "2026-11-15",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212750033?change_second=4080",
+          "confidence": "video",
+          "eventTitle": "후열 노래 잠깐 | 11월 25일 슬요 X 따린 오리지널곡 많관부💚",
+          "timestampLabel": "01:08:00",
+          "seconds": 4080,
+          "playedAt": "2026-11-15T21:16:49.000+09:00",
+          "broadcastDate": "2026-11-15",
+          "vodId": 212750033,
+          "dateBasis": "file_start_plus_file_local_time",
+          "gameId": "just-dance",
+          "description": "01:06 무렵 Nintendo Switch 실행 화면 뒤 Just Dance의 코치 선택 화면을 원본 프레임으로 확인했다. 표본에서 두 사람이 함께 여러 곡을 플레이하는 장면이 01:58 무렵까지 이어지고, 02:00 프레임의 Switch 홈 화면에 Just Dance® 플레이 중 표시가 남아 있다.",
+          "broadcastTitle": "후열 노래 잠깐 | 11월 25일 슬요 X 따린 오리지널곡 많관부💚",
+          "videoVerified": true,
+          "verificationMethod": "공개 원본 영상 프레임 직접 확인 및 전체 120초 표본 대조",
+          "reviewedOn": "2026-11-24",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "fileStart": "2026-11-15 20:08:49",
+          "fileLocalSeconds": 4080,
+          "fileIndex": 0
+        }
+      ],
+      "unresolved": [],
+      "excluded": [
+        "3D 의상 소개·노래·수다 구간은 게임 플레이가 아니다."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-15~2026-11-24인 추가 기록.",
+        "2026-11-25: 저스트 댄스는 Switch 2 홈 화면의 Just Dance® 타일(Decades of Hits 키아트)로 Just Dance: Decades of Hits임을 확인했다."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-24",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 195,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          240,
+          135
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 212832027,
+      "title": "8시) 머리퍼리 비상입니다. | D-9 듀엣곡 발매🔥",
+      "sourceUrl": "https://vod.sooplive.com/player/212832027",
+      "broadcastStart": "2026-11-16 18:00:22",
+      "durationSeconds": 26030.1,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [
+        {
+          "date": "2026-11-17",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212832027?change_second=25440",
+          "confidence": "video",
+          "eventTitle": "8시) 머리퍼리 비상입니다. | D-9 듀엣곡 발매🔥",
+          "timestampLabel": "07:04:00",
+          "seconds": 25440,
+          "playedAt": "2026-11-17T01:04:24.000+09:00",
+          "broadcastDate": "2026-11-16",
+          "vodId": 212832027,
+          "dateBasis": "file_start_plus_file_local_time",
+          "gameId": "nikke",
+          "description": "방송 후반 NIKKE 모집·캐릭터 상세 화면(SSR 니케 정보, NIKKE INFORMATION)을 원본 프레임으로 확인했다.",
+          "broadcastTitle": "8시) 머리퍼리 비상입니다. | D-9 듀엣곡 발매🔥",
+          "videoVerified": true,
+          "verificationMethod": "공개 원본 영상 프레임 직접 확인 및 전체 120초 표본 대조",
+          "reviewedOn": "2026-11-24",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "fileStart": "2026-11-16 23:00:24",
+          "fileLocalSeconds": 7440.0,
+          "fileIndex": 1
+        }
+      ],
+      "unresolved": [],
+      "excluded": [
+        "앞부분은 AGF 행사 방송·영상 같이보기다."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-15~2026-11-24인 추가 기록.",
+        "2026-11-25: Dub Night Live를 게임 목록 기록으로 옮겨 날짜를 추가했다(원본 프레임: Steam 라이브러리 실행 화면 / 게임 내 BACKSTAGE 로비)."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-24",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 217,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          240,
+          135
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 212930469,
+      "title": "후열 디아블로스 구스구스덕 | D-8 듀엣곡 발매🔥",
+      "sourceUrl": "https://vod.sooplive.com/player/212930469",
+      "broadcastStart": "2026-11-17 18:00:22",
+      "durationSeconds": 33154.584,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [
+        {
+          "date": "2026-11-17",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212930469?change_second=18960",
+          "confidence": "video",
+          "eventTitle": "후열 디아블로스 구스구스덕 | D-8 듀엣곡 발매🔥",
+          "timestampLabel": "05:16:00",
+          "seconds": 18960,
+          "playedAt": "2026-11-17T23:16:24.000+09:00",
+          "broadcastDate": "2026-11-17",
+          "vodId": 212930469,
+          "dateBasis": "file_start_plus_file_local_time",
+          "gameId": "worst-class-ever",
+          "description": "교실·복도에서 학생 캐릭터로 장난 수치를 모으는 비대칭 파티 게임 화면(방 코드, 벽면 Mischief Points 안내)을 원본 프레임으로 확인했다. 11월 18일 0시 이후까지 이어진다.",
+          "broadcastTitle": "후열 디아블로스 구스구스덕 | D-8 듀엣곡 발매🔥",
+          "videoVerified": true,
+          "verificationMethod": "공개 원본 영상 프레임 직접 확인 및 전체 120초 표본 대조",
+          "reviewedOn": "2026-11-24",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "fileStart": "2026-11-17 23:00:24",
+          "fileLocalSeconds": 960.0,
+          "fileIndex": 1
+        },
+        {
+          "date": "2026-11-18",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212930469?change_second=23520",
+          "confidence": "video",
+          "eventTitle": "후열 디아블로스 구스구스덕 | D-8 듀엣곡 발매🔥",
+          "timestampLabel": "06:32:00",
+          "seconds": 23520,
+          "playedAt": "2026-11-18T00:32:24.000+09:00",
+          "broadcastDate": "2026-11-17",
+          "vodId": 212930469,
+          "dateBasis": "file_start_plus_file_local_time",
+          "gameId": "worst-class-ever",
+          "description": "자정 이후 선생님 역할로 학생 5명을 모두 잡은 결과 화면(老师胜利, beadyo(선생님) 검거 5)을 원본 프레임으로 확인했다.",
+          "broadcastTitle": "후열 디아블로스 구스구스덕 | D-8 듀엣곡 발매🔥",
+          "videoVerified": true,
+          "verificationMethod": "공개 원본 영상 프레임 직접 확인 및 전체 120초 표본 대조",
+          "reviewedOn": "2026-11-24",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "fileStart": "2026-11-17 23:00:24",
+          "fileLocalSeconds": 5520.0,
+          "fileIndex": 1
+        },
+        {
+          "date": "2026-11-18",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/212930469?change_second=24600",
+          "confidence": "video",
+          "eventTitle": "후열 디아블로스 구스구스덕 | D-8 듀엣곡 발매🔥",
+          "timestampLabel": "06:50:00",
+          "seconds": 24600,
+          "playedAt": "2026-11-18T00:50:24.000+09:00",
+          "broadcastDate": "2026-11-17",
+          "vodId": 212930469,
+          "dateBasis": "file_start_plus_file_local_time",
+          "gameId": "goose-goose-duck",
+          "description": "Steam의 Goose Goose Duck 실행 후 플레이어 목록에 구슬요[당신]이 표시된 원본 프레임을 확인했다. 표본에서 투표·맵 이동·파티 오리 모드 장면이 02:56 무렵까지 이어진다.",
+          "broadcastTitle": "후열 디아블로스 구스구스덕 | D-8 듀엣곡 발매🔥",
+          "videoVerified": true,
+          "verificationMethod": "공개 원본 영상 프레임 직접 확인 및 전체 120초 표본 대조",
+          "reviewedOn": "2026-11-24",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "fileStart": "2026-11-17 23:00:24",
+          "fileLocalSeconds": 6600.0,
+          "fileIndex": 1
+        }
+      ],
+      "unresolved": [],
+      "excluded": [
+        "19:24~19:56 웹 퀴즈 화면은 게임 목록에 넣지 않았다."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-15~2026-11-24인 추가 기록.",
+        "2026-11-25: Dub Night Live를 게임 목록 기록으로 옮겨 날짜를 추가했다(원본 프레임: Steam 라이브러리 실행 화면 / 게임 내 BACKSTAGE 로비)."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-24",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 277,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          240,
+          135
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 212966905,
+      "title": "7시) V리그 배구 승부 예측 기능 OPEN (맞추면 퀵뷰) | D-7 듀엣곡 발매🔥",
+      "sourceUrl": "https://vod.sooplive.com/player/212966905",
+      "broadcastStart": "2026-11-18 18:00:38",
+      "durationSeconds": 2674.0,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [],
+      "unresolved": [],
+      "excluded": [
+        "수다와 배구 예측 안내만 있다."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-15~2026-11-24인 추가 기록."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-24",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 23,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          240,
+          135
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 212979531,
+      "title": "7시) V리그 배구 멸망전 Soopers VS 현대건설 (맞추면 퀵뷰) | D-7 듀엣곡 발매🔥",
+      "sourceUrl": "https://vod.sooplive.com/player/212979531",
+      "broadcastStart": "2026-11-18 18:45:14",
+      "durationSeconds": 8073.0,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [],
+      "unresolved": [],
+      "excluded": [
+        "V리그 배구 경기 같이보기다."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-15~2026-11-24인 추가 기록."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-24",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 69,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          240,
+          135
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 213000399,
+      "title": "예비군 훈련을 시작합니다. | D-7 듀엣곡 발매🔥",
+      "sourceUrl": "https://vod.sooplive.com/player/213000399",
+      "broadcastStart": "2026-11-18 20:59:48",
+      "durationSeconds": 10476.967,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [
+        {
+          "date": "2026-11-18",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/213000399?change_second=383",
+          "confidence": "video",
+          "eventTitle": "예비군 훈련을 시작합니다. | D-7 듀엣곡 발매🔥",
+          "timestampLabel": "00:06:23",
+          "seconds": 383,
+          "playedAt": "2026-11-18T21:06:10.000+09:00",
+          "broadcastDate": "2026-11-18",
+          "vodId": 213000399,
+          "dateBasis": "file_start_plus_file_local_time",
+          "gameId": "rok-reserve-force",
+          "description": "Steam 라이브러리에서 예비군(ROK RESERVE FORCE) 실행 중 화면을 원본 프레임으로 확인했다. 이후 표본에서 사격·교육·훈련장 이동 장면이 22:36 무렵까지 이어진다.",
+          "broadcastTitle": "예비군 훈련을 시작합니다. | D-7 듀엣곡 발매🔥",
+          "videoVerified": true,
+          "verificationMethod": "공개 원본 영상 프레임 직접 확인 및 전체 120초 표본 대조",
+          "reviewedOn": "2026-11-24",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "fileStart": "2026-11-18 21:00:10",
+          "fileLocalSeconds": 360.0,
+          "fileIndex": 1
+        }
+      ],
+      "unresolved": [],
+      "excluded": [],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-15~2026-11-24인 추가 기록."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-24",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 89,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          240,
+          135
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 213100401,
+      "title": "미스테리 많이 무섭나? 나 안무서울줄 알고 야식 시켰는데 (w.키마 마냥 뮤즈 힌콕 화양 유나기) | D-6 듀엣곡 발매🔥",
+      "sourceUrl": "https://vod.sooplive.com/player/213100401",
+      "broadcastStart": "2026-11-19 23:52:16",
+      "durationSeconds": 17672.217,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [],
+      "unresolved": [],
+      "excluded": [
+        "미스터리 다큐멘터리 같이보기다."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-15~2026-11-24인 추가 기록."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-24",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 148,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          240,
+          135
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 213163665,
+      "title": "8시) 중력이가 오래 ( 마크 이터널리턴 )| D-5 듀엣곡 발매🔥",
+      "sourceUrl": "https://vod.sooplive.com/player/213163665",
+      "broadcastStart": "2026-11-20 18:00:37",
+      "durationSeconds": 19806.0,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [
+        {
+          "date": "2026-11-20",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/213163665?change_second=4080",
+          "confidence": "video",
+          "eventTitle": "8시) 중력이가 오래 ( 마크 이터널리턴 )| D-5 듀엣곡 발매🔥",
+          "timestampLabel": "01:08:00",
+          "seconds": 4080,
+          "playedAt": "2026-11-20T19:08:37.000+09:00",
+          "broadcastDate": "2026-11-20",
+          "vodId": 213163665,
+          "dateBasis": "file_start_plus_file_local_time",
+          "gameId": "minecraft",
+          "description": "이터널 리턴 규칙을 적용한 마인크래프트 서버에서 직접 이동·전투하는 원본 프레임을 확인했다. 표본에서 23:16 무렵까지 이어진다.",
+          "broadcastTitle": "8시) 중력이가 오래 ( 마크 이터널리턴 )| D-5 듀엣곡 발매🔥",
+          "videoVerified": true,
+          "verificationMethod": "공개 원본 영상 프레임 직접 확인 및 전체 120초 표본 대조",
+          "reviewedOn": "2026-11-24",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "fileStart": "2026-11-20 18:00:37",
+          "fileLocalSeconds": 4080,
+          "fileIndex": 0
+        }
+      ],
+      "unresolved": [],
+      "excluded": [],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-15~2026-11-24인 추가 기록."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-24",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 166,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          240,
+          135
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 213178263,
+      "title": "여러분은 클라이밍 하지마세요.. | D-5 듀엣곡 발매🔥",
+      "sourceUrl": "https://vod.sooplive.com/player/213178263",
+      "broadcastStart": "2026-11-20 23:30:44",
+      "durationSeconds": 8398.05,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [],
+      "unresolved": [],
+      "excluded": [
+        "영화 같이보기다."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-15~2026-11-24인 추가 기록."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-24",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 72,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          240,
+          135
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 213212593,
+      "title": "3시 여자배구 SOOPers VS 정관장 승부예측 투표 중! ㅍ| D-4 듀엣곡 발매🔥",
+      "sourceUrl": "https://vod.sooplive.com/player/213212593",
+      "broadcastStart": "2026-11-21 15:02:28",
+      "durationSeconds": 2598.0,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [],
+      "unresolved": [],
+      "excluded": [
+        "수다 구간만 있다."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-15~2026-11-24인 추가 기록."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-24",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 22,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          240,
+          135
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 213223797,
+      "title": "3시 여자배구 SOOPers VS 정관장 승부예측 투표 중! ㅍ| D-4 듀엣곡 발매🔥",
+      "sourceUrl": "https://vod.sooplive.com/player/213223797",
+      "broadcastStart": "2026-11-21 15:45:48",
+      "durationSeconds": 10031.0,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [],
+      "unresolved": [],
+      "excluded": [
+        "V리그 배구 경기 같이보기다."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-15~2026-11-24인 추가 기록."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-24",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 85,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          240,
+          135
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 213252391,
+      "title": "똥 꾸릉내 나는 게임만 함 | D-4 듀엣곡 발매🔥",
+      "sourceUrl": "https://vod.sooplive.com/player/213252391",
+      "broadcastStart": "2026-11-21 18:32:59",
+      "durationSeconds": 16664.084,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [
+        {
+          "date": "2026-11-21",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/213252391?change_second=3737",
+          "confidence": "video",
+          "eventTitle": "똥 꾸릉내 나는 게임만 함 | D-4 듀엣곡 발매🔥",
+          "timestampLabel": "01:02:17",
+          "seconds": 3737,
+          "playedAt": "2026-11-21T19:35:15.000+09:00",
+          "broadcastDate": "2026-11-21",
+          "vodId": 213252391,
+          "dateBasis": "file_start_plus_file_local_time",
+          "gameId": "trust-your-instinct",
+          "description": "멀티볼 룰렛 로그라이트 직감을 믿어라의 스핀·목표 화면을 원본 프레임으로 확인했다. 11월 23일 Steam 라이브러리 최근 목록에도 같은 이름이 남아 있다.",
+          "broadcastTitle": "똥 꾸릉내 나는 게임만 함 | D-4 듀엣곡 발매🔥",
+          "videoVerified": true,
+          "verificationMethod": "공개 원본 영상 프레임 직접 확인 및 전체 120초 표본 대조",
+          "reviewedOn": "2026-11-24",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "fileStart": "2026-11-21 18:33:15",
+          "fileLocalSeconds": 3720.0,
+          "fileIndex": 1
+        },
+        {
+          "date": "2026-11-21",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/213252391?change_second=10457",
+          "confidence": "video",
+          "eventTitle": "똥 꾸릉내 나는 게임만 함 | D-4 듀엣곡 발매🔥",
+          "timestampLabel": "02:54:17",
+          "seconds": 10457,
+          "playedAt": "2026-11-21T21:27:15.000+09:00",
+          "broadcastDate": "2026-11-21",
+          "vodId": 213252391,
+          "dateBasis": "file_start_plus_file_local_time",
+          "gameId": "hair-removal-salon-simulator",
+          "description": "살롱 침대의 손님과 레이저 장비, Day 1 $500, 제모 미션 HUD를 원본 프레임으로 확인했고 Steam 공식 스크린샷과 화면 구성이 일치한다.",
+          "broadcastTitle": "똥 꾸릉내 나는 게임만 함 | D-4 듀엣곡 발매🔥",
+          "videoVerified": true,
+          "verificationMethod": "공개 원본 영상 프레임 직접 확인 및 전체 120초 표본 대조",
+          "reviewedOn": "2026-11-24",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "fileStart": "2026-11-21 18:33:15",
+          "fileLocalSeconds": 10440.0,
+          "fileIndex": 1
+        },
+        {
+          "date": "2026-11-21",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/213252391?change_second=12497",
+          "confidence": "video",
+          "eventTitle": "똥 꾸릉내 나는 게임만 함 | D-4 듀엣곡 발매🔥",
+          "timestampLabel": "03:28:17",
+          "seconds": 12497,
+          "playedAt": "2026-11-21T22:01:15.000+09:00",
+          "broadcastDate": "2026-11-21",
+          "vodId": 213252391,
+          "dateBasis": "file_start_plus_file_local_time",
+          "gameId": "ah-ah-ah",
+          "description": "목소리로 캐릭터를 점프시키는 음성 입력 게임의 스테이지 화면을 원본 프레임으로 확인했다. 11월 23일 Steam 라이브러리 최근 목록에도 아. 아. 아.가 남아 있다.",
+          "broadcastTitle": "똥 꾸릉내 나는 게임만 함 | D-4 듀엣곡 발매🔥",
+          "videoVerified": true,
+          "verificationMethod": "공개 원본 영상 프레임 직접 확인 및 전체 120초 표본 대조",
+          "reviewedOn": "2026-11-24",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "fileStart": "2026-11-21 18:33:15",
+          "fileLocalSeconds": 12480.0,
+          "fileIndex": 1
+        }
+      ],
+      "unresolved": [],
+      "excluded": [
+        "18:49~19:31 결박된 남성을 심문하는 게임은 화면만 확인했고 이름을 확인하지 못했다(Steam 최근 목록에 없음)."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-15~2026-11-24인 추가 기록."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-24",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 140,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          240,
+          135
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 213358535,
+      "title": "8시) 구슬요X따린 노래 이상형 월드컵!(곧 티저 나옴) | D-3 듀엣곡 발매🔥",
+      "sourceUrl": "https://vod.sooplive.com/player/213358535",
+      "broadcastStart": "2026-11-22 18:11:18",
+      "durationSeconds": 26983.45,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [],
+      "unresolved": [],
+      "excluded": [
+        "19:05~19:43 마인크래프트는 다른 방송 화면을 보는 장면이다.",
+        "01:31 무렵 웹 야구 미니게임은 짧게 열어본 화면이라 넣지 않았다.",
+        "노래 이상형 월드컵은 게임 목록에 넣지 않았다."
+      ],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-15~2026-11-24인 추가 기록."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-24",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 225,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          240,
+          135
+        ],
+        "continuousPlaybackReviewed": false,
+        "audioReviewed": false
+      }
+    },
+    {
+      "vodId": 213440689,
+      "title": "콜옵 듀티 4 해보쟈  | D-2 듀엣곡 발매🔥",
+      "sourceUrl": "https://vod.sooplive.com/player/213440689",
+      "broadcastStart": "2026-11-23 18:00:15",
+      "durationSeconds": 27669.017,
+      "fileType": "REVIEW",
+      "access": "public",
+      "sampledReviewComplete": true,
+      "reviewStatus": "sampled_scene_review_completed",
+      "findings": [
+        {
+          "date": "2026-11-23",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/213440689?change_second=9600",
+          "confidence": "video",
+          "eventTitle": "콜옵 듀티 4 해보쟈  | D-2 듀엣곡 발매🔥",
+          "timestampLabel": "02:40:00",
+          "seconds": 9600,
+          "playedAt": "2026-11-23T20:40:15.000+09:00",
+          "broadcastDate": "2026-11-23",
+          "vodId": 213440689,
+          "dateBasis": "file_start_plus_file_local_time",
+          "gameId": "call-of-duty-modern-warfare-4",
+          "description": "“모던 워페어 4 실행 중” 로딩 화면을 원본 프레임으로 확인했고, 이후 표본에서 캠페인 임무가 11월 24일 01:28 무렵까지 이어진다.",
+          "broadcastTitle": "콜옵 듀티 4 해보쟈  | D-2 듀엣곡 발매🔥",
+          "videoVerified": true,
+          "verificationMethod": "공개 원본 영상 프레임 직접 확인 및 전체 120초 표본 대조",
+          "reviewedOn": "2026-11-24",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "fileStart": "2026-11-23 18:00:15",
+          "fileLocalSeconds": 9600,
+          "fileIndex": 0
+        },
+        {
+          "date": "2026-11-24",
+          "dateEnd": null,
+          "sourceLabel": "SOOP 다시보기",
+          "sourceUrl": "https://vod.sooplive.com/player/213440689?change_second=23040",
+          "confidence": "video",
+          "eventTitle": "콜옵 듀티 4 해보쟈  | D-2 듀엣곡 발매🔥",
+          "timestampLabel": "06:24:00",
+          "seconds": 23040,
+          "playedAt": "2026-11-24T00:24:18.000+09:00",
+          "broadcastDate": "2026-11-23",
+          "vodId": 213440689,
+          "dateBasis": "file_start_plus_file_local_time",
+          "gameId": "call-of-duty-modern-warfare-4",
+          "description": "자정 이후 설원 지역 캠페인 임무를 1인칭으로 진행하는 원본 프레임을 확인했다.",
+          "broadcastTitle": "콜옵 듀티 4 해보쟈  | D-2 듀엣곡 발매🔥",
+          "videoVerified": true,
+          "verificationMethod": "공개 원본 영상 프레임 직접 확인 및 전체 120초 표본 대조",
+          "reviewedOn": "2026-11-24",
+          "continuousPlaybackReviewed": false,
+          "audioReviewed": false,
+          "fileStart": "2026-11-23 23:00:18",
+          "fileLocalSeconds": 5040.0,
+          "fileIndex": 1
+        }
+      ],
+      "unresolved": [],
+      "excluded": [],
+      "notes": [
+        "실제 플레이 날짜가 2026-11-15~2026-11-24인 추가 기록."
+      ],
+      "missingSceneSegments": [],
+      "reviewedOn": "2026-11-24",
+      "incrementalSampleReview": {
+        "complete": true,
+        "samplesActuallyViewed": 231,
+        "baseSampleIntervalSeconds": 120,
+        "displayedTileResolution": [
+          240,
+          135
         ],
         "continuousPlaybackReviewed": false,
         "audioReviewed": false

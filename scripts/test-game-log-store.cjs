@@ -16,6 +16,7 @@ function memoryDB(options = {}) {
         const chain = {
             select(fields) { request.fields = fields; return chain; },
             insert(item) { request.operation = 'insert'; request.payload = item; return chain; },
+            update(item) { request.operation = 'update'; request.payload = item; return chain; },
             order() { return chain; },
             range(from, to) { request.range = [from, to]; return chain; },
             eq(key, value) { request.eq = [key, value]; return chain; },
@@ -34,6 +35,12 @@ function memoryDB(options = {}) {
                     if (state.rows.some(saved => saved.id === item.id || saved.title.toLowerCase() === item.title.toLowerCase())) return { data: null, error: { code: '23505' } };
                     const saved = { ...structuredClone(item), created_at: '2026-11-02T12:00:00.000Z' };
                     state.rows.push(saved);
+                    return { data: structuredClone(saved), error: null };
+                }
+                if (request.operation === 'update') {
+                    const saved = state.rows.find(item => item.id === request.eq?.[1]);
+                    if (!saved || options.denyUpdate) return { data: null, error: null };
+                    Object.assign(saved, structuredClone(request.payload));
                     return { data: structuredClone(saved), error: null };
                 }
                 let data = [...state.rows];
@@ -184,4 +191,23 @@ test('insert and verification stalls are bounded and cannot invent a saved recor
     assert.equal(state.signals.length, 2);
     assert.ok(state.signals.every(signal => signal.aborted));
     assert.equal(state.rows.length, 0);
+});
+
+test('editing keeps the same record, ignores its own title as a duplicate and confirms the saved values', async () => {
+    const original = row();
+    const { db, state } = memoryDB({ rows: [original] });
+    const existing = [S.rowToGame(original)];
+    const next = S.buildPayload(values({ played_date: '2026-12-02', notes: '[테스트용] 수정 메모' }), existing, categories, id(1));
+    const saved = await S.updateEntry(db, next);
+    assert.equal(saved.id, id(1));
+    assert.equal(saved.played_date, '2026-12-02');
+    assert.equal(state.rows.length, 1);
+    assert.equal(state.calls[0].operation, 'update');
+    assert.equal('id' in state.calls[0].payload, false);
+    assert.throws(() => S.buildPayload(values(), existing, categories, id(2)), error => error.code === 'DUPLICATE');
+});
+
+test('an update that RLS silently blocks is reported, never shown as saved', async () => {
+    const { db } = memoryDB({ rows: [row()], denyUpdate: true });
+    await assert.rejects(S.updateEntry(db, S.buildPayload(values({ notes: '바뀐 메모' }), [], categories, id(1))), error => error.code === 'NOT_UPDATED');
 });
