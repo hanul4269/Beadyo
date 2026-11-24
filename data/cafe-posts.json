@@ -3,8 +3,14 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-11-23T22:40:42.837Z",
+  "fetchedAt": "2026-11-24T06:27:13.358Z",
   "posts": [
+    {
+      "id": "40734",
+      "title": "8만이라니.. ㅠㅠ",
+      "publishedAt": "2026-11-24T14:21:02.553+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40734"
+    },
     {
       "id": "40724",
       "title": "콜오브듀티",
@@ -28,12 +34,6 @@
       "title": "무서워서",
       "publishedAt": "2026-11-20T13:48:35.760+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40689"
-    },
-    {
-      "id": "40683",
-      "title": "키마가 오래",
-      "publishedAt": "2026-11-19T19:52:11.700+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40683"
     }
   ]
 }
