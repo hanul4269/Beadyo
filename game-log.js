@@ -338,6 +338,7 @@
         editingId = row ? row.id : '';
         $('game-add-title').textContent = row ? '게임 정보 수정' : '새 게임 추가';
         $('save-new-game').textContent = row ? '수정 저장' : '게임 추가';
+        $('delete-game').hidden = !row;
         if (row) {
             $('new-game-title').value = row.title;
             $('new-game-date').value = row.played_date || '';
@@ -371,7 +372,7 @@
         savingGame = true;
         message.textContent = '';
         $('game-add-fields').disabled = true;
-        for (const id of ['save-new-game', 'cancel-new-game', 'close-add-game']) $(id).disabled = true;
+        for (const id of ['save-new-game', 'cancel-new-game', 'close-add-game', 'delete-game']) $(id).disabled = true;
         $('save-new-game').textContent = '저장 중…';
         try {
             if (!await canEditNow()) throw new Error('편집 권한을 확인하지 못했어요. 로그인 상태를 확인하고 다시 시도해 주세요.');
@@ -393,8 +394,39 @@
         } finally {
             savingGame = false;
             $('game-add-fields').disabled = false;
-            for (const id of ['save-new-game', 'cancel-new-game', 'close-add-game']) $(id).disabled = false;
+            for (const id of ['save-new-game', 'cancel-new-game', 'close-add-game', 'delete-game']) $(id).disabled = false;
             $('save-new-game').textContent = editingId ? '수정 저장' : '게임 추가';
+        }
+    }
+    async function deleteGame() {
+        if (savingGame || !isEditor || !customReady || !Store || !dataset || !editingId) return;
+        const row = customRows.find(item => item.id === editingId);
+        if (!row) return;
+        if (!window.confirm(`'${row.title}' 기록을 삭제할까요?\n삭제하면 되돌릴 수 없어요.`)) return;
+        const message = $('game-add-message');
+        savingGame = true;
+        message.textContent = '';
+        $('game-add-fields').disabled = true;
+        for (const id of ['save-new-game', 'cancel-new-game', 'close-add-game', 'delete-game']) $(id).disabled = true;
+        $('delete-game').textContent = '삭제 중…';
+        try {
+            if (!await canEditNow()) throw new Error('편집 권한을 확인하지 못했어요. 로그인 상태를 확인하고 다시 시도해 주세요.');
+            await Store.deleteEntry(db, row.id);
+            customRows = customRows.filter(item => item.id !== row.id);
+            dataset = { ...dataset, games: dataset.games.filter(item => item.id !== `custom-${row.id}`) };
+            reset();
+            syncCatalogControls();
+            render();
+            $('game-add-dialog').close();
+            $('game-save-notice').textContent = `'${row.title}' 기록을 삭제했어요.`;
+            $('game-save-notice').hidden = false;
+        } catch (error) {
+            message.textContent = error.message || '삭제하지 못했어요. 새로고침 후 다시 시도해 주세요.';
+        } finally {
+            savingGame = false;
+            $('game-add-fields').disabled = false;
+            for (const id of ['save-new-game', 'cancel-new-game', 'close-add-game', 'delete-game']) $(id).disabled = false;
+            $('delete-game').textContent = '삭제';
         }
     }
     function syncCatalogControls() {
@@ -525,6 +557,7 @@
     $('retry-custom-games').addEventListener('click', load);
     $('add-game-btn').addEventListener('click', () => openGameForm());
     $('game-add-form').addEventListener('submit', saveNewGame);
+    $('delete-game').addEventListener('click', deleteGame);
     $('game-add-form').addEventListener('input', () => { if (!savingGame) $('game-add-message').textContent = ''; });
     for (const id of ['cancel-new-game', 'close-add-game']) $(id).addEventListener('click', () => { if (!savingGame) $('game-add-dialog').close(); });
     $('game-add-dialog').addEventListener('cancel', event => { if (savingGame) event.preventDefault(); });

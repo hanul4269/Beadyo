@@ -17,6 +17,7 @@ function memoryDB(options = {}) {
             select(fields) { request.fields = fields; return chain; },
             insert(item) { request.operation = 'insert'; request.payload = item; return chain; },
             update(item) { request.operation = 'update'; request.payload = item; return chain; },
+            delete() { request.operation = 'delete'; return chain; },
             order() { return chain; },
             range(from, to) { request.range = [from, to]; return chain; },
             eq(key, value) { request.eq = [key, value]; return chain; },
@@ -42,6 +43,12 @@ function memoryDB(options = {}) {
                     if (!saved || options.denyUpdate) return { data: null, error: null };
                     Object.assign(saved, structuredClone(request.payload));
                     return { data: structuredClone(saved), error: null };
+                }
+                if (request.operation === 'delete') {
+                    const index = state.rows.findIndex(item => item.id === request.eq?.[1]);
+                    if (index < 0 || options.denyDelete) return { data: null, error: null };
+                    const [removed] = state.rows.splice(index, 1);
+                    return { data: structuredClone(removed), error: null };
                 }
                 let data = [...state.rows];
                 if (request.eq) data = data.filter(item => item[request.eq[0]] === request.eq[1]);
@@ -210,4 +217,27 @@ test('editing keeps the same record, ignores its own title as a duplicate and co
 test('an update that RLS silently blocks is reported, never shown as saved', async () => {
     const { db } = memoryDB({ rows: [row()], denyUpdate: true });
     await assert.rejects(S.updateEntry(db, S.buildPayload(values({ notes: '바뀐 메모' }), [], categories, id(1))), error => error.code === 'NOT_UPDATED');
+});
+
+test('deleting removes only the chosen temporary record and confirms it is gone', async () => {
+    const { db, state } = memoryDB({ rows: [row(), row({ id: id(2), title: '[테스트용] 다른 가짜 게임' })] });
+    assert.equal(await S.deleteEntry(db, id(1)), true);
+    assert.deepEqual(state.rows.map(item => item.id), [id(2)]);
+    const deleteCall = state.calls.find(call => call.operation === 'delete');
+    assert.deepEqual(deleteCall.eq, ['id', id(1)]);
+});
+
+test('a delete blocked by RLS, an invalid id or an unconfirmed failure is never reported as deleted', async () => {
+    const blocked = memoryDB({ rows: [row()], denyDelete: true });
+    await assert.rejects(S.deleteEntry(blocked.db, id(1)), error => error.code === 'NOT_DELETED');
+    assert.equal(blocked.state.rows.length, 1);
+    await assert.rejects(S.deleteEntry(blocked.db, 'not-a-uuid'), error => error.code === 'VALIDATION');
+    const failing = memoryDB({ rows: [row()], execute: request => request.operation === 'delete' ? { data: null, error: { code: '500' } } : undefined });
+    await assert.rejects(S.deleteEntry(failing.db, id(1)), error => error.code === '500');
+    const committed = memoryDB({ rows: [row()], execute: (request, state) => {
+        if (request.operation !== 'delete') return undefined;
+        state.rows = [];
+        throw new Error('Network unavailable');
+    } });
+    assert.equal(await S.deleteEntry(committed.db, id(1)), true);
 });

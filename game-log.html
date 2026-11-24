@@ -10,11 +10,11 @@
     <title>플레이한 게임 — BEADYO</title>
     <link rel="icon" href="logo-icon.webp">
     <script src="site-backdrop.js?v=release-20261011-all"></script>
-    <link rel="stylesheet" href="game-log.css?v=edit-games-20261124">
+    <link rel="stylesheet" href="game-log.css?v=delete-games-20261125">
     <script defer src="supabase.min.js?v=supabase-2-119-0"></script>
     <script defer src="beadyo-common.js?v=auth-security-20261105"></script>
-    <script defer src="game-log-store.js?v=edit-games-20261124"></script>
-    <script defer src="game-log.js?v=edit-games-20261125"></script>
+    <script defer src="game-log-store.js?v=delete-games-20261125"></script>
+    <script defer src="game-log.js?v=delete-games-20261125"></script>
 </head>
 <body>
     <a class="skip-link" href="#games">게임 목록으로 건너뛰기</a>
@@ -107,7 +107,7 @@
                 <label><span>메모 <span class="field-help">선택</span></span><textarea id="new-game-notes" name="notes" rows="3" maxlength="2000" placeholder="함께 남길 내용"></textarea></label>
             </fieldset>
             <p id="game-add-message" class="game-add-message" role="alert"></p>
-            <div class="game-add-footer"><button id="cancel-new-game" class="secondary-action" type="button">취소</button><button id="save-new-game" class="primary-action" type="submit">게임 추가</button></div>
+            <div class="game-add-footer"><button id="delete-game" class="secondary-action danger-action" type="button" hidden>삭제</button><button id="cancel-new-game" class="secondary-action" type="button">취소</button><button id="save-new-game" class="primary-action" type="submit">게임 추가</button></div>
         </form>
     </dialog>
 </body>
