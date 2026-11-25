@@ -11,6 +11,7 @@ export interface PushRequestRow {
 export interface PushCommentRow {
   id: number;
   request_id: number;
+  author_id?: string;
   author_name: string;
   content: string;
   created_at: string;
@@ -42,6 +43,8 @@ export interface Store {
   listSubscriptions(): Promise<Subscription[]>;
   deleteSubscription(id: number): Promise<void>;
   isOwnerToken(token: string): Promise<boolean>;
+  /** whether this user id is a registered push owner (server-side check) */
+  isOwnerUser(userId: string): Promise<boolean>;
 }
 
 /** Sends one push and returns the push service's HTTP status. */
@@ -282,9 +285,20 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
       return json(200, { ok: true, skipped: 'too old' });
     }
     if (!(await store.claimComment(commentId))) return json(200, { ok: true, skipped: 'already sent' });
-    const [result, discord] = await fanOut(store, deps, commentPayload(comment), discordCommentMessage(comment), log);
-    log(`comment ${commentId}: ${JSON.stringify({ ...result, discord })}`);
-    return json(200, { ok: true, ...result, discord });
+    // 소유자가 단 댓글은 본인 폰으로 보내지 않고 디스코드에만 올린다.
+    let byOwner = false;
+    if (comment.author_id) {
+      try {
+        byOwner = await store.isOwnerUser(comment.author_id);
+      } catch (error) {
+        log(`owner check failed: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
+    const [result, discord] = await fanOut(
+      store, deps, byOwner ? null : commentPayload(comment), discordCommentMessage(comment), log,
+    );
+    log(`comment ${commentId}: ${JSON.stringify({ ...result, discord, byOwner })}`);
+    return json(200, { ok: true, ...result, discord, push: byOwner ? 'skipped (owner)' : 'sent' });
   }
 
   // DB 트리거가 새 요청 id로 호출
@@ -309,9 +323,10 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
 }
 
 // 웹 푸시와 디스코드는 서로 독립: 한쪽이 실패해도 다른 쪽은 보낸다.
-function fanOut(store: Store, deps: Deps, payload: PushPayload, message: DiscordMessage, log: (m: string) => void) {
+function fanOut(store: Store, deps: Deps, payload: PushPayload | null, message: DiscordMessage, log: (m: string) => void) {
+  const none = { devices: 0, sent: 0, removed: 0, failed: 0 };
   return Promise.all([
-    deliver(store, deps.send, payload, log).catch(error => {
+    payload === null ? Promise.resolve(none) : deliver(store, deps.send, payload, log).catch(error => {
       log(`push delivery threw: ${error instanceof Error ? error.message : String(error)}`);
       return { devices: 0, sent: 0, removed: 0, failed: 0, error: true };
     }),

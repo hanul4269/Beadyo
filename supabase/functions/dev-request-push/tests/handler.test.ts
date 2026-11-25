@@ -36,6 +36,7 @@ function fakeStore(overrides: Partial<Store> = {}, subs: Subscription[] = []) {
     async listSubscriptions() { return subs; },
     async deleteSubscription(id) { deleted.push(id); },
     async isOwnerToken(token) { return token === 'owner-token'; },
+    async isOwnerUser(userId) { return userId === 'owner-uid'; },
     ...overrides,
   };
   return { store, deleted };
@@ -232,4 +233,39 @@ test('comment payload text and missing request context fallback', () => {
   const row = { id: 3, request_id: 9, author_name: '편집자 D', content: 'ok', created_at: '' };
   assert.equal(commentPayload(row).body, '편집자 D님이 댓글을 남겼어요.');
   assert.equal(discordCommentMessage(row).embeds[0].fields?.[0].value, '#9');
+});
+
+test('owner comment goes to discord only, editor comment to both', async () => {
+  const comment = (id: number, author: string) => ({
+    id, request_id: 7, author_id: author, author_name: '작성자', content: '답글', created_at: new Date(NOW - 1000).toISOString(),
+  });
+  const { store } = fakeStore({ async getComment(id) { return comment(id, id === 31 ? 'owner-uid' : 'editor-uid'); } }, subs.slice(0, 1));
+  let pushes = 0;
+  let posts = 0;
+  const deps = {
+    store: () => store, now: () => NOW,
+    send: async () => { pushes += 1; return 201; },
+    discord: async () => { posts += 1; return 204; },
+  };
+  const owner = await (await handle(post({ comment_id: 31 }), deps)).json();
+  assert.equal(owner.push, 'skipped (owner)');
+  assert.equal(owner.discord, 'sent');
+  assert.equal(pushes, 0);
+  assert.equal(posts, 1);
+
+  const editor = await (await handle(post({ comment_id: 32 }), deps)).json();
+  assert.equal(editor.push, 'sent');
+  assert.equal(pushes, 1);
+  assert.equal(posts, 2);
+});
+
+test('owner check failure falls back to sending the push', async () => {
+  const { store } = fakeStore({
+    async getComment(id) { return { id, request_id: 7, author_id: 'x', author_name: 'a', content: 'b', created_at: new Date(NOW).toISOString() }; },
+    async isOwnerUser() { throw new Error('rpc missing'); },
+  }, subs.slice(0, 1));
+  let pushes = 0;
+  const res = await (await handle(post({ comment_id: 33 }), { store: () => store, now: () => NOW, send: async () => { pushes += 1; return 201; } })).json();
+  assert.equal(res.push, 'sent');
+  assert.equal(pushes, 1);
 });

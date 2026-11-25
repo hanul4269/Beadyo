@@ -41,7 +41,7 @@ export function createStore(fetchFn: FetchFn, supabaseUrl: string, serviceKey: s
     },
     async getComment(id) {
       const rows = await call(
-        `development_request_comments?id=eq.${id}&select=id,request_id,author_name,content,created_at,development_requests(content)`,
+        `development_request_comments?id=eq.${id}&select=id,request_id,author_id,author_name,content,created_at,development_requests(content)`,
       );
       if (!Array.isArray(rows) || !rows.length) return null;
       const row = rows[0] as Record<string, unknown>;
@@ -49,6 +49,7 @@ export function createStore(fetchFn: FetchFn, supabaseUrl: string, serviceKey: s
       return {
         id: Number(row.id),
         request_id: Number(row.request_id),
+        author_id: typeof row.author_id === 'string' ? row.author_id : undefined,
         author_name: String(row.author_name ?? ''),
         content: String(row.content ?? ''),
         created_at: String(row.created_at ?? ''),
@@ -69,6 +70,14 @@ export function createStore(fetchFn: FetchFn, supabaseUrl: string, serviceKey: s
     },
     async deleteSubscription(id) {
       await call(`push_subscriptions?id=eq.${id}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } });
+    },
+    async isOwnerUser(userId) {
+      const result = await call('rpc/is_push_owner_user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ p_user_id: userId }),
+      });
+      return result === true;
     },
     async isOwnerToken(token) {
       // 사용자의 로그인 토큰으로 can_register_push RPC를 불러 소유자인지 확인
