@@ -7,7 +7,7 @@ import urllib.request
 
 # The workflow entry points run directly from .github/scripts.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from tools.supabase_http import SUPABASE_URL, open_supabase
+from tools.supabase_http import SUPABASE_URL, open_supabase, supabase_key_headers
 
 
 def upsert_runtime_cache(cache_key, payload, updated_at=None):
@@ -36,8 +36,7 @@ def upsert_runtime_cache(cache_key, payload, updated_at=None):
         data=body,
         method='POST',
         headers={
-            'apikey': service_key,
-            'Authorization': f'Bearer {service_key}',
+            **supabase_key_headers(service_key),
             'Content-Type': 'application/json',
             'Prefer': 'resolution=merge-duplicates,return=minimal',
         },

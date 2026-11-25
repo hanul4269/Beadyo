@@ -10,6 +10,9 @@ exclude:
   - EXPLORE.md
   - HOME.md
   - songbook_cover_backfill_guide.md
+  # 게임 기록 작업용 원자료(페이지에서 쓰지 않음, 3MB+)
+  - data/game-log-sources.json
+  - data/game-log-reaudit.json
   - scripts/
   - tools/
   - supabase/

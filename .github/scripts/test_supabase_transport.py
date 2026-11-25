@@ -58,6 +58,14 @@ class SupabaseTransportTests(unittest.TestCase):
                 self.assertEqual(self.requests[0].get_header('Apikey'), self.key)
                 self.assertEqual(self.requests[0].get_header('Authorization'), 'Bearer ' + self.key)
 
+    def test_new_secret_key_is_sent_only_as_apikey(self):
+        new_key = 'sb_secret_isolated-test-key'
+        with patch.dict(os.environ, {'SUPABASE_SERVICE_ROLE_KEY': new_key}):
+            self.assertTrue(runtime_cache.upsert_runtime_cache('test', {}))
+        self.assertEqual(len(self.requests), 1)
+        self.assertEqual(self.requests[0].get_header('Apikey'), new_key)
+        self.assertIsNone(self.requests[0].get_header('Authorization'))
+
     def test_redirects_never_issue_a_second_request(self):
         for self.redirect in ('https://other.invalid/collect', SUPABASE_URL + '/elsewhere'):
             for index, operation in enumerate(self.operations()):
