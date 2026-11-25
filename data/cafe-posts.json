@@ -3,8 +3,14 @@
   "cafeId": "31098081",
   "menuId": "21",
   "boardTitle": "슬요 똥글",
-  "fetchedAt": "2026-11-25T02:48:46.383Z",
+  "fetchedAt": "2026-11-25T13:00:25.659Z",
   "posts": [
+    {
+      "id": "40752",
+      "title": "마!",
+      "publishedAt": "2026-11-25T14:04:13.167+09:00",
+      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40752"
+    },
     {
       "id": "40734",
       "title": "8만이라니.. ㅠㅠ",
@@ -28,12 +34,6 @@
       "title": "엇",
       "publishedAt": "2026-11-22T14:28:35.130+09:00",
       "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40707"
-    },
-    {
-      "id": "40689",
-      "title": "무서워서",
-      "publishedAt": "2026-11-20T13:48:35.760+09:00",
-      "href": "https://cafe.naver.com/f-e/cafes/31098081/articles/40689"
     }
   ]
 }
