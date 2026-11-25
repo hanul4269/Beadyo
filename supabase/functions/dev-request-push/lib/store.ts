@@ -1,6 +1,6 @@
 // Supabase REST access for dev-request-push. Keys are only ever sent to this
 // project's own endpoints.
-import type { Store, Subscription, PushRequestRow } from './handler.ts';
+import type { Store, Subscription, PushCommentRow, PushRequestRow } from './handler.ts';
 
 type FetchFn = typeof fetch;
 
@@ -36,6 +36,30 @@ export function createStore(fetchFn: FetchFn, supabaseUrl: string, serviceKey: s
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Prefer: 'resolution=ignore-duplicates,return=representation' },
         body: JSON.stringify([{ request_id: id }]),
+      });
+      return Array.isArray(rows) && rows.length > 0;
+    },
+    async getComment(id) {
+      const rows = await call(
+        `development_request_comments?id=eq.${id}&select=id,request_id,author_name,content,created_at,development_requests(content)`,
+      );
+      if (!Array.isArray(rows) || !rows.length) return null;
+      const row = rows[0] as Record<string, unknown>;
+      const parent = row.development_requests as { content?: string } | null;
+      return {
+        id: Number(row.id),
+        request_id: Number(row.request_id),
+        author_name: String(row.author_name ?? ''),
+        content: String(row.content ?? ''),
+        created_at: String(row.created_at ?? ''),
+        request_content: parent?.content ?? '',
+      } as PushCommentRow;
+    },
+    async claimComment(id) {
+      const rows = await call('development_request_comment_push_log?on_conflict=comment_id', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Prefer: 'resolution=ignore-duplicates,return=representation' },
+        body: JSON.stringify([{ comment_id: id }]),
       });
       return Array.isArray(rows) && rows.length > 0;
     },

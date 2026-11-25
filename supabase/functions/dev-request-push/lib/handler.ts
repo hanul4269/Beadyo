@@ -8,6 +8,16 @@ export interface PushRequestRow {
   content?: string;
 }
 
+export interface PushCommentRow {
+  id: number;
+  request_id: number;
+  author_name: string;
+  content: string;
+  created_at: string;
+  /** content of the request the comment belongs to */
+  request_content?: string;
+}
+
 export interface Subscription {
   id: number;
   endpoint: string;
@@ -26,6 +36,9 @@ export interface Store {
   getRequest(id: number): Promise<PushRequestRow | null>;
   /** true only for the first caller for this request id */
   claimRequest(id: number): Promise<boolean>;
+  getComment(id: number): Promise<PushCommentRow | null>;
+  /** true only for the first caller for this comment id */
+  claimComment(id: number): Promise<boolean>;
   listSubscriptions(): Promise<Subscription[]>;
   deleteSubscription(id: number): Promise<void>;
   isOwnerToken(token: string): Promise<boolean>;
@@ -46,6 +59,7 @@ export interface DiscordMessage {
     color: number;
     timestamp?: string;
     author?: { name: string };
+    fields?: Array<{ name: string; value: string }>;
   }>;
 }
 
@@ -88,6 +102,19 @@ export function requestPayload(row: PushRequestRow): PushPayload {
   };
 }
 
+function displayName(value: string, limit: number): string {
+  return String(value || '편집자').replace(/\s+/g, ' ').trim().slice(0, limit) || '편집자';
+}
+
+export function commentPayload(row: PushCommentRow): PushPayload {
+  return {
+    title: '새 댓글',
+    body: `${displayName(row.author_name, 30)}님이 댓글을 남겼어요.`,
+    url: BOARD_URL,
+    tag: `dev-comment-${row.id}`,
+  };
+}
+
 export function testPayload(now: number): PushPayload {
   return {
     title: '알림 테스트',
@@ -120,6 +147,24 @@ export function discordRequestMessage(row: PushRequestRow): DiscordMessage {
       color: 0x76ad39,
       timestamp: row.created_at,
       author: { name },
+    }],
+  };
+}
+
+export const DISCORD_REQUEST_CONTEXT_CHARS = 50;
+
+export function discordCommentMessage(row: PushCommentRow): DiscordMessage {
+  const requestPreview = preview(row.request_content || '', DISCORD_REQUEST_CONTEXT_CHARS).replace(/\n+/g, ' ');
+  return {
+    allowed_mentions: { parse: [] },
+    embeds: [{
+      title: '새 댓글',
+      description: preview(row.content || '', DISCORD_PREVIEW_CHARS) || '(내용 없음)',
+      url: SITE_BOARD_URL,
+      color: 0x76ad39,
+      timestamp: row.created_at,
+      author: { name: displayName(row.author_name, 80) },
+      fields: [{ name: '요청', value: requestPreview || `#${row.request_id}` }],
     }],
   };
 }
@@ -224,6 +269,24 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
     return json(200, { ok: true, ...result, discord });
   }
 
+  // DB 트리거가 새 댓글 id로 호출
+  if ('comment_id' in body) {
+    const commentId = body.comment_id;
+    if (typeof commentId !== 'number' || !Number.isSafeInteger(commentId) || commentId <= 0) {
+      return json(400, { error: 'comment_id must be a positive integer' });
+    }
+    const comment = await store.getComment(commentId);
+    if (!comment) return json(404, { error: 'comment not found' });
+    const commentAt = Date.parse(comment.created_at);
+    if (!Number.isFinite(commentAt) || now() - commentAt > MAX_REQUEST_AGE_MS) {
+      return json(200, { ok: true, skipped: 'too old' });
+    }
+    if (!(await store.claimComment(commentId))) return json(200, { ok: true, skipped: 'already sent' });
+    const [result, discord] = await fanOut(store, deps, commentPayload(comment), discordCommentMessage(comment), log);
+    log(`comment ${commentId}: ${JSON.stringify({ ...result, discord })}`);
+    return json(200, { ok: true, ...result, discord });
+  }
+
   // DB 트리거가 새 요청 id로 호출
   const id = body.request_id;
   if (typeof id !== 'number' || !Number.isSafeInteger(id) || id <= 0) {
@@ -240,14 +303,18 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
 
   if (!(await store.claimRequest(id))) return json(200, { ok: true, skipped: 'already sent' });
 
-  // 웹 푸시와 디스코드는 서로 독립: 한쪽이 실패해도 다른 쪽은 보낸다.
-  const [result, discord] = await Promise.all([
-    deliver(store, deps.send, requestPayload(row), log).catch(error => {
+  const [result, discord] = await fanOut(store, deps, requestPayload(row), discordRequestMessage(row), log);
+  log(`request ${id}: ${JSON.stringify({ ...result, discord })}`);
+  return json(200, { ok: true, ...result, discord });
+}
+
+// 웹 푸시와 디스코드는 서로 독립: 한쪽이 실패해도 다른 쪽은 보낸다.
+function fanOut(store: Store, deps: Deps, payload: PushPayload, message: DiscordMessage, log: (m: string) => void) {
+  return Promise.all([
+    deliver(store, deps.send, payload, log).catch(error => {
       log(`push delivery threw: ${error instanceof Error ? error.message : String(error)}`);
       return { devices: 0, sent: 0, removed: 0, failed: 0, error: true };
     }),
-    postDiscord(deps.discord, discordRequestMessage(row), log),
+    postDiscord(deps.discord, message, log),
   ]);
-  log(`request ${id}: ${JSON.stringify({ ...result, discord })}`);
-  return json(200, { ok: true, ...result, discord });
 }

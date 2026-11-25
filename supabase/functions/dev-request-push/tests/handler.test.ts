@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  handle, isAllowedEndpoint, isDiscordWebhook, requestPayload, discordRequestMessage,
+  handle, commentPayload, discordCommentMessage, isAllowedEndpoint, isDiscordWebhook, requestPayload, discordRequestMessage,
   type DiscordMessage, type Store, type Subscription,
 } from '../lib/handler.ts';
 
@@ -20,6 +20,17 @@ function fakeStore(overrides: Partial<Store> = {}, subs: Subscription[] = []) {
     async claimRequest(id) {
       if (claimed.has(id)) return false;
       claimed.add(id);
+      return true;
+    },
+    async getComment(id) {
+      return id === 21 ? {
+        id: 21, request_id: 7, author_name: '편집자 C', content: '@here 확인 부탁해요',
+        created_at: new Date(NOW - 30_000).toISOString(), request_content: '룰렛 결과를 방송 화면에 크게 띄울 수 있는 기능이 필요해요. 참고 링크도 같이 남깁니다.',
+      } : null;
+    },
+    async claimComment(id) {
+      if (claimed.has(-id)) return false;
+      claimed.add(-id);
       return true;
     },
     async listSubscriptions() { return subs; },
@@ -176,4 +187,49 @@ test('test button also posts to discord', async () => {
   })).json();
   assert.equal(res.discord, 'sent');
   assert.equal(posted, 1);
+});
+
+test('new comment goes to push and discord once, with request context', async () => {
+  const messages: DiscordMessage[] = [];
+  const payloads: string[] = [];
+  const { store } = fakeStore({}, subs.slice(0, 1));
+  const deps = {
+    store: () => store, now: () => NOW,
+    send: async (_s: Subscription, p: { title: string }) => { payloads.push(p.title); return 201; },
+    discord: async (m: DiscordMessage) => { messages.push(m); return 204; },
+  };
+  const first = await (await handle(post({ comment_id: 21 }), deps)).json();
+  assert.equal(first.sent, 1);
+  assert.equal(first.discord, 'sent');
+  assert.deepEqual(payloads, ['새 댓글']);
+  const embed = messages[0].embeds[0];
+  assert.equal(embed.title, '새 댓글');
+  assert.equal(embed.description, '@here 확인 부탁해요');
+  assert.deepEqual(messages[0].allowed_mentions, { parse: [] });
+  assert.equal(embed.fields?.[0].name, '요청');
+  assert.ok((embed.fields?.[0].value.length ?? 0) <= 51);
+
+  const again = await (await handle(post({ comment_id: 21 }), deps)).json();
+  assert.equal(again.skipped, 'already sent');
+  assert.equal(messages.length, 1);
+});
+
+test('comment validation: bad id, missing, too old', async () => {
+  const { store } = fakeStore({}, subs);
+  let sends = 0;
+  const deps = { store: () => store, now: () => NOW, send: async () => { sends += 1; return 201; } };
+  assert.equal((await handle(post({ comment_id: 0 }), deps)).status, 400);
+  assert.equal((await handle(post({ comment_id: '21' }), deps)).status, 400);
+  assert.equal((await handle(post({ comment_id: 99 }), deps)).status, 404);
+  const old = fakeStore({
+    async getComment(id) { return { id, request_id: 1, author_name: 'x', content: 'y', created_at: new Date(NOW - 11 * 60_000).toISOString() }; },
+  }, subs).store;
+  assert.equal((await (await handle(post({ comment_id: 22 }), { ...deps, store: () => old })).json()).skipped, 'too old');
+  assert.equal(sends, 0);
+});
+
+test('comment payload text and missing request context fallback', () => {
+  const row = { id: 3, request_id: 9, author_name: '편집자 D', content: 'ok', created_at: '' };
+  assert.equal(commentPayload(row).body, '편집자 D님이 댓글을 남겼어요.');
+  assert.equal(discordCommentMessage(row).embeds[0].fields?.[0].value, '#9');
 });
