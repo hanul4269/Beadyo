@@ -131,5 +131,129 @@ class UpEventSourceTests(unittest.TestCase):
                 self.assertEqual(len(writes), 1)
 
 
+CACHED = {
+    'updated': '2026-02-02T00:00:00Z',
+    'events': [{
+        'id': 900000001, 'tab': 'OLD TAB', 'title': 'OLD TITLE',
+        'soop_url': 'https://www.sooplive.co.kr/isolated/post/1',
+        'ranking': [{'bj_id': 'isolated_cached', 'up_count': 42, 'rank': 1}],
+        'live_updated_at': '2026-02-02T00:00:00Z',
+    }],
+}
+COMMENT = {'pCommentNo': 7, 'userId': 'isolated_fan', 'userNick': '[테스트용]',
+           'profileImage': '', 'regDate': '2026-02-03', 'likeCnt': 5}
+
+
+class UpCollectionFailureTests(unittest.TestCase):
+    """GitHub Actions에는 up.json이 없으므로 기존 값은 공개 런타임 캐시에서 읽는다.
+    네트워크·DB는 모두 mock이며 실제 SOOP/Supabase에는 요청하지 않는다."""
+
+    def run_job(self, collector='ok', cache='ok', local_previous=None):
+        writes, urls = [], []
+
+        class Response:
+            def __init__(self, payload): self.payload = payload
+            def __enter__(self): return self
+            def __exit__(self, *args): pass
+            def read(self): return json.dumps(self.payload).encode()
+
+        def urlopen(req, *args, **kwargs):
+            url = getattr(req, 'full_url', req)
+            urls.append(url)
+            if '/up_events' in url:
+                return Response([EVENT])
+            if '/site_runtime_cache' in url:
+                if cache == 'error':
+                    raise RuntimeError('ISOLATED cache lookup failure')
+                if cache == 'empty':
+                    return Response([])
+                return Response([{'payload': CACHED}])
+            raise AssertionError(f'unexpected request {url}')
+
+        def soop_get(*args, **kwargs):
+            if collector == 'http-error':
+                return types.SimpleNamespace(status_code=503, json=lambda: {})
+            return types.SimpleNamespace(status_code=200, json=lambda: {
+                'data': [COMMENT], 'meta': {'lastPage': 1}})
+
+        modules = {
+            'runtime_cache': types.SimpleNamespace(upsert_runtime_cache=lambda *args: writes.append(args)),
+            # supabase-py가 없는 Actions 환경처럼 urllib 경로를 탄다.
+            'supabase': None,
+            'curl_cffi': None if collector == 'missing' else
+                types.SimpleNamespace(requests=types.SimpleNamespace(get=soop_get)),
+        }
+        with tempfile.TemporaryDirectory(prefix='isolated-up-collection-') as temp:
+            original_cwd = Path.cwd()
+            try:
+                os.chdir(temp)
+                if local_previous is not None:
+                    Path('up.json').write_text(json.dumps(local_previous))
+                status = 0
+                with patch.dict(sys.modules, modules), patch('urllib.request.urlopen', side_effect=urlopen), patch('socket.socket', side_effect=AssertionError('Network forbidden')), contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                    try:
+                        exec(compile(SOURCE, 'check_up.py', 'exec'), {})
+                    except SystemExit as error:
+                        status = error.code
+                output = json.loads(Path('up.json').read_text()) if Path('up.json').exists() else None
+                return status, output, writes, urls
+            finally:
+                os.chdir(original_cwd)
+
+    def test_missing_curl_cffi_keeps_cached_ranking_instead_of_empty(self):
+        status, output, writes, _ = self.run_job(collector='missing')
+        self.assertEqual(status, 0)
+        self.assertEqual(len(writes), 1)
+        saved = writes[0][1]['events'][0]
+        self.assertEqual(saved['ranking'], CACHED['events'][0]['ranking'])
+        self.assertEqual(saved['live_updated_at'], CACHED['events'][0]['live_updated_at'])
+        self.assertEqual(saved['tab'], EVENT['tab_name'])
+        self.assertEqual(output, writes[0][1])
+
+    def test_soop_http_error_keeps_cached_ranking(self):
+        status, _, writes, _ = self.run_job(collector='http-error')
+        self.assertEqual(status, 0)
+        self.assertEqual(writes[0][1]['events'][0]['ranking'], CACHED['events'][0]['ranking'])
+
+    def test_failure_without_readable_previous_never_writes_empty_ranking(self):
+        status, output, writes, _ = self.run_job(collector='missing', cache='error')
+        self.assertEqual(status, 1)
+        self.assertEqual(writes, [])
+        self.assertIsNone(output)
+
+    def test_local_up_json_is_used_before_cache(self):
+        status, _, writes, urls = self.run_job(collector='missing', local_previous=PREVIOUS)
+        self.assertEqual(status, 0)
+        self.assertEqual(writes[0][1]['events'][0]['ranking'], PREVIOUS['events'][0]['ranking'])
+        self.assertFalse(any('/site_runtime_cache' in url for url in urls))
+
+    def test_new_event_without_previous_value_starts_empty(self):
+        status, _, writes, _ = self.run_job(collector='missing', cache='empty')
+        self.assertEqual(status, 0)
+        self.assertEqual(writes[0][1]['events'][0]['ranking'], [])
+
+    def test_successful_collection_replaces_cached_ranking(self):
+        status, _, writes, _ = self.run_job(collector='ok')
+        self.assertEqual(status, 0)
+        ranking = writes[0][1]['events'][0]['ranking']
+        self.assertEqual([r['bj_id'] for r in ranking], ['isolated_fan'])
+        self.assertEqual(ranking[0]['rank'], 1)
+
+
+class UpWorkflowPinTests(unittest.TestCase):
+    def test_workflow_installs_hash_pinned_collector(self):
+        root = Path(__file__).resolve().parents[2]
+        workflow = (root / '.github/workflows/up-ranking.yml').read_text()
+        requirements = (root / '.github/scripts/requirements-up.txt').read_text()
+        self.assertIn('--require-hashes', workflow)
+        self.assertIn('-r .github/scripts/requirements-up.txt', workflow)
+        self.assertRegex(workflow, r'actions/setup-python@[0-9a-f]{40}')
+        packages = [line.split()[0] for line in requirements.splitlines()
+                    if line and not line.startswith((' ', '#'))]
+        self.assertIn('curl_cffi==0.17.0', packages)
+        for package in packages:
+            self.assertRegex(package, r'^[\w.-]+==[\w.]+$')
+
+
 if __name__ == '__main__':
     unittest.main()

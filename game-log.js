@@ -486,7 +486,7 @@
         $('games').setAttribute('aria-busy', 'true');
         try {
             const [response, genreData] = await Promise.all([
-                fetch('data/game-log.json?v=vod-20261125', { cache: 'no-cache', credentials: 'omit' }),
+                fetch('data/game-log.json?v=vod-webp-20261125', { cache: 'no-cache', credentials: 'omit' }),
                 loadGenres(),
                 loadCustomRecords(),
             ]);

@@ -80,7 +80,7 @@ test('one failed source leaves other HOME sources usable and never invents data'
     root.addEventListener = () => {};
     const ctx = vm.createContext({ console, Date, Intl, Set, Promise, URL, URLSearchParams, setTimeout, clearTimeout, setInterval() {},
         document: { hidden: false, getElementById: node, addEventListener() {} },
-        window: { addEventListener() {}, location: { pathname: '/index.html', search: '?tab=home&keep=1' }, BeadyoHomeData: D, BeadyoHomeSoop: { boardUrl: require('../home-soop.js').boardUrl, read: async () => { throw new Error('SOOP unavailable'); } }, BeadyoExploreData: require('../explore-data.js'), BeadyoCommon: {
+        window: { addEventListener() {}, location: { pathname: '/index.html', search: '?tab=home&keep=1' }, BeadyoHomeData: D, BeadyoKstDate: require('../kst-date.js'), BeadyoHomeSoop: { boardUrl: require('../home-soop.js').boardUrl, read: async () => { throw new Error('SOOP unavailable'); } }, BeadyoExploreData: require('../explore-data.js'), BeadyoCommon: {
             esc: text => String(text ?? ''), safeUrl: text => text || '',
             unifiedSearchConfig: { cacheTtlMs: 3600000 },
             loadUnifiedSearchData: async () => { throw new Error('Removed HOME song must not load the songbook'); },
@@ -138,7 +138,7 @@ test('manual cafe refresh keeps five posts, bypasses cache once, and recovers af
     t.after(() => deferred.forEach(request => request.resolve(initial)));
     const ctx = vm.createContext({ console, Date, Intl, Set, Promise, URL, URLSearchParams, setTimeout, clearTimeout, setInterval() {},
         document: { hidden: false, getElementById: node, addEventListener() {} },
-        window: { addEventListener() {}, location: { pathname: '/index.html', search: '?tab=home' }, BeadyoHomeData: D,
+        window: { addEventListener() {}, location: { pathname: '/index.html', search: '?tab=home' }, BeadyoHomeData: D, BeadyoKstDate: require('../kst-date.js'),
             BeadyoHomeSoop: { boardUrl: require('../home-soop.js').boardUrl, read: async () => [] },
             BeadyoHomeCafe: { boardUrl: 'https://cafe.naver.com/f-e/cafes/31098081/menus/21?viewType=L', read: readCafe },
             BeadyoExploreData: require('../explore-data.js'),

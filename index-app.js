@@ -674,16 +674,7 @@ function formatNotificationDate(value) {
     if (!value) return '';
     const date = new Date(value);
     if (!Number.isFinite(date.getTime())) return String(value);
-    try {
-        return new Intl.DateTimeFormat('ko-KR', {
-            month: 'numeric',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        }).format(date);
-    } catch {
-        return date.toLocaleString();
-    }
+    return window.BeadyoKstDate.formatMonthDayTime(date);
 }
 
 function notificationTimeValue(item) {
@@ -1055,11 +1046,6 @@ function openCalendarAdmin() {
     setTimeout(() => sendCalendarAction('open-admin'), 120);
 }
 
-function openDanceReviewPage() {
-    closeAuthMenu();
-    window.location.href = withFrameAssetVersion('dance-archive.html', 'review-20261115');
-}
-
 function openDevelopmentRequestsPage() {
     closeAuthMenu();
     window.location.href = withFrameAssetVersion('development-requests.html', 'review-20261115');
@@ -1099,8 +1085,7 @@ async function updateAuthUI() {
         <div class="auth-menu" id="auth-menu">
             ${canAdmin ? `<button onclick="openCalendarAdmin()">⚙ 편집 설정</button>` : ''}
             <button onclick="openPatchNotesModal()">패치노트</button>
-            ${canAdmin ? `<button onclick="openDanceReviewPage()">춤영상 검토 페이지</button>
-            <button onclick="openDevelopmentRequestsPage()">개발요청란</button>` : ''}
+            ${canAdmin ? `<button onclick="openDevelopmentRequestsPage()">개발요청란</button>` : ''}
             <button class="danger" onclick="signOut()">로그아웃</button>
         </div>
     </div>`;

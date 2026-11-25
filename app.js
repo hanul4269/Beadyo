@@ -201,8 +201,8 @@ function anniversariesForDate(dateStr) {
 }
 
 const state = {
-    year: new Date().getFullYear(),
-    month: new Date().getMonth(),
+    year: kstToday().getFullYear(),
+    month: kstToday().getMonth(),
     events: [],
     ytLinks: [],
     broadcastInfos: [],
@@ -216,7 +216,7 @@ const state = {
     calendarNotices: [],
     viewMode: 'month',
     weekStart: null,
-    mobileStartDate: dateToStr(new Date()),
+    mobileStartDate: dateToStr(kstToday()),
 };
 
 const DEFAULT_CALENDAR_NOTICE = {
@@ -439,6 +439,13 @@ function addDays(date, days) {
     const d = new Date(date);
     d.setDate(d.getDate() + days);
     return d;
+}
+// 달력의 '오늘'은 홈과 같은 한국 시간(KST) 기준이다. 해외 기기에서도 같은 날을 가리키도록
+// KST 날짜를 기기 로컬 자정 Date로 돌려준다(달력 칸·주 계산은 이 Date로 그대로 한다).
+// 한국은 서머타임이 없어 UTC+9 고정 오프셋으로 계산한다.
+function kstToday(nowMs = Date.now()) {
+    const k = new Date(nowMs + 9 * 60 * 60 * 1000);
+    return new Date(k.getUTCFullYear(), k.getUTCMonth(), k.getUTCDate());
 }
 function dateToStr(date) {
     return toDateStr(date.getFullYear(), date.getMonth(), date.getDate());
@@ -1065,7 +1072,7 @@ function downloadPaintCanvas() {
     if (!canvas) return;
     const a = document.createElement('a');
     a.href = canvas.toDataURL('image/png');
-    a.download = `beadyo-canvas-${dateToStr(new Date())}.png`;
+    a.download = `beadyo-canvas-${dateToStr(kstToday())}.png`;
     a.click();
     a.remove();
 }
@@ -1528,7 +1535,8 @@ async function loadEvents({ isRetry = false } = {}) {
     } catch (e) {
         clearTimeout(tid);
         if (requestSequence !== _loadRequestSequence) return;
-        state.events = [];
+        // 자동 갱신이 한 번 실패했다고 보이던 일정을 지우지 않는다.
+        // 마지막으로 받은 일정을 그대로 두고 재시도만 예약한다.
         renderCalendar();
         _scheduleLoadRetry();
         return;
@@ -1635,7 +1643,7 @@ function renderMobileSchedule() {
     closeScheduleContextMenu();
     const wrap = document.getElementById('mobileScheduleView');
     if (!wrap) return;
-    const todayStr = dateToStr(new Date());
+    const todayStr = dateToStr(kstToday());
     const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
     const [y, m, d] = state.mobileStartDate.split('-').map(Number);
     const cards = [];
@@ -1703,7 +1711,7 @@ function renderCalendar() {
     document.getElementById('monthModeBtn')?.classList.toggle('active', state.viewMode === 'month');
     document.querySelector('.cal-area')?.classList.toggle('week-mode', state.viewMode === 'week');
 
-    const today    = new Date();
+    const today    = kstToday();
     const todayStr = toDateStr(today.getFullYear(), today.getMonth(), today.getDate());
 
     const cells = [];
@@ -2278,12 +2286,17 @@ function openBroadcastModal(dateStr) {
     renderBroadcastVodRows(broadcastRows(info));
     document.getElementById('broadcastMemo').value = info?.memo || '';
     document.getElementById('broadcastDeleteBtn').style.display = info ? '' : 'none';
-    document.getElementById('broadcastModal').classList.add('open');
+    const modal = document.getElementById('broadcastModal');
+    modal.classList.add('open');
+    // Opened from the day popup, so keep that popup's focus trap underneath.
+    window.BeadyoModalFocus?.activate(modal, closeBroadcastModal, { nested: true });
 }
 
 function closeBroadcastModal() {
-    document.getElementById('broadcastModal').classList.remove('open');
+    const modal = document.getElementById('broadcastModal');
+    modal.classList.remove('open');
     _broadcastModalDate = null;
+    window.BeadyoModalFocus?.release(modal);
 }
 
 async function saveBroadcastInfo() {
@@ -2427,7 +2440,7 @@ function openDayViewModal(dateStr) {
     const time = broadcastTimeLabel(info);
     const links = broadcastLinks(info);
 
-    let html = `<div class="modal-title">${formatDate(dateStr)}</div>`;
+    let html = `<div class="modal-title" id="viewModalTitle">${formatDate(dateStr)}</div>`;
     const annivs = anniversariesForDate(dateStr);
     if (annivs.length) {
         html += `<div class="day-modal-section">
@@ -2467,7 +2480,7 @@ function openDayViewModal(dateStr) {
            ${_copiedEvent ? `<button class="btn btn-secondary" onclick="pasteCopiedEvent(${jsArg(dateStr)})">복사한 일정 붙여넣기</button>` : ''}
            <button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>`
         : `<button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>`;
-    document.getElementById('viewModal').classList.add('open');
+    showViewModal();
 }
 
 function openViewModal(id) {
@@ -2476,7 +2489,7 @@ function openViewModal(id) {
     delete document.getElementById('viewModal').dataset.dayDate;
     const t = typeOf(ev.type);
 
-    let html = `<div class="modal-title">${esc(ev.title)}</div>`;
+    let html = `<div class="modal-title" id="viewModalTitle">${esc(ev.title)}</div>`;
     html += `<span class="type-badge" style="${typeStyle(t)}">${esc(t.icon)} ${t.label}</span>`;
 
     if (ev.date) {
@@ -2514,7 +2527,7 @@ function openViewModal(id) {
            <button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>`
         : `<button class="btn btn-secondary" onclick="closeViewModal()">닫기</button>`;
 
-    document.getElementById('viewModal').classList.add('open');
+    showViewModal();
 
     const titleEl = document.querySelector('#viewContent .modal-title');
     if (titleEl) {
@@ -2526,10 +2539,22 @@ function openViewModal(id) {
         }
     }
 }
+function showViewModal() {
+    const modal = document.getElementById('viewModal');
+    modal.classList.add('open');
+    const trigger = document.activeElement;
+    const onclick = trigger?.getAttribute?.('onclick');
+    const date = trigger?.closest?.('[data-date]')?.dataset.date;
+    // Calendar refreshes rebuild the cells, so fall back to the rebuilt control for the same day.
+    const restore = () => (onclick && [...document.querySelectorAll('[onclick]')].find(el => el.getAttribute('onclick') === onclick))
+        || (date && document.querySelector(`[data-date="${CSS.escape(date)}"] button`)) || null;
+    window.BeadyoModalFocus?.activate(modal, closeViewModal, { restore });
+}
 function closeViewModal() {
     const modal = document.getElementById('viewModal');
     modal.classList.remove('open');
     delete modal.dataset.dayDate;
+    window.BeadyoModalFocus?.release(modal);
 }
 
 const UP_LOCAL_RANKING_CACHE_KEY = 'beadyoUpRankingLastSnapshot:v1';
@@ -2671,14 +2696,14 @@ const UP_AUTO_POPUP_HIDE_UNTIL_KEY = 'beadyoUpAutoPopupHideUntil';
 function upAutoPopupHiddenUntil() {
     try {
         const value = localStorage.getItem(UP_AUTO_POPUP_HIDE_UNTIL_KEY) || '';
-        if (/^\d{4}-\d{2}-\d{2}$/.test(value) && value >= dateToStr(new Date())) return value;
+        if (/^\d{4}-\d{2}-\d{2}$/.test(value) && value >= dateToStr(kstToday())) return value;
         if (value) localStorage.removeItem(UP_AUTO_POPUP_HIDE_UNTIL_KEY);
     } catch {}
     return '';
 }
 
 function hideUpAutoPopupUntil(daysFromToday) {
-    const until = dateToStr(addDays(new Date(), daysFromToday));
+    const until = dateToStr(addDays(kstToday(), daysFromToday));
     try {
         localStorage.setItem(UP_AUTO_POPUP_HIDE_UNTIL_KEY, until);
     } catch {}
@@ -2844,7 +2869,7 @@ function renderUpModal(data, fetchLive = false) {
         const ev = events[idx];
         const liveState = liveStates.get(idx) || (fetchLive ? 'pending' : 'cached');
         const lastUpdated = ev.live_updated_at || data.updated;
-        const lastUpdatedLabel = lastUpdated ? new Date(lastUpdated).toLocaleString('ko-KR') : '알 수 없음';
+        const lastUpdatedLabel = lastUpdated ? BeadyoKstDate.formatDateTime(lastUpdated, { seconds: true }) : '알 수 없음';
         const updateLabel = liveState === 'error'
             ? `업데이트 실패 · 마지막 갱신: ${lastUpdatedLabel}`
             : liveState === 'pending'
@@ -2897,7 +2922,7 @@ function renderUpModal(data, fetchLive = false) {
                         <div class="up-rank-time">${esc(r.timestamp)}</div>
                     </div>
                     ${rankSticker}
-                    <div class="up-rank-count">👍 ${Number(r.up_count).toLocaleString()}</div>
+                    <div class="up-rank-count">👍 ${Number(r.up_count).toLocaleString('ko-KR')}</div>
                 </div>`;
             }).join('')
             : upEmptyHtml(liveState === 'error' ? '랭킹을 불러오지 못했습니다'
@@ -3722,7 +3747,7 @@ function renderScheduleAudit() {
         const snapshot = entry.new_values || entry.old_values || {};
         const changedFields = scheduleAuditChangedFields(entry);
         const changedAt = entry.changed_at
-            ? new Date(entry.changed_at).toLocaleString('ko-KR', { dateStyle: 'medium', timeStyle: 'medium' })
+            ? BeadyoKstDate.formatDateTime(entry.changed_at, { seconds: true })
             : '시간 확인 불가';
         const actor = entry.changed_by_email || '시스템 또는 확인 불가';
         const scheduleTitle = snapshot.title || '제목 없는 일정';
@@ -3913,7 +3938,7 @@ function calendarNoticeHideKey(notice) {
 const _calendarNoticeHiddenDates = new Map();
 
 function isCalendarNoticeHiddenToday(notice) {
-    return _calendarNoticeHiddenDates.get(calendarNoticeHideKey(notice)) === dateToStr(new Date());
+    return _calendarNoticeHiddenDates.get(calendarNoticeHideKey(notice)) === dateToStr(kstToday());
 }
 
 function renderNoticePopup(notice) {
@@ -3968,7 +3993,7 @@ function closeNoticePopup() {
 
 function hideNoticeToday() {
     const notice = _activeCalendarNotice || normalizeCalendarNotice(DEFAULT_CALENDAR_NOTICE);
-    _calendarNoticeHiddenDates.set(calendarNoticeHideKey(notice), dateToStr(new Date()));
+    _calendarNoticeHiddenDates.set(calendarNoticeHideKey(notice), dateToStr(kstToday()));
     closeNoticePopup();
 }
 
@@ -4503,7 +4528,7 @@ async function removeUpEvent(id) {
 function setViewMode(mode) {
     state.viewMode = mode === 'week' ? 'week' : 'month';
     if (state.viewMode === 'week' && !state.weekStart) {
-        const today = new Date();
+        const today = kstToday();
         const ws = addDays(today, -today.getDay());
         state.weekStart = dateToStr(ws);
     }
@@ -4514,7 +4539,7 @@ function changeMonth(delta) {
     pendingCalendarDate = '';
     if (state.viewMode === 'week') {
         if (!state.weekStart) {
-            const today = new Date();
+            const today = kstToday();
             state.weekStart = dateToStr(addDays(today, -today.getDay()));
         }
         const [wy, wm, wd] = state.weekStart.split('-').map(Number);
@@ -4542,7 +4567,7 @@ function changeMonth(delta) {
 }
 function goToday() {
     pendingCalendarDate = '';
-    const now = new Date();
+    const now = kstToday();
     state.year  = now.getFullYear();
     state.month = now.getMonth();
     state.mobileStartDate = dateToStr(now);
@@ -4687,7 +4712,7 @@ const CONFETTI_COLORS = ['#ff7eb3','#ffcd3c','#7bc67e','#6eb5ff','#ff8c69','#c77
 // ─── 초기화 ───
 loadEvents().catch(err => {
     console.error('initial loadEvents:', err);
-    state.events = [];
+    // loadEvents가 일정을 받은 뒤(방송 정보·렌더 단계)에 실패해도 받은 일정은 남긴다.
     renderCalendar();
     loadYtLinks().catch(() => {});
 });
@@ -4762,7 +4787,7 @@ function showBirthdayPopup() {
 }
 
 function checkBirthday() {
-    const now = new Date();
+    const now = kstToday();
     if (now.getMonth() === 7 && now.getDate() === 18) {
         setTimeout(showBirthdayPopup, 1200);
     }

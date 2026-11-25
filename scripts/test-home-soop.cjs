@@ -48,8 +48,8 @@ test('notice rendering escapes external text and retains actual original URL and
     const body = source.slice(source.indexOf('    function renderSoop()'), source.indexOf('    function renderContent()'));
     let html = '';
     const data = S.latestNotice(board([post(1, '2026-10-10 22:00:00', { titleName: '<script>bad</script>', userNick: 'a&b' })]), now);
-    const render = new Function('sources', 'stateHtml', 'setHtml', 'esc', 'refreshNotice', body + ';return renderSoop;')(
-        { soop: { data } }, () => '', (_, value) => { html = value; }, text => String(text).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;'), () => '');
+    const render = new Function('sources', 'stateHtml', 'setHtml', 'esc', 'refreshNotice', 'K', body + ';return renderSoop;')(
+        { soop: { data } }, () => '', (_, value) => { html = value; }, text => String(text).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;'), () => '', require('../kst-date.js'));
     render();
     assert.doesNotMatch(html, /<script>/); assert.match(html, /&lt;script>/); assert.match(html, /a&amp;b/);
     assert.match(html, /datetime="2026-10-10T13:00:00.000Z"/); assert.match(html, /\/post\/1"/);

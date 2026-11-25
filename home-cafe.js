@@ -6,6 +6,10 @@
     const source = './data/cafe-posts.json', storageKey = 'beadyo:home-cafe:v1';
     // Public raw data updates independently of a GitHub Pages rebuild. Preview stays local.
     const liveSource = 'https://raw.githubusercontent.com/hanul4269/Beadyo/main/data/cafe-posts.json';
+    // Supabase runtime cache written every 30 minutes by the runtime-collector Edge Function.
+    // Same schema as the JSON file; the publishable key is public and read-only here.
+    const runtimeSource = 'https://qlmcwobfldgmhwhptkfz.supabase.co/rest/v1/site_runtime_cache?select=payload&cache_key=eq.cafe_posts&limit=1';
+    const runtimeKey = 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR';
     const liveHosts = new Set(['beadyo.com', 'www.beadyo.com', 'hanul4269.github.io']);
     const cacheDuration = 5 * 60000, staleAfter = 6 * 3600000, futureTolerance = 5 * 60000;
     const controls = /[\u0000-\u001f\u007f-\u009f\u200b\u200e\u200f\u202a-\u202e\u2060-\u206f\ufeff]/;
@@ -62,15 +66,23 @@
         return value;
     }
 
-    async function readFeed(fetchWithTimeout, url, mode, timeout = 6000) {
+    function runtimePayload(rows) {
+        // A missing row (before the collector's first save) is a failure, not an empty board.
+        if (!Array.isArray(rows) || rows.length !== 1 || !rows[0]?.payload) throw new Error('Cafe runtime cache unavailable');
+        return rows[0].payload;
+    }
+
+    async function readFeed(fetchWithTimeout, url, mode, timeout = 6000, runtime = false) {
         let timer;
         try {
             // Cover JSON body reads too: the shared fetch timeout only covers the response headers.
             const request = (async () => {
-                const response = await fetchWithTimeout(url, timeout,
-                    { credentials: 'omit', cache: 'no-cache', mode, redirect: 'error' });
+                const options = { credentials: 'omit', cache: 'no-cache', mode, redirect: 'error' };
+                if (runtime) options.headers = { apikey: runtimeKey };
+                const response = await fetchWithTimeout(url, timeout, options);
                 if (!response?.ok) throw new Error('Cafe feed unavailable');
-                return response.json();
+                const body = await response.json();
+                return runtime ? runtimePayload(body) : body;
             })();
             const payload = await Promise.race([request, new Promise((_, reject) => {
                 timer = setTimeout(() => reject(new Error('Cafe feed timeout')), timeout);
@@ -83,13 +95,21 @@
         try {
             let value, fetchFailed = false;
             if (liveHosts.has(root.location?.hostname)) {
-                try { value = await readFeed(fetchWithTimeout, liveSource, 'cors'); }
-                catch {
-                    fetchFailed = true;
-                    // Leave time for bundled data and persistent fallback within HOME's 12s deadline.
-                    value = await readFeed(fetchWithTimeout, source, 'same-origin', 4000);
-                    const previous = cached(Date.now());
-                    if (previous && Date.parse(previous.fetchedAt) >= Date.parse(value.fetchedAt)) value = previous;
+                // Budgets 3s + 4s + 3s leave persistent fallback time within HOME's 12s deadline.
+                try { value = await readFeed(fetchWithTimeout, runtimeSource, 'cors', 3000, true); } catch {}
+                // A stale or missing runtime cache (collector stopped or rolled back) still tries raw data.
+                if (!value || value.stale) {
+                    try {
+                        const raw = await readFeed(fetchWithTimeout, liveSource, 'cors', 4000);
+                        if (!value || Date.parse(raw.fetchedAt) > Date.parse(value.fetchedAt)) value = raw;
+                    } catch {
+                        if (!value) {
+                            fetchFailed = true;
+                            value = await readFeed(fetchWithTimeout, source, 'same-origin', 3000);
+                            const previous = cached(Date.now());
+                            if (previous && Date.parse(previous.fetchedAt) >= Date.parse(value.fetchedAt)) value = previous;
+                        }
+                    }
                 }
             } else value = await readFeed(fetchWithTimeout, source, 'same-origin');
             memory = record(value);

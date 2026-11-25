@@ -64,7 +64,7 @@ test('MUSIC route rejects invalid IDs, escapes query text and shows missing sele
 function live() {
     const nodes = Object.fromEntries(['live-list','stats-panel','result-info','explore-live-date'].map(id=>[id,element()]));
     const S={mainTab:'live',liveYear:2026,liveDate:'2026-10-01',liveTargetId:'42',query:'',session:null,liveCache:{2026:[{id:41,year:2026,title:'동일 제목',performed_date:'2026-10-01'},{id:42,year:2026,title:'동일 제목',performed_date:'2026-10-01'}]},liveFilter:{years:new Set([2026]),sort:'date',dir:'desc'}};
-    const ctx=vm.createContext({S,document:{getElementById:id=>nodes[id],querySelector:element},loadLive:async()=>{},renderSkeleton(){},ensureStatsData:async()=>{},renderStats(){throw Error('Must show record');},updateResultInfo(){},liveStatKey:row=>row.title,esc,fmtDate:x=>x,emptyHtml:x=>x,safeUrl:x=>x,matches:()=>true});
+    const ctx=vm.createContext({S,document:{getElementById:id=>nodes[id],querySelector:element},loadLive:async()=>{},renderSkeleton(){},ensureStatsData:async()=>{},renderStats(){throw Error('Must show record');},updateResultInfo(){},liveStatKey:row=>row.title,esc,fmtDate:x=>x,emptyHtml:x=>x,safeUrl:x=>x,matches:()=>true,canEditSongbook:()=>false});
     vm.runInContext(section('songbook.html','let liveRenderGeneration =','// ── 렌더: 통계'),ctx);
     return {ctx,nodes,S};
 }

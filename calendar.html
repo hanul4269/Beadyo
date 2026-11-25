@@ -18,17 +18,18 @@
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
-    <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
+    <link rel="stylesheet" href="tokens.css?v=deploy-20261126">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
     <link rel="preload" href="supabase.min.js?v=supabase-2-119-0" as="script">
-    <link rel="preload" href="app.js?v=review-20261115" as="script">
+    <link rel="preload" href="app.js?v=kst-20261125" as="script">
     <script defer src="supabase.min.js?v=supabase-2-119-0"></script>
     <script defer src="beadyo-common.js?v=auth-security-20261105"></script>
-    <script defer src="modal-focus.js?v=release-20261011-all"></script>
+    <script defer src="kst-date.js?v=kst-20261125"></script>
+    <script defer src="modal-focus.js?v=deploy-20261126"></script>
     <link rel="stylesheet" href="explore.css?v=release-20261011-all">
     <script defer src="explore-data.js?v=release-20261011-all"></script>
     <script defer src="explore.js?v=release-20261011-all"></script>
-    <script defer src="app.js?v=review-20261115"></script>
+    <script defer src="app.js?v=kst-20261125"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="assets/fonts/pretendard/pretendard-subset.css?v=subset-20261112" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="assets/fonts/pretendard/pretendard-subset.css?v=subset-20261112" rel="stylesheet"></noscript>
@@ -266,7 +267,7 @@
         }
         .view-toggle button.active {
             background: var(--accent);
-            color: #fff;
+            color: #203314; /* #203314 on the light green = 5.7–6.5:1 */
         }
         .paint-launcher {
             display: inline-flex;
@@ -462,7 +463,7 @@
             pointer-events: none;
         }
         .cal-cell.today .date-num {
-            background: var(--accent);
+            background: var(--accent-solid, #4f7f25);
             color: #fff;
             border-radius: 50%;
         }
@@ -490,6 +491,7 @@
             color: var(--accent-dark);
             transform: translateY(-1px);
         }
+        .cal-cell.today .date-num.date-button:hover { color: #fff; }
         .date-num.sun { color: #e53935; }
         .date-num.sat { color: #1976d2; }
 
@@ -571,7 +573,7 @@
             gap: 4px;
         }
         .today-badge {
-            background: var(--accent);
+            background: var(--accent-solid, #4f7f25);
             color: #fff;
             font-size: 10px;
             font-weight: 700;
@@ -582,7 +584,7 @@
         }
         .cell-add-btn {
             width: 22px; height: 22px;
-            background: var(--accent);
+            background: var(--accent-solid, #4f7f25);
             color: #fff;
             border: none;
             border-radius: 50%;
@@ -1334,7 +1336,7 @@
         }
         .memo-add-form input[type="url"]:focus { border-color: #8bc34a; outline: none; }
         .memo-add-form button {
-            background: #8bc34a;
+            background: var(--accent-solid, #4f7f25);
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -1345,7 +1347,7 @@
             cursor: pointer;
             width: 100%;
         }
-        .memo-add-form button:hover { background: #7cb342; }
+        .memo-add-form button:hover { background: #456f20; }
         .memo-card {
             background: #fff;
             border-radius: 12px;
@@ -1686,7 +1688,7 @@
             transition: background 0.12s, color 0.12s;
         }
         .up-tab-btn.active {
-            background: var(--accent);
+            background: var(--accent-solid, #4f7f25);
             border-color: var(--accent);
             color: #fff;
         }
@@ -1720,7 +1722,7 @@
             gap: 5px;
             padding: 6px 13px;
             border-radius: 999px;
-            background: var(--accent);
+            background: var(--accent-solid, #4f7f25);
             color: #fff;
             font-size: 12px;
             font-weight: 700;
@@ -1749,7 +1751,7 @@
             border: 1.5px solid rgba(139,195,74,0.28);
             box-shadow: none;
         }
-        .up-goto-btn:hover { opacity: 0.85; }
+        .up-goto-btn:hover { filter: brightness(0.92); }
         @media (max-width: 560px) {
             .up-goto-btn.primary {
                 position: static;
@@ -1831,7 +1833,7 @@
             align-items: center;
             padding: 2px 7px;
             border-radius: 999px;
-            background: var(--accent);
+            background: var(--accent-solid, #4f7f25);
             color: #fff;
             font-size: 10px;
             font-weight: 900;
@@ -1977,7 +1979,7 @@
         .admin-form-stack button {
             border: none;
             border-radius: 8px;
-            background: var(--accent);
+            background: var(--accent-solid, #4f7f25);
             color: #fff;
             padding: 10px 14px;
             font: inherit;
@@ -2651,7 +2653,7 @@
             transition: filter 0.15s, transform 0.1s;
         }
         .btn:hover { filter: brightness(0.93); transform: translateY(-1px); }
-        .btn-primary  { background: var(--accent); color: #fff; }
+        .btn-primary  { background: var(--accent-solid, #4f7f25); color: #fff; }
         .btn-danger   { background: #ff5252; color: #fff; }
         .btn-secondary{ background: #f0f0f0; color: var(--text); }
 
@@ -2705,7 +2707,7 @@
             box-shadow: 0 2px 7px rgba(0,0,0,0.05);
         }
         .paint-tool-btn.active {
-            background: var(--accent);
+            background: var(--accent-solid, #4f7f25);
             color: #fff;
             border-color: var(--accent);
         }
@@ -2839,7 +2841,7 @@
         }
         .editor-add-row input:focus { border-color: var(--accent); }
         .editor-add-row button {
-            background: var(--accent);
+            background: var(--accent-solid, #4f7f25);
             color: #fff;
             border: none;
             padding: 8px 16px;
@@ -3168,7 +3170,8 @@
                 color: #e45147;
             }
             .mobile-today-badge {
-                background: #ff827a;
+                /* #fff on #c4473d = 4.87:1 (was #ff827a, 2.41:1). */
+                background: #c4473d;
                 color: #fff;
                 border-radius: 999px;
                 padding: 7px 13px;
@@ -3581,7 +3584,7 @@
         }
     </style>
     <script defer src="page-footer.js?v=release-20261011-all"></script>
-    <link rel="stylesheet" href="heading-font.css?v=release-20261011-all">
+    <link rel="stylesheet" href="heading-font.css?v=deploy-20261126">
 </head>
 <body>
 
@@ -3685,8 +3688,8 @@
 </div>
 <!-- ─── 보기 모달 ─── -->
 <div class="modal-overlay" id="viewModal" onmousedown="if(event.target===this)closeViewModal()">
-    <div class="modal">
-        <button class="modal-close" onclick="closeViewModal()">×</button>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle">
+        <button class="modal-close" onclick="closeViewModal()" aria-label="닫기">×</button>
         <div id="viewContent"></div>
         <div class="btn-row" id="viewBtns"></div>
     </div>
@@ -3783,8 +3786,8 @@
 
 <!-- ─── 방송정보 모달 ─── -->
 <div class="modal-overlay" id="broadcastModal" onmousedown="if(event.target===this)closeBroadcastModal()">
-    <div class="modal">
-        <button class="modal-close" onclick="closeBroadcastModal()">×</button>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="broadcastModalTitle">
+        <button class="modal-close" onclick="closeBroadcastModal()" aria-label="닫기">×</button>
         <div class="modal-title" id="broadcastModalTitle">방송정보</div>
         <input type="hidden" id="broadcastDate">
         <div class="field-row" style="margin-bottom:13px;">

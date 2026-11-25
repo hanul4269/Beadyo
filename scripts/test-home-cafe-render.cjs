@@ -2,6 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const cafe = require('../home-cafe.js');
+const K = require('../kst-date.js');
 const source = fs.readFileSync(require.resolve('../home.js'), 'utf8');
 const body = source.slice(source.indexOf('    function renderCafe()'), source.indexOf('    function renderEvents()'));
 const esc = value => String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
@@ -14,8 +15,8 @@ function refreshButton() {
 function render(state, button = refreshButton()) {
     let html;
     const document = { getElementById(id) { assert.equal(id, 'home-cafe-refresh'); return button; } };
-    const fn = new Function('sources', 'setHtml', 'esc', 'document', body + ';return renderCafe;')(
-        { cafe: state }, (id, text) => { assert.equal(id, 'home-cafe'); html = text; }, esc, document);
+    const fn = new Function('sources', 'setHtml', 'esc', 'document', 'K', body + ';return renderCafe;')(
+        { cafe: state }, (id, text) => { assert.equal(id, 'home-cafe'); html = text; }, esc, document, K);
     fn();
     return html;
 }

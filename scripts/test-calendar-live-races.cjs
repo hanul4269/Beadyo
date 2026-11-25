@@ -198,7 +198,7 @@ function live({ readYear, readStats = async () => {} } = {}) {
         loadLive: readYear || (async () => {}), renderSkeleton() {}, ensureStatsData: readStats, renderStats() { stats++; },
         updateResultInfo() { renders++; }, liveStatKey: row => row.title, esc: value => String(value ?? ''), fmtDate: value => value,
         emptyHtml: value => value, safeUrl: value => value, matches: (title, artist, query) => title.includes(query),
-        liveYearStyle: () => '',
+        liveYearStyle: () => '', canEditSongbook: () => !!S.session && S.isEditor === true,
     });
     vm.runInContext(section('songbook.html', 'let liveRenderGeneration =', '// ── 렌더: 통계'), ctx);
     return { ctx, nodes, S, renders: () => renders, stats: () => stats };
@@ -253,4 +253,38 @@ test('MUSIC date validation accepts real dates and rejects impossible days, mont
         assert.equal(ctx.parseDate(input), expected);
     for (const input of ['20260230', '20260229', '20261301', '20260001', '20260431', '20261000', '19000229', '00000101', '2026/10/01', '2026-1-01', '2026101', 'text20261011'])
         assert.equal(ctx.parseDate(input), null, input);
+});
+
+for (const failure of ['network error', 'HTTP 503']) test(`a failed automatic refresh (${failure}) keeps the schedules already on screen`, async () => {
+    const h = calendar();
+    const retries = [];
+    h.ctx._scheduleLoadRetry = () => retries.push('retry');
+    const rows = [{ id: 1, date: '2025-01-10', title: '[테스트용] 가짜 일정' }];
+    h.ctx.fetch = async url => { h.requests.push(url); return response(rows); };
+    await h.ctx.loadEvents(); await flush();
+    assert.deepEqual(h.ctx.state.events.map(ev => ev.id), [1]);
+
+    // mock 실패: 운영 DB에는 아무 요청도 가지 않는다.
+    h.ctx.fetch = async url => {
+        h.requests.push(url);
+        if (failure === 'network error') throw new TypeError('Failed to fetch');
+        return { ok: false, status: 503, json: async () => ({}) };
+    };
+    const rendersBefore = h.renders();
+    await h.ctx.loadEvents(); await flush();
+    assert.deepEqual(h.ctx.state.events.map(ev => ev.id), [1], 'previous schedules stay visible');
+    assert.ok(h.renders() > rendersBefore, 'calendar re-renders with the kept schedules');
+    assert.deepEqual(retries, ['retry'], 'a retry is scheduled');
+    assert.ok(h.requests.every(url => url.startsWith('https://fixture.invalid')));
+});
+
+test('the initial load failure handler does not wipe schedules that already arrived', () => {
+    const text = source('app.js');
+    const start = text.indexOf('// ─── 초기화 ───');
+    const handler = text.slice(start, text.indexOf('loadMemoCards()', start));
+    assert.match(handler, /loadEvents\(\)\.catch/);
+    assert.doesNotMatch(handler, /state\.events\s*=/);
+    const loader = section('app.js', 'async function loadEvents(', 'async function loadEditors()');
+    const catchBlock = loader.slice(loader.indexOf('} catch (e) {'), loader.indexOf('state.events = Array.isArray'));
+    assert.doesNotMatch(catchBlock, /state\.events\s*=/);
 });

@@ -100,16 +100,53 @@ except Exception as e:
         print(f'[urllib] Also failed: {e2}', file=sys.stderr)
         sys.exit(1)
 
-# 이전 up.json 로드
+# 이전 랭킹 로드: 로컬 up.json이 있으면 그것을, 없으면(GitHub Actions) 공개
+# 런타임 캐시를 읽는다. 수집이 실패한 이벤트는 이 값을 그대로 유지한다.
+def fetch_previous_cache():
+    url = (f'{SUPABASE_URL}/rest/v1/site_runtime_cache'
+           '?cache_key=eq.up_ranking&select=payload')
+    req = urllib.request.Request(url, headers={
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': f'Bearer {SUPABASE_ANON_KEY}',
+        'Accept': 'application/json',
+    })
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        rows = json.loads(resp.read().decode())
+    if not isinstance(rows, list):
+        raise ValueError('runtime cache response must be a list')
+    if not rows:
+        return {'events': []}
+    payload = rows[0].get('payload') if isinstance(rows[0], dict) else None
+    if not isinstance(payload, dict):
+        raise ValueError('runtime cache payload must be an object')
+    return payload
+
+def load_previous():
+    try:
+        with open('up.json', 'r', encoding='utf-8') as f:
+            return json.load(f), 'up.json'
+    except FileNotFoundError:
+        pass
+    except Exception as e:
+        print(f'up.json unreadable: {e}')
+    return fetch_previous_cache(), 'runtime cache'
+
 try:
-    with open('up.json', 'r', encoding='utf-8') as f:
-        prev = json.load(f)
+    prev, prev_source = load_previous()
+    prev_events = prev.get('events', [])
+    if not isinstance(prev_events, list):
+        raise ValueError('previous events must be a list')
     prev_map = {e['id']: {**e, 'live_updated_at': e.get('live_updated_at') or prev.get('updated')}
-                for e in prev.get('events', [])}
-except Exception:
+                for e in prev_events if isinstance(e, dict) and 'id' in e}
+    prev_loaded = True
+    print(f'Previous ranking loaded from {prev_source}: {len(prev_map)} events')
+except Exception as e:
+    print(f'Previous ranking unavailable: {e}')
     prev_map = {}
+    prev_loaded = False
 
 events_out = []
+collection_failures = 0
 for ev in events:
     bj_id, post_no = parse_soop_url(ev['soop_url'])
     if not bj_id or not post_no:
@@ -127,10 +164,24 @@ for ev in events:
     replies = fetch_replies(bj_id, post_no)
 
     if replies is None:
+        collection_failures += 1
         if ev['id'] in prev_map:
-            print(f'  Keeping previous data')
-            events_out.append(prev_map[ev['id']])
+            # 수집 실패: 탭·제목만 최신으로 두고 랭킹·글 주소·수집 시각은 기존 값을 유지
+            # (글 주소를 바꾼 직후라면 랭킹과 주소가 같은 글을 가리키도록 함께 유지)
+            print(f'  Collection failed; keeping previous ranking')
+            previous = prev_map[ev['id']]
+            events_out.append({
+                **previous,
+                'tab':      ev['tab_name'],
+                'title':    ev['title'],
+            })
+        elif not prev_loaded:
+            # 기존 값을 확인할 수 없으면 빈 랭킹으로 덮어쓸 위험이 있으니 저장하지 않는다.
+            print('Collection failed and previous ranking is unavailable; '
+                  'leaving stored ranking untouched.', file=sys.stderr)
+            sys.exit(1)
         else:
+            # 기존 값이 없는 새 이벤트: 덮어쓸 랭킹이 없으므로 빈 목록으로 시작
             events_out.append({
                 'id':       ev['id'],
                 'tab':      ev['tab_name'],
@@ -161,3 +212,6 @@ with open('up.json', 'w', encoding='utf-8') as f:
     json.dump(output, f, ensure_ascii=False)
 print(f'up.json written: {len(events_out)} events')
 upsert_runtime_cache('up_ranking', output, output['updated'])
+if collection_failures:
+    print(f'::warning::UP comment collection failed for {collection_failures} event(s); '
+          'previous rankings were kept.')

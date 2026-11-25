@@ -7,6 +7,8 @@ const source = fs.readFileSync(require.resolve('../home-cafe.js'), 'utf8');
 const now = Date.parse('2026-10-17T03:00:00Z');
 const key = 'beadyo:home-cafe:v1';
 const rawUrl = 'https://raw.githubusercontent.com/hanul4269/Beadyo/main/data/cafe-posts.json';
+const runtimeUrl = 'https://qlmcwobfldgmhwhptkfz.supabase.co/rest/v1/site_runtime_cache?select=payload&cache_key=eq.cafe_posts&limit=1';
+const rows = payload => response(payload === undefined ? [] : [{ payload }]);
 const post = (id = '10', publishedAt = '2026-10-17T02:00:00Z', extra = {}) => ({ id,
     title: `등록 글 ${id}`, publishedAt, href: `https://cafe.naver.com/f-e/cafes/31098081/articles/${id}`, ...extra });
 const board = (posts = [post()], extra = {}) => ({ schemaVersion: 1, cafeId: '31098081', menuId: '21',
@@ -189,17 +191,55 @@ test('a stalled JSON body times out and its late response cannot overwrite a rec
     assert.equal(h.timers.size, 0);
 });
 
-test('only the three production hosts read public raw data first, without cookies or local fallback on success', async () => {
+test('the three production hosts read the runtime cache first, without cookies, and stop there when it is fresh', async () => {
     for (const hostname of ['beadyo.com', 'www.beadyo.com', 'hanul4269.github.io']) {
         const h = fixture(undefined, { hostname }), calls = [];
         const result = await h.api.read(async (url, ms, options) => {
-            calls.push(url); assert.equal(url, rawUrl); assert.equal(ms, 6000);
+            calls.push(url); assert.equal(url, runtimeUrl); assert.equal(ms, 3000);
             assert.equal(options.credentials, 'omit'); assert.equal(options.cache, 'no-cache');
             assert.equal(options.mode, 'cors'); assert.equal(options.redirect, 'error');
-            return response(board());
+            assert.deepEqual(Object.entries(options.headers), [['apikey', 'sb_publishable_jMhCscf87Dtt38Wk_ASKrw_dRtQExSR']]);
+            return rows(board([post('30')]));
         });
-        assert.equal(calls.length, 1); assert.equal(result.fetchFailed, false); assert.equal(result.fromCache, false);
+        assert.equal(calls.length, 1); assert.equal(result.posts[0].id, '30');
+        assert.equal(result.fetchFailed, false); assert.equal(result.fromCache, false);
     }
+});
+
+test('a missing, failed or invalid runtime cache falls back to public raw data without a failure notice', async () => {
+    for (const runtime of [rows(), { ok: false }, response({ payload: board() }), response([{ payload: board() }, { payload: board() }]),
+        rows(board([], { menuId: 'wrong' })), { ok: true, json: async () => { throw Error('bad JSON'); } }]) {
+        const h = fixture(undefined, { hostname: 'beadyo.com' }), calls = [];
+        const result = await h.api.read(async (url, ms, options) => {
+            calls.push(url);
+            if (url === runtimeUrl) return runtime;
+            assert.equal(url, rawUrl); assert.equal(ms, 4000); assert.equal(options.headers, undefined);
+            return response(board([post('20')]));
+        });
+        assert.equal(calls.join(','), `${runtimeUrl},${rawUrl}`);
+        assert.equal(result.posts[0].id, '20'); assert.equal(result.fetchFailed, false);
+    }
+});
+
+test('a stale runtime cache also checks raw data and keeps whichever was collected later', async () => {
+    const staleAt = new Date(now - 7 * 3600000).toISOString();
+    const stale = board([post('5', new Date(now - 8 * 3600000).toISOString())], { fetchedAt: staleAt });
+    const newer = await fixture(undefined, { hostname: 'beadyo.com' }).api.read(async url =>
+        url === runtimeUrl ? rows(stale) : response(board([post('6')])));
+    assert.equal(newer.posts[0].id, '6'); assert.equal(newer.stale, false);
+    const older = await fixture(undefined, { hostname: 'beadyo.com' }).api.read(async url =>
+        url === runtimeUrl ? rows(stale) : response(board([post('4', '2026-10-16T00:00:00Z')], { fetchedAt: '2026-10-16T01:00:00Z' })));
+    assert.equal(older.posts[0].id, '5'); assert.equal(older.stale, true); assert.equal(older.fetchFailed, false);
+    const rawDown = await fixture(undefined, { hostname: 'beadyo.com' }).api.read(async url => url === runtimeUrl ? rows(stale) : { ok: false });
+    assert.equal(rawDown.posts[0].id, '5'); assert.equal(rawDown.stale, true); assert.equal(rawDown.fetchFailed, false);
+});
+
+test('a stalled runtime body times out and continues to raw data', async () => {
+    const h = fixture(undefined, { hostname: 'beadyo.com' });
+    const pending = h.api.read(async url => url === runtimeUrl
+        ? { ok: true, json: () => new Promise(() => {}) } : response(board([post('7')])));
+    await h.flush(); h.expire(); const result = await pending;
+    assert.equal(result.posts[0].id, '7'); assert.equal(result.fetchFailed, false); assert.equal(h.timers.size, 0);
 });
 
 test('preview, loopback, subdomains and lookalike hosts never request the remote data', async () => {
@@ -219,12 +259,13 @@ test('production raw HTTP, JSON and validation failures use the bundled feed wit
         const h = fixture(undefined, { hostname: 'beadyo.com' }), calls = [];
         const result = await h.api.read(async (url, ms, options) => {
             calls.push(url);
+            if (url === runtimeUrl) return { ok: false };
             if (url === rawUrl) return badResponse;
-            assert.equal(url, './data/cafe-posts.json'); assert.equal(ms, 4000);
+            assert.equal(url, './data/cafe-posts.json'); assert.equal(ms, 3000);
             assert.equal(options.mode, 'same-origin'); assert.equal(options.credentials, 'omit');
             return response(board([post('2')]));
         });
-        assert.equal(calls.join(','), `${rawUrl},./data/cafe-posts.json`);
+        assert.equal(calls.join(','), `${runtimeUrl},${rawUrl},./data/cafe-posts.json`);
         assert.equal(result.posts[0].id, '2'); assert.equal(result.fetchFailed, true); assert.equal(result.fromCache, true);
         const memory = await h.api.read(offline);
         assert.equal(memory.fetchFailed, true); assert.equal(memory.posts[0].id, '2');
@@ -264,7 +305,7 @@ test('a production raw body timeout falls back locally and its late response can
 
 test('a bundled body timeout after raw failure reaches persistent fallback instead of hanging', async () => {
     const h = fixture(board([post('3')]), { hostname: 'hanul4269.github.io' }); let resolveLocal;
-    const pending = h.api.read(async url => url === rawUrl ? { ok: false }
+    const pending = h.api.read(async url => url === runtimeUrl || url === rawUrl ? { ok: false }
         : { ok: true, json: () => new Promise(resolve => { resolveLocal = resolve; }) });
     await h.flush(); h.expire(); const result = await pending;
     assert.equal(result.posts[0].id, '3'); assert.equal(result.fetchFailed, true);
@@ -277,17 +318,17 @@ test('production concurrent callers share the complete raw-to-bundled fallback s
     const h = fixture(undefined, { hostname: 'beadyo.com' }), calls = []; let resolveLocal;
     const fetcher = async url => {
         calls.push(url);
-        return url === rawUrl ? { ok: false } : new Promise(resolve => { resolveLocal = resolve; });
+        return url === runtimeUrl || url === rawUrl ? { ok: false } : new Promise(resolve => { resolveLocal = resolve; });
     };
     const first = h.api.read(fetcher), second = h.api.read(fetcher, { force: true });
     assert.equal(first, second); await h.flush();
-    assert.equal(calls.join(','), `${rawUrl},./data/cafe-posts.json`);
+    assert.equal(calls.join(','), `${runtimeUrl},${rawUrl},./data/cafe-posts.json`);
     resolveLocal(response(board())); assert.equal((await first).fetchFailed, true);
 });
 
 test('a successful empty raw feed is authoritative and never replaced by bundled or stored posts', async () => {
     const h = fixture(board(), { hostname: 'beadyo.com' }); let calls = 0;
-    const result = await h.api.read(async url => { calls++; assert.equal(url, rawUrl); return response(board([])); });
+    const result = await h.api.read(async url => { calls++; assert.equal(url, runtimeUrl); return rows(board([])); });
     assert.equal(calls, 1); assert.equal(result.posts.length, 0); assert.equal(result.fetchFailed, false);
     assert.equal(JSON.parse(h.storage.get(key)).posts.length, 0);
 });

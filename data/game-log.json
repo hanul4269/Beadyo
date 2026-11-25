@@ -4572,7 +4572,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/minecraft.jpg",
+      "image": "assets/game-log/minecraft.webp",
       "officialUrl": "https://www.minecraft.net/en-us/about-minecraft"
     },
     {
@@ -4620,7 +4620,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/rust.jpg",
+      "image": "assets/game-log/rust.webp",
       "officialUrl": "https://store.steampowered.com/app/252490/"
     },
     {
@@ -5027,7 +5027,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/valorant.png",
+      "image": "assets/game-log/valorant.webp",
       "officialUrl": "https://playvalorant.com/en-us/"
     },
     {
@@ -7116,7 +7116,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/vrchat.jpg",
+      "image": "assets/game-log/vrchat.webp",
       "officialUrl": "https://store.steampowered.com/app/438100/"
     },
     {
@@ -8824,7 +8824,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/pubg-battlegrounds.jpg",
+      "image": "assets/game-log/pubg-battlegrounds.webp",
       "officialUrl": "https://store.steampowered.com/app/578080/"
     },
     {
@@ -8834,7 +8834,7 @@
         "Vampire Survivors"
       ],
       "dates": [],
-      "image": "assets/game-log/vampire-survivors.jpg",
+      "image": "assets/game-log/vampire-survivors.webp",
       "officialUrl": "https://store.steampowered.com/app/1794680/"
     },
     {
@@ -8952,7 +8952,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/mario-kart-world.jpg",
+      "image": "assets/game-log/mario-kart-world.webp",
       "officialUrl": "https://www.nintendo.com/us/store/products/mario-kart-world-switch-2/"
     },
     {
@@ -9033,7 +9033,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/webfishing.jpg",
+      "image": "assets/game-log/webfishing.webp",
       "officialUrl": "https://store.steampowered.com/app/3146520/"
     },
     {
@@ -9041,7 +9041,7 @@
       "title": "Turmoil",
       "aliases": [],
       "dates": [],
-      "image": "assets/game-log/turmoil.jpg",
+      "image": "assets/game-log/turmoil.webp",
       "officialUrl": "https://store.steampowered.com/app/361280/"
     },
     {
@@ -9049,7 +9049,7 @@
       "title": "Propnight",
       "aliases": [],
       "dates": [],
-      "image": "assets/game-log/propnight.jpg",
+      "image": "assets/game-log/propnight.webp",
       "officialUrl": "https://store.steampowered.com/app/1549180/"
     },
     {
@@ -9057,7 +9057,7 @@
       "title": "Dread Hunger",
       "aliases": [],
       "dates": [],
-      "image": "assets/game-log/dread-hunger.jpg",
+      "image": "assets/game-log/dread-hunger.webp",
       "officialUrl": "https://store.steampowered.com/app/1418630/"
     },
     {
@@ -9231,7 +9231,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/goose-goose-duck.jpg",
+      "image": "assets/game-log/goose-goose-duck.webp",
       "officialUrl": "https://store.steampowered.com/app/1568590/"
     },
     {
@@ -9340,7 +9340,7 @@
       "title": "Longvinter",
       "aliases": [],
       "dates": [],
-      "image": "assets/game-log/longvinter.jpg",
+      "image": "assets/game-log/longvinter.webp",
       "officialUrl": "https://store.steampowered.com/app/1635450/"
     },
     {
@@ -9385,7 +9385,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/only-up-20261029.png",
+      "image": "assets/game-log/only-up-20261029.webp",
       "officialUrl": "https://steamcommunity.com/app/2381590"
     },
     {
@@ -9451,7 +9451,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/pummel-party.jpg",
+      "image": "assets/game-log/pummel-party.webp",
       "officialUrl": "https://store.steampowered.com/app/880940/"
     },
     {
@@ -9497,7 +9497,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/raft.jpg",
+      "image": "assets/game-log/raft.webp",
       "officialUrl": "https://store.steampowered.com/app/648800/"
     },
     {
@@ -9505,7 +9505,7 @@
       "title": "슈퍼 마리오 메이커 2",
       "aliases": [],
       "dates": [],
-      "image": "assets/game-log/super-mario-maker-2.jpg",
+      "image": "assets/game-log/super-mario-maker-2.webp",
       "officialUrl": "https://www.nintendo.com/us/store/products/super-mario-maker-2-switch/"
     },
     {
@@ -9573,7 +9573,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/kibitz-bugs-20261102.png",
+      "image": "assets/game-log/kibitz-bugs-20261102.webp",
       "officialUrl": "https://kibitz-bugs.xyz/"
     },
     {
@@ -9640,7 +9640,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/only-climb-20261031.jpg",
+      "image": "assets/game-log/only-climb-20261031.webp",
       "officialUrl": "https://store.steampowered.com/app/2500750/"
     },
     {
@@ -9743,7 +9743,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/party-animals.jpg",
+      "image": "assets/game-log/party-animals.webp",
       "officialUrl": "https://store.steampowered.com/app/1260320/"
     },
     {
@@ -9882,7 +9882,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/palworld.jpg",
+      "image": "assets/game-log/palworld.webp",
       "officialUrl": "https://store.steampowered.com/app/1623730/"
     },
     {
@@ -9909,7 +9909,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/crab-game.jpg",
+      "image": "assets/game-log/crab-game.webp",
       "officialUrl": "https://store.steampowered.com/app/1782210/"
     },
     {
@@ -10118,7 +10118,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/arma-3.jpg",
+      "image": "assets/game-log/arma-3.webp",
       "officialUrl": "https://store.steampowered.com/app/107410/"
     },
     {
@@ -10219,7 +10219,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/kartrider-drift.jpg",
+      "image": "assets/game-log/kartrider-drift.webp",
       "officialUrl": "https://store.steampowered.com/app/1184140/"
     },
     {
@@ -10229,7 +10229,7 @@
         "[Chilla's Art] Shinkansen 0 | 新幹線 0号"
       ],
       "dates": [],
-      "image": "assets/game-log/shinkansen-0.jpg",
+      "image": "assets/game-log/shinkansen-0.webp",
       "officialUrl": "https://store.steampowered.com/app/2793370/"
     },
     {
@@ -10258,7 +10258,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/the-exit-8.jpg",
+      "image": "assets/game-log/the-exit-8.webp",
       "officialUrl": "https://store.steampowered.com/app/2653790/"
     },
     {
@@ -10303,7 +10303,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/60-seconds.jpg",
+      "image": "assets/game-log/60-seconds.webp",
       "officialUrl": "https://store.steampowered.com/app/368360/"
     },
     {
@@ -10330,7 +10330,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/carry-the-glass.jpg",
+      "image": "assets/game-log/carry-the-glass.webp",
       "officialUrl": "https://store.steampowered.com/app/3263320/"
     },
     {
@@ -10609,7 +10609,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/project-zomboid.jpg",
+      "image": "assets/game-log/project-zomboid.webp",
       "officialUrl": "https://store.steampowered.com/app/108600/"
     },
     {
@@ -10636,7 +10636,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/visage.jpg",
+      "image": "assets/game-log/visage.webp",
       "officialUrl": "https://store.steampowered.com/app/594330/"
     },
     {
@@ -10681,7 +10681,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/professor-layton-and-the-curious-village-20261029.jpg",
+      "image": "assets/game-log/professor-layton-and-the-curious-village-20261029.webp",
       "officialUrl": "https://www.nintendo.com/en-gb/Games/Nintendo-DS/Professor-Layton-and-the-Curious-Village-272563.html"
     },
     {
@@ -10729,7 +10729,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/old-market-simulator.jpg",
+      "image": "assets/game-log/old-market-simulator.webp",
       "officialUrl": "https://store.steampowered.com/app/2878420/"
     },
     {
@@ -10757,7 +10757,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/keep-talking-and-nobody-explodes.jpg",
+      "image": "assets/game-log/keep-talking-and-nobody-explodes.webp",
       "officialUrl": "https://store.steampowered.com/app/341800/"
     },
     {
@@ -10802,7 +10802,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/miside.jpg",
+      "image": "assets/game-log/miside.webp",
       "officialUrl": "https://store.steampowered.com/app/2527500/"
     },
     {
@@ -10847,7 +10847,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/void-crew.jpg",
+      "image": "assets/game-log/void-crew.webp",
       "officialUrl": "https://store.steampowered.com/app/1063420/"
     },
     {
@@ -10912,7 +10912,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/detroit-become-human.jpg",
+      "image": "assets/game-log/detroit-become-human.webp",
       "officialUrl": "https://store.steampowered.com/app/1222140/"
     },
     {
@@ -10957,7 +10957,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/get-to-work.jpg",
+      "image": "assets/game-log/get-to-work.webp",
       "officialUrl": "https://store.steampowered.com/app/2706170/"
     },
     {
@@ -11076,7 +11076,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/monster-hunter-wilds.jpg",
+      "image": "assets/game-log/monster-hunter-wilds.webp",
       "officialUrl": "https://store.steampowered.com/app/2246340/"
     },
     {
@@ -11105,7 +11105,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/buried-stars.jpg",
+      "image": "assets/game-log/buried-stars.webp",
       "officialUrl": "https://store.steampowered.com/app/1025960/"
     },
     {
@@ -11132,7 +11132,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/ring-fit-adventure.jpg",
+      "image": "assets/game-log/ring-fit-adventure.webp",
       "officialUrl": "https://www.nintendo.com/us/store/products/ring-fit-adventure-switch/"
     },
     {
@@ -11179,7 +11179,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/split-fiction.jpg",
+      "image": "assets/game-log/split-fiction.webp",
       "officialUrl": "https://store.steampowered.com/app/2001120/"
     },
     {
@@ -11262,7 +11262,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/inzoi.jpg",
+      "image": "assets/game-log/inzoi.webp",
       "officialUrl": "https://store.steampowered.com/app/2456740/"
     },
     {
@@ -11307,7 +11307,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/dooms-hair-salon.jpg",
+      "image": "assets/game-log/dooms-hair-salon.webp",
       "officialUrl": "https://store.steampowered.com/app/3398870/"
     },
     {
@@ -11334,7 +11334,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/into-the-dead-our-darkest-days.jpg",
+      "image": "assets/game-log/into-the-dead-our-darkest-days.webp",
       "officialUrl": "https://store.steampowered.com/app/2239710/"
     },
     {
@@ -11456,7 +11456,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/sephiria-20261101.jpg",
+      "image": "assets/game-log/sephiria-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2436940/"
     },
     {
@@ -11483,7 +11483,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/mabinogi-mobile.jpg",
+      "image": "assets/game-log/mabinogi-mobile.webp",
       "officialUrl": "https://mabinogimobile.nexon.com/Main"
     },
     {
@@ -11566,7 +11566,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/world-of-tanks.jpg",
+      "image": "assets/game-log/world-of-tanks.webp",
       "officialUrl": "https://store.steampowered.com/app/1407200/"
     },
     {
@@ -11686,7 +11686,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/liar-game-20261029.jpg",
+      "image": "assets/game-log/liar-game-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/3555700/"
     },
     {
@@ -11731,7 +11731,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/brotato.jpg",
+      "image": "assets/game-log/brotato.webp",
       "officialUrl": "https://store.steampowered.com/app/1942280/"
     },
     {
@@ -11851,7 +11851,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/starcraft-meundi-base-logo-20261029.jpg",
+      "image": "assets/game-log/starcraft-meundi-base-logo-20261029.webp",
       "officialUrl": "https://blizzard.gamespress.com/BlizzConline-Co-Streamer-Asset-Pack"
     },
     {
@@ -11898,7 +11898,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/kuukiyomi-series-official-logo-20261029.png",
+      "image": "assets/game-log/kuukiyomi-series-official-logo-20261029.webp",
       "officialUrl": "https://kuukiyomi.com/"
     },
     {
@@ -11946,7 +11946,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/stardew-valley.jpg",
+      "image": "assets/game-log/stardew-valley.webp",
       "officialUrl": "https://store.steampowered.com/app/413150/"
     },
     {
@@ -11975,7 +11975,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/street-fighter-6.jpg",
+      "image": "assets/game-log/street-fighter-6.webp",
       "officialUrl": "https://store.steampowered.com/app/1364780/"
     },
     {
@@ -12058,7 +12058,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/slay-the-spire.jpg",
+      "image": "assets/game-log/slay-the-spire.webp",
       "officialUrl": "https://store.steampowered.com/app/646570/"
     },
     {
@@ -12195,7 +12195,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/maplestory.jpg",
+      "image": "assets/game-log/maplestory.webp",
       "officialUrl": "https://store.steampowered.com/app/216150/"
     },
     {
@@ -12225,7 +12225,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/among-us-3d.jpg",
+      "image": "assets/game-log/among-us-3d.webp",
       "officialUrl": "https://store.steampowered.com/app/3168600/"
     },
     {
@@ -12294,7 +12294,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/yacht-dice-verified-20261103.jpg",
+      "image": "assets/game-log/yacht-dice-verified-20261103.webp",
       "officialUrl": "https://store.steampowered.com/app/1737690/Yacht_Dice/",
       "imageFit": "cover",
       "imageCredit": {
@@ -12345,7 +12345,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/subnautica.jpg",
+      "image": "assets/game-log/subnautica.webp",
       "officialUrl": "https://store.steampowered.com/app/264710/"
     },
     {
@@ -12376,7 +12376,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/worms-clan-wars.jpg",
+      "image": "assets/game-log/worms-clan-wars.webp",
       "officialUrl": "https://store.steampowered.com/app/233840/"
     },
     {
@@ -12421,7 +12421,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/zelda-breath-of-the-wild.jpg",
+      "image": "assets/game-log/zelda-breath-of-the-wild.webp",
       "officialUrl": "https://www.nintendo.com/us/store/products/the-legend-of-zelda-breath-of-the-wild-switch/"
     },
     {
@@ -12450,7 +12450,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/geoguessr.jpg",
+      "image": "assets/game-log/geoguessr.webp",
       "officialUrl": "https://store.steampowered.com/app/3478870/"
     },
     {
@@ -12552,7 +12552,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/peak.jpg",
+      "image": "assets/game-log/peak.webp",
       "officialUrl": "https://store.steampowered.com/app/3527290/"
     },
     {
@@ -12634,7 +12634,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/7-days-to-die.jpg",
+      "image": "assets/game-log/7-days-to-die.webp",
       "officialUrl": "https://store.steampowered.com/app/251570/"
     },
     {
@@ -12664,7 +12664,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/whos-at-the-door.jpg",
+      "image": "assets/game-log/whos-at-the-door.webp",
       "officialUrl": "https://store.steampowered.com/app/3690010/"
     },
     {
@@ -12694,7 +12694,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/death-sees-twice.jpg",
+      "image": "assets/game-log/death-sees-twice.webp",
       "officialUrl": "https://store.steampowered.com/app/3723720/"
     },
     {
@@ -12724,7 +12724,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/one-mans-trash.jpg",
+      "image": "assets/game-log/one-mans-trash.webp",
       "officialUrl": "https://store.steampowered.com/app/3692070/"
     },
     {
@@ -12772,7 +12772,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/fantasy-life-i.jpg",
+      "image": "assets/game-log/fantasy-life-i.webp",
       "officialUrl": "https://store.steampowered.com/app/2993780/"
     },
     {
@@ -12818,7 +12818,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/pokemon-legends-z-a.jpg",
+      "image": "assets/game-log/pokemon-legends-z-a.webp",
       "officialUrl": "https://www.nintendo.com/us/store/products/pokemon-legends-z-a-switch/"
     },
     {
@@ -12848,7 +12848,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/little-nightmares-3.jpg",
+      "image": "assets/game-log/little-nightmares-3.webp",
       "officialUrl": "https://store.steampowered.com/app/1392860/"
     },
     {
@@ -12932,7 +12932,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/megabonk.jpg",
+      "image": "assets/game-log/megabonk.webp",
       "officialUrl": "https://store.steampowered.com/app/3405340/"
     },
     {
@@ -12962,7 +12962,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/escape-simulator-2.jpg",
+      "image": "assets/game-log/escape-simulator-2.webp",
       "officialUrl": "https://store.steampowered.com/app/2879840/"
     },
     {
@@ -13028,7 +13028,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/judofuri-20261101.jpg",
+      "image": "assets/game-log/judofuri-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3013460/"
     },
     {
@@ -13056,7 +13056,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/keep-digging.jpg",
+      "image": "assets/game-log/keep-digging.webp",
       "officialUrl": "https://store.steampowered.com/app/3585800/"
     },
     {
@@ -13118,7 +13118,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/trine-4.jpg",
+      "image": "assets/game-log/trine-4.webp",
       "officialUrl": "https://store.steampowered.com/app/690640/"
     },
     {
@@ -13225,7 +13225,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/the-spell-brigade.jpg",
+      "image": "assets/game-log/the-spell-brigade.webp",
       "officialUrl": "https://store.steampowered.com/app/2904000/"
     },
     {
@@ -13344,7 +13344,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/escape-from-duckov.jpg",
+      "image": "assets/game-log/escape-from-duckov.webp",
       "officialUrl": "https://store.steampowered.com/app/3167020/"
     },
     {
@@ -13410,7 +13410,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/my-little-puppy.jpg",
+      "image": "assets/game-log/my-little-puppy.webp",
       "officialUrl": "https://store.steampowered.com/app/2102040/"
     },
     {
@@ -13440,7 +13440,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/five-hearts-under-one-roof-season-2.jpg",
+      "image": "assets/game-log/five-hearts-under-one-roof-season-2.webp",
       "officialUrl": "https://store.steampowered.com/app/3731020/"
     },
     {
@@ -13470,7 +13470,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/alley-ghost.jpg",
+      "image": "assets/game-log/alley-ghost.webp",
       "officialUrl": "https://store.steampowered.com/app/4181410/"
     },
     {
@@ -13526,7 +13526,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/leaf-it-alone.jpg",
+      "image": "assets/game-log/leaf-it-alone.webp",
       "officialUrl": "https://store.steampowered.com/app/3981100/"
     },
     {
@@ -13554,7 +13554,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/storebound.jpg",
+      "image": "assets/game-log/storebound.webp",
       "officialUrl": "https://store.steampowered.com/app/3417410/"
     },
     {
@@ -13582,7 +13582,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/egging-on.jpg",
+      "image": "assets/game-log/egging-on.webp",
       "officialUrl": "https://store.steampowered.com/app/2897610/"
     },
     {
@@ -13610,7 +13610,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/shelldiver.jpg",
+      "image": "assets/game-log/shelldiver.webp",
       "officialUrl": "https://store.steampowered.com/app/3862670/"
     },
     {
@@ -13640,7 +13640,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/bonfire-simulator.jpg",
+      "image": "assets/game-log/bonfire-simulator.webp",
       "officialUrl": "https://store.steampowered.com/app/3920940/"
     },
     {
@@ -13670,7 +13670,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/after-school-playground.jpg",
+      "image": "assets/game-log/after-school-playground.webp",
       "officialUrl": "https://store.steampowered.com/app/3966360/"
     },
     {
@@ -13718,7 +13718,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/peglin.jpg",
+      "image": "assets/game-log/peglin.webp",
       "officialUrl": "https://store.steampowered.com/app/1296610/"
     },
     {
@@ -13766,7 +13766,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/wuthering-waves.jpg",
+      "image": "assets/game-log/wuthering-waves.webp",
       "officialUrl": "https://store.steampowered.com/app/3513350/"
     },
     {
@@ -13794,7 +13794,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/quarantine-zone-the-last-check.jpg",
+      "image": "assets/game-log/quarantine-zone-the-last-check.webp",
       "officialUrl": "https://store.steampowered.com/app/3419520/"
     },
     {
@@ -13824,7 +13824,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/rhythm-doctor.jpg",
+      "image": "assets/game-log/rhythm-doctor.webp",
       "officialUrl": "https://store.steampowered.com/app/774181/"
     },
     {
@@ -13854,7 +13854,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/i-want-to-agree-to-the-terms-20261029.jpg",
+      "image": "assets/game-log/i-want-to-agree-to-the-terms-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/3757210/"
     },
     {
@@ -13900,7 +13900,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/my-summer-car.jpg",
+      "image": "assets/game-log/my-summer-car.webp",
       "officialUrl": "https://store.steampowered.com/app/516750/"
     },
     {
@@ -14038,7 +14038,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/starcraft.png",
+      "image": "assets/game-log/starcraft.webp",
       "officialUrl": "https://starcraft.blizzard.com/en-us"
     },
     {
@@ -14068,7 +14068,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/whos-who-2-0.jpg",
+      "image": "assets/game-log/whos-who-2-0.webp",
       "officialUrl": "https://store.steampowered.com/app/3391260/"
     },
     {
@@ -14116,7 +14116,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/repo.jpg",
+      "image": "assets/game-log/repo.webp",
       "officialUrl": "https://store.steampowered.com/app/3241660/"
     },
     {
@@ -14198,7 +14198,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/super-mario-party-jamboree.jpg",
+      "image": "assets/game-log/super-mario-party-jamboree.webp",
       "officialUrl": "https://www.nintendo.com/us/store/products/super-mario-party-jamboree-switch/"
     },
     {
@@ -14228,7 +14228,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/lego-party.jpg",
+      "image": "assets/game-log/lego-party.webp",
       "officialUrl": "https://store.steampowered.com/app/1969370/"
     },
     {
@@ -14276,7 +14276,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/restaurats.jpg",
+      "image": "assets/game-log/restaurats.webp",
       "officialUrl": "https://store.steampowered.com/app/2870920/"
     },
     {
@@ -14325,7 +14325,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/call-of-duty-modern-warfare-ii.jpg",
+      "image": "assets/game-log/call-of-duty-modern-warfare-ii.webp",
       "officialUrl": "https://store.steampowered.com/app/3595230/"
     },
     {
@@ -14373,7 +14373,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/cairn.jpg",
+      "image": "assets/game-log/cairn.webp",
       "officialUrl": "https://store.steampowered.com/app/1588550/"
     },
     {
@@ -14835,7 +14835,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/world-of-warcraft.jpg",
+      "image": "assets/game-log/world-of-warcraft.webp",
       "officialUrl": "https://worldofwarcraft.blizzard.com/en-us/"
     },
     {
@@ -14883,7 +14883,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/reanimal.jpg",
+      "image": "assets/game-log/reanimal.webp",
       "officialUrl": "https://store.steampowered.com/app/2129530/"
     },
     {
@@ -14913,7 +14913,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/super-battle-golf.jpg",
+      "image": "assets/game-log/super-battle-golf.webp",
       "officialUrl": "https://store.steampowered.com/app/4069520/"
     },
     {
@@ -14997,7 +14997,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/slay-the-spire-2.jpg",
+      "image": "assets/game-log/slay-the-spire-2.webp",
       "officialUrl": "https://store.steampowered.com/app/2868840/"
     },
     {
@@ -15061,7 +15061,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/scritchy-scratchy.jpg",
+      "image": "assets/game-log/scritchy-scratchy.webp",
       "officialUrl": "https://store.steampowered.com/app/3948120/"
     },
     {
@@ -15091,7 +15091,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/fast-food-simulator-20261029.jpg",
+      "image": "assets/game-log/fast-food-simulator-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/2916430/"
     },
     {
@@ -15140,7 +15140,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/diablo-2-20261029.jpg",
+      "image": "assets/game-log/diablo-2-20261029.webp",
       "officialUrl": "https://news.blizzard.com/en-us/article/23722094/bringing-the-original-diablo-ii-experience-to-console"
     },
     {
@@ -15281,7 +15281,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/roblox-20261029.jpg",
+      "image": "assets/game-log/roblox-20261029.webp",
       "officialUrl": "https://www.roblox.com/"
     },
     {
@@ -15330,7 +15330,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/subnautica-2.jpg",
+      "image": "assets/game-log/subnautica-2.webp",
       "officialUrl": "https://store.steampowered.com/app/1962700/"
     },
     {
@@ -15380,7 +15380,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/undusted.jpg",
+      "image": "assets/game-log/undusted.webp",
       "officialUrl": "https://store.steampowered.com/app/2891020/"
     },
     {
@@ -15408,7 +15408,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/yoshis-mysterious-book-20261029.jpg",
+      "image": "assets/game-log/yoshis-mysterious-book-20261029.webp",
       "officialUrl": "https://www.nintendo.com/us/store/products/yoshi-and-the-mysterious-book-switch-2/"
     },
     {
@@ -16058,7 +16058,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/nikke.jpg",
+      "image": "assets/game-log/nikke.webp",
       "officialUrl": "https://nikke-en.com/"
     },
     {
@@ -16088,7 +16088,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/pebble-knights-20261029.jpg",
+      "image": "assets/game-log/pebble-knights-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/3087930/"
     },
     {
@@ -16157,7 +16157,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/metcha-chameleon-20261029.jpg",
+      "image": "assets/game-log/metcha-chameleon-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/4704690/"
     },
     {
@@ -16244,7 +16244,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/yakuza-0.jpg",
+      "image": "assets/game-log/yakuza-0.webp",
       "officialUrl": "https://store.steampowered.com/app/638970/"
     },
     {
@@ -16274,7 +16274,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/dead-by-daylight.jpg",
+      "image": "assets/game-log/dead-by-daylight.webp",
       "officialUrl": "https://store.steampowered.com/app/381210/"
     },
     {
@@ -16323,7 +16323,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/poly-bridge-2.jpg",
+      "image": "assets/game-log/poly-bridge-2.webp",
       "officialUrl": "https://store.steampowered.com/app/1062160/"
     },
     {
@@ -16443,7 +16443,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/drainsim.jpg",
+      "image": "assets/game-log/drainsim.webp",
       "officialUrl": "https://store.steampowered.com/app/2963800/"
     },
     {
@@ -16492,7 +16492,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/escape-the-forest-20261029.jpg",
+      "image": "assets/game-log/escape-the-forest-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/4090360/"
     },
     {
@@ -16520,7 +16520,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/the-cabin-factory.jpg",
+      "image": "assets/game-log/the-cabin-factory.webp",
       "officialUrl": "https://store.steampowered.com/app/3311740/"
     },
     {
@@ -16550,7 +16550,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/im-on-observation-duty-5-20261029.jpg",
+      "image": "assets/game-log/im-on-observation-duty-5-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/1850550/"
     },
     {
@@ -16578,7 +16578,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/supermarket-chaos.jpg",
+      "image": "assets/game-log/supermarket-chaos.webp",
       "officialUrl": "https://store.steampowered.com/app/4800590/"
     },
     {
@@ -16624,7 +16624,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/ore-factory-squad.jpg",
+      "image": "assets/game-log/ore-factory-squad.webp",
       "officialUrl": "https://store.steampowered.com/app/4210580/"
     },
     {
@@ -16690,7 +16690,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/god-field-20261029.png",
+      "image": "assets/game-log/god-field-20261029.webp",
       "officialUrl": "https://godfield.net/"
     },
     {
@@ -16718,7 +16718,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/shift-at-midnight.jpg",
+      "image": "assets/game-log/shift-at-midnight.webp",
       "officialUrl": "https://store.steampowered.com/app/3722330/"
     },
     {
@@ -16748,7 +16748,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/fc-online-official-logo-20261029.png",
+      "image": "assets/game-log/fc-online-official-logo-20261029.webp",
       "officialUrl": "https://fconline.nexon.com/main/index"
     },
     {
@@ -16794,7 +16794,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/bills-must-be-paid-20261029.jpg",
+      "image": "assets/game-log/bills-must-be-paid-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/4421010/"
     },
     {
@@ -16842,7 +16842,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/machine-party-20261029.jpg",
+      "image": "assets/game-log/machine-party-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/4108000/"
     },
     {
@@ -16891,7 +16891,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/ea-sports-fc-26.jpg",
+      "image": "assets/game-log/ea-sports-fc-26.webp",
       "officialUrl": "https://store.steampowered.com/app/3405690/"
     },
     {
@@ -16919,7 +16919,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/big-walk.jpg",
+      "image": "assets/game-log/big-walk.webp",
       "officialUrl": "https://store.steampowered.com/app/1478500/"
     },
     {
@@ -16949,7 +16949,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/restory.jpg",
+      "image": "assets/game-log/restory.webp",
       "officialUrl": "https://store.steampowered.com/app/3812600/"
     },
     {
@@ -16976,7 +16976,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/emergency-cleanup-co-20261029.jpg",
+      "image": "assets/game-log/emergency-cleanup-co-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/2413190/"
     },
     {
@@ -17006,7 +17006,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/pengpong-20261029.jpg",
+      "image": "assets/game-log/pengpong-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/2766910/"
     },
     {
@@ -17054,7 +17054,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/cyberpunk-2077.jpg",
+      "image": "assets/game-log/cyberpunk-2077.webp",
       "officialUrl": "https://store.steampowered.com/app/1091500/"
     },
     {
@@ -17082,7 +17082,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/big-ambitions.jpg",
+      "image": "assets/game-log/big-ambitions.webp",
       "officialUrl": "https://store.steampowered.com/app/1331550/"
     },
     {
@@ -17110,7 +17110,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/bombanana-20261029.jpg",
+      "image": "assets/game-log/bombanana-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/4656000/"
     },
     {
@@ -17140,7 +17140,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/reshine-demo.jpg",
+      "image": "assets/game-log/reshine-demo.webp",
       "officialUrl": "https://store.steampowered.com/app/4668060/"
     },
     {
@@ -17168,7 +17168,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/maestro-20261029.jpg",
+      "image": "assets/game-log/maestro-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/2701700/"
     },
     {
@@ -17196,7 +17196,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/sunset-summit.jpg",
+      "image": "assets/game-log/sunset-summit.webp",
       "officialUrl": "https://store.steampowered.com/app/3874450/"
     },
     {
@@ -17224,7 +17224,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/pokebonk-20261102.jpg",
+      "image": "assets/game-log/pokebonk-20261102.webp",
       "officialUrl": "https://pokebonk.com/"
     },
     {
@@ -17272,7 +17272,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/how-to-fish-20261029.jpg",
+      "image": "assets/game-log/how-to-fish-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/4001890/"
     },
     {
@@ -17301,7 +17301,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/princess-maker-children-of-revelation-20261029.jpg",
+      "image": "assets/game-log/princess-maker-children-of-revelation-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/3438810/"
     },
     {
@@ -17404,7 +17404,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/the-game-of-life-nintendo-switch-20261029.png",
+      "image": "assets/game-log/the-game-of-life-nintendo-switch-20261029.webp",
       "officialUrl": "https://www.takaratomy.co.jp/products/jinseidigital/"
     },
     {
@@ -17431,7 +17431,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/the-mound-omen-of-cthulhu-20261029.jpg",
+      "image": "assets/game-log/the-mound-omen-of-cthulhu-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/2569760/"
     },
     {
@@ -17476,7 +17476,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/moo-who-20261029.jpg",
+      "image": "assets/game-log/moo-who-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/4948000/"
     },
     {
@@ -17539,7 +17539,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/clubhouse-games-51-worldwide-classics-20261029.jpg",
+      "image": "assets/game-log/clubhouse-games-51-worldwide-classics-20261029.webp",
       "officialUrl": "https://www.nintendo.com/us/store/products/clubhouse-games-51-worldwide-classics-switch/"
     },
     {
@@ -17584,7 +17584,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/big-brain-academy-brain-vs-brain-20261029.jpg",
+      "image": "assets/game-log/big-brain-academy-brain-vs-brain-20261029.webp",
       "officialUrl": "https://www.nintendo.com/us/store/products/big-brain-academy-brain-vs-brain-switch/"
     },
     {
@@ -17611,7 +17611,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/thehunter-call-of-the-wild-20261029.jpg",
+      "image": "assets/game-log/thehunter-call-of-the-wild-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/518790/"
     },
     {
@@ -17658,7 +17658,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/fruit-mountain-party-20261029.jpg",
+      "image": "assets/game-log/fruit-mountain-party-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/3467540/"
     },
     {
@@ -17687,7 +17687,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/fall-guys-20261029.jpg",
+      "image": "assets/game-log/fall-guys-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/1097150/"
     },
     {
@@ -17714,7 +17714,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/sudden-attack-official-logo-20261029.png",
+      "image": "assets/game-log/sudden-attack-official-logo-20261029.webp",
       "officialUrl": "https://gamebulletin.nexon.com/sa/inspection.aspx"
     },
     {
@@ -17759,7 +17759,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/find-the-differences-3d-20261029.jpg",
+      "image": "assets/game-log/find-the-differences-3d-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/3753590/"
     },
     {
@@ -17786,7 +17786,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/mario-golf-super-rush-20261029.jpg",
+      "image": "assets/game-log/mario-golf-super-rush-20261029.webp",
       "officialUrl": "https://mariogolf.nintendo.com/"
     },
     {
@@ -17831,7 +17831,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/tattoo-removal-simulator-20261029.jpg",
+      "image": "assets/game-log/tattoo-removal-simulator-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/3143910/"
     },
     {
@@ -17858,7 +17858,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/all-in-one-sports-vr-20261029.jpg",
+      "image": "assets/game-log/all-in-one-sports-vr-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/1514840/"
     },
     {
@@ -17885,7 +17885,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/fears-to-fathom-scratch-creek-20261029.jpg",
+      "image": "assets/game-log/fears-to-fathom-scratch-creek-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/4121170/"
     },
     {
@@ -17930,7 +17930,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/the-house-always-wins-20261029.jpg",
+      "image": "assets/game-log/the-house-always-wins-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/3412160/"
     },
     {
@@ -17959,7 +17959,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/hand-simulator-survival-20261029.jpg",
+      "image": "assets/game-log/hand-simulator-survival-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/924140/"
     },
     {
@@ -17986,7 +17986,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/master-of-pottery-20261029.jpg",
+      "image": "assets/game-log/master-of-pottery-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/1160490/"
     },
     {
@@ -18015,7 +18015,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/world-of-warships-20261029.jpg",
+      "image": "assets/game-log/world-of-warships-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/552990/"
     },
     {
@@ -18078,7 +18078,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/baby-kings-20261029.jpg",
+      "image": "assets/game-log/baby-kings-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/3670180/"
     },
     {
@@ -18452,7 +18452,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/fruit-box-official-logo-20261029.png",
+      "image": "assets/game-log/fruit-box-official-logo-20261029.webp",
       "officialUrl": "https://en.gamesaien.com/game/fruit_box/"
     },
     {
@@ -18535,7 +18535,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/euro-truck-simulator-2-20261029.jpg",
+      "image": "assets/game-log/euro-truck-simulator-2-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/227300/"
     },
     {
@@ -18580,7 +18580,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/a-weird-game-about-sausage-20261029.jpg",
+      "image": "assets/game-log/a-weird-game-about-sausage-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/4691990/"
     },
     {
@@ -18627,7 +18627,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/tabletop-simulator-20261029.jpg",
+      "image": "assets/game-log/tabletop-simulator-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/286160/"
     },
     {
@@ -18654,7 +18654,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/pizza-house-simulator-20261029.jpg",
+      "image": "assets/game-log/pizza-house-simulator-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/4132330/"
     },
     {
@@ -18699,7 +18699,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/painting-pc-20261029.jpg",
+      "image": "assets/game-log/painting-pc-20261029.webp",
       "officialUrl": "https://store.steampowered.com/app/4521680/"
     },
     {
@@ -18787,7 +18787,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/apple-game-plus-official-icon-20261031.jpg",
+      "image": "assets/game-log/apple-game-plus-official-icon-20261031.webp",
       "officialUrl": "https://apple.oshizi.com/ko/"
     },
     {
@@ -18836,7 +18836,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/color-tile-multiplayer-20261102.png",
+      "image": "assets/game-log/color-tile-multiplayer-20261102.webp",
       "officialUrl": "https://multicolortile.duckdns.org/"
     },
     {
@@ -18867,7 +18867,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/walk-the-stork-verified-20261103.png",
+      "image": "assets/game-log/walk-the-stork-verified-20261103.webp",
       "officialUrl": null,
       "imageFit": "contain",
       "imageCredit": {
@@ -18903,7 +18903,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/gohyang-mandu-verified-20261103.png",
+      "image": "assets/game-log/gohyang-mandu-verified-20261103.webp",
       "officialUrl": null,
       "imageFit": "contain",
       "imageCredit": {
@@ -18959,7 +18959,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/side-kick-2007-verified-20261103.png",
+      "image": "assets/game-log/side-kick-2007-verified-20261103.webp",
       "officialUrl": null,
       "imageFit": "contain",
       "imageCredit": {
@@ -18997,7 +18997,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/shu-ramen-shop-verified-20261103.png",
+      "image": "assets/game-log/shu-ramen-shop-verified-20261103.webp",
       "officialUrl": null,
       "imageFit": "contain",
       "imageCredit": {
@@ -19038,7 +19038,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/mingming-vs-wangtta-verified-20261103.png",
+      "image": "assets/game-log/mingming-vs-wangtta-verified-20261103.webp",
       "officialUrl": null,
       "imageFit": "contain",
       "imageCredit": {
@@ -19073,7 +19073,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/jukrim-gosu-verified-20261103.png",
+      "image": "assets/game-log/jukrim-gosu-verified-20261103.webp",
       "officialUrl": null,
       "imageFit": "contain",
       "imageCredit": {
@@ -19109,7 +19109,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/jjiksin-verified-20261103.png",
+      "image": "assets/game-log/jjiksin-verified-20261103.webp",
       "officialUrl": null,
       "imageFit": "contain",
       "imageCredit": {
@@ -19236,7 +19236,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/machugi-io-20261102.png",
+      "image": "assets/game-log/machugi-io-20261102.webp",
       "officialUrl": "https://machugi.io/"
     },
     {
@@ -19267,7 +19267,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/quiz-bubble-20261031.png",
+      "image": "assets/game-log/quiz-bubble-20261031.webp",
       "officialUrl": "https://quizbubble.kr/"
     },
     {
@@ -19297,7 +19297,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/higher-or-lower-game-20261031.jpg",
+      "image": "assets/game-log/higher-or-lower-game-20261031.webp",
       "officialUrl": "https://www.higherorlowergame.com/daily/"
     },
     {
@@ -19329,7 +19329,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/soop-who-are-ya-verified-20261103.png",
+      "image": "assets/game-log/soop-who-are-ya-verified-20261103.webp",
       "officialUrl": "https://lollckgacha.github.io/soopwho/",
       "imageFit": "contain",
       "imageCredit": {
@@ -19365,7 +19365,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/hello-kitty-party-land-20261031.jpg",
+      "image": "assets/game-log/hello-kitty-party-land-20261031.webp",
       "officialUrl": "https://www.sanrio-games.jp/ko/news/00006.html"
     },
     {
@@ -19413,7 +19413,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/hozy-20261031.jpg",
+      "image": "assets/game-log/hozy-20261031.webp",
       "officialUrl": "https://store.steampowered.com/app/3326230/"
     },
     {
@@ -19445,7 +19445,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/which-one-live-20261031.png",
+      "image": "assets/game-log/which-one-live-20261031.webp",
       "officialUrl": "https://warru.io/which-one"
     },
     {
@@ -19476,7 +19476,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/librarian-tidy-up-the-arcane-library-20261031.jpg",
+      "image": "assets/game-log/librarian-tidy-up-the-arcane-library-20261031.webp",
       "officialUrl": "https://store.steampowered.com/app/4197610/"
     },
     {
@@ -19523,7 +19523,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/national-quiz-of-common-sense-advanced-20261031.jpg",
+      "image": "assets/game-log/national-quiz-of-common-sense-advanced-20261031.webp",
       "officialUrl": "https://store.nintendo.co.kr/70010000109342"
     },
     {
@@ -19550,7 +19550,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/extreme-common-sense-check-20261031.jpg",
+      "image": "assets/game-log/extreme-common-sense-check-20261031.webp",
       "officialUrl": "https://store.nintendo.co.kr/70010000123923"
     },
     {
@@ -19577,7 +19577,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/common-sense-championship-20261031.jpg",
+      "image": "assets/game-log/common-sense-championship-20261031.webp",
       "officialUrl": "https://store.nintendo.co.kr/70010000129441"
     },
     {
@@ -19607,7 +19607,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/color-tiles-plus-official-icon-20261031.jpg",
+      "image": "assets/game-log/color-tiles-plus-official-icon-20261031.webp",
       "officialUrl": "https://color-tiles.oshizi.com/ko/"
     },
     {
@@ -19654,7 +19654,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/windrose-20261101.jpg",
+      "image": "assets/game-log/windrose-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3041230/"
     },
     {
@@ -19776,7 +19776,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/overwatch-20261101.jpg",
+      "image": "assets/game-log/overwatch-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2357570/"
     },
     {
@@ -19806,7 +19806,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/vampire-crawlers-20261101.jpg",
+      "image": "assets/game-log/vampire-crawlers-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3265700/"
     },
     {
@@ -19835,7 +19835,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/night-shippers-20261101.jpg",
+      "image": "assets/game-log/night-shippers-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3761880/"
     },
     {
@@ -19882,7 +19882,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/pratfall-20261101.jpg",
+      "image": "assets/game-log/pratfall-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/4244510/"
     },
     {
@@ -19911,7 +19911,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/omelet-you-cook-20261101.jpg",
+      "image": "assets/game-log/omelet-you-cook-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3205380/"
     },
     {
@@ -19940,7 +19940,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/holy-crap-in-law-survival-20261101.jpg",
+      "image": "assets/game-log/holy-crap-in-law-survival-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/4467380/"
     },
     {
@@ -19970,7 +19970,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/scam-line-20261101.jpg",
+      "image": "assets/game-log/scam-line-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2794590/"
     },
     {
@@ -20000,7 +20000,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/summers-heartbeat-20261101.jpg",
+      "image": "assets/game-log/summers-heartbeat-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/4179020/"
     },
     {
@@ -20048,7 +20048,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/pojangmacha-20261101.jpg",
+      "image": "assets/game-log/pojangmacha-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3785710/"
     },
     {
@@ -20081,7 +20081,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/soop-stock-verified-20261103.png",
+      "image": "assets/game-log/soop-stock-verified-20261103.webp",
       "officialUrl": "https://neezu-crypto.github.io/soop-stock-market/",
       "imageFit": "contain",
       "imageCredit": {
@@ -20261,7 +20261,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/marbles-on-stream-20261101.jpg",
+      "image": "assets/game-log/marbles-on-stream-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1170970/"
     },
     {
@@ -20292,7 +20292,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/comic-book-store-simulator-20261101.jpg",
+      "image": "assets/game-log/comic-book-store-simulator-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3354220/"
     },
     {
@@ -20341,7 +20341,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/pokemon-pokopia-20261101.png",
+      "image": "assets/game-log/pokemon-pokopia-20261101.webp",
       "officialUrl": "https://pokemonkorea.com/pokemonpokopia"
     },
     {
@@ -20390,7 +20390,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/tcg-card-shop-simulator-20261101.jpg",
+      "image": "assets/game-log/tcg-card-shop-simulator-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3070070/"
     },
     {
@@ -20421,7 +20421,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/heartopia-20261101.jpg",
+      "image": "assets/game-log/heartopia-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/4025700/"
     },
     {
@@ -20451,7 +20451,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/yapyap-20261101.jpg",
+      "image": "assets/game-log/yapyap-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3834090/"
     },
     {
@@ -20481,7 +20481,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/oh-deer-20261101.jpg",
+      "image": "assets/game-log/oh-deer-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2708450/"
     },
     {
@@ -20510,7 +20510,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/no-case-should-remain-unsolved-20261101.jpg",
+      "image": "assets/game-log/no-case-should-remain-unsolved-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2676840/"
     },
     {
@@ -20540,7 +20540,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/count-the-fingers-20261102.png",
+      "image": "assets/game-log/count-the-fingers-20261102.webp",
       "officialUrl": "https://countthefingers.com/"
     },
     {
@@ -20588,7 +20588,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/dont-scream-together-20261101.jpg",
+      "image": "assets/game-log/dont-scream-together-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2692990/"
     },
     {
@@ -20618,7 +20618,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/backseat-drivers-20261101.jpg",
+      "image": "assets/game-log/backseat-drivers-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3558400/"
     },
     {
@@ -20667,7 +20667,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/bits-and-bops-20261101.jpg",
+      "image": "assets/game-log/bits-and-bops-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1929290/"
     },
     {
@@ -20699,7 +20699,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/strawberry-game-multiplayer-verified-20261103.png",
+      "image": "assets/game-log/strawberry-game-multiplayer-verified-20261103.webp",
       "officialUrl": "https://dalgi.ssjj.kr/",
       "imageFit": "contain",
       "imageCredit": {
@@ -20753,7 +20753,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/side-effects-20261101.jpg",
+      "image": "assets/game-log/side-effects-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3799100/"
     },
     {
@@ -20800,7 +20800,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/feather-party-20261101.jpg",
+      "image": "assets/game-log/feather-party-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2300230/"
     },
     {
@@ -20830,7 +20830,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/onigiri-shop-simulator-20261101.jpg",
+      "image": "assets/game-log/onigiri-shop-simulator-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3915140/"
     },
     {
@@ -20859,7 +20859,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/my-voice-zoo-20261101.jpg",
+      "image": "assets/game-log/my-voice-zoo-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/4015530/"
     },
     {
@@ -20889,7 +20889,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/tavern-keeper-20261101.jpg",
+      "image": "assets/game-log/tavern-keeper-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/436780/"
     },
     {
@@ -20918,7 +20918,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/mimesis-20261101.jpg",
+      "image": "assets/game-log/mimesis-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2827200/"
     },
     {
@@ -20947,7 +20947,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/gone-fishing-20261101.jpg",
+      "image": "assets/game-log/gone-fishing-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3645890/"
     },
     {
@@ -20994,7 +20994,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/powerwash-simulator-2-20261101.jpg",
+      "image": "assets/game-log/powerwash-simulator-2-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2968420/"
     },
     {
@@ -21060,7 +21060,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/everybody-1-2-switch-20261102.png",
+      "image": "assets/game-log/everybody-1-2-switch-20261102.webp",
       "officialUrl": "https://www.nintendo.com/kr/switch/argta/index.html"
     },
     {
@@ -21125,7 +21125,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/cloverpit-20261101.jpg",
+      "image": "assets/game-log/cloverpit-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3314790/"
     },
     {
@@ -21154,7 +21154,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/baby-steps-20261101.jpg",
+      "image": "assets/game-log/baby-steps-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1281040/"
     },
     {
@@ -21184,7 +21184,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/the-spike-cross-20261101.jpg",
+      "image": "assets/game-log/the-spike-cross-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3983810/"
     },
     {
@@ -21213,7 +21213,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/mage-arena-20261101.jpg",
+      "image": "assets/game-log/mage-arena-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3716600/"
     },
     {
@@ -21242,7 +21242,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/fingerdance-20261101.jpg",
+      "image": "assets/game-log/fingerdance-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3633450/"
     },
     {
@@ -21510,7 +21510,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/grand-theft-auto-v-20261101.jpg",
+      "image": "assets/game-log/grand-theft-auto-v-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/271590/"
     },
     {
@@ -21540,7 +21540,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/bogos-binted-20261101.jpg",
+      "image": "assets/game-log/bogos-binted-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3588490/"
     },
     {
@@ -21571,7 +21571,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/patapon-1-2-replay-20261101.jpg",
+      "image": "assets/game-log/patapon-1-2-replay-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2383200/"
     },
     {
@@ -21601,7 +21601,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/netmarble-sachunsung-20261102.jpg",
+      "image": "assets/game-log/netmarble-sachunsung-20261102.webp",
       "officialUrl": "https://game2.netmarble.net/Sachunsung/"
     },
     {
@@ -21631,7 +21631,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/catch-mind-20261102.jpg",
+      "image": "assets/game-log/catch-mind-20261102.webp",
       "officialUrl": "https://cmind.netmarble.net/main.asp"
     },
     {
@@ -21662,7 +21662,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/pavlov-vr-20261101.jpg",
+      "image": "assets/game-log/pavlov-vr-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/555160/"
     },
     {
@@ -21692,7 +21692,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/mini-motorways-20261101.jpg",
+      "image": "assets/game-log/mini-motorways-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1127500/"
     },
     {
@@ -21721,7 +21721,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/salted-20261101.jpg",
+      "image": "assets/game-log/salted-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3639420/"
     },
     {
@@ -21752,7 +21752,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/the-binding-of-isaac-rebirth-20261101.jpg",
+      "image": "assets/game-log/the-binding-of-isaac-rebirth-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/250900/"
     },
     {
@@ -21782,7 +21782,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/all-about-chopsticks-20261101.jpg",
+      "image": "assets/game-log/all-about-chopsticks-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3688340/"
     },
     {
@@ -21809,7 +21809,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/dont-pee-20261101.jpg",
+      "image": "assets/game-log/dont-pee-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2753520/"
     },
     {
@@ -21841,7 +21841,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/the-stubborn-of-wakgood-verified-20261103.png",
+      "image": "assets/game-log/the-stubborn-of-wakgood-verified-20261103.webp",
       "officialUrl": null,
       "imageFit": "contain",
       "imageCredit": {
@@ -21876,7 +21876,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/red-or-blue-20261101.jpg",
+      "image": "assets/game-log/red-or-blue-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3439320/"
     },
     {
@@ -21906,7 +21906,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/chopchop-20261101.jpg",
+      "image": "assets/game-log/chopchop-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2918490/"
     },
     {
@@ -21935,7 +21935,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/watermelon-broken-head-20261101.jpg",
+      "image": "assets/game-log/watermelon-broken-head-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3540460/"
     },
     {
@@ -21964,7 +21964,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/thats-not-my-neighbor-20261101.jpg",
+      "image": "assets/game-log/thats-not-my-neighbor-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3431040/"
     },
     {
@@ -21994,7 +21994,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/slow-and-steady-20261101.jpg",
+      "image": "assets/game-log/slow-and-steady-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1599080/"
     },
     {
@@ -22042,7 +22042,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/rush-only-up-multiplayer-20261101.jpg",
+      "image": "assets/game-log/rush-only-up-multiplayer-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2497520/"
     },
     {
@@ -22090,7 +22090,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/whos-next-20261101.jpg",
+      "image": "assets/game-log/whos-next-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2891940/"
     },
     {
@@ -22120,7 +22120,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/lively-chair-simulator-20261101.jpg",
+      "image": "assets/game-log/lively-chair-simulator-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2575060/"
     },
     {
@@ -22150,7 +22150,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/yakiniku-simulator-20261101.jpg",
+      "image": "assets/game-log/yakiniku-simulator-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2001570/"
     },
     {
@@ -22180,7 +22180,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/revenge-of-the-colon-20261101.jpg",
+      "image": "assets/game-log/revenge-of-the-colon-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2710950/"
     },
     {
@@ -22210,7 +22210,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/lapidary-jewel-craft-simulator-20261101.jpg",
+      "image": "assets/game-log/lapidary-jewel-craft-simulator-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2539820/"
     },
     {
@@ -22240,7 +22240,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/a-game-about-digging-a-hole-20261101.jpg",
+      "image": "assets/game-log/a-game-about-digging-a-hole-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3244220/"
     },
     {
@@ -22267,7 +22267,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/netmarble-spot-the-difference-20261102.png",
+      "image": "assets/game-log/netmarble-spot-the-difference-20261102.webp",
       "officialUrl": "https://game2.netmarble.net/igame/picture/"
     },
     {
@@ -22297,7 +22297,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/igedol-game-verified-20261103.png",
+      "image": "assets/game-log/igedol-game-verified-20261103.webp",
       "officialUrl": "https://sedol.wakttu.kr/",
       "imageFit": "contain",
       "imageCredit": {
@@ -22333,7 +22333,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/getting-over-it-20261101.jpg",
+      "image": "assets/game-log/getting-over-it-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/240720/"
     },
     {
@@ -22382,7 +22382,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/wwme-lemon-game-verified-20261103.png",
+      "image": "assets/game-log/wwme-lemon-game-verified-20261103.webp",
       "officialUrl": "https://wwme.kr/lemon",
       "imageFit": "contain",
       "imageCredit": {
@@ -22418,7 +22418,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/slither-io-20261102.jpg",
+      "image": "assets/game-log/slither-io-20261102.webp",
       "officialUrl": "https://slither.io/"
     },
     {
@@ -22447,7 +22447,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/house-flipper-20261101.jpg",
+      "image": "assets/game-log/house-flipper-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/613100/"
     },
     {
@@ -22513,7 +22513,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/liars-bar-20261101.jpg",
+      "image": "assets/game-log/liars-bar-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3097560/"
     },
     {
@@ -22563,7 +22563,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/wjmax-verified-20261103.jpg",
+      "image": "assets/game-log/wjmax-verified-20261103.webp",
       "officialUrl": null,
       "imageFit": "contain",
       "imageCredit": {
@@ -22600,7 +22600,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/incantation-20261101.jpg",
+      "image": "assets/game-log/incantation-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2328540/"
     },
     {
@@ -22629,7 +22629,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/prisoners-20261101.jpg",
+      "image": "assets/game-log/prisoners-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2725200/"
     },
     {
@@ -22659,7 +22659,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/lockdown-protocol-20261101.jpg",
+      "image": "assets/game-log/lockdown-protocol-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2780980/"
     },
     {
@@ -22688,7 +22688,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/a-night-duty-20261101.jpg",
+      "image": "assets/game-log/a-night-duty-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/3305540/"
     },
     {
@@ -22717,7 +22717,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/unpacking-20261101.jpg",
+      "image": "assets/game-log/unpacking-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1135690/"
     },
     {
@@ -22764,7 +22764,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/buckshot-roulette-20261101.jpg",
+      "image": "assets/game-log/buckshot-roulette-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2835570/"
     },
     {
@@ -22793,7 +22793,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/cooking-simulator-20261101.jpg",
+      "image": "assets/game-log/cooking-simulator-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/641320/"
     },
     {
@@ -22841,7 +22841,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/until-dawn-20261101.jpg",
+      "image": "assets/game-log/until-dawn-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2172010/"
     },
     {
@@ -22871,7 +22871,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/death-note-killer-within-20261101.jpg",
+      "image": "assets/game-log/death-note-killer-within-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2213190/"
     },
     {
@@ -22900,7 +22900,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/a-little-to-the-left-20261101.jpg",
+      "image": "assets/game-log/a-little-to-the-left-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1629520/"
     },
     {
@@ -22947,7 +22947,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/fc-25-20261101.jpg",
+      "image": "assets/game-log/fc-25-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2669320/"
     },
     {
@@ -23048,7 +23048,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/fc-24-20261101.jpg",
+      "image": "assets/game-log/fc-24-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2195250/"
     },
     {
@@ -23095,7 +23095,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/nintendo-switch-sports-20261102.jpg",
+      "image": "assets/game-log/nintendo-switch-sports-20261102.webp",
       "officialUrl": "https://www.nintendo.com/kr/switch/as8sa/"
     },
     {
@@ -23124,7 +23124,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/green-hell-20261101.jpg",
+      "image": "assets/game-log/green-hell-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/815370/"
     },
     {
@@ -23153,7 +23153,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/mario-party-superstars-20261102.png",
+      "image": "assets/game-log/mario-party-superstars-20261102.webp",
       "officialUrl": "https://www.nintendo.com/kr/switch/az82a/"
     },
     {
@@ -23218,7 +23218,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/it-takes-two-20261101.jpg",
+      "image": "assets/game-log/it-takes-two-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1426210/"
     },
     {
@@ -23249,7 +23249,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/school-labyrinth-20261101.jpg",
+      "image": "assets/game-log/school-labyrinth-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2423300/"
     },
     {
@@ -23279,7 +23279,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/magical-mic-duel-20261101.jpg",
+      "image": "assets/game-log/magical-mic-duel-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2696400/"
     },
     {
@@ -23306,7 +23306,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/national-quiz-of-common-sense-20261102.jpg",
+      "image": "assets/game-log/national-quiz-of-common-sense-20261102.webp",
       "officialUrl": "https://store.nintendo.co.kr/70010000073448"
     },
     {
@@ -23354,7 +23354,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/sooper-shot-verified-20261103.png",
+      "image": "assets/game-log/sooper-shot-verified-20261103.webp",
       "officialUrl": null,
       "imageFit": "contain",
       "imageCredit": {
@@ -23390,7 +23390,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/assetto-corsa-20261101.jpg",
+      "image": "assets/game-log/assetto-corsa-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/244210/"
     },
     {
@@ -23419,7 +23419,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/powerwash-simulator-20261101.jpg",
+      "image": "assets/game-log/powerwash-simulator-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1290000/"
     },
     {
@@ -23468,7 +23468,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/heavy-spoilers-rpg-20261102.png",
+      "image": "assets/game-log/heavy-spoilers-rpg-20261102.webp",
       "officialUrl": "https://ksb0.com/ksbgames/netabarerpg/"
     },
     {
@@ -23497,7 +23497,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/forbidden-art-20261101.jpg",
+      "image": "assets/game-log/forbidden-art-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1166140/"
     },
     {
@@ -23526,7 +23526,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/silent-breath-20261101.jpg",
+      "image": "assets/game-log/silent-breath-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2796180/"
     },
     {
@@ -23557,7 +23557,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/toreba-20261102.jpg",
+      "image": "assets/game-log/toreba-20261102.webp",
       "officialUrl": "https://www.toreba.net/"
     },
     {
@@ -23586,7 +23586,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/content-warning-20261101.jpg",
+      "image": "assets/game-log/content-warning-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2881650/"
     },
     {
@@ -23634,7 +23634,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/sputnika-game-20261101.jpg",
+      "image": "assets/game-log/sputnika-game-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2730270/"
     },
     {
@@ -23682,7 +23682,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/shadow-corridor-20261101.jpg",
+      "image": "assets/game-log/shadow-corridor-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1025250/"
     },
     {
@@ -23712,7 +23712,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/getting-over-goombas-20261102.png",
+      "image": "assets/game-log/getting-over-goombas-20261102.webp",
       "officialUrl": "https://newbie-indie-game-dev.itch.io/getting-over-goombas"
     },
     {
@@ -23742,7 +23742,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/motesolo-20261101.jpg",
+      "image": "assets/game-log/motesolo-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1414180/"
     },
     {
@@ -23808,7 +23808,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/tekken-8-20261101.jpg",
+      "image": "assets/game-log/tekken-8-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1778820/"
     },
     {
@@ -23874,7 +23874,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/poppy-playtime-chapter-3-20261101.jpg",
+      "image": "assets/game-log/poppy-playtime-chapter-3-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2555190/"
     },
     {
@@ -23901,7 +23901,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/q-remastered-20261101.jpg",
+      "image": "assets/game-log/q-remastered-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2246110/"
     },
     {
@@ -23931,7 +23931,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/beadyo-christmas-watermelon-20261102.png",
+      "image": "assets/game-log/beadyo-christmas-watermelon-20261102.webp",
       "officialUrl": "https://watermelon.shinyou.ng/melon?game=kskja"
     },
     {
@@ -23962,7 +23962,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/night-security-20261101.jpg",
+      "image": "assets/game-log/night-security-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2367230/"
     },
     {
@@ -24042,7 +24042,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/headbangers-rhythm-royale-20261101.jpg",
+      "image": "assets/game-log/headbangers-rhythm-royale-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1761620/"
     },
     {
@@ -24092,7 +24092,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/a-dance-of-fire-and-ice-20261101.jpg",
+      "image": "assets/game-log/a-dance-of-fire-and-ice-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/977950/"
     },
     {
@@ -24124,7 +24124,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/the-kidnap-20261101.jpg",
+      "image": "assets/game-log/the-kidnap-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2593900/"
     },
     {
@@ -24153,7 +24153,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/outlast-2-20261101.jpg",
+      "image": "assets/game-log/outlast-2-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/414700/"
     },
     {
@@ -24183,7 +24183,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/dont-scream-20261101.jpg",
+      "image": "assets/game-log/dont-scream-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2497900/"
     },
     {
@@ -24212,7 +24212,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/golf-with-your-friends-20261101.jpg",
+      "image": "assets/game-log/golf-with-your-friends-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/431240/"
     },
     {
@@ -24259,7 +24259,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/outlast-20261101.jpg",
+      "image": "assets/game-log/outlast-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/238320/"
     },
     {
@@ -24286,7 +24286,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/gartic-phone-20261102.png",
+      "image": "assets/game-log/gartic-phone-20261102.webp",
       "officialUrl": "https://garticphone.com/"
     },
     {
@@ -24315,7 +24315,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/welcome-to-kowloon-20261101.jpg",
+      "image": "assets/game-log/welcome-to-kowloon-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/2515240/"
     },
     {
@@ -24345,7 +24345,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/escape-simulator-20261101.jpg",
+      "image": "assets/game-log/escape-simulator-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1435790/"
     },
     {
@@ -24393,7 +24393,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/agrou-20261101.jpg",
+      "image": "assets/game-log/agrou-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1305420/"
     },
     {
@@ -24423,7 +24423,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/ultimate-chicken-horse-20261101.jpg",
+      "image": "assets/game-log/ultimate-chicken-horse-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/386940/"
     },
     {
@@ -24472,7 +24472,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/fling-to-the-finish-20261101.jpg",
+      "image": "assets/game-log/fling-to-the-finish-20261101.webp",
       "officialUrl": "https://store.steampowered.com/app/1054430/"
     },
     {
@@ -24505,7 +24505,7 @@
           ]
         }
       ],
-      "image": "assets/game-log/how-much-quiz-verified-20261103.png",
+      "image": "assets/game-log/how-much-quiz-verified-20261103.webp",
       "officialUrl": "http://how-much-quiz.shop/",
       "imageFit": "contain",
       "imageCredit": {
@@ -24524,7 +24524,7 @@
         "Aging Curve"
       ],
       "officialUrl": "https://aging-curve-kappa.vercel.app/",
-      "image": "assets/game-log/aging-curve-official-20261106.png",
+      "image": "assets/game-log/aging-curve-official-20261106.webp",
       "imageFit": "contain",
       "imageCredit": {
         "type": "official",
@@ -24561,7 +24561,7 @@
         "젤다 시간의 오카리나",
         "Ocarina of Time"
       ],
-      "image": "assets/game-log/zelda-ocarina-of-time-official-20261106.png",
+      "image": "assets/game-log/zelda-ocarina-of-time-official-20261106.webp",
       "imageFit": "contain",
       "officialUrl": "https://www.nintendo.com/kr/games/switch2/aa9ja/",
       "imageCredit": {
@@ -24650,7 +24650,7 @@
       "aliases": [
         "크랙"
       ],
-      "image": "assets/game-log/crack-official-20261110.jpg",
+      "image": "assets/game-log/crack-official-20261110.webp",
       "officialUrl": "https://store.steampowered.com/app/4312190/",
       "imageCredit": {
         "type": "official",
@@ -24685,7 +24685,7 @@
         "미믹 파티",
         "미믹파티"
       ],
-      "image": "assets/game-log/mimic-party-official-20261110.jpg",
+      "image": "assets/game-log/mimic-party-official-20261110.webp",
       "officialUrl": "https://store.steampowered.com/app/5053820/",
       "imageCredit": {
         "type": "official",
@@ -24721,7 +24721,7 @@
         "라멘 시뮬레이터",
         "일본 라멘 시뮬레이터"
       ],
-      "image": "assets/game-log/japanese-ramen-simulator-official-20261110.jpg",
+      "image": "assets/game-log/japanese-ramen-simulator-official-20261110.webp",
       "officialUrl": "https://store.steampowered.com/app/4968640/",
       "imageCredit": {
         "type": "official",
@@ -24756,7 +24756,7 @@
         "Augmented Yut",
         "증강윷놀이"
       ],
-      "image": "assets/game-log/augmented-yut-official-20261110.jpg",
+      "image": "assets/game-log/augmented-yut-official-20261110.webp",
       "officialUrl": "https://store.steampowered.com/app/4947900/",
       "imageCredit": {
         "type": "official",
@@ -24809,7 +24809,7 @@
         "코지 게임 레스토레이션",
         "코지 게임 복원"
       ],
-      "image": "assets/game-log/cozy-game-restoration-official-20261116.jpg",
+      "image": "assets/game-log/cozy-game-restoration-official-20261116.webp",
       "officialUrl": "https://store.steampowered.com/app/3581230/",
       "imageCredit": {
         "type": "official",
@@ -24844,7 +24844,7 @@
         "포테이토 플리즈",
         "감자 깎기 게임"
       ],
-      "image": "assets/game-log/potato-please-official-20261116.jpg",
+      "image": "assets/game-log/potato-please-official-20261116.webp",
       "officialUrl": "https://store.steampowered.com/app/5266240/",
       "imageCredit": {
         "type": "official",
@@ -24899,7 +24899,7 @@
         "Just Dance",
         "Just Dance®"
       ],
-      "image": "assets/game-log/just-dance-decades-of-hits-official-20261125.jpg",
+      "image": "assets/game-log/just-dance-decades-of-hits-official-20261125.webp",
       "officialUrl": "https://www.ubisoft.com/ko-kr/game/just-dance/decades-of-hits",
       "imageCredit": {
         "type": "official",
@@ -24935,7 +24935,7 @@
         "덥 나이트 라이브",
         "덥나잇라이브"
       ],
-      "image": "assets/game-log/dub-night-live-official-20261125.jpg",
+      "image": "assets/game-log/dub-night-live-official-20261125.webp",
       "officialUrl": "https://store.steampowered.com/app/5099290/",
       "imageCredit": {
         "type": "official",
@@ -24988,7 +24988,7 @@
         "워스트 클래스 에버",
         "선생님 몰래 장난치기"
       ],
-      "image": "assets/game-log/worst-class-ever-official-20261124.jpg",
+      "image": "assets/game-log/worst-class-ever-official-20261124.webp",
       "officialUrl": "https://store.steampowered.com/app/5175310/",
       "dates": [
         {
@@ -25041,7 +25041,7 @@
         "ROK Reserve Force",
         "예비군 훈련"
       ],
-      "image": "assets/game-log/rok-reserve-force-official-20261124.jpg",
+      "image": "assets/game-log/rok-reserve-force-official-20261124.webp",
       "officialUrl": "https://store.steampowered.com/app/5367010/",
       "dates": [
         {
@@ -25075,7 +25075,7 @@
       "aliases": [
         "멀티볼 룰렛"
       ],
-      "image": "assets/game-log/trust-your-instinct-official-20261124.jpg",
+      "image": "assets/game-log/trust-your-instinct-official-20261124.webp",
       "officialUrl": "https://store.steampowered.com/app/4066520/",
       "dates": [
         {
@@ -25110,7 +25110,7 @@
         "제모 살롱 시뮬레이터",
         "왁싱 살롱 시뮬레이터"
       ],
-      "image": "assets/game-log/hair-removal-salon-simulator-official-20261124.jpg",
+      "image": "assets/game-log/hair-removal-salon-simulator-official-20261124.webp",
       "officialUrl": "https://store.steampowered.com/app/4351380/",
       "dates": [
         {
@@ -25145,7 +25145,7 @@
         "아아아",
         "아.아.아."
       ],
-      "image": "assets/game-log/ah-ah-ah-official-20261124.jpg",
+      "image": "assets/game-log/ah-ah-ah-official-20261124.webp",
       "officialUrl": "https://store.steampowered.com/app/4574320/",
       "dates": [
         {
@@ -25181,7 +25181,7 @@
         "콜옵 모던 워페어 4",
         "콜 오브 듀티"
       ],
-      "image": "assets/game-log/call-of-duty-modern-warfare-4-official-20261124.jpg",
+      "image": "assets/game-log/call-of-duty-modern-warfare-4-official-20261124.webp",
       "officialUrl": "https://store.steampowered.com/app/4435490/",
       "dates": [
         {

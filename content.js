@@ -99,16 +99,12 @@
     function formatDate(value, long = false) {
         const normalized = normalizeDate(value);
         if (!normalized) return '날짜 미상';
-        const date = new Date(`${normalized}T00:00:00`);
-        return new Intl.DateTimeFormat('ko-KR', long
-            ? { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' }
-            : { year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+        // 방송 날짜(YYYY-MM-DD)는 시간대 변환 없이 그 날짜 그대로 표기한다.
+        return long ? window.BeadyoKstDate.formatLongDate(normalized, { weekday: true }) : window.BeadyoKstDate.formatDate(normalized);
     }
 
     function formatTimestamp(value) {
-        const date = new Date(value);
-        if (Number.isNaN(date.getTime())) return '';
-        return new Intl.DateTimeFormat('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(date);
+        return window.BeadyoKstDate.formatLongDateTime(value);
     }
 
     function cardFallback() {

@@ -3,7 +3,8 @@
     'use strict';
     const BROADCAST_TYPES = new Set(['chat', 'song', 'solo', 'collab', 'watch', 'game', 'ad', 'relay']);
     function dayKey(now = new Date()) {
-        return new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
+        // KST(UTC+9, 서머타임 없음) 날짜. Intl 로캘 출력에 기대지 않고 직접 계산한다.
+        return new Date(new Date(now).getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
     }
     function dayNumber(date) {
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date || '')) return NaN;

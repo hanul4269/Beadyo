@@ -50,6 +50,8 @@ html[data-page="content"][data-theme="dark"] {
 
 html[data-page="calendar"] {
     --accent: #8bc34a;
+    /* Solid fill behind white text: #fff on #4f7f25 = 4.78:1 (WCAG AA). */
+    --accent-solid: #4f7f25;
     --accent-dark: #6d9c32;
     --accent-light: #f1f8e9;
     --bg: #f5f4f0;
@@ -61,6 +63,7 @@ html[data-page="calendar"] {
 
 html[data-page="calendar"][data-theme="dark"] {
     --accent: #8bc34a;
+    --accent-solid: #4f7f25;
     --accent-dark: #b7df7f;
     --accent-light: #21381b;
     --bg: #11170f;
@@ -73,6 +76,8 @@ html[data-page="calendar"][data-theme="dark"] {
 
 html[data-page="songbook"] {
     --accent: #7fb83f;
+    /* Solid fill behind white text: #fff on #4f7f25 = 4.78:1 (WCAG AA). */
+    --accent-solid: #4f7f25;
     --accent-dark: #4f7f25;
     --accent-light: #eef7e4;
     --accent-soft: #f8fbf2;
@@ -406,7 +411,7 @@ html[data-page="dance-archive"][data-theme="dark"] {
     color-scheme: dark;
 }
 html[data-page="dance-archive"][data-theme="dark"] body {
-    background: linear-gradient(180deg, rgba(17,23,15,.88) 0 0), url("banner.jpg") top center / 1600px auto no-repeat, var(--bg);
+    background: linear-gradient(180deg, rgba(17,23,15,.88) 0 0), url("banner.webp") top center / 1600px auto no-repeat, var(--bg);
 }
 html[data-page="dance-archive"][data-theme="dark"] :is(.summary-item, .tools, .bulk-bar, .detail, .empty) { background: var(--surface); }
 html[data-page="dance-archive"][data-theme="dark"] :is(.source-tabs, .source-badge, .status-badge, .play-mark, .pipeline, .detail-media) { background: var(--surface-2); }

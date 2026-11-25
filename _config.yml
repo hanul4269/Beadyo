@@ -13,6 +13,13 @@ exclude:
   # 게임 기록 작업용 원자료(페이지에서 쓰지 않음, 3MB+)
   - data/game-log-sources.json
   - data/game-log-reaudit.json
+  # 춤영상 검토 페이지는 사이트에서 내림(2026-11-25). 파일과 DB 자료는 보관.
+  # 다시 쓰려면 docs/dance-review-archive.md 참고
+  - dance-archive.html
+  - dance-data.js
+  - dance-import-feed.js
+  - dance-thumbnail-backfill.js
+  - docs/
   - scripts/
   - tools/
   - supabase/

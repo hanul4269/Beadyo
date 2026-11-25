@@ -4,6 +4,7 @@
     if (!root) return;
     const D = window.BeadyoHomeData;
     const C = window.BeadyoCommon;
+    const K = window.BeadyoKstDate;
     const SOOP = 'https://www.sooplive.co.kr/station/beadyo97';
     const sources = {};
     const rendered = new WeakMap();
@@ -16,7 +17,7 @@
     const typeNames = { chat: '소통', song: '노래', solo: '슬요 콘텐츠', collab: '참여 콘텐츠', watch: '같이보기', game: '게임', ad: '광고', rest: '휴방', cover: '커버곡', original: '오리지널곡', relay: '중계', pre: '방송 전', general: '기타' };
     const esc = C.esc;
     const url = value => C.safeUrl(value, '');
-    const dateText = day => Number.isFinite(D.dayNumber(day)) ? new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', month: 'long', day: 'numeric', weekday: 'short' }).format(new Date(`${day}T00:00:00+09:00`)) : '';
+    const dateText = day => Number.isFinite(D.dayNumber(day)) ? K.formatMonthDay(day) : '';
     const eventDate = event => `${dateText(event.date)}${event.start_time ? ` · ${String(event.start_time).slice(0, 5)}` : ' · 시간 미정'}`;
     function external(href, label, className = 'home-link') {
         const safe = url(href);
@@ -41,7 +42,7 @@
     function photoStrip() {
         return `<aside class="home-photostrip" aria-label="슬요네컷">
             <button type="button" class="home-photostrip-open" data-home-photo-open aria-label="슬요네컷 사진 크게 보기" aria-haspopup="dialog" aria-controls="home-photo-dialog">
-                <img src="assets/home/photostrip-20261026.jpg" alt="네 가지 표정의 구슬요가 담긴 홀로그램 네컷 사진, 2026년 10월 26일" width="600" height="1800" decoding="async">
+                <img src="assets/home/photostrip-20261026.webp" alt="네 가지 표정의 구슬요가 담긴 홀로그램 네컷 사진, 2026년 10월 26일" width="600" height="1800" decoding="async">
                 <span class="home-photostrip-hint">크게 보기 <span aria-hidden="true">↗</span></span>
             </button>
         </aside>
@@ -127,7 +128,7 @@
     }
     function renderSoop() {
         const html = stateHtml('soop', '등록된 공개 공지가 없습니다.') || sources.soop.data.map(notice => {
-            const date = new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(notice.postedAt));
+            const date = K.formatDateTime(notice.postedAt);
             return `<a class="home-soop-post" href="${esc(notice.href)}" target="_blank" rel="noopener noreferrer"><span class="home-soop-meta"><span class="home-soop-author">${notice.profile ? `<img src="${esc(notice.profile)}" alt="" width="28" height="28" decoding="async" data-home-soop-profile>` : ''}${esc(notice.author)}</span><time datetime="${esc(notice.postedAt)}">${esc(date)}</time></span><span class="home-soop-title">${esc(notice.title)} ↗</span></a>`;
         }).join('');
         setHtml('home-soop', html + refreshNotice('soop'));
@@ -151,8 +152,8 @@
             html = '<div class="home-state home-error">카페 글 목록을 불러오지 못했습니다.<button class="home-action" type="button" data-home-retry="cafe">다시 시도</button></div>';
         } else {
             const data = state.data;
-            const date = value => new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(value));
-            const checked = new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(data.fetchedAt));
+            const date = value => K.formatDate(value);
+            const checked = K.formatDateTime(data.fetchedAt);
             html = data.posts.length ? `<ul class="home-list home-cafe-list">${data.posts.map(post => `<li><a class="home-item home-cafe-item" href="${esc(post.href)}" target="_blank" rel="noopener noreferrer"><span class="home-item-title">${esc(post.title)} ↗</span><time class="home-cafe-date" datetime="${esc(post.publishedAt)}">${esc(date(post.publishedAt))}</time></a></li>`).join('')}</ul>` : '<p class="home-state">현재 표시할 공개 게시글이 없습니다.</p>';
             html += `<p class="home-meta home-cafe-checked">최근 업데이트 · <time datetime="${esc(data.fetchedAt)}">${esc(checked)}</time></p>`;
             if (data.fetchFailed || state.refreshError) {
@@ -274,7 +275,7 @@
                 if (target.hasAttribute('data-home-photo-open')) {
                     const dialog = document.getElementById('home-photo-dialog');
                     const image = dialog.querySelector('[data-home-photo-full]');
-                    if (!image.getAttribute('src')) image.src = 'assets/home/photostrip-20261026-full.jpg';
+                    if (!image.getAttribute('src')) image.src = 'assets/home/photostrip-20261026-full.webp';
                     photoOpener = target;
                     dialog.showModal();
                     dialog.scrollTop = 0;

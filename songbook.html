@@ -18,7 +18,7 @@
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
-    <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
+    <link rel="stylesheet" href="tokens.css?v=deploy-20261126">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="assets/fonts/pretendard/pretendard-subset.css?v=subset-20261112" rel="stylesheet" media="print" onload="this.media='all'">
@@ -167,7 +167,7 @@
         }
         .sub-tab.active {
             background: var(--accent);
-            color: #fff;
+            color: #203314; /* #203314 on the light green = 5.7–6.5:1 */
             border-color: var(--accent-dark);
             box-shadow: 0 2px 8px rgba(139,195,74,0.35);
         }
@@ -265,7 +265,7 @@
         }
         .lf-check input, .lf-radio input { display: none; }
         .lf-check:has(input:checked), .lf-radio:has(input:checked) {
-            background: var(--accent); color: #fff; border-color: var(--accent-dark);
+            background: var(--accent-solid, #4f7f25); color: #fff; border-color: var(--accent-dark);
         }
         .lf-year-check {
             background: #fff;
@@ -340,7 +340,7 @@
             color: var(--accent-dark);
         }
         .sbf-chip.active {
-            background: var(--accent);
+            background: var(--accent-solid, #4f7f25);
             border-color: var(--accent-dark);
             color: #fff;
         }
@@ -455,6 +455,10 @@
             color: #b77d00;
             box-shadow: 0 3px 10px rgba(185,132,0,0.18);
         }
+        [data-songbook-entry-id][tabindex]:focus-visible {
+            outline: 3px solid var(--accent-solid, #4f7f25);
+            outline-offset: -3px;
+        }
         .favorite-toggle:focus-visible {
             outline: 3px solid rgba(222,169,33,0.26);
             outline-offset: 2px;
@@ -557,7 +561,7 @@
             color: var(--accent-dark);
         }
         .songbook-view-btn.active {
-            background: var(--accent);
+            background: var(--accent-solid, #4f7f25);
             color: #fff;
             box-shadow: 0 2px 7px rgba(127,184,63,0.26);
         }
@@ -1232,7 +1236,7 @@
             cursor: pointer; white-space: nowrap;
         }
         .stats-toggle button.active {
-            background: var(--accent); color: #fff;
+            background: var(--accent-solid, #4f7f25); color: #fff;
         }
         .per-year-charts { display: flex; flex-direction: column; gap: 8px; max-width: 520px; }
         .per-year-chart { display: flex; align-items: center; gap: 8px; }
@@ -1393,7 +1397,7 @@
             color: var(--accent-dark);
         }
         .random-option input:checked + span {
-            background: var(--accent);
+            background: var(--accent-solid, #4f7f25);
             border-color: var(--accent-dark);
             color: #fff;
         }
@@ -1502,7 +1506,7 @@
             cursor: pointer; transition: opacity .15s;
         }
         .modal-btns button:hover { opacity: .8; }
-        .btn-again { background: var(--accent); color: #fff; }
+        .btn-again { background: var(--accent-solid, #4f7f25); color: #fff; }
         .btn-close  { background: var(--bg); color: var(--text); }
 
         /* ─── 노래 상세 패널 ─── */
@@ -2105,7 +2109,7 @@
         #edit-fab {
             position: fixed; bottom: 28px; right: 24px;
             width: 52px; height: 52px; border-radius: 50%;
-            background: var(--accent); color: #fff; border: none;
+            background: var(--accent-solid, #4f7f25); color: #fff; border: none;
             font-size: 28px; line-height: 1;
             cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.22);
             display: none; align-items: center; justify-content: center;
@@ -2421,7 +2425,7 @@
             height: 28px;
             border: none;
             border-radius: 7px;
-            background: var(--accent);
+            background: var(--accent-solid, #4f7f25);
             color: #fff;
             font-family: inherit;
             font-size: 11px;
@@ -2536,7 +2540,7 @@
             transition: background .12s, border-color .12s, color .12s;
         }
         .tag-check input:checked + span {
-            background: var(--accent);
+            background: var(--accent-solid, #4f7f25);
             border-color: var(--accent-dark);
             color: #fff;
         }
@@ -2557,7 +2561,7 @@
         .btn-del { padding: 8px 14px; border: none; border-radius: 8px; background: #fdf0f0; color: #c0392b; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
         .btn-del:hover { background: #fde0e0; }
         .btn-cancel-sm { padding: 8px 14px; border: none; border-radius: 8px; background: var(--bg); color: var(--text); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; margin-left: auto; }
-        .btn-save-sm { padding: 8px 18px; border: none; border-radius: 8px; background: var(--accent); color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+        .btn-save-sm { padding: 8px 18px; border: none; border-radius: 8px; background: var(--accent-solid, #4f7f25); color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
         .btn-save-sm:hover { background: var(--accent-dark); }
         .btn-save-sm:disabled { opacity: .6; cursor: default; }
 
@@ -2964,9 +2968,132 @@
         html[data-theme="dark"] .modal-overlay {
             background: rgba(5,9,5,0.62);
         }
+
+        /* ─── 휴대폰: 표 행을 카드로 (가로 스크롤 없음) ─── */
+        @media (max-width: 640px) {
+            #live-list .song-table,
+            #songbook-list .song-table,
+            #wc-search-results .song-table {
+                min-width: 0;
+                display: block;
+                table-layout: auto;
+            }
+            #live-list .song-table thead,
+            #songbook-list .song-table thead,
+            #wc-search-results .song-table thead {
+                position: absolute;
+                width: 1px; height: 1px;
+                overflow: hidden;
+                clip: rect(0 0 0 0);
+                white-space: nowrap;
+            }
+            #live-list .song-table tbody,
+            #songbook-list .song-table tbody,
+            #wc-search-results .song-table tbody { display: block; }
+            #live-list .song-table tbody tr,
+            #songbook-list .song-table tbody tr,
+            #wc-search-results .song-table tbody tr {
+                display: grid;
+                gap: 3px 10px;
+                align-items: center;
+                padding: 11px 12px;
+                border-bottom: 1px solid var(--border);
+            }
+            #live-list .song-table tbody tr:last-child,
+            #songbook-list .song-table tbody tr:last-child,
+            #wc-search-results .song-table tbody tr:last-child { border-bottom: none; }
+            #live-list .song-table tbody tr:nth-child(even),
+            #songbook-list .song-table tbody tr:nth-child(even),
+            #wc-search-results .song-table tbody tr:nth-child(even) { background: var(--row-alt); }
+            #live-list .song-table tbody tr:hover,
+            #songbook-list .song-table tbody tr:hover,
+            #wc-search-results .song-table tbody tr:hover { background: var(--row-hover); }
+            #live-list .song-table tbody td,
+            #songbook-list .song-table tbody td,
+            #wc-search-results .song-table tbody td {
+                display: block;
+                width: auto;
+                min-width: 0;
+                padding: 0;
+                border: none;
+                text-align: left !important;
+                font-size: 13px;
+            }
+            /* Row stripes and hover now live on the row; cells stay clear. */
+            html #live-list .song-table tbody tr td,
+            html #songbook-list .song-table tbody tr td,
+            html #wc-search-results .song-table tbody tr td { background: transparent !important; }
+            #live-list .song-table tbody td:empty,
+            #songbook-list .song-table tbody td:empty,
+            #wc-search-results .song-table tbody td:empty { display: none; }
+            #live-list .song-table tbody td.col-title,
+            #songbook-list .song-table tbody td.col-title,
+            #wc-search-results .song-table tbody td.col-title { font-size: 15px; line-height: 1.4; }
+            #live-list .song-table tbody td.col-artist,
+            #songbook-list .song-table tbody td.col-artist,
+            #wc-search-results .song-table tbody td.col-artist { line-height: 1.4; }
+
+            /* 라이브 기록: 날짜·연도·누적 → 제목 → 가수 → 메모 */
+            #live-list .song-table tbody tr {
+                grid-template-columns: auto auto minmax(0, 1fr) auto;
+                grid-template-areas:
+                    "date year . cnt"
+                    "title title title clip"
+                    "artist artist artist clip"
+                    "memo memo memo memo";
+            }
+            #live-list .song-table tbody tr.month-start { border-top: 2.5px solid var(--accent); }
+            #live-list .song-table tbody tr.month-start td { border-top: none; }
+            #live-list .song-table tbody td.col-num { display: none; }
+            #live-list .song-table tbody td.col-date { grid-area: date; font-size: 13px; color: var(--muted); }
+            #live-list .song-table tbody td.col-year { grid-area: year; }
+            #live-list .song-table tbody td.col-title { grid-area: title; }
+            #live-list .song-table tbody td.col-artist { grid-area: artist; }
+            #live-list .song-table tbody td.col-lmemo { grid-area: memo; display: block; font-size: 12px; }
+            #live-list .song-table tbody td.col-lmemo:empty { display: none; }
+            #live-list .song-table tbody td.col-clip { grid-area: clip; align-self: center; }
+            #live-list .song-table tbody td.col-cnt { grid-area: cnt; font-size: 12px; }
+            #live-list .song-table tbody td.col-cnt::before { content: "누적 "; font-weight: 600; color: var(--muted); }
+            #live-list .song-table tbody td.col-cnt.excluded::before { content: "통계 "; }
+
+            /* 노래책 목록: 커버 | 분류·제목·가수·숙련도 | 즐겨찾기 */
+            #songbook-list .song-table tbody tr,
+            #wc-search-results .song-table tbody tr {
+                grid-template-columns: 58px minmax(0, 1fr) auto auto;
+                grid-template-areas:
+                    "cover cat cat fav"
+                    "cover title title fav"
+                    "cover artist artist artist"
+                    "cover skill mr clip"
+                    "memo memo memo memo";
+            }
+            #songbook-list .song-table tbody td.col-num,
+            #wc-search-results .song-table tbody td.col-num { display: none; }
+            #songbook-list .song-table tbody td.col-cover,
+            #wc-search-results .song-table tbody td.col-cover { grid-area: cover; align-self: start; }
+            #songbook-list .song-table tbody td.col-cat,
+            #wc-search-results .song-table tbody td.col-cat { grid-area: cat; }
+            #songbook-list .song-table tbody td.col-fav,
+            #wc-search-results .song-table tbody td.col-fav { grid-area: fav; align-self: start; }
+            #songbook-list .song-table tbody td.col-title,
+            #wc-search-results .song-table tbody td.col-title { grid-area: title; }
+            #songbook-list .song-table tbody td.col-artist,
+            #wc-search-results .song-table tbody td.col-artist { grid-area: artist; }
+            #songbook-list .song-table tbody td.col-skill,
+            #wc-search-results .song-table tbody td.col-skill { grid-area: skill; }
+            #songbook-list .song-table tbody td.col-mr,
+            #wc-search-results .song-table tbody td.col-mr { grid-area: mr; }
+            #songbook-list .song-table tbody td.col-clip,
+            #wc-search-results .song-table tbody td.col-clip { grid-area: clip; }
+            #songbook-list .song-table tbody td.col-memo,
+            #wc-search-results .song-table tbody td.col-memo { grid-area: memo; display: block; }
+            #songbook-list .song-table tbody td.col-memo:empty,
+            #wc-search-results .song-table tbody td.col-memo:empty { display: none; }
+        }
     </style>
     <script defer src="page-footer.js?v=release-20261011-all"></script>
-    <link rel="stylesheet" href="heading-font.css?v=release-20261011-all">
+    <script defer src="modal-focus.js?v=deploy-20261126"></script>
+    <link rel="stylesheet" href="heading-font.css?v=deploy-20261126">
 </head>
 <body>
 
@@ -3154,7 +3281,7 @@
 
 <!-- ══════════════ 일반 사용자 노래 상세 패널 ══════════════ -->
 <div id="song-detail-modal" class="modal-overlay" onclick="if(event.target===this)closeSongDetailPanel()">
-    <div class="modal song-detail-panel" id="song-detail-panel"></div>
+    <div class="modal song-detail-panel" id="song-detail-panel" role="dialog" aria-modal="true" aria-labelledby="song-detail-title"></div>
 </div>
 
 <!-- ══════════════ 노래 일괄 추가 모달 ══════════════ -->
@@ -3423,6 +3550,7 @@ function liveYearStyle(year) {
 // ── 상태 ──────────────────────────────────────────
 const S = {
     mainTab:      INITIAL_VIEW,
+    isEditor:     false,
     songbookCat:  'welcome',
     songbookView: 'grid',
     welcomeSearchView: 'table',
@@ -3884,7 +4012,7 @@ function songQualityBadges(song) {
 }
 
 function songQualityBadgesHtml(song, extraClass = '') {
-    if (!S.session) return '';
+    if (!canEditSongbook()) return '';
     const badges = songQualityBadges(song);
     if (!badges.length) return '';
     return `<div class="song-quality-badges ${extraClass}">${badges.map(issue =>
@@ -3929,7 +4057,7 @@ function filteredSongbookItems({
         if (query && !matches(s.title, s.artist, query, s.memo)) return false;
         if (query && s.category !== '오리지널' && originalKeys.has(songbookCompareKey(s))) return false;
         if (!ignoreTag && tag && tag !== 'all' && !songbookTags(s).includes(tag)) return false;
-        if (S.session && !ignoreQuality && quality && quality !== 'all' && !songHasQualityIssue(s, quality)) return false;
+        if (canEditSongbook() && !ignoreQuality && quality && quality !== 'all' && !songHasQualityIssue(s, quality)) return false;
         if (!ignoreFavorite && favoriteOnly && !isSongbookFavorite(s)) return false;
         return true;
     });
@@ -4001,7 +4129,10 @@ function refreshOpenSongDetailFavorite(id) {
     const song = findSongbookSongById(id);
     if (!song) return;
     const panel = document.getElementById('song-detail-panel');
+    const hadFocus = panel.contains(document.activeElement);
     panel.innerHTML = songDetailPanelHtml(song);
+    // Re-rendering removes the pressed star; keep keyboard focus on its replacement.
+    if (hadFocus) panel.querySelector('.favorite-toggle')?.focus({ preventScroll: true });
     updateSongDetailLastDate(song);
     window.BeadyoExplore?.mountSong(document.getElementById('song-related-links'), song, ensureLiveAllForSongDetail);
 }
@@ -4061,14 +4192,22 @@ function songLinksHtml(song) {
     ].filter(Boolean).join('');
 }
 function songClickClass() {
-    return `clickable${S.session ? ' editable' : ''}`;
+    return `clickable${canEditSongbook() ? ' editable' : ''}`;
 }
 function songClickHandler(song) {
     return `openSongDetail(${song.id})`;
 }
 function editableSongAttrs(song) {
-    return `class="${songClickClass()}" onclick="${songClickHandler(song)}"`;
+    return `class="${songClickClass()}" onclick="${songClickHandler(song)}" tabindex="0"`;
 }
+// Song rows and cards open their detail with Enter or Space, like the mouse click.
+document.addEventListener('keydown', event => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    const row = event.target;
+    if (!row?.matches?.('[data-songbook-entry-id][tabindex][onclick]')) return;
+    event.preventDefault();
+    row.click();
+});
 function fmtDate(d) {
     if (!d) return '';
     const parts = d.split('-');
@@ -4293,7 +4432,7 @@ function songbookCardGridHtml(items, isAll) {
                     ${links ? `<div class="song-card-links">${links}</div>` : ''}
                     ${s.memo ? `<div class="song-card-memo">${esc(s.memo)}</div>` : ''}
                 </div>` : '';
-            return `<article class="song-card ${songCategoryClass(s.category)} ${songClickClass()}" data-songbook-entry-id="${esc(s.id)}" onclick="${songClickHandler(s)}">
+            return `<article class="song-card ${songCategoryClass(s.category)} ${songClickClass()}" data-songbook-entry-id="${esc(s.id)}" onclick="${songClickHandler(s)}" tabindex="0">
                 <div class="song-card-cover-wrap">${songCoverMediaHtml(s, 'song-card-cover', 'lazy', SONG_COVER_SIZE.card)}</div>
                 <div class="song-card-info">
                     <div class="song-card-head">
@@ -4420,7 +4559,7 @@ function renderSongbookFilterPanel() {
         songbookFacetRowHtml('favorite', '저장', favoriteBase.length, favoriteEntries, S.songbookFavoriteOnly ? 'only' : 'all', true),
         songbookFacetRowHtml('tags', '태그', tagBase.length, tagEntries, S.songbookTag, S.songbookFilterExpanded.tags),
     ];
-    if (S.session) {
+    if (canEditSongbook()) {
         const qualityBase = filteredSongbookItems({ forceAll, ignoreQuality: true });
         const qualityCounts = songbookQualityCounts(qualityBase);
         const qualityEntries = SONGBOOK_QUALITY_ISSUES.map(issue => ({
@@ -4469,7 +4608,7 @@ function renderSongbook(forceAll) {
     updateResultInfo(items.length, scopedTotal);
 
     if (!items.length) {
-        const hasFacet = S.songbookFavoriteOnly || S.songbookTag !== 'all' || (!!S.session && S.songbookQuality !== 'all');
+        const hasFacet = S.songbookFavoriteOnly || S.songbookTag !== 'all' || (canEditSongbook() && S.songbookQuality !== 'all');
         el.innerHTML = emptyHtml(S.query ? `"${esc(S.query)}" 검색 결과가 없어요` : hasFacet ? '필터 조건에 맞는 곡이 없어요' : '등록된 곡이 없어요');
         return;
     }
@@ -4575,7 +4714,7 @@ async function renderLive() {
             const cnt = countMap[liveStatKey(r, true)] || 1;
             const excluded = !!r.exclude_from_stats;
             return `
-            <tr data-live-record-id="${esc(r.id)}" class="${S.session ? 'editable ' : ''}${monthStart ? 'month-start' : ''}"${S.session ? ` onclick="openLiveModal(${r.id})"` : ''}>
+            <tr data-live-record-id="${esc(r.id)}" class="${canEditSongbook() ? 'editable ' : ''}${monthStart ? 'month-start' : ''}"${canEditSongbook() ? ` onclick="openLiveModal(${r.id})"` : ''}>
                 <td class="col-num">${i + 1}</td>
                 ${showYear ? `<td class="col-year">${r.year ? `<span class="year-badge y${esc(r.year)}" style="${liveYearStyle(r.year)}">${esc(r.year)}</span>` : ''}</td>` : ''}
                 <td class="col-date">${fmtDate(r.performed_date)}</td>
@@ -4948,7 +5087,7 @@ function renderStats() {
 
     // ── 렌더 ─────────────────────────────────────
     panel.innerHTML = `<div class="stats-dashboard">
-        <div class="stats-total-badge">총 ${totalCount.toLocaleString()}곡</div>
+        <div class="stats-total-badge">총 ${totalCount.toLocaleString('ko-KR')}곡</div>
         ${foldHtml('summary', '1. 요약 통계', summaryRow)}
         ${foldHtml('graphs', '2. 그래프 / 월별 기록', graphRow)}
         ${foldHtml('yearly', '3. 연도별 많이 부른 곡', yearlyRow)}
@@ -4963,7 +5102,7 @@ function updateResultInfo(shown, total) {
         const active = [];
         if (S.songbookFavoriteOnly) active.push('즐겨찾기');
         if (S.songbookTag !== 'all') active.push(`#${S.songbookTag}`);
-        if (S.session && S.songbookQuality !== 'all') {
+        if (canEditSongbook() && S.songbookQuality !== 'all') {
             const issue = SONGBOOK_QUALITY_ISSUES.find(item => item.key === S.songbookQuality);
             if (issue) active.push(issue.label);
         }
@@ -5719,7 +5858,7 @@ function deferWarmup(task) {
 }
 
 function updateFab() {
-    const show = !!S.session && (
+    const show = canEditSongbook() && (
         (S.mainTab === 'songbook' && S.songbookCat !== 'welcome') ||
         (S.mainTab === 'live' && S.liveYear !== 'stats')
     );
@@ -5733,9 +5872,38 @@ async function initAuth() {
         console.warn('세션 시각 확인이 지연되고 있습니다. 저장된 로그인 정보는 유지합니다.');
         return;
     }
-    S.session = session;
+    setSongbookSession(session);
+    db.auth.onAuthStateChange((_, sess) => { setSongbookSession(sess); });
+}
+
+// 로그인만으로는 편집 권한이 아니다. 운영 DB의 is_beadyo_editor 결과가 true인
+// 편집자에게만 수정 창·편집 표시를 보여 준다(쓰기 권한 자체는 RLS가 막는다).
+function canEditSongbook() {
+    return !!S.session && S.isEditor === true;
+}
+
+let _songbookEditorCheckSeq = 0;
+async function setSongbookSession(session) {
+    const seq = ++_songbookEditorCheckSeq;
+    const sameUser = !!session?.user?.id && session.user.id === S.session?.user?.id;
+    S.session = session || null;
+    // 다른 사용자로 바뀌거나 로그아웃하면 확인 전까지 편집 권한을 내린다.
+    if (!sameUser) S.isEditor = false;
     updateAuthUI();
-    db.auth.onAuthStateChange((_, sess) => { S.session = sess; updateAuthUI(); });
+    if (!S.session) return;
+    let isEditor = false;
+    try {
+        await ensureDb();
+        const { data, error } = await db.rpc('is_beadyo_editor');
+        if (error) console.warn('is_beadyo_editor:', error);
+        isEditor = !error && data === true;
+    } catch (error) {
+        console.warn('is_beadyo_editor:', error);
+    }
+    if (seq !== _songbookEditorCheckSeq) return;
+    if (S.isEditor === isEditor) return;
+    S.isEditor = isEditor;
+    updateAuthUI();
 }
 
 function updateAuthUI() {
@@ -5764,8 +5932,7 @@ window.addEventListener('message', (e) => {
                 console.warn('세션 시각 확인이 지연되고 있습니다. 저장된 로그인 정보는 유지합니다.');
                 return;
             }
-            S.session = session;
-            updateAuthUI();
+            setSongbookSession(session);
         });
     }
 });
@@ -5781,7 +5948,7 @@ function closeFabMenu() { document.getElementById('fab-menu').classList.remove('
 document.addEventListener('click', closeFabMenu);
 
 function openBulkModal() {
-    if (!S.session) return;
+    if (!canEditSongbook()) return;
     document.getElementById('bulk-rows').innerHTML = '';
     document.getElementById('bulk-status').textContent = '';
     document.getElementById('bulk-save-btn').disabled = false;
@@ -5844,7 +6011,7 @@ function updateCoverBackfillCounts() {
 }
 
 function openCoverBackfillModal() {
-    if (!S.session) return;
+    if (!canEditSongbook()) return;
     updateCoverBackfillCounts();
     loadCoverYoutubeSettings();
     document.getElementById('cover-log').textContent = '';
@@ -5957,7 +6124,7 @@ function addCoverReviewCandidates(song, label, candidates) {
 async function saveCoverReviewCandidate(groupIndex, candidateIndex) {
     const group = _coverReviewCandidates[groupIndex];
     const candidate = group?.candidates?.[candidateIndex];
-    if (!S.session || !group || !candidate || group.saved) return;
+    if (!canEditSongbook() || !group || !candidate || group.saved) return;
     await ensureDb();
     const { error } = await db.from('songbook').update({ cover_url: candidate.coverUrl }).eq('id', group.songId).select('id').single();
     if (error) {
@@ -6560,7 +6727,7 @@ function wait(ms) {
 
 async function startCoverBackfill(scope) {
     if (_coverBackfillRunning) return;
-    if (!S.session) return;
+    if (!canEditSongbook()) return;
     const canUseCover = await ensureSongCoverColumn();
     if (!canUseCover) {
         showToast('Supabase에 cover_url 컬럼을 먼저 추가해주세요');
@@ -6958,7 +7125,7 @@ function songDetailPanelHtml(song) {
                 ${tagHtml}
                 ${songbookFavoriteButtonHtml(song, 'song-detail-favorite')}
             </div>
-            <h2 class="song-detail-title">${esc(song.title || '')}</h2>
+            <h2 class="song-detail-title" id="song-detail-title">${esc(song.title || '')}</h2>
             <div class="song-detail-artist">${esc(song.artist || '')}</div>
             <div class="song-detail-fields">
                 <div class="song-detail-field">
@@ -7047,6 +7214,10 @@ function openSongDetailPanel(id) {
     modal.dataset.songId = String(song.id);
     panel.innerHTML = songDetailPanelHtml(song);
     modal.classList.add('open');
+    const entryId = document.activeElement?.closest?.('[data-songbook-entry-id]')?.dataset.songbookEntryId;
+    window.BeadyoModalFocus?.activate(modal, closeSongDetailPanel, {
+        restore: () => entryId ? document.querySelector(`[data-songbook-entry-id="${CSS.escape(entryId)}"][tabindex]`) : null,
+    });
     updateSongDetailLastDate(song);
     window.BeadyoExplore?.mountSong(document.getElementById('song-related-links'), song, ensureLiveAllForSongDetail);
 }
@@ -7055,10 +7226,11 @@ function closeSongDetailPanel() {
     const modal = document.getElementById('song-detail-modal');
     modal.classList.remove('open');
     modal.dataset.songId = '';
+    window.BeadyoModalFocus?.release(modal);
 }
 
 function openSongDetail(id) {
-    if (S.session) openSongModal(id);
+    if (canEditSongbook()) openSongModal(id);
     else openSongDetailPanel(id);
 }
 
@@ -7073,7 +7245,7 @@ document.addEventListener('keydown', e => {
 });
 
 function openSongModal(id) {
-    if (!S.session) return;
+    if (!canEditSongbook()) return;
     const s = id ? S.songbookData?.find(x => x.id === id) : null;
     const currentTags = s ? songbookTags(s) : [];
     document.getElementById('song-modal-title').textContent = s ? '노래 수정' : '노래 추가';
@@ -7403,7 +7575,7 @@ async function deleteSong() {
 
 // ── 라이브 기록 일괄 추가 ────────────────────────
 function openLiveBulkModal() {
-    if (!S.session) return;
+    if (!canEditSongbook()) return;
     document.getElementById('live-bulk-rows').innerHTML = '';
     document.getElementById('live-bulk-status').textContent = '';
     document.getElementById('live-bulk-save-btn').disabled = false;
@@ -7520,7 +7692,7 @@ function findLiveRecordById(id) {
 }
 
 function openLiveModal(id) {
-    if (!S.session) return;
+    if (!canEditSongbook()) return;
     const r = id ? findLiveRecordById(id) : null;
     document.getElementById('live-modal-title').textContent = r ? '라이브 기록 수정' : '라이브 기록 추가';
     document.getElementById('lf-id').value     = r?.id ?? '';

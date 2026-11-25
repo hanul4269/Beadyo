@@ -9,8 +9,8 @@
     <meta name="robots" content="noindex, nofollow">
     <title>구슬요 춤영상 검토 페이지</title>
     <link rel="icon" href="logo-icon.webp">
-    <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
-    <script src="modal-focus.js?v=release-20261011-all"></script>
+    <link rel="stylesheet" href="tokens.css?v=deploy-20261126">
+    <script src="modal-focus.js?v=deploy-20261126"></script>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="assets/fonts/pretendard/pretendard-subset.css?v=subset-20261112" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="assets/fonts/pretendard/pretendard-subset.css?v=subset-20261112" rel="stylesheet"></noscript>
@@ -24,7 +24,7 @@
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background:
                 linear-gradient(180deg, rgba(255,255,255,.72) 0 0),
-                url("banner.jpg") top center / 1600px auto no-repeat,
+                url("banner.webp") top center / 1600px auto no-repeat,
                 var(--bg);
         }
 
@@ -897,7 +897,7 @@
 
                 <aside class="detail" aria-label="선택한 영상">
                     <div class="detail-media">
-                        <img id="detailImage" src="songbook-char.png" alt="" referrerpolicy="no-referrer">
+                        <img id="detailImage" src="songbook-char.webp" alt="" referrerpolicy="no-referrer">
                     </div>
                     <div class="detail-body">
                         <div class="detail-title" id="detailTitle">춤영상을 선택하세요</div>
@@ -959,6 +959,7 @@
 
     <script src="supabase.min.js?v=supabase-2-119-0"></script>
     <script src="beadyo-common.js?v=auth-security-20261105"></script>
+    <script src="kst-date.js?v=kst-20261125"></script>
     <script src="dance-data.js?v=status-20260628"></script>
     <script src="dance-thumbnail-backfill.js?v=thumbs-20260628"></script>
     <script>
@@ -984,7 +985,7 @@
 
         const DANCE_STATUS_TABLE = 'dance_video_statuses';
         const DANCE_STATUS_COLUMNS = 'video_id,status,title,source,song,url,thumbnail';
-        const PLACEHOLDER_THUMBNAILS = new Set(['', 'banner.jpg', 'loading-img.png', 'songbook-char.png']);
+        const PLACEHOLDER_THUMBNAILS = new Set(['', 'banner.jpg', 'banner.webp', 'loading-img.png', 'songbook-char.png', 'songbook-char.webp']);
         let videos = loadVideos();
         let db = null;
         let sharedStatusMode = 'loading';
@@ -1036,7 +1037,7 @@
             const youtubeId = getYouTubeId(video.url);
             if (youtubeId) return `https://img.youtube.com/vi/${encodeURIComponent(youtubeId)}/hqdefault.jpg`;
 
-            return 'banner.jpg';
+            return 'banner.webp';
         }
 
         function shouldExcludeVideo(video) {
@@ -1047,7 +1048,7 @@
             const normalized = {
                 status: 'review',
                 tags: [],
-                thumbnail: 'banner.jpg',
+                thumbnail: 'banner.webp',
                 ...video,
             };
             normalized.url = safeUrl(normalized.url);
@@ -1093,7 +1094,7 @@
                 source: row?.source || 'soop',
                 song: row?.song || '',
                 url: row?.url || '',
-                thumbnail: row?.thumbnail || 'banner.jpg',
+                thumbnail: row?.thumbnail || 'banner.webp',
                 tags: [],
             });
         }
@@ -1191,7 +1192,7 @@
 
         function formatImportTime(value) {
             if (!value) return '마지막 가져오기: 없음';
-            return `마지막 가져오기: ${new Date(value).toLocaleString('ko-KR', { dateStyle: 'short', timeStyle: 'short' })}`;
+            return `마지막 가져오기: ${window.BeadyoKstDate.formatDateTime(value) || '없음'}`;
         }
 
         function updateImportStatus(message) {
@@ -1275,7 +1276,7 @@
             grid.innerHTML = items.map(video => `
                 <article class="video-card${video.id === selectedId ? ' active' : ''}${selectedIds.has(video.id) ? ' selected' : ''}" data-id="${esc(video.id)}">
                     <div class="thumb">
-                        <img src="${esc(video.thumbnail)}" alt="" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='banner.jpg';">
+                        <img src="${esc(video.thumbnail)}" alt="" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='banner.webp';">
                         <span class="source-badge" style="color:${sourceColors[video.source]}">${esc(sourceLabels[video.source])}</span>
                         <span class="status-badge">${esc(statusLabels[video.status])}</span>
                         <label class="select-video">
@@ -1357,7 +1358,7 @@
                 document.getElementById('detailTitle').textContent = '춤영상을 선택하세요';
                 const detailImage = document.getElementById('detailImage');
                 detailImage.onerror = null;
-                detailImage.src = 'songbook-char.png';
+                detailImage.src = 'songbook-char.webp';
                 document.getElementById('detailSource').textContent = '-';
                 document.getElementById('detailDate').textContent = '-';
                 document.getElementById('detailStatus').textContent = '-';
@@ -1374,7 +1375,7 @@
             const detailImage = document.getElementById('detailImage');
             detailImage.onerror = () => {
                 detailImage.onerror = null;
-                detailImage.src = 'songbook-char.png';
+                detailImage.src = 'songbook-char.webp';
             };
             detailImage.src = video.thumbnail;
             document.getElementById('detailSource').textContent = sourceLabels[video.source];

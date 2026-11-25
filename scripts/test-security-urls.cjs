@@ -28,7 +28,7 @@ function harness() {
         document: { getElementById: node },
         navigator: { clipboard: { writeText: async value => copied.push(value) } },
         window: { open: (...args) => opened.push(args), BeadyoModalFocus: { activate() {} } },
-        PLACEHOLDER_THUMBNAILS: new Set(['', 'banner.jpg', 'loading-img.png', 'songbook-char.png']),
+        PLACEHOLDER_THUMBNAILS: new Set(['', 'banner.jpg', 'banner.webp', 'loading-img.png', 'songbook-char.png', 'songbook-char.webp']),
         sourceLabels: { soop: 'SOOP' }, statusLabels: { review: '검토 필요' },
         selectedVideo: () => ctx.video,
         setVideoStatus() {}, closeVideoModal() {},
@@ -77,7 +77,7 @@ test('shared row normalization rejects script links and images before rendering'
     const { ctx } = harness();
     const normalized = ctx.normalizeVideo({ id: 'test-only', url: 'javascript:void(0)', thumbnail: 'data:text/html,inspection-only' });
     assert.equal(normalized.url, '#');
-    assert.equal(normalized.thumbnail, 'banner.jpg');
+    assert.equal(normalized.thumbnail, 'banner.webp');
     const valid = ctx.normalizeVideo({ id: 'test-only', url: 'https://youtu.be/abc123_-XYZ', thumbnail: 'https://img.example.test/a.jpg' });
     assert.equal(valid.url, 'https://youtu.be/abc123_-XYZ');
     assert.equal(valid.thumbnail, 'https://img.example.test/a.jpg');

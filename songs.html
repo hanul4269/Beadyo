@@ -18,7 +18,7 @@
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="ko_KR">
     <link rel="icon" href="logo-icon.webp">
-    <link rel="stylesheet" href="tokens.css?v=release-20261011-all">
+    <link rel="stylesheet" href="tokens.css?v=deploy-20261126">
     <link rel="preconnect" href="https://qlmcwobfldgmhwhptkfz.supabase.co">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="assets/fonts/pretendard/pretendard-subset.css?v=subset-20261112" rel="stylesheet" media="print" onload="this.media='all'">
@@ -616,7 +616,7 @@
         }
     </style>
     <script defer src="page-footer.js?v=release-20261011-all"></script>
-    <link rel="stylesheet" href="heading-font.css?v=release-20261011-all">
+    <link rel="stylesheet" href="heading-font.css?v=deploy-20261126">
 </head>
 <body>
     <div class="songs-header">
@@ -701,6 +701,7 @@
 
     <script src="supabase.min.js?v=supabase-2-119-0"></script>
     <script src="beadyo-common.js?v=auth-security-20261105"></script>
+    <script src="kst-date.js?v=kst-20261125"></script>
     <script>
         let db = null;
         let _dbReady = null;
@@ -864,7 +865,7 @@
                 const thumb = vid ? thumbUrl(vid) : null;
                 const href = safeYtUrl(song.youtube_url);
                 const dateStr = song.upload_date
-                    ? new Date(song.upload_date + 'T00:00:00').toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
+                    ? window.BeadyoKstDate.formatLongDate(song.upload_date)
                     : '';
                 const typeLbl = song.type === 'original' ? '오리지널' : song.type === 'live' ? '라이브' : '커버';
                 const typeCls = song.type === 'original' ? 'original' : song.type === 'live' ? 'live' : 'cover';
