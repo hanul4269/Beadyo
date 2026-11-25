@@ -9,10 +9,11 @@
 //   VAPID_PUBLIC_KEY   same value as PUSH_PUBLIC_KEY in development-requests.html
 //   VAPID_PRIVATE_KEY
 //   VAPID_SUBJECT      e.g. https://beadyo.com
+//   DISCORD_WEBHOOK_URL  optional; same alert (with a 200-char preview) to a Discord channel
 // Injected by Supabase: SUPABASE_URL, SUPABASE_SECRET_KEYS / SUPABASE_SERVICE_ROLE_KEY,
 // SUPABASE_PUBLISHABLE_KEYS / SUPABASE_ANON_KEY.
 import webpush from 'npm:web-push@3.6.7';
-import { handle, type PushPayload, type Subscription } from './lib/handler.ts';
+import { handle, isDiscordWebhook, type DiscordFn, type PushPayload, type Subscription } from './lib/handler.ts';
 import { createStore } from './lib/store.ts';
 
 function pickKey(jsonEnv: string, legacyEnv: string): string {
@@ -49,7 +50,23 @@ async function send(subscription: Subscription, payload: PushPayload): Promise<n
   return response.status;
 }
 
+const discordWebhook = (Deno.env.get('DISCORD_WEBHOOK_URL') || '').trim();
+if (discordWebhook && !isDiscordWebhook(discordWebhook)) console.log('DISCORD_WEBHOOK_URL is not a Discord webhook URL; Discord is off');
+
+const discord: DiscordFn | undefined = discordWebhook && isDiscordWebhook(discordWebhook)
+  ? async message => {
+    const response = await fetch(discordWebhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(message),
+    });
+    await response.body?.cancel();
+    return response.status;
+  }
+  : undefined;
+
 Deno.serve(request => handle(request, {
+  discord,
   store: () => createStore(
     fetch,
     Deno.env.get('SUPABASE_URL') || '',

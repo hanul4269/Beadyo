@@ -1,7 +1,10 @@
 // node --test supabase/functions/dev-request-push/tests/handler.test.ts
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { handle, isAllowedEndpoint, requestPayload, type Store, type Subscription } from '../lib/handler.ts';
+import {
+  handle, isAllowedEndpoint, isDiscordWebhook, requestPayload, discordRequestMessage,
+  type DiscordMessage, type Store, type Subscription,
+} from '../lib/handler.ts';
 
 const NOW = Date.parse('2026-11-26T12:00:00Z');
 const APPLE = 'https://web.push.apple.com/abc';
@@ -59,7 +62,7 @@ test('new request is pushed once, expired devices are removed, unknown hosts ski
     send: async (s: Subscription) => { sentTo.push(s.endpoint); return s.id === 2 ? 410 : 201; },
   };
   const first = await (await handle(post({ request_id: 7 }), deps)).json();
-  assert.deepEqual(first, { ok: true, devices: 3, sent: 1, removed: 1, failed: 1 });
+  assert.deepEqual(first, { ok: true, devices: 3, sent: 1, removed: 1, failed: 1, discord: 'off' });
   assert.deepEqual(sentTo, [APPLE, FCM]);
   assert.deepEqual(deleted, [2]);
 
@@ -108,4 +111,69 @@ test('CORS only for site origins, other methods rejected', async () => {
   const other = await handle(new Request('https://x/f', { method: 'OPTIONS', headers: { Origin: 'https://evil.com' } }), deps);
   assert.equal(other.headers.get('Access-Control-Allow-Origin'), null);
   assert.equal((await handle(new Request('https://x/f'), deps)).status, 405);
+});
+
+test('discord webhook URL check', () => {
+  assert.equal(isDiscordWebhook('https://discord.com/api/webhooks/123/abc_DEF-1'), true);
+  assert.equal(isDiscordWebhook('https://discordapp.com/api/webhooks/123/abc'), true);
+  assert.equal(isDiscordWebhook('https://evil.com/api/webhooks/123/abc'), false);
+  assert.equal(isDiscordWebhook('http://discord.com/api/webhooks/123/abc'), false);
+});
+
+test('discord message has preview, no mentions, links to the board', () => {
+  const long = '@everyone 내용 '.repeat(40);
+  const message = discordRequestMessage({ id: 5, requester_name: '편집자 B', created_at: '2026-11-26T12:00:00Z', content: long });
+  assert.deepEqual(message.allowed_mentions, { parse: [] });
+  const embed = message.embeds[0];
+  assert.equal(embed.title, '새 개발요청');
+  assert.equal(embed.author?.name, '편집자 B');
+  assert.ok(embed.description.length <= 201);
+  assert.ok(embed.description.endsWith('…'));
+  assert.equal(embed.url, 'https://beadyo.com/development-requests.html');
+});
+
+test('push and discord are sent together, and one failing does not stop the other', async () => {
+  const messages: DiscordMessage[] = [];
+  const { store } = fakeStore({
+    async getRequest(id) { return { id, requester_name: '편집자 A', created_at: new Date(NOW - 1000).toISOString(), content: '룰렛 기능' }; },
+  }, subs.slice(0, 1));
+  let pushes = 0;
+  const ok = await (await handle(post({ request_id: 11 }), {
+    store: () => store, now: () => NOW,
+    send: async () => { pushes += 1; return 201; },
+    discord: async m => { messages.push(m); return 204; },
+  })).json();
+  assert.equal(ok.sent, 1);
+  assert.equal(ok.discord, 'sent');
+  assert.equal(messages[0].embeds[0].description, '룰렛 기능');
+
+  const failing = await (await handle(post({ request_id: 12 }), {
+    store: () => store, now: () => NOW,
+    send: async () => { pushes += 1; return 201; },
+    discord: async () => { throw new Error('network'); },
+  })).json();
+  assert.equal(failing.sent, 1);
+  assert.equal(failing.discord, 'failed');
+
+  const listFails = fakeStore({
+    async getRequest(id) { return { id, requester_name: 'x', created_at: new Date(NOW).toISOString(), content: 'y' }; },
+    async listSubscriptions() { throw new Error('db down'); },
+  }).store;
+  const pushDown = await (await handle(post({ request_id: 13 }), {
+    store: () => listFails, now: () => NOW, send: async () => 201, discord: async () => 204,
+  })).json();
+  assert.equal(pushDown.discord, 'sent');
+
+  const off = await (await handle(post({ request_id: 14 }), { store: () => store, now: () => NOW, send: async () => 201 })).json();
+  assert.equal(off.discord, 'off');
+});
+
+test('test button also posts to discord', async () => {
+  const { store } = fakeStore({}, []);
+  let posted = 0;
+  const res = await (await handle(post({ test: true }, { Authorization: 'Bearer owner-token' }), {
+    store: () => store, send: async () => 201, discord: async () => { posted += 1; return 204; },
+  })).json();
+  assert.equal(res.discord, 'sent');
+  assert.equal(posted, 1);
 });

@@ -5,6 +5,7 @@ export interface PushRequestRow {
   id: number;
   requester_name: string;
   created_at: string;
+  content?: string;
 }
 
 export interface Subscription {
@@ -33,9 +34,26 @@ export interface Store {
 /** Sends one push and returns the push service's HTTP status. */
 export type SendFn = (subscription: Subscription, payload: PushPayload) => Promise<number>;
 
+/** Posts one message to a Discord webhook and returns the HTTP status. */
+export type DiscordFn = (message: DiscordMessage) => Promise<number>;
+
+export interface DiscordMessage {
+  allowed_mentions: { parse: string[] };
+  embeds: Array<{
+    title: string;
+    description: string;
+    url: string;
+    color: number;
+    timestamp?: string;
+    author?: { name: string };
+  }>;
+}
+
 export interface Deps {
   store: () => Store;
   send: SendFn;
+  /** undefined when DISCORD_WEBHOOK_URL is not set */
+  discord?: DiscordFn;
   now?: () => number;
   log?: (message: string) => void;
   allowedOrigins?: string[];
@@ -77,6 +95,57 @@ export function testPayload(now: number): PushPayload {
     url: BOARD_URL,
     tag: `dev-request-test-${now}`,
   };
+}
+
+export const SITE_BOARD_URL = 'https://beadyo.com/development-requests.html';
+export const DISCORD_PREVIEW_CHARS = 200;
+
+export function isDiscordWebhook(url: string): boolean {
+  return /^https:\/\/(?:canary\.|ptb\.)?(?:discord|discordapp)\.com\/api\/webhooks\/\d+\/[\w-]+$/.test(url);
+}
+
+function preview(text: string, limit: number): string {
+  const clean = String(text || '').replace(/\r\n?/g, '\n').trim();
+  return clean.length > limit ? `${clean.slice(0, limit).trimEnd()}…` : clean;
+}
+
+export function discordRequestMessage(row: PushRequestRow): DiscordMessage {
+  const name = String(row.requester_name || '편집자').replace(/\s+/g, ' ').trim().slice(0, 80) || '편집자';
+  return {
+    allowed_mentions: { parse: [] },
+    embeds: [{
+      title: '새 개발요청',
+      description: preview(row.content || '', DISCORD_PREVIEW_CHARS) || '(내용 없음)',
+      url: SITE_BOARD_URL,
+      color: 0x76ad39,
+      timestamp: row.created_at,
+      author: { name },
+    }],
+  };
+}
+
+export function discordTestMessage(): DiscordMessage {
+  return {
+    allowed_mentions: { parse: [] },
+    embeds: [{
+      title: '알림 테스트',
+      description: '개발요청 알림이 이 채널로도 정상적으로 와요.',
+      url: SITE_BOARD_URL,
+      color: 0x76ad39,
+    }],
+  };
+}
+
+async function postDiscord(discord: DiscordFn | undefined, message: DiscordMessage, log: (m: string) => void) {
+  if (!discord) return 'off';
+  try {
+    const status = await discord(message);
+    if (status >= 200 && status < 300) return 'sent';
+    log(`discord failed with HTTP ${status}`);
+  } catch (error) {
+    log(`discord threw: ${error instanceof Error ? error.message : String(error)}`);
+  }
+  return 'failed';
 }
 
 function corsHeaders(request: Request, allowed: string[]): Record<string, string> {
@@ -148,8 +217,11 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
     const auth = request.headers.get('Authorization') || '';
     const token = auth.startsWith('Bearer ') ? auth.slice(7).trim() : '';
     if (!token || !(await store.isOwnerToken(token))) return json(403, { error: 'owner only' });
-    const result = await deliver(store, deps.send, testPayload(now()), log);
-    return json(200, { ok: true, ...result });
+    const [result, discord] = await Promise.all([
+      deliver(store, deps.send, testPayload(now()), log),
+      postDiscord(deps.discord, discordTestMessage(), log),
+    ]);
+    return json(200, { ok: true, ...result, discord });
   }
 
   // DB 트리거가 새 요청 id로 호출
@@ -168,7 +240,14 @@ export async function handle(request: Request, deps: Deps): Promise<Response> {
 
   if (!(await store.claimRequest(id))) return json(200, { ok: true, skipped: 'already sent' });
 
-  const result = await deliver(store, deps.send, requestPayload(row), log);
-  log(`request ${id}: ${JSON.stringify(result)}`);
-  return json(200, { ok: true, ...result });
+  // 웹 푸시와 디스코드는 서로 독립: 한쪽이 실패해도 다른 쪽은 보낸다.
+  const [result, discord] = await Promise.all([
+    deliver(store, deps.send, requestPayload(row), log).catch(error => {
+      log(`push delivery threw: ${error instanceof Error ? error.message : String(error)}`);
+      return { devices: 0, sent: 0, removed: 0, failed: 0, error: true };
+    }),
+    postDiscord(deps.discord, discordRequestMessage(row), log),
+  ]);
+  log(`request ${id}: ${JSON.stringify({ ...result, discord })}`);
+  return json(200, { ok: true, ...result, discord });
 }

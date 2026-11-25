@@ -28,7 +28,7 @@ export function createStore(fetchFn: FetchFn, supabaseUrl: string, serviceKey: s
 
   return {
     async getRequest(id) {
-      const rows = await call(`development_requests?id=eq.${id}&select=id,requester_name,created_at`);
+      const rows = await call(`development_requests?id=eq.${id}&select=id,requester_name,created_at,content`);
       return Array.isArray(rows) && rows.length ? rows[0] as PushRequestRow : null;
     },
     async claimRequest(id) {
