@@ -10,11 +10,11 @@
     <title>같이보기 — BEADYO</title>
     <link rel="icon" href="logo-icon.webp">
     <script src="site-backdrop.js?v=release-20261011-all"></script>
-    <link rel="stylesheet" href="records.css?v=records-20261113c">
+    <link rel="stylesheet" href="records.css?v=review-20261126b">
     <script defer src="supabase.min.js?v=supabase-2-119-0"></script>
     <script defer src="beadyo-common.js?v=auth-security-20261105"></script>
     <script defer src="records-common.js?v=review-20261115"></script>
-    <script defer src="watchlist.js?v=records-20261113c"></script>
+    <script defer src="watchlist.js?v=review-20261126c"></script>
 </head>
 <body>
     <a class="skip-link" href="#records">작품 목록으로 건너뛰기</a>
@@ -74,7 +74,7 @@
                 <label><span>본 날짜 <i>모르면 비움</i></span><input name="watched_date" type="date"></label>
                 <label class="span-2"><span>회차 <i>애니메이션이면 예: 1~12화</i></span><input name="episodes" maxlength="60" autocomplete="off"></label>
                 <label class="span-2"><span>포스터 이미지 주소 <i>선택</i></span><input name="image_url" type="url" maxlength="2048" placeholder="https://beadyo.com/assets/watchlist/..." autocomplete="off"></label>
-                <label class="span-2"><span>한 줄 메모 <i>선택</i></span><textarea name="notes" rows="2" maxlength="1000"></textarea></label>
+                <label class="span-2"><span>후기 <i>최대 2000자</i></span><textarea name="review" rows="6" maxlength="2000" placeholder="이 작품 어땠는지 자유롭게 남겨 주세요."></textarea></label>
             </fieldset>
             <p id="edit-message" class="form-message" role="alert"></p>
             <div class="dialog-footer">

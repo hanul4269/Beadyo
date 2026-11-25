@@ -139,3 +139,22 @@ html[data-theme="dark"] .danger-action{border-color:#6b3337;color:#ff9aa2}
     .dialog-footer{padding:12px 16px}
     .filter-chip{font-size:11px;padding:4px 10px;min-height:30px}
 }
+/* 같이보기 후기 (2026-11-26) */
+.watch-review{margin-top:6px;min-width:0}
+.watch-review summary{display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-size:11px;font-weight:800;color:#3d6619;padding:3px 9px;border-radius:999px;background:var(--accent-soft);list-style:none}
+.watch-review summary::-webkit-details-marker{display:none}
+.watch-review summary::before{content:'✎';font-weight:400}
+html[data-theme="dark"] .watch-review summary{color:var(--accent-dark)}
+.watch-review-text{margin:8px 0 0;padding:11px 12px;border-left:3px solid var(--accent);border-radius:8px;background:var(--surface-soft);color:var(--ink);font-size:13px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}
+/* 같이보기 카드: 수정 버튼 하단 정렬, 포스터 클릭으로 수정 (2026-11-26) */
+.poster-body{flex:1}
+.poster-actions{display:flex;justify-content:flex-end;margin-top:auto;padding-top:8px}
+.poster-actions .record-edit{margin:0}
+button.art-edit{display:block;width:100%;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:inherit}
+button.poster-frame.art-edit{border:1px solid var(--line)}
+button.watch-thumb.art-edit{border:0}
+.art-edit-hint{position:absolute;right:8px;bottom:8px;padding:3px 9px;border-radius:999px;background:#000b;color:#fff;font-size:11px;font-weight:700;opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s;pointer-events:none}
+.art-edit:hover .art-edit-hint,.art-edit:focus-visible .art-edit-hint{opacity:1;transform:none}
+.art-edit:hover .poster-image,.art-edit:focus-visible .poster-image{filter:brightness(.88)}
+.art-edit:focus-visible{outline:3px solid var(--accent-dark);outline-offset:2px}
+@media(hover:none){.art-edit-hint{opacity:.9;transform:none}}

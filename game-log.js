@@ -52,6 +52,10 @@
     let draftId = '';
     let editingId = '';
     const Store = window.BeadyoGameStore;
+    const Memos = window.BeadyoGameMemos;
+    let memos = new Map();
+    let memosReady = false;
+    let savingMemo = false;
     let db = null;
     try { db = window.getBeadyoSupabaseClient({ auth: { detectSessionInUrl: false, flowType: 'pkce' } }); } catch {}
 
@@ -113,7 +117,7 @@
         const button = element('button', 'game-card');
         button.type = 'button';
         button.dataset.gameId = game.id;
-        button.setAttribute('aria-label', `${game.title} 플레이 날짜 보기`);
+        button.setAttribute('aria-label', `${game.title} 플레이 날짜${memos.has(game.id) ? '와 후기' : ''} 보기`);
         const copy = element('div', 'game-card-copy');
         copy.append(element('h2', 'game-title', game.title));
         const date = element('div', 'game-date');
@@ -126,6 +130,8 @@
             if (count > 1) date.append(element('span', 'date-extra', `+${count - 1}개 기록`));
         } else date.append(element('span', 'date-unknown', '플레이 날짜 미확인'));
         copy.append(date);
+        const badge = memoBadge(game);
+        if (badge) copy.append(badge);
         button.append(gameArt(game), copy);
         button.addEventListener('click', () => openDetail(game, button));
         return button;
@@ -135,8 +141,10 @@
         const button = element('button', 'game-row');
         button.type = 'button';
         button.dataset.gameId = game.id;
-        button.setAttribute('aria-label', `${game.title}, ${lastDate ? `최근 기록 ${formatDate(lastDate)}, 등록 날짜 ${count}개` : '플레이 날짜 미확인'}, 상세 보기`);
+        button.setAttribute('aria-label', `${game.title}, ${lastDate ? `최근 기록 ${formatDate(lastDate)}, 등록 날짜 ${count}개` : '플레이 날짜 미확인'}${memos.has(game.id) ? ', 후기 있음' : ''}, 상세 보기`);
         const title = element('h2', 'game-row-title', game.title);
+        const badge = memoBadge(game);
+        if (badge) title.append(badge);
         const stats = element('div', 'game-row-stats');
         const recent = element('div', 'game-row-stat');
         recent.append(element('span', 'row-stat-label', '최근 기록'));
@@ -166,7 +174,136 @@
         document.querySelectorAll('[data-view]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.view === state.view)));
         syncFilterButtons();
     }
+    function memoBadge(game) {
+        if (!memos.has(game.id)) return null;
+        const badge = element('span', 'memo-badge', '후기');
+        badge.setAttribute('aria-hidden', 'true');
+        return badge;
+    }
+    // 구슬요의 메모: 누구나 읽기, 편집자에게만 쓰기 버튼. 메모가 없고 편집자가 아니면 칸을 만들지 않는다.
+    function memoSection(game) {
+        const memo = memos.get(game.id);
+        const canWrite = isEditor && memosReady && Boolean(Memos);
+        if (!memo && !canWrite) return null;
+        const box = element('section', 'detail-memo');
+        box.setAttribute('aria-labelledby', 'detail-memo-title');
+        const head = element('div', 'detail-memo-head');
+        const heading = element('h3', '', '후기');
+        heading.id = 'detail-memo-title';
+        head.append(heading);
+        if (canWrite) {
+            const edit = element('button', 'secondary-action detail-memo-edit', memo ? '후기 수정' : '후기 쓰기');
+            edit.type = 'button';
+            edit.addEventListener('click', () => openMemoEditor(box, game));
+            head.append(edit);
+        }
+        box.append(head);
+        box.append(memo ? element('p', 'detail-memo-text', memo.memo) : element('p', 'detail-memo-empty', '아직 후기가 없어요. 이 게임 어땠는지 남겨 보세요.'));
+        return box;
+    }
+    function refreshMemoSection(box, game, focusSelector) {
+        const next = memoSection(game) || element('div');
+        box.replaceWith(next);
+        next.querySelector(focusSelector || '.detail-memo-edit')?.focus({ preventScroll: true });
+    }
+    function openMemoEditor(box, game) {
+        if (!isEditor || !memosReady || !Memos || savingMemo) return;
+        const current = memos.get(game.id)?.memo || '';
+        const form = element('form', 'detail-memo-form');
+        form.noValidate = true;
+        const label = element('label', 'detail-memo-label', '후기');
+        label.htmlFor = 'detail-memo-input';
+        const textarea = element('textarea');
+        textarea.id = 'detail-memo-input';
+        textarea.rows = 7;
+        textarea.maxLength = Memos.MAX_LENGTH;
+        textarea.value = current;
+        textarea.placeholder = '이 게임 어땠는지 자유롭게 남겨 주세요.';
+        const count = element('span', 'detail-memo-count');
+        const updateCount = () => { count.textContent = `${textarea.value.length} / ${Memos.MAX_LENGTH}자`; };
+        updateCount();
+        const message = element('p', 'detail-memo-message');
+        message.setAttribute('role', 'status');
+        textarea.addEventListener('input', () => { updateCount(); message.textContent = ''; });
+        const actions = element('div', 'detail-memo-actions');
+        const remove = element('button', 'secondary-action danger-action', '후기 지우기');
+        remove.type = 'button';
+        remove.hidden = !current;
+        const cancel = element('button', 'secondary-action', '취소');
+        cancel.type = 'button';
+        const save = element('button', 'primary-action', '저장');
+        save.type = 'submit';
+        actions.append(remove, cancel, save);
+        form.append(label, textarea, count, message, actions);
+        const head = box.querySelector('.detail-memo-head');
+        head.querySelector('.detail-memo-edit')?.remove();
+        box.replaceChildren(head, form);
+        textarea.focus();
+
+        const setBusy = (busy, text) => {
+            savingMemo = busy;
+            for (const control of [textarea, remove, cancel, save]) control.disabled = busy;
+            if (text) save.textContent = text;
+        };
+        cancel.addEventListener('click', () => refreshMemoSection(box, game));
+        async function run(action) {
+            if (savingMemo) return;
+            let text;
+            try { text = Memos.memoText(textarea.value); } catch (error) { message.textContent = error.message; return; }
+            const deleting = action === 'delete' || (!text && Boolean(current));
+            if (!deleting && !text) { message.textContent = '후기 내용을 입력해 주세요.'; return; }
+            if (!deleting && text === current) { refreshMemoSection(box, game); return; }
+            setBusy(true, deleting ? '지우는 중…' : '저장 중…');
+            try {
+                if (!await canEditNow()) throw new Error('편집 권한을 확인하지 못했어요. 로그인 상태를 확인하고 다시 시도해 주세요.');
+                if (deleting) {
+                    await Memos.deleteMemo(db, game.id);
+                    memos.delete(game.id);
+                } else {
+                    const saved = await Memos.saveMemo(db, game.id, text);
+                    memos.set(saved.game_id, saved);
+                }
+                setBusy(false);
+                render();
+                refreshMemoSection(box, game);
+                $('game-save-notice').textContent = deleting ? `'${game.title}' 후기를 지웠어요.` : `'${game.title}' 후기를 저장했어요.`;
+                $('game-save-notice').hidden = false;
+            } catch (error) {
+                setBusy(false, '저장');
+                message.textContent = error.message || '저장하지 못했어요. 내용을 유지했으니 다시 시도해 주세요.';
+            }
+        }
+        form.addEventListener('submit', event => { event.preventDefault(); void run('save'); });
+        remove.addEventListener('click', () => {
+            if (!window.confirm(`'${game.title}' 후기를 지울까요?\n지우면 되돌릴 수 없어요.`)) return;
+            void run('delete');
+        });
+    }
+    async function loadMemos() {
+        if (!db || !Memos) { memosReady = false; return; }
+        try {
+            memos = await Memos.readMemos(db);
+            memosReady = true;
+        } catch {
+            // 메모 표가 없거나 읽기 실패: 메모만 빼고 나머지 화면은 그대로 보여 준다.
+            memos = new Map();
+            memosReady = false;
+        }
+    }
+    let detailGame = null;
+    // 편집 권한·메모를 늦게 확인했을 때, 열려 있는 상세 화면의 메모 칸만 다시 그린다.
+    function refreshOpenMemo() {
+        if (!detailGame || !$('game-dialog').open || savingMemo || document.getElementById('detail-memo-input')) return;
+        const content = $('detail-body').querySelector('.detail-content');
+        if (!content) return;
+        const box = content.querySelector('.detail-memo');
+        const next = memoSection(detailGame);
+        if (box && next) box.replaceWith(next);
+        else if (box) box.remove();
+        else if (next) content.querySelector('.detail-record-heading')?.before(next);
+    }
     function openDetail(game, opener, updateUrl = true) {
+        detailGame = game;
         returnFocus = opener || null;
         const body = $('detail-body');
         const image = officialImage(game, 'detail-image');
@@ -178,7 +315,9 @@
         content.append(title);
         const aliases = (game.aliases || []).filter(alias => normalize(alias) !== normalize(game.title));
         if (aliases.length) content.append(element('p', 'detail-aliases', aliases.join(' · ')));
-        const dated = game.dates.filter(row => matchesPeriod(row.date, state.year, state.month)).sort((a, b) => b.date.localeCompare(a.date));
+        const memoBox = memoSection(game);
+        if (memoBox) content.append(memoBox);
+        const dated =game.dates.filter(row => matchesPeriod(row.date, state.year, state.month)).sort((a, b) => b.date.localeCompare(a.date));
         const heading = element('div', 'detail-record-heading');
         heading.append(element('h3', '', state.year || state.month ? '선택한 기간의 플레이 날짜' : '기록된 플레이 날짜'), element('span', '', `${dated.length}개 기록`));
         content.append(heading);
@@ -312,6 +451,11 @@
         isEditor = allowed;
         updateEditorControls();
         if (!isEditor && $('game-add-dialog').open && !savingGame) $('game-add-dialog').close();
+        if (!isEditor && document.getElementById('detail-memo-input') && !savingMemo && detailGame) {
+            const box = $('detail-body').querySelector('.detail-memo');
+            if (box) refreshMemoSection(box, detailGame);
+        }
+        refreshOpenMemo();
     }
     async function initEditorAuth() {
         if (!db) return;
@@ -489,6 +633,7 @@
                 fetch('data/game-log.json?v=vod-webp-20261125', { cache: 'no-cache', credentials: 'omit' }),
                 loadGenres(),
                 loadCustomRecords(),
+                loadMemos(),
             ]);
             if (!response.ok) throw new Error('Data unavailable');
             const next = await response.json();
@@ -565,13 +710,20 @@
         document.body.classList.remove('detail-open');
         if (isEditor) $('add-game-btn').focus({ preventScroll: true });
     });
-    $('close-detail').addEventListener('click', () => $('game-dialog').close());
-    $('game-dialog').addEventListener('click', event => { if (event.target === $('game-dialog')) { const rect = event.target.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) event.target.close(); } });
+    $('close-detail').addEventListener('click', () => { if (!savingMemo) $('game-dialog').close(); });
+    $('game-dialog').addEventListener('cancel', event => { if (savingMemo) event.preventDefault(); });
+    $('game-dialog').addEventListener('click', event => { if (!savingMemo && event.target === $('game-dialog')) { const rect = event.target.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) event.target.close(); } });
     $('game-dialog').addEventListener('close', () => {
+        const closedId = detailGame?.id;
+        detailGame = null;
         document.body.classList.remove('detail-open');
         const url = new URL(location.href);
         url.searchParams.delete('game');
         history.replaceState(null, '', url.pathname + url.search + url.hash);
+        // 메모 저장 후 목록을 다시 그렸으면 원래 버튼이 사라졌으므로 같은 게임의 새 버튼으로 돌아간다.
+        if (returnFocus && !returnFocus.isConnected && closedId) {
+            returnFocus = [...$('games').querySelectorAll('[data-game-id]')].find(item => item.dataset.gameId === closedId) || null;
+        }
         returnFocus?.focus({ preventScroll: true });
     });
     initEditorAuth();

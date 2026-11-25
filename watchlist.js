@@ -18,7 +18,7 @@
         const q = state.query.trim().toLowerCase();
         return state.rows.filter(r => (!state.kind || r.kind === state.kind)
             && (!state.year || yearOf(r) === state.year)
-            && (!q || [r.title, r.notes].some(v => String(v || '').toLowerCase().includes(q))));
+            && (!q || [r.title, r.review].some(v => String(v || '').toLowerCase().includes(q))));
     }
 
     function renderSummary() {
@@ -75,8 +75,17 @@
         const sub = el('div', 'watch-sub');
         if (withKind) sub.append(el('span', 'category-chip', r.kind));
         if (r.episodes) sub.append(el('span', '', r.episodes));
-        if (r.notes) sub.append(el('span', '', r.notes));
         return sub;
+    }
+    // 후기: 접어 두었다가 '후기 보기'를 누르면 줄바꿈 그대로 펼쳐 보여 준다.
+    function reviewBlock(r) {
+        const text = typeof r.review === 'string' ? r.review.trim() : '';
+        if (!text) return null;
+        const box = el('details', 'watch-review');
+        const summary = el('summary', '', '후기 보기');
+        box.append(summary, el('p', 'watch-review-text', text));
+        box.addEventListener('toggle', () => { summary.textContent = box.open ? '후기 접기' : '후기 보기'; });
+        return box;
     }
     function editButton(r) {
         if (!state.isEditor) return null;
@@ -85,29 +94,48 @@
         edit.addEventListener('click', () => openEditor(r));
         return edit;
     }
+    // 편집자에게는 포스터(썸네일) 자체가 '수정' 버튼이 된다. 방문자에게는 그냥 그림이다.
+    function artBox(r, className) {
+        if (!state.isEditor) return el('div', className);
+        const button = el('button', `${className} art-edit`);
+        button.type = 'button';
+        button.setAttribute('aria-label', `'${r.title}' 수정`);
+        button.addEventListener('click', () => openEditor(r));
+        return button;
+    }
     function card(r) {
         const item = el('article', 'poster-card');
-        const art = el('div', 'poster-frame');
+        const art = artBox(r, 'poster-frame');
         art.append(poster(r), el('span', 'poster-kind', r.kind));
+        if (state.isEditor) art.append(el('span', 'art-edit-hint', '수정'));
         const body = el('div', 'poster-body');
         body.append(el('h3', 'poster-title', r.title));
         const when = el('time', 'poster-date', dateLabel(r));
         if (r.watched_date) when.dateTime = r.watched_date;
         body.append(when);
-        if (r.episodes || r.notes) body.append(subLine(r, false));
+        if (r.episodes) body.append(subLine(r, false));
+        const review = reviewBlock(r);
+        if (review) body.append(review);
         const edit = editButton(r);
-        if (edit) body.append(edit);
+        if (edit) {
+            // 내용 길이와 상관없이 카드 맨 아래 같은 자리에 둔다.
+            const actions = el('div', 'poster-actions');
+            actions.append(edit);
+            body.append(actions);
+        }
         item.append(art, body);
         return item;
     }
     function row(r) {
         const item = el('article', 'watch-row');
-        const thumb = el('div', 'watch-thumb');
+        const thumb = artBox(r, 'watch-thumb');
         thumb.append(poster(r));
         const when = el('time', 'watch-date', dateLabel(r));
         if (r.watched_date) when.dateTime = r.watched_date;
         const main = el('div', 'watch-main');
         main.append(el('h3', 'watch-title', r.title), subLine(r, true));
+        const review = reviewBlock(r);
+        if (review) main.append(review);
         item.append(thumb, when, main);
         const edit = editButton(r);
         if (edit) { const actions = el('div', 'watch-actions'); actions.append(edit); item.append(actions); }
@@ -169,9 +197,16 @@
         $('delete-btn').hidden = !r;
         $('edit-message').textContent = '';
         const v = r || { kind: state.kind || '영화' };
-        ['title', 'kind', 'watched_date', 'episodes', 'image_url', 'notes'].forEach(k => { f[k].value = v[k] ?? ''; });
+        ['title', 'kind', 'watched_date', 'episodes', 'image_url', 'review'].forEach(k => { f[k].value = v[k] ?? ''; });
         $('edit-dialog').showModal();
         f.title.focus();
+    }
+    // 후기는 줄바꿈을 살리고 앞뒤 공백만 정리한다. 빈 칸이면 저장하지 않음(null).
+    function reviewText(value) {
+        const text = String(value ?? '').replace(/\r\n?/g, '\n').trim();
+        if (text.length > 2000) throw new Error('후기는 2000자 이내로 써 주세요.');
+        if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(text)) throw new Error('후기에 쓸 수 없는 문자가 있어요.');
+        return text || null;
     }
     function payload() {
         const f = form();
@@ -180,7 +215,9 @@
         if (!KINDS.includes(f.kind.value)) throw new Error('종류를 골라 주세요.');
         return {
             title, kind: f.kind.value, watched_date: f.watched_date.value || null,
-            episodes: R.trimOrNull(f.episodes.value, 60), notes: R.trimOrNull(f.notes.value, 1000),
+            // '한 줄 메모'(notes)는 2026-11-26에 화면에서 뺐다. 저장할 때 보내지 않으므로 DB의 기존 값은 그대로 남는다.
+            episodes: R.trimOrNull(f.episodes.value, 60),
+            review: reviewText(f.review.value),
             image_url: R.urlOrNull(f.image_url.value, '포스터 이미지 주소'),
         };
     }
